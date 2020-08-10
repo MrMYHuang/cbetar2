@@ -1,0 +1,7 @@
+{
+  "name": "cbetar2",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
