@@ -37,6 +37,7 @@ import '@ionic/react/css/display.css';
 import './theme/variables.css';
 import Globals from './Globals';
 import { Catalog } from './models/Catalog';
+import SettingsPage from './pages/SettingsPage';
 
 let store = getSavedStore();
 class DebugRouter extends IonReactRouter {
@@ -74,7 +75,7 @@ const App: React.FC = () => (
           <IonRouterOutlet>
             <Route path="/:tab(catalog)" render={props => <CatalogPage {...props} catalogs={getTopCatalogs()} />} exact={true} />
             <Route path="/tab2" component={WorkPage} exact={true} />
-            <Route path="/tab3" component={WebViewPage} />
+            <Route path="/settings" component={SettingsPage} />
           </IonRouterOutlet>
           <IonTabBar slot="bottom">
             <IonTabButton tab="tab1" href="/tab1">
@@ -83,7 +84,7 @@ const App: React.FC = () => (
             <IonTabButton tab="tab2" href="/tab2">
               <IonIcon icon={bookmark} />
             </IonTabButton>
-            <IonTabButton tab="tab3" href="/tab3">
+            <IonTabButton tab="settings" href="/settings">
               <IonIcon icon={settings} />
             </IonTabButton>
           </IonTabBar>
