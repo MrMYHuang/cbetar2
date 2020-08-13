@@ -1,6 +1,7 @@
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton } from '@ionic/react';
 import { RouteComponentProps, Route } from 'react-router-dom';
+import * as uuid from 'uuid';
 import './WebViewPage.css';
 
 interface PageProps extends RouteComponentProps<{
@@ -17,7 +18,7 @@ function addBookmark(uuid: string) {
     if (sel.rangeCount) {
       range = sel.getRangeAt(0);
       range.startContainer.parentElement.id = bookmarkPrefix + uuid;
-      var msg = JSON.stringify({status: 'ok', selectedText: sel.toString(), html: document.body.outerHTML}); 
+      var msg = JSON.stringify({ status: 'ok', selectedText: sel.toString(), html: document.body.outerHTML });
       //SaveHtml.postMessage(msg);
       return;
     }
@@ -39,11 +40,12 @@ function scrollToBookmark(uuid: string) {
   document.getElementById(bookmarkPrefix + uuid)!.scrollIntoView();
 }
 
-window.onload = function() {
+window.onload = function () {
   //SaveHtml.postMessage(JSON.stringify({status: 'loaded'}));
 }
 
 class WebViewPage extends React.Component<PageProps> {
+  uuidStr = '';
   render() {
     return (
       <IonPage>
@@ -53,7 +55,12 @@ class WebViewPage extends React.Component<PageProps> {
           </IonToolbar>
         </IonHeader>
         <IonContent>
-          <div style={{userSelect: "text"}} dangerouslySetInnerHTML={{__html: this.props.htmlStr}}></div>
+          <IonButton onClick={e => {
+            this.uuidStr = uuid.v4();
+            addBookmark(this.uuidStr);
+          }}>Add</IonButton>
+          <IonButton onClick={e => scrollToBookmark(this.uuidStr)}>Go to</IonButton>
+          <div id='cbetarWebView' style={{ userSelect: "text" }} dangerouslySetInnerHTML={{ __html: this.props.htmlStr }}></div>
         </IonContent>
       </IonPage>
     );

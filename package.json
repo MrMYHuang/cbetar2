@@ -55,6 +55,7 @@
   "devDependencies": {
     "@capacitor/cli": "2.4.0",
     "@types/react-redux": "^7.1.9",
+    "@types/uuid": "^8.3.0",
     "electron-packager": "^15.0.0"
   },
   "description": "An Ionic project"
