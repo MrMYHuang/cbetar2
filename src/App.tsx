@@ -10,10 +10,12 @@ import {
   IonTabs
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import { ellipse, square, triangle } from 'ionicons/icons';
-import Tab1 from './pages/Tab1';
-import Tab2 from './pages/Tab2';
-import Tab3 from './pages/Tab3';
+import { Provider } from 'react-redux';
+import getSavedStore from './redux/store';
+import { bookmark, book, settings } from 'ionicons/icons';
+import CatalogPage from './pages/CatalogPage';
+import WorkPage from './pages/WorkPage';
+import WebViewPage from './pages/WebViewPage';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -33,34 +35,61 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
+import Globals from './Globals';
+import { Catalog } from './models/Catalog';
+
+let store = getSavedStore();
+class DebugRouter extends IonReactRouter {
+  constructor(props){
+    super(props);
+    console.log('initial history is: ', JSON.stringify(this.history, null,2))
+    this.history.listen((location, action)=>{
+      console.log(
+        `The current URL is ${location.pathname}${location.search}${location.hash}`
+      )
+      console.log(`The last navigation action was ${action}`, JSON.stringify(this.history, null,2));
+    });
+  }
+}
+
+function getTopCatalogs() {
+  let catalogs = Array<Catalog>();
+    Object.keys(Globals.topCatalogs).forEach((key) => {
+    const catalog: Catalog = {
+      n: key,
+      nodeType: null,
+      work: null,
+      label: Globals.topCatalogs[key],
+      file: null,
+    };
+    catalogs.push(catalog);
+  });
+  return catalogs;
+}
 
 const App: React.FC = () => (
-  <IonApp>
-    <IonReactRouter>
-      <IonTabs>
-        <IonRouterOutlet>
-          <Route path="/tab1" component={Tab1} exact={true} />
-          <Route path="/tab2" component={Tab2} exact={true} />
-          <Route path="/tab3" component={Tab3} />
-          <Route path="/" render={() => <Redirect to="/tab1" />} exact={true} />
-        </IonRouterOutlet>
-        <IonTabBar slot="bottom">
-          <IonTabButton tab="tab1" href="/tab1">
-            <IonIcon icon={triangle} />
-            <IonLabel>Tab 1</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="tab2" href="/tab2">
-            <IonIcon icon={ellipse} />
-            <IonLabel>Tab 2</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="tab3" href="/tab3">
-            <IonIcon icon={square} />
-            <IonLabel>Tab 3</IonLabel>
-          </IonTabButton>
-        </IonTabBar>
-      </IonTabs>
-    </IonReactRouter>
-  </IonApp>
+    <IonApp>
+      <DebugRouter>
+        <IonTabs>
+          <IonRouterOutlet>
+            <Route path="/:tab(catalog)" render={props => <CatalogPage {...props} catalogs={getTopCatalogs()} />} exact={true} />
+            <Route path="/tab2" component={WorkPage} exact={true} />
+            <Route path="/tab3" component={WebViewPage} />
+          </IonRouterOutlet>
+          <IonTabBar slot="bottom">
+            <IonTabButton tab="tab1" href="/tab1">
+              <IonIcon icon={book} />
+            </IonTabButton>
+            <IonTabButton tab="tab2" href="/tab2">
+              <IonIcon icon={bookmark} />
+            </IonTabButton>
+            <IonTabButton tab="tab3" href="/tab3">
+              <IonIcon icon={settings} />
+            </IonTabButton>
+          </IonTabBar>
+        </IonTabs>
+      </DebugRouter>
+    </IonApp>
 );
 
 export default App;
