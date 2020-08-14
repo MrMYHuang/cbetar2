@@ -53,28 +53,14 @@ class DebugRouter extends IonReactRouter {
   }
 }
 
-function getTopCatalogs() {
-  let catalogs = Array<Catalog>();
-    Object.keys(Globals.topCatalogs).forEach((key) => {
-    const catalog: Catalog = {
-      n: key,
-      nodeType: null,
-      work: null,
-      label: Globals.topCatalogs[key],
-      file: null,
-    };
-    catalogs.push(catalog);
-  });
-  return catalogs;
-}
-
 const App: React.FC = () => (
   <Provider store={store}>
     <IonApp>
       <DebugRouter>
         <IonTabs>
-          <IonRouterOutlet>
-            <Route path="/:tab(catalog)" render={props => <CatalogPage {...props} catalogs={getTopCatalogs()} />} exact={true} />
+          <IonRouterOutlet animated={false}>
+            <Route path="/:tab(catalog)" component={props => <CatalogPage {...props}  />} exact={true} />
+            <Route path="/:tab(catalog)/:path" component={props => <CatalogPage {...props}  />} exact={true} />
             <Route path="/bookmarks" component={WorkPage} exact={true} />
             <Route path="/settings" component={SettingsPage} />
           </IonRouterOutlet>

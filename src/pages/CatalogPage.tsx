@@ -1,5 +1,5 @@
 import React from 'react';
-import { IonRouterOutlet, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonLabel, IonButton, IonBackButton, IonIcon, useIonViewWillEnter, useIonViewDidEnter } from '@ionic/react';
+import { IonRouterOutlet, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonLabel, IonButton, IonBackButton, IonIcon, withIonLifeCycle } from '@ionic/react';
 import { RouteComponentProps, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import axios from 'axios';
@@ -17,26 +17,39 @@ interface PageProps extends RouteComponentProps<{
 
 const url = `${Globals.cbetaApiUrl}/catalog_entry?q=`;
 const urlWork = `${Globals.cbetaApiUrl}/works?work=`;
-class CatalogPage extends React.Component<PageProps> {
-  _isMounted = false;
+class _CatalogPage extends React.Component<PageProps> {
   constructor(props) {
     super(props);
+    this.state = {
+      catalogs: []
+    }
+  }
+    
+  catalogs = Array<Catalog>();
+  ionViewWillEnter() {
+    //console.log( 'view will enter' );
+    this.fetchData(this.props.match.params.path);
   }
 
+  /*
   componentWillReceiveProps(nextProps){
     console.log(`route changed: ${nextProps.match.url}`)
  }
 
   componentDidMount() {
-    this._isMounted = true;
-  }
-  componentWillUnmount() {
-    this._isMounted = false;
+    console.log(`did mount: ${this.props.match.url}`)
   }
 
-  catalogs = Array<Catalog>();
+  componentWillUnmount() {
+  }*/
+
   async fetchData(path: string) {
+    console.log('fetch');
     this.catalogs = new Array<Catalog>();
+
+    if (this.props.match.params.path == null) {
+      this.catalogs = this.getTopCatalogs();
+    } else {
 
       //try {
       const res = await axios.get(url + path, {
@@ -44,7 +57,9 @@ class CatalogPage extends React.Component<PageProps> {
       });
       const data = JSON.parse(new Buffer(res.data).toString());
       this.catalogs = data.results as [Catalog];
+    }
     
+    this.setState({catalogs: this.catalogs});
       return true;
 
     /*data..forEach((element) {
@@ -54,6 +69,22 @@ class CatalogPage extends React.Component<PageProps> {
     fetchFail = true;
   }*/
   }
+  
+
+getTopCatalogs() {
+  let catalogs = Array<Catalog>();
+    Object.keys(Globals.topCatalogs).forEach((key) => {
+    const catalog: Catalog = {
+      n: key,
+      nodeType: null,
+      work: null,
+      label: Globals.topCatalogs[key],
+      file: null,
+    };
+    catalogs.push(catalog);
+  });
+  return catalogs;
+}
 
   works = Array<Work>();
   async fetchWork(path: string) {
@@ -78,15 +109,14 @@ class CatalogPage extends React.Component<PageProps> {
 
   render() {
     let rows = Array<object>();
-    this.props.catalogs.forEach((catalog, index) => {
+    this.state.catalogs.forEach((catalog, index) => {
       //if (catalog.nodeType == 'html')
       let routeLink = '';
       if (catalog.work == null) {
-        routeLink = `${this.props.match.url}/${catalog.n}`;
+        routeLink = `/catalog/${catalog.n}`;
         rows.push(
           <IonItem key={`${catalog.n}item` + index} button={true} onClick={async event => {
             event.preventDefault();
-            await this.fetchData(catalog.n);
            this.props.history.push(routeLink);
             }}>
             <a><IonLabel key={`${catalog.n}label` + index}>            
@@ -102,19 +132,16 @@ class CatalogPage extends React.Component<PageProps> {
             await this.fetchWork(catalog.work);
            this.props.history.push(routeLink);
             }}>
-            <a><IonLabel key={`${catalog.n}label` + index}>            
+            <IonLabel key={`${catalog.n}label` + index}>
             {catalog.label}
-            </IonLabel></a>
+            </IonLabel>
           </IonItem>
         );
       }
     });
+    console.log(`${this.props.match.url} render`)
     return (
       <>
-        <IonRouterOutlet>
-          <Route path={`${this.props.match.url}/:path`} render={props => <CatalogPage {...props} catalogs={this.catalogs} />} exact={true} />
-          <Route path={`${this.props.match.url}/work/:path`} render={props => <WorkPage {...props} works={this.works} />} exact={true} />
-        </IonRouterOutlet>
         <IonPage>
           <IonHeader>
             <IonToolbar>
@@ -143,6 +170,7 @@ const mapStateToProps = (state /*, ownProps*/) => {
 
 const mapDispatchToProps = {};
 
+const CatalogPage = withIonLifeCycle(_CatalogPage);
 /*
 export default connect(
   mapStateToProps,
