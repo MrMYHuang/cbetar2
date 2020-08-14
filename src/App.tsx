@@ -41,14 +41,14 @@ import SettingsPage from './pages/SettingsPage';
 
 let store = getSavedStore();
 class DebugRouter extends IonReactRouter {
-  constructor(props){
+  constructor(props) {
     super(props);
-    console.log('initial history is: ', JSON.stringify(this.history, null,2))
-    this.history.listen((location, action)=>{
+    console.log('initial history is: ', JSON.stringify(this.history, null, 2))
+    this.history.listen((location, action) => {
       console.log(
         `The current URL is ${location.pathname}${location.search}${location.hash}`
       )
-      console.log(`The last navigation action was ${action}`, JSON.stringify(this.history, null,2));
+      console.log(`The last navigation action was ${action}`, JSON.stringify(this.history, null, 2));
     });
   }
 }
@@ -59,9 +59,10 @@ const App: React.FC = () => (
       <DebugRouter>
         <IonTabs>
           <IonRouterOutlet animated={false}>
-            <Route path="/:tab(catalog)" component={props => <CatalogPage {...props}  />} exact={true} />
-            <Route path="/:tab(catalog)/:path" component={props => <CatalogPage {...props}  />} exact={true} />
-            <Route path="/:tab(catalog)/work/:path" component={props => <WorkPage {...props}  />} exact={true} />
+            <Route path="/:tab(catalog)" component={props => <CatalogPage {...props} />} exact={true} />
+            <Route path="/:tab(catalog)/:path" component={props => <CatalogPage {...props} />} exact={true} />
+            <Route path="/:tab(catalog)/work/:path" component={props => <WorkPage {...props} />} exact={true} />
+            <Route path={`/:tab(catalog)/webview/:work/:path`} render={props => <WebViewPage {...props} />} exact={true} />
             <Route path="/bookmarks" component={WorkPage} exact={true} />
             <Route path="/settings" component={SettingsPage} />
           </IonRouterOutlet>
@@ -79,7 +80,7 @@ const App: React.FC = () => (
         </IonTabs>
       </DebugRouter>
     </IonApp>
-    </Provider>
+  </Provider>
 );
 
 export default App;
