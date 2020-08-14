@@ -6,9 +6,8 @@ import axios from 'axios';
 import './CatalogPage.css';
 import { Catalog } from '../models/Catalog';
 import Globals from '../Globals';
-import WorkPage from './WorkPage';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
-import { star, bookmark, arrowBack, home, search } from 'ionicons/icons';
+import { bookmark, arrowBack, home, search } from 'ionicons/icons';
 
 interface PageProps extends RouteComponentProps<{
   tab: string;
@@ -92,8 +91,8 @@ class _CatalogPage extends React.Component<PageProps> {
       val: new Bookmark({
         type: BookmarkType.CATALOG,
         uuid: this.props.match.params.path,
+        selectedText: 'abc',
         fileName: '',
-        selectedText: '',
         work: null,
       }),
     });

@@ -60,9 +60,9 @@ class _WorkPage extends React.Component<PageProps> {
           event.preventDefault();
           this.props.history.push(routeLink);
         }}>
-          <a><IonLabel key={`juanLabel` + i}>
+          <IonLabel key={`juanLabel` + i}>
             卷{juans[i]}
-          </IonLabel></a>
+          </IonLabel>
         </IonItem>
       );
     }
