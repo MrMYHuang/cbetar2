@@ -69,16 +69,17 @@ function getTopCatalogs() {
 }
 
 const App: React.FC = () => (
+  <Provider store={store}>
     <IonApp>
       <DebugRouter>
         <IonTabs>
           <IonRouterOutlet>
             <Route path="/:tab(catalog)" render={props => <CatalogPage {...props} catalogs={getTopCatalogs()} />} exact={true} />
-            <Route path="/tab2" component={WorkPage} exact={true} />
+            <Route path="/bookmarks" component={WorkPage} exact={true} />
             <Route path="/settings" component={SettingsPage} />
           </IonRouterOutlet>
           <IonTabBar slot="bottom">
-            <IonTabButton tab="tab1" href="/tab1">
+            <IonTabButton tab="catalog" href="/catalog">
               <IonIcon icon={book} />
             </IonTabButton>
             <IonTabButton tab="tab2" href="/tab2">
@@ -91,6 +92,7 @@ const App: React.FC = () => (
         </IonTabs>
       </DebugRouter>
     </IonApp>
+    </Provider>
 );
 
 export default App;

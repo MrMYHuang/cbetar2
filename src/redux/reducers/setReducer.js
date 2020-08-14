@@ -1,3 +1,5 @@
+import Globals from '../../Globals';
+
 // Used to store settings. They will be saved to file.
 export default function reducer(state = {
 }, action) {
@@ -7,6 +9,7 @@ export default function reducer(state = {
   newState[key] = val
   switch (action.type) {
     case "SET_KEY_VAL": {
+      localStorage.setItem(Globals.storeFile, JSON.stringify(newState));
       return newState
     }
   }

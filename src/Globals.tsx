@@ -1,5 +1,6 @@
 const apiVersion = 'v1.2';
 export default {
+    storeFile: 'Settings.json',
     fontSizeNorm: 24,
     fontSizeLarge: 48,
     apiVersion,
