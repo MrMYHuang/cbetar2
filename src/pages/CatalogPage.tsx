@@ -1,5 +1,5 @@
 import React from 'react';
-import { IonRouterOutlet, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonLabel, IonButton, IonBackButton, IonIcon, withIonLifeCycle } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonLabel, IonButton, IonBackButton, IonIcon, withIonLifeCycle } from '@ionic/react';
 import { RouteComponentProps, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import axios from 'axios';
@@ -8,6 +8,7 @@ import { Catalog } from '../models/Catalog';
 import Globals from '../Globals';
 import WorkPage from './WorkPage';
 import { Work } from '../models/Work';
+import { star, bookmark, arrowBack, home, search } from 'ionicons/icons';
 
 interface PageProps extends RouteComponentProps<{
   tab: string;
@@ -23,7 +24,7 @@ class _CatalogPage extends React.Component<PageProps> {
       catalogs: [],
     }
   }
-    
+
   catalogs = Array<Catalog>();
   ionViewWillEnter() {
     //console.log( 'view will enter' );
@@ -57,9 +58,9 @@ class _CatalogPage extends React.Component<PageProps> {
       const data = JSON.parse(new Buffer(res.data).toString());
       this.catalogs = data.results as [Catalog];
     }
-    
-    this.setState({catalogs: this.catalogs});
-      return true;
+
+    this.setState({ catalogs: this.catalogs });
+    return true;
 
     /*data..forEach((element) {
       catalogs.add(Catalog.fromJson(element));
@@ -68,22 +69,22 @@ class _CatalogPage extends React.Component<PageProps> {
     fetchFail = true;
   }*/
   }
-  
 
-getTopCatalogs() {
-  let catalogs = Array<Catalog>();
+
+  getTopCatalogs() {
+    let catalogs = Array<Catalog>();
     Object.keys(Globals.topCatalogs).forEach((key) => {
-    const catalog: Catalog = {
-      n: key,
-      nodeType: null,
-      work: null,
-      label: Globals.topCatalogs[key],
-      file: null,
-    };
-    catalogs.push(catalog);
-  });
-  return catalogs;
-}
+      const catalog: Catalog = {
+        n: key,
+        nodeType: null,
+        work: null,
+        label: Globals.topCatalogs[key],
+        file: null,
+      };
+      catalogs.push(catalog);
+    });
+    return catalogs;
+  }
 
   render() {
     let rows = Array<object>();
@@ -95,10 +96,10 @@ getTopCatalogs() {
         rows.push(
           <IonItem key={`${catalog.n}item` + index} button={true} onClick={async event => {
             event.preventDefault();
-           this.props.history.push(routeLink);
-            }}>
-            <a><IonLabel key={`${catalog.n}label` + index}>            
-            {catalog.label}
+            this.props.history.push(routeLink);
+          }}>
+            <a><IonLabel key={`${catalog.n}label` + index}>
+              {catalog.label}
             </IonLabel></a>
           </IonItem>
         );
@@ -107,10 +108,10 @@ getTopCatalogs() {
         rows.push(
           <IonItem key={`${catalog.n}item` + index} button={true} onClick={async event => {
             event.preventDefault();
-           this.props.history.push(routeLink);
-            }}>
+            this.props.history.push(routeLink);
+          }}>
             <IonLabel key={`${catalog.n}label` + index}>
-            {catalog.label}
+              {catalog.label}
             </IonLabel>
           </IonItem>
         );
@@ -118,23 +119,30 @@ getTopCatalogs() {
     });
     console.log(`${this.props.match.url} render`)
     return (
-      <>
-        <IonPage>
-          <IonHeader>
-            <IonToolbar>
-              <IonTitle>目錄</IonTitle>
-            </IonToolbar>
-          </IonHeader>
-          <IonContent>
-          <IonButton >
-              <IonBackButton defaultHref='/' text="Back" icon="add" />
-              </IonButton>
-            <IonList>
-              {rows}
-            </IonList>
-          </IonContent>
-        </IonPage>
-      </>
+      <IonPage>
+        <IonHeader>
+          <IonToolbar>
+            <IonTitle>目錄</IonTitle>
+            <IonButton fill="clear" slot='start'>
+              <IonBackButton icon={arrowBack} />
+            </IonButton>
+            <IonButton fill="clear" slot='end'>
+              <IonIcon icon={bookmark} slot='icon-only' />
+            </IonButton>
+            <IonButton fill="clear" slot='end'>
+              <IonIcon icon={home} slot='icon-only' />
+            </IonButton>
+            <IonButton fill="clear" slot='end'>
+              <IonIcon icon={search} slot='icon-only' />
+            </IonButton>
+          </IonToolbar>
+        </IonHeader>
+        <IonContent>
+          <IonList>
+            {rows}
+          </IonList>
+        </IonContent>
+      </IonPage>
     );
   }
 };
