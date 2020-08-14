@@ -1,6 +1,6 @@
 {
-  "short_name": "Ionic App",
-  "name": "My Ionic App",
+  "short_name": "電子佛典",
+  "name": "電子佛典PWA",
   "icons": [
     {
       "src": "assets/icon/favicon.png",
