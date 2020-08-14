@@ -7,7 +7,7 @@ import './CatalogPage.css';
 import { Catalog } from '../models/Catalog';
 import Globals from '../Globals';
 import WorkPage from './WorkPage';
-import { Work } from '../models/Work';
+import { Bookmark, BookmarkType } from '../models/Bookmark';
 import { star, bookmark, arrowBack, home, search } from 'ionicons/icons';
 
 interface PageProps extends RouteComponentProps<{
@@ -86,6 +86,24 @@ class _CatalogPage extends React.Component<PageProps> {
     return catalogs;
   }
 
+  addBookmarkHandler() {
+    this.props.dispatch({
+      type: "ADD_BOOKMARK",
+      val: new Bookmark({
+        type: BookmarkType.CATALOG,
+        uuid: this.props.match.params.path,
+        fileName: '',
+        selectedText: '',
+        work: null,
+      }),
+    });
+  }
+
+  get hasBookmark() {
+    return (this.props.bookmarks as [Bookmark]).find(
+            (e) => e.type == BookmarkType.CATALOG && e.uuid == this.props.match.params.path) != null;
+  }
+
   render() {
     let rows = Array<object>();
     this.state.catalogs.forEach((catalog, index) => {
@@ -126,7 +144,7 @@ class _CatalogPage extends React.Component<PageProps> {
             <IonButton fill="clear" slot='start'>
               <IonBackButton icon={arrowBack} />
             </IonButton>
-            <IonButton fill="clear" slot='end'>
+            <IonButton fill="clear" color={this.hasBookmark ? 'warning' : 'primary'} slot='end' onClick={e => this.addBookmarkHandler()}>
               <IonIcon icon={bookmark} slot='icon-only' />
             </IonButton>
             <IonButton fill="clear" slot='end'>
@@ -149,17 +167,14 @@ class _CatalogPage extends React.Component<PageProps> {
 
 const mapStateToProps = (state /*, ownProps*/) => {
   return {
-    counter: state.counter
+    bookmarks: state.settings.bookmarks,
   }
 };
 
-const mapDispatchToProps = {};
+//const mapDispatchToProps = {};
 
 const CatalogPage = withIonLifeCycle(_CatalogPage);
-/*
+
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
 )(CatalogPage);
-*/
-export default CatalogPage;

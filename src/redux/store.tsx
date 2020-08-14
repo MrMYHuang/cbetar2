@@ -21,8 +21,8 @@ export default function getSavedStore() {
     }
 
     // Setting default values.
-    var keys = ['fontSize', 'listFontSize', 'darkMode', 'showComments'];
-    var vals = [48, 48, 0, 0];
+    var keys = ['fontSize', 'listFontSize', 'darkMode', 'showComments', 'bookmarks'];
+    var vals = [48, 48, 0, 0, []];
     var { settings } = savedStore.getState();
     for (let k = 0; k < keys.length; k++) {
         // Set default value if null.

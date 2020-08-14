@@ -38,7 +38,7 @@ class SettingsPage extends React.Component<PageProps> {
                       type: "SET_KEY_VAL",
                       key: 'listFontSize',
                       val: e.currentTarget.value
-                    })
+                    });
                   }} />
                 </div>
               </div>
@@ -53,7 +53,7 @@ class SettingsPage extends React.Component<PageProps> {
                       type: "SET_KEY_VAL",
                       key: 'fontSize',
                       val: e.currentTarget.value
-                    })
+                    });
                   }} /></div>
               </div>
             </IonItem>
