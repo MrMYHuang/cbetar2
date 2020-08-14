@@ -1,6 +1,7 @@
 import React from 'react';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton } from '@ionic/react';
 import { RouteComponentProps, Route } from 'react-router-dom';
+import { connect } from 'react-redux';
 import * as uuid from 'uuid';
 import './WebViewPage.css';
 
@@ -49,6 +50,9 @@ class WebViewPage extends React.Component<PageProps> {
   render() {
     return (
       <IonPage>
+        <style dangerouslySetInnerHTML={{__html: `
+      .t, p { font-size: ${this.props.settings.fontSize}px }
+    `}} />
         <IonHeader>
           <IonToolbar>
             <IonTitle>{this.props.workTitle}</IonTitle>
@@ -67,4 +71,12 @@ class WebViewPage extends React.Component<PageProps> {
   }
 };
 
-export default WebViewPage;
+const mapStateToProps = (state /*, ownProps*/) => {
+  return {
+    settings: state.settings
+  }
+};
+
+export default connect(
+  mapStateToProps,
+)(WebViewPage);
