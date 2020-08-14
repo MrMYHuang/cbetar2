@@ -61,6 +61,7 @@ const App: React.FC = () => (
           <IonRouterOutlet animated={false}>
             <Route path="/:tab(catalog)" component={props => <CatalogPage {...props}  />} exact={true} />
             <Route path="/:tab(catalog)/:path" component={props => <CatalogPage {...props}  />} exact={true} />
+            <Route path="/:tab(catalog)/work/:path" component={props => <WorkPage {...props}  />} exact={true} />
             <Route path="/bookmarks" component={WorkPage} exact={true} />
             <Route path="/settings" component={SettingsPage} />
           </IonRouterOutlet>

@@ -16,12 +16,11 @@ interface PageProps extends RouteComponentProps<{
 }> { }
 
 const url = `${Globals.cbetaApiUrl}/catalog_entry?q=`;
-const urlWork = `${Globals.cbetaApiUrl}/works?work=`;
 class _CatalogPage extends React.Component<PageProps> {
   constructor(props) {
     super(props);
     this.state = {
-      catalogs: []
+      catalogs: [],
     }
   }
     
@@ -86,27 +85,6 @@ getTopCatalogs() {
   return catalogs;
 }
 
-  works = Array<Work>();
-  async fetchWork(path: string) {
-    this.works = new Array<Work>();
-
-      //try {
-      const res = await axios.get(urlWork + path, {
-        responseType: 'arraybuffer',
-      });
-      const data = JSON.parse(new Buffer(res.data).toString());
-      this.works = data.results as [Work];
-    
-      return true;
-
-    /*data..forEach((element) {
-      works.add(Work.fromJson(element));
-    });
-  } catch (e) {
-    fetchFail = true;
-  }*/
-  }
-
   render() {
     let rows = Array<object>();
     this.state.catalogs.forEach((catalog, index) => {
@@ -125,11 +103,10 @@ getTopCatalogs() {
           </IonItem>
         );
       } else {
-        routeLink = `${this.props.match.url}/work/${catalog.work}`;
+        routeLink = `/catalog/work/${catalog.work}`;
         rows.push(
           <IonItem key={`${catalog.n}item` + index} button={true} onClick={async event => {
             event.preventDefault();
-            await this.fetchWork(catalog.work);
            this.props.history.push(routeLink);
             }}>
             <IonLabel key={`${catalog.n}label` + index}>

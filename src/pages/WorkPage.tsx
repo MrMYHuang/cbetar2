@@ -1,5 +1,5 @@
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonLabel, IonRouterOutlet } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonLabel, IonRouterOutlet, withIonLifeCycle } from '@ionic/react';
 import { RouteComponentProps, Route } from 'react-router-dom';
 import axios from 'axios';
 import './WorkPage.css';
@@ -13,7 +13,38 @@ interface PageProps extends RouteComponentProps<{
 }> { }
 
 const url = `${Globals.cbetaApiUrl}/juans?edition=CBETA`;
-class WorkPage extends React.Component<PageProps> {
+const urlWork = `${Globals.cbetaApiUrl}/works?work=`;
+class _WorkPage extends React.Component<PageProps> {
+  constructor(props) {
+    super(props);
+    this.state = {
+      work: null,
+    }
+  }
+
+  ionViewWillEnter() {
+    console.log( 'view will enter' );
+    this.fetchWork(this.props.match.params.path);
+  }
+
+  async fetchWork(path: string) {
+      //try {
+      const res = await axios.get(urlWork + path, {
+        responseType: 'arraybuffer',
+      });
+      const data = JSON.parse(new Buffer(res.data).toString());
+      const works = data.results as [Work];
+    
+      this.setState({work: works[0]});
+      return true;
+
+    /*data..forEach((element) {
+      works.add(Work.fromJson(element));
+    });
+  } catch (e) {
+    fetchFail = true;
+  }*/
+  }
 
   htmlStr = '';
   async fetchData(path: string) {
@@ -34,10 +65,13 @@ class WorkPage extends React.Component<PageProps> {
   }*/
   }
 
-  work = this.props.works[0] as Work;
+  //work = this.works[0] as Work;
   render() {
+    if (this.state.work == null) {
+      return <IonPage></IonPage>
+    }
     let rows = Array<object>();
-    let juans = this.work.juan_list.split(',');
+    let juans = this.state.work.juan_list.split(',');
     for (let i = 0; i < juans.length; i++) {
       //if (work.nodeType == 'html')
       let routeLink = `${this.props.match.url}/webview/${juans[i]}`;
@@ -61,7 +95,7 @@ class WorkPage extends React.Component<PageProps> {
         <IonPage>
           <IonHeader>
             <IonToolbar>
-              <IonTitle>{this.work.title}</IonTitle>
+              <IonTitle>{this.state.work.title}</IonTitle>
             </IonToolbar>
           </IonHeader>
           <IonContent>
@@ -75,4 +109,5 @@ class WorkPage extends React.Component<PageProps> {
   }
 };
 
+const WorkPage = withIonLifeCycle(_WorkPage);
 export default WorkPage;
