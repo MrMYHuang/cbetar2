@@ -13,6 +13,5 @@ ion-icon {
 }
 
 .contentBlock {
-    margin-left: 10px;
     flex-grow: 1;
 }

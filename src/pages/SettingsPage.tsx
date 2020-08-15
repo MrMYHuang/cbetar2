@@ -1,9 +1,9 @@
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonRange, IonIcon } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonRange, IonIcon, IonLabel, IonToggle } from '@ionic/react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import Globals from '../Globals';
-import { star, helpCircle, text } from 'ionicons/icons';
+import { star, helpCircle, text, moon } from 'ionicons/icons';
 import './SettingsPage.css';
 import PackageInfos from '../../package.json';
 
@@ -31,10 +31,18 @@ class SettingsPage extends React.Component<PageProps> {
         <IonContent>
           <IonList>
             <IonItem>
-              <div><IonIcon icon={text}></IonIcon></div>
+              <IonIcon icon={moon} slot='start' />
+              <IonLabel>暗色模式</IonLabel>
+              <IonToggle slot='end' value={(this.props as any).darkMode} onIonChange={e => {
+                const isChecked = e.detail.checked;
+                document.body.classList.toggle('dark', isChecked);
+              }} />
+            </IonItem>
+            <IonItem>
+              <IonIcon icon={text} slot='start' />
               <div className="contentBlock">
                 <div style={{ flexDirection: "column" }}>
-                  <div>列表字型大小: {(this.props as any).settings.listFontSize}</div>
+                  <IonLabel>列表字型大小: {(this.props as any).settings.listFontSize}</IonLabel>
                   <IonRange min={10} max={64} value={(this.props as any).settings.listFontSize} onIonChange={e => {
                     (this.props as any).dispatch({
                       type: "SET_KEY_VAL",
@@ -46,29 +54,30 @@ class SettingsPage extends React.Component<PageProps> {
               </div>
             </IonItem>
             <IonItem>
-              <div><IonIcon icon={text}></IonIcon></div>
+              <IonIcon icon={text} slot='start' />
               <div className="contentBlock">
                 <div style={{ flexDirection: "column" }}>
-                  <div>經文字型大小: {(this.props as any).settings.fontSize}</div>
+                  <IonLabel>經文字型大小: {(this.props as any).settings.fontSize}</IonLabel>
                   <IonRange min={10} max={64} value={(this.props as any).settings.fontSize} onIonChange={e => {
                     (this.props as any).dispatch({
                       type: "SET_KEY_VAL",
                       key: 'fontSize',
                       val: (e.currentTarget as any).value
                     });
-                  }} /></div>
+                  }} />
+                </div>
               </div>
             </IonItem>
             <IonItem>
-              <div><IonIcon icon={star}></IonIcon></div>
-              <div className="contentBlock">
-                <div>特色</div>
-                <div>搜尋經文、書籤功能、離線瀏覽、暗色主題、字型調整。</div>
+              <IonIcon icon={star} slot='start' />
+              <div>
+                <IonLabel>特色</IonLabel>
+                <IonLabel>搜尋經文、書籤功能、離線瀏覽、暗色模式、字型調整。</IonLabel>
               </div>
             </IonItem>
-            <IonItem style={{ alignItems: "start" }}>
-              <div><IonIcon icon={helpCircle}></IonIcon></div>
-              <div className="contentBlock">
+            <IonItem>
+              <IonIcon icon={helpCircle} slot='start' />
+              <div>
                 <div>關於</div>
                 <div>程式版本: {PackageInfos.version}</div>
                 <div>CBETA API版本: {Globals.apiVersion}</div>
@@ -87,7 +96,8 @@ class SettingsPage extends React.Component<PageProps> {
 
 const mapStateToProps = (state: any /*, ownProps*/) => {
   return {
-    settings: state.settings
+    settings: state.settings,
+    darkMode: state.settings.darkMode
   }
 };
 

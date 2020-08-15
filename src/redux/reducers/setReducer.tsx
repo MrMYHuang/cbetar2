@@ -35,7 +35,7 @@ export default function reducer(state = {
       if (Object.keys(newSettings).length === 0) {
         // Setting default values.
         var keys = ['fontSize', 'listFontSize', 'darkMode', 'showComments', 'bookmarks'];
-        var vals = [32, 24, 0, 0, []];
+        var vals = [32, 24, 1, 0, []];
         newSettings = {};
         for (let k = 0; k < keys.length; k++) {
           newSettings[keys[k]] = vals[k];
