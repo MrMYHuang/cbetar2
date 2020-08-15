@@ -4,7 +4,7 @@ export default {
     fontSizeNorm: 24,
     fontSizeLarge: 48,
     apiVersion,
-    cbetaApiUrl: `http://cbdata.dila.edu.tw/${apiVersion}`,
+    cbetaApiUrl: `https://cbdata.dila.edu.tw/${apiVersion}`,
     topCatalogs: {
         "CBETA": "CBETA 部類",
         "others": "歷代藏經補輯",
