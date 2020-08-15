@@ -80,6 +80,7 @@ class _BookmarkPage extends React.Component<PageProps> {
 const mapStateToProps = (state /*, ownProps*/) => {
   return {
     bookmarks: state.settings.bookmarks,
+    listFontSize: state.settings.listFontSize,
   }
 };
 
