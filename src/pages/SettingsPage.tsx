@@ -31,7 +31,7 @@ class SettingsPage extends React.Component<PageProps> {
           <IonList>
             <IonItem>
               <div><IonIcon icon={text}></IonIcon></div>
-              <div class="contentBlock">
+              <div className="contentBlock">
                 <div style={{ flexDirection: "column" }}>
                   <div>列表字型大小: {this.props.settings.listFontSize}</div>
                   <IonRange min={10} max={64} value={this.props.settings.listFontSize} onIonChange={e => {

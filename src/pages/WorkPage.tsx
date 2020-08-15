@@ -50,7 +50,7 @@ class _WorkPage extends React.Component<PageProps> {
   addBookmarkHandler() {
     this.props.dispatch({
       type: "ADD_BOOKMARK",
-      val: new Bookmark({
+      bookmark: new Bookmark({
         type: BookmarkType.WORK,
         uuid: this.props.match.params.path,
         selectedText: this.props.location.state.label || this.props.match.params.path,
@@ -82,7 +82,12 @@ class _WorkPage extends React.Component<PageProps> {
       rows.push(
         <IonItem key={`juanItem` + i} button={true} onClick={async event => {
           event.preventDefault();
-          this.props.history.push(routeLink);
+          this.props.history.push({
+            pathname: routeLink,
+            state: {
+              label: work.title,
+            },
+          });
         }}>
           <IonLabel style={{ fontSize: this.props.listFontSize }} key={`juanLabel` + i}>
             卷{juans[i]}

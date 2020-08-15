@@ -31,19 +31,29 @@ class _BookmarkPage extends React.Component<PageProps> {
     let rows = Array<object>();
     let routeLink = ``;
     bookmarks.forEach((bookmark, i) => {
+      let label = `${bookmark.selectedText}`;
       switch (bookmark.type) {
         case BookmarkType.CATALOG:
           routeLink = `/catalog/${bookmark.uuid}`; break;
         case BookmarkType.WORK:
           routeLink = `/catalog/work/${bookmark.uuid}`; break;
+        case BookmarkType.JUAN:
+          label = `${bookmark.work?.title}第${bookmark.work?.juan}卷 - ${label}`;
+          routeLink = `/catalog/webview/${bookmark.work}/${bookmark.fileName}`; break;
       }
       rows.push(
         <IonItem key={`bookmarkItem_` + i} button={true} onClick={async event => {
           event.preventDefault();
-          this.props.history.push(routeLink);
+          this.props.history.push({
+            pathname: routeLink,
+            state: {
+              uuid: bookmark.uuid,
+              label: bookmark.work,
+            },
+          });
         }}>
-          <IonLabel key={`bookmarkItemLabel_` + i}>
-            {bookmark.selectedText}
+          <IonLabel style={{ fontSize: this.props.listFontSize }} key={`bookmarkItemLabel_` + i}>
+            {label}
           </IonLabel>
         </IonItem>
       );

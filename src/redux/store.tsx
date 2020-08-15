@@ -14,25 +14,10 @@ var savedStore: Store;
 export default function getSavedStore() {
     var savedSettingsStr = localStorage.getItem(Globals.storeFile);
     if (savedSettingsStr != null) {
-        savedStore = createStore(reducer, { settings: JSON.parse(savedSettingsStr) });//, middleware)
+        savedStore = createStore(reducer, JSON.parse(savedSettingsStr));//, middleware)
     }
     else {
         savedStore = createStore(reducer);//, middleware)
-    }
-
-    // Setting default values.
-    var keys = ['fontSize', 'listFontSize', 'darkMode', 'showComments', 'bookmarks'];
-    var vals = [32, 24, 0, 0, []];
-    var { settings } = savedStore.getState();
-    for (let k = 0; k < keys.length; k++) {
-        // Set default value if null.
-        if (settings[keys[k]] == null) {
-            savedStore.dispatch({
-                type: "SET_KEY_VAL",
-                key: keys[k],
-                val: vals[k]
-            });
-        }
     }
 
     return savedStore;

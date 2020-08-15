@@ -93,7 +93,7 @@ class _CatalogPage extends React.Component<PageProps> {
   addBookmarkHandler() {
     this.props.dispatch({
       type: "ADD_BOOKMARK",
-      val: new Bookmark({
+      bookmark: new Bookmark({
         type: BookmarkType.CATALOG,
         uuid: this.props.match.params.path,
         selectedText: this.props.location.state.label || this.props.match.params.path,
@@ -111,7 +111,7 @@ class _CatalogPage extends React.Component<PageProps> {
   }
 
   get hasBookmark() {
-    return (this.props.bookmarks as [Bookmark]).find(
+    return (this.props.bookmarks as [Bookmark])?.find(
       (e) => e.type == BookmarkType.CATALOG && e.uuid == this.props.match.params.path) != null;
   }
 

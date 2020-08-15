@@ -19,5 +19,6 @@ export class Bookmark {
         this.uuid = json.uuid;
         this.work = json.work;
         this.selectedText = json.selectedText;
+        this.fileName = json.fileName;
     }
 }
