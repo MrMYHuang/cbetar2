@@ -22,6 +22,10 @@ class _BookmarkPage extends React.Component<PageProps> {
     //console.log( 'view will enter' );
   }
 
+  get hasBookmark() {
+    return ((this.props as any).bookmarks as [Bookmark]).length > 0;
+  }
+
   render() {
     let bookmarks = (this.props as any).bookmarks as [Bookmark];
     let rows = Array<object>();
@@ -61,10 +65,8 @@ class _BookmarkPage extends React.Component<PageProps> {
             <IonTitle>書籤</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <IonContent>
-          <IonList>
-            {rows}
-          </IonList>
+        <IonContent>          
+            {this.hasBookmark ? <IonList>{rows}</IonList> : <IonLabel style={{fontSize: 48, textAlign: 'center', height: '100%', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>無書籤</IonLabel>}
         </IonContent>
       </IonPage>
     );
