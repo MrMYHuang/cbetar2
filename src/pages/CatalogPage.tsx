@@ -150,7 +150,7 @@ class _CatalogPage extends React.Component<PageProps> {
         <IonHeader>
           <IonToolbar>
             <IonTitle>目錄</IonTitle>
-            <IonButton fill="clear" slot='start'>
+            <IonButton hidden={this.isTopCatalog} fill="clear" slot='start'>
               <IonBackButton icon={arrowBack} />
             </IonButton>
             <IonButton hidden={this.isTopCatalog} fill="clear" color={this.hasBookmark ? 'warning' : 'primary'} slot='end' onClick={e => this.hasBookmark ? this.delBookmarkHandler() : this.addBookmarkHandler()}>

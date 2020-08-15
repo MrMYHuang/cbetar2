@@ -5,6 +5,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import Globals from '../Globals';
 import { star, helpCircle, text } from 'ionicons/icons';
 import './SettingsPage.css';
+import PackageInfos from '../../package.json';
 
 interface PageProps extends RouteComponentProps<{
   tab: string;
@@ -68,12 +69,12 @@ class SettingsPage extends React.Component<PageProps> {
               <div><IonIcon icon={helpCircle}></IonIcon></div>
               <div class="contentBlock">
                 <div>關於</div>
-                <div></div>
+                <div>程式版本: {PackageInfos.version}</div>
                 <div>CBETA API版本: {Globals.apiVersion}</div>
                 <div>作者: Meng-Yuan Huang</div>
-                <div><a href="mailto:myh@live.com">myh@live.com</a></div>
-                <div><a href="https://github.com/MrMYHuang/cbetar2">操作說明與開放原始碼</a></div>
-                <div><a href="http://cbdata.dila.edu.tw/v1.2/">CBETA API參考文件</a></div>
+                <div><a href="mailto:myh@live.com" target="__new">myh@live.com</a></div>
+                <div><a href="https://github.com/MrMYHuang/cbetar2" target="__new">操作說明與開放原始碼</a></div>
+                <div><a href="http://cbdata.dila.edu.tw/v1.2/" target="__new">CBETA API參考文件</a></div>
               </div>
             </IonItem>
           </IonList>
