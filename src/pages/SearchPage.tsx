@@ -3,85 +3,84 @@ import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem,
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import axios from 'axios';
-import './SearchPage.css';
 import { Work } from '../models/Work';
 import Globals from '../Globals';
+import { key } from 'ionicons/icons';
+import { Search } from '../models/Search';
 
 interface PageProps extends RouteComponentProps<{
   tab: string;
-  path: string;
+  keyword: string;
 }> { }
 
-const urlWork = `${Globals.cbetaApiUrl}/works?work=`;
+const searchUrl = `${Globals.cbetaApiUrl}/toc?q=`;
 class _SearchPage extends React.Component<PageProps> {
   constructor(props) {
     super(props);
     this.state = {
-      work: null,
+      searches: [],
     }
   }
 
   ionViewWillEnter() {
     //console.log( 'view will enter' );
-    this.fetchWork(this.props.match.params.path);
+    this.search(this.props.match.params.keyword);
   }
 
-  async fetchWork(path: string) {
-      //try {
-      const res = await axios.get(urlWork + path, {
+  async search(keyword: string) {
+    try {
+      const res = await axios.get(searchUrl + keyword, {
         responseType: 'arraybuffer',
       });
       const data = JSON.parse(new Buffer(res.data).toString());
-      const works = data.results as [Work];
-    
-      this.setState({work: works[0]});
-      return true;
+      const searches = data.results as [Search];
 
-    /*data..forEach((element) {
-      works.add(Work.fromJson(element));
-    });
-  } catch (e) {
-    fetchFail = true;
-  }*/
+      this.setState({ searches: searches });
+      return true;
+    } catch (err) {
+
+    }
   }
 
-  //work = this.works[0] as Work;
-  render() {
-    let work = this.state.work as Work
-    if (work == null) {
-      return <IonPage></IonPage>
-    }
+  getRows() {
     let rows = Array<object>();
-    let juans = work.juan_list.split(',');
-    for (let i = 0; i < juans.length; i++) {
-      //if (work.nodeType == 'html')
-      let routeLink = `/catalog/webview/${work.work}/${juans[i]}`;
+    const searches = this.state.searches as [Search];
+    searches.forEach((search, i) => {
+      const isCatalog = search.type == 'catalog';
+      let label = isCatalog ? search.label : `${search.title}\n作者:${search.creators}`;
+      let routeLink = `/${this.props.match.params.tab}` + (isCatalog ? `/${search.n}` : `/work/${search.work}`);
       rows.push(
-        <IonItem key={`juanItem` + i} button={true} onClick={async event => {
+        <IonItem key={`searchItem_` + i} button={true} onClick={async event => {
           event.preventDefault();
-          this.props.history.push(routeLink);
+          this.props.history.push({
+            pathname: routeLink,
+            state: { label: search.label },
+          });
         }}>
-          <IonLabel key={`juanLabel` + i}>
-            卷{juans[i]}
+          <IonLabel style={{ fontSize: this.props.listFontSize }} key={`searchLabel_` + i}>
+            {label}
           </IonLabel>
         </IonItem>
       );
-    }
+    });
+    return rows;
+  }
+
+  render() {
+    let rows = this.getRows();
     return (
-      <>
-        <IonPage>
-          <IonHeader>
-            <IonToolbar>
-              <IonTitle>{this.state.work.title}</IonTitle>
-            </IonToolbar>
-          </IonHeader>
-          <IonContent>
-            <IonList>
-              {rows}
-            </IonList>
-          </IonContent>
-        </IonPage>
-      </>
+      <IonPage>
+        <IonHeader>
+          <IonToolbar>
+            <IonTitle>搜尋 - {this.props.match.params.keyword}</IonTitle>
+          </IonToolbar>
+        </IonHeader>
+        <IonContent>
+          <IonList>
+            {rows}
+          </IonList>
+        </IonContent>
+      </IonPage>
     );
   }
 };

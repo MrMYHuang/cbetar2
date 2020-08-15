@@ -6,10 +6,10 @@ export class Catalog {
     file: string | null | undefined;
 
     constructor(json) {
-        this.n = json.n
-        this.nodeType = json.node_type
-        this.label = json.label
-        this.work = json.work
-        this.file = json.file
+        this.n = json.n;
+        this.nodeType = json.node_type;
+        this.label = json.label;
+        this.work = json.work;
+        this.file = json.file;
     }
 }

@@ -171,9 +171,10 @@ class _CatalogPage extends React.Component<PageProps> {
             searchCancel={() =>
               this.setState({showSearchAlert: false})
             }
-            searchOk={() =>
-              this.setState({showSearchAlert: false})
-            }
+            searchOk={(keyword: string) => {
+              this.props.history.push(`/catalog/search/${keyword}`);
+              this.setState({showSearchAlert: false});
+            }}
           />
         </IonContent>
       </IonPage>

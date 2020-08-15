@@ -27,15 +27,15 @@ class _WorkPage extends React.Component<PageProps> {
   }
 
   async fetchWork(path: string) {
-      //try {
-      const res = await axios.get(urlWork + path, {
-        responseType: 'arraybuffer',
-      });
-      const data = JSON.parse(new Buffer(res.data).toString());
-      const works = data.results as [Work];
-    
-      this.setState({work: works[0]});
-      return true;
+    //try {
+    const res = await axios.get(urlWork + path, {
+      responseType: 'arraybuffer',
+    });
+    const data = JSON.parse(new Buffer(res.data).toString());
+    const works = data.results as [Work];
+
+    this.setState({ work: works[0] });
+    return true;
 
     /*data..forEach((element) {
       works.add(Work.fromJson(element));
@@ -57,7 +57,7 @@ class _WorkPage extends React.Component<PageProps> {
           event.preventDefault();
           this.props.history.push(routeLink);
         }}>
-          <IonLabel style={{fontSize: this.props.listFontSize}} key={`juanLabel` + i}>
+          <IonLabel style={{ fontSize: this.props.listFontSize }} key={`juanLabel` + i}>
             卷{juans[i]}
           </IonLabel>
         </IonItem>
@@ -73,22 +73,20 @@ class _WorkPage extends React.Component<PageProps> {
       return <IonPage></IonPage>
     }
 
-    let rows = this.getRows();    
+    let rows = this.getRows();
     return (
-      <>
-        <IonPage>
-          <IonHeader>
-            <IonToolbar>
-              <IonTitle>{this.state.work.title}</IonTitle>
-            </IonToolbar>
-          </IonHeader>
-          <IonContent>
-            <IonList>
-              {rows}
-            </IonList>
-          </IonContent>
-        </IonPage>
-      </>
+      <IonPage>
+        <IonHeader>
+          <IonToolbar>
+            <IonTitle>{this.state.work.title}</IonTitle>
+          </IonToolbar>
+        </IonHeader>
+        <IonContent>
+          <IonList>
+            {rows}
+          </IonList>
+        </IonContent>
+      </IonPage>
     );
   }
 };

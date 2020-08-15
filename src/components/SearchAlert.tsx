@@ -1,7 +1,8 @@
 import React from 'react';
 import { IonAlert } from '@ionic/react';
+import { RouteComponentProps } from 'react-router-dom';
 
-class SearchAlert extends React.Component {
+class SearchAlert extends React.Component<RouteComponentProps> {
   constructor(props) {
     super(props);
     this.state = {
@@ -31,7 +32,9 @@ class SearchAlert extends React.Component {
         {
           text: '確定',
           cssClass: 'primary',
-          handler: () => this.props.searchOk(),
+          handler: (value) => {
+            this.props.searchOk(value.name0);
+          },
         }
       ]}
     />
