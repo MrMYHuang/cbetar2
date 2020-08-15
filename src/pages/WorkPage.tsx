@@ -48,12 +48,14 @@ class _WorkPage extends React.Component<PageProps> {
   }
 
   addBookmarkHandler() {
+    const state = this.props.location.state as any;
+
     (this.props as any).dispatch({
       type: "ADD_BOOKMARK",
       bookmark: new Bookmark({
         type: BookmarkType.WORK,
         uuid: this.props.match.params.path,
-        selectedText: (this.props.location.state as any).label || this.props.match.params.path,
+        selectedText: state ? state.label : this.props.match.params.path,
         fileName: '',
         work: null,
       }),

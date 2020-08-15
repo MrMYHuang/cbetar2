@@ -43,7 +43,8 @@ class _WebViewPage extends React.Component<PageProps> {
 
   async fetchData(juan: string) {
     let htmlStr = '';
-    if ((this.props.location.state as any).uuid !== null && (this.props.location.state as any).uuid !== undefined) {
+    const state = this.props.location.state as any;
+    if ((state ? state.uuid : state) !== null && (state ? state.uuid : state) !== undefined) {
       htmlStr = localStorage.getItem(this.bookmark?.fileName!)!;
     } else {
       //try {
@@ -76,6 +77,7 @@ class _WebViewPage extends React.Component<PageProps> {
 
         const docBody = document.getElementById('cbetarWebView')?.innerHTML;
 
+        const state = this.props.location.state as any;
         (this.props as any).dispatch({
           type: "ADD_BOOKMARK",
           htmlStr: docBody,
@@ -86,12 +88,12 @@ class _WebViewPage extends React.Component<PageProps> {
             fileName: `${this.props.match.params.work}_juan${this.props.match.params.path}.html`,
             work: new Work({
               juan: this.props.match.params.path,
-              title: (this.props.location.state as any).label,
+              title: (state ? state.label : this.props.match.params.work),
               work: this.props.match.params.work,
             }),
           }),
         });
-        (this.props.location.state as any).uuid = uuidStr;
+        state && (state.uuid = uuidStr);
         return;
       }
     }
@@ -101,7 +103,12 @@ class _WebViewPage extends React.Component<PageProps> {
   }
 
   delBookmarkHandler() {
-    let uuidStr = (this.props.location.state as any).uuid;
+    const state = this.props.location.state as any;
+    if (!state) {
+      return;
+    }
+
+    let uuidStr = state.uuid;
     var oldBookmark = document.getElementById(bookmarkPrefix + uuidStr);
     if (oldBookmark) {
       oldBookmark.id = '';
@@ -114,8 +121,9 @@ class _WebViewPage extends React.Component<PageProps> {
   }
 
   get bookmark() {
+    const state = this.props.location.state as any;
     return ((this.props as any).bookmarks as [Bookmark]).find(
-      (e) => e.type === BookmarkType.JUAN && e.uuid === (this.props.location.state as any).uuid);
+      (e) => e.type === BookmarkType.JUAN && e.uuid === (state ? state.uuid : null));
   }
 
   get hasBookmark() {
