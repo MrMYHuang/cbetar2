@@ -154,7 +154,7 @@ class _WebViewPage extends React.Component<PageProps> {
           </IonToolbar>
         </IonHeader>
         <IonContent>
-          <div id='cbetarWebView' style={{ userSelect: "text" }} dangerouslySetInnerHTML={{ __html: (this.state as any).htmlStr }}></div>
+          <div id='cbetarWebView' style={{ userSelect: "text", WebkitUserSelect: "text" }} dangerouslySetInnerHTML={{ __html: (this.state as any).htmlStr }}></div>
         </IonContent>
       </IonPage>
     );
