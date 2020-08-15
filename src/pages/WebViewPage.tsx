@@ -1,6 +1,6 @@
 import React from 'react';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton, withIonLifeCycle, IonBackButton, IonIcon } from '@ionic/react';
-import { RouteComponentProps, Route } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as uuid from 'uuid';
 import axios from 'axios';
@@ -10,13 +10,19 @@ import { bookmark, arrowBack, home, search } from 'ionicons/icons';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
 import { Work } from '../models/Work';
 
+const bookmarkPrefix = 'bookmark_';
+function scrollToBookmark(uuidStr: string) {
+  //console.log('Bookmark uuid: ' + bookmarkPrefix + uuid);
+  document.getElementById(bookmarkPrefix + uuidStr)!.scrollIntoView();
+}
+window.scrollToBookmark = scrollToBookmark;
+
 interface PageProps extends RouteComponentProps<{
   tab: string;
   work: string;
   path: string;
 }> { }
 
-const bookmarkPrefix = 'bookmark_';
 window.onload = function () {
   //SaveHtml.postMessage(JSON.stringify({status: 'loaded'}));
 }
@@ -67,11 +73,12 @@ class _WebViewPage extends React.Component<PageProps> {
       if (sel.rangeCount) {
         range = sel.getRangeAt(0);
         range.startContainer.parentElement.id = bookmarkPrefix + uuidStr;
-        var msg = JSON.stringify({ status: 'ok', selectedText: sel.toString(), html: document.body.outerHTML });
+
+        const docBody = document.getElementById('cbetarWebView')?.innerHTML;
 
         this.props.dispatch({
           type: "ADD_BOOKMARK",
-          htmlStr: document.body.outerHTML,
+          htmlStr: docBody,
           bookmark: new Bookmark({
             type: BookmarkType.JUAN,
             uuid: uuidStr,
@@ -104,11 +111,6 @@ class _WebViewPage extends React.Component<PageProps> {
         fileName: this.bookmark?.fileName,
       });
     }
-  }
-
-  scrollToBookmark(uuidStr: string) {
-    //console.log('Bookmark uuid: ' + bookmarkPrefix + uuid);
-    document.getElementById(bookmarkPrefix + uuidStr)!.scrollIntoView();
   }
 
   get bookmark() {
@@ -145,11 +147,11 @@ class _WebViewPage extends React.Component<PageProps> {
         </IonHeader>
         <IonContent>
           <div id='cbetarWebView' style={{ userSelect: "text" }} dangerouslySetInnerHTML={{ __html: this.state.htmlStr }}></div>
+          <script dangerouslySetInnerHTML={{
+            __html: `window.scrollToBookmark('${this.props.location.state ? this.props.location.state.uuid : ''}')`
+          }}>
+          </script>
         </IonContent>
-        <script dangerouslySetInnerHTML={{
-          __html: `scrollToBookmark(${this.props.location.state ? this.props.location.state.uuid : ''})`
-        }}>
-        </script>
       </IonPage>
     );
   }

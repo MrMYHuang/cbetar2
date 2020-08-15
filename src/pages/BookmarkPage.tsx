@@ -2,9 +2,7 @@ import React from 'react';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonLabel, withIonLifeCycle } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
-import axios from 'axios';
 import './WorkPage.css';
-import { Work } from '../models/Work';
 import Globals from '../Globals';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
 
@@ -13,7 +11,6 @@ interface PageProps extends RouteComponentProps<{
   path: string;
 }> { }
 
-const urlWork = `${Globals.cbetaApiUrl}/works?work=`;
 class _BookmarkPage extends React.Component<PageProps> {
   constructor(props) {
     super(props);

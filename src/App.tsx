@@ -3,7 +3,6 @@ import { Redirect, Route } from 'react-router-dom';
 import {
   IonApp,
   IonIcon,
-  IonLabel,
   IonRouterOutlet,
   IonTabBar,
   IonTabButton,
@@ -35,8 +34,6 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
-import Globals from './Globals';
-import { Catalog } from './models/Catalog';
 import SettingsPage from './pages/SettingsPage';
 import BookmarkPage from './pages/BookmarkPage';
 import SearchPage from './pages/SearchPage';

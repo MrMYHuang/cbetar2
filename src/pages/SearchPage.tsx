@@ -3,9 +3,7 @@ import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem,
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import axios from 'axios';
-import { Work } from '../models/Work';
 import Globals from '../Globals';
-import { key } from 'ionicons/icons';
 import { Search } from '../models/Search';
 
 interface PageProps extends RouteComponentProps<{
@@ -46,7 +44,7 @@ class _SearchPage extends React.Component<PageProps> {
     let rows = Array<object>();
     const searches = this.state.searches as [Search];
     searches.forEach((search, i) => {
-      const isCatalog = search.type == 'catalog';
+      const isCatalog = search.type === 'catalog';
       let label = isCatalog ? search.label : `${search.title}\n作者:${search.creators}`;
       let routeLink = `/${this.props.match.params.tab}` + (isCatalog ? `/${search.n}` : `/work/${search.work}`);
       rows.push(
