@@ -43,7 +43,7 @@ class _WebViewPage extends React.Component<PageProps> {
 
   async fetchData(juan: string) {
     let htmlStr = '';
-    if ((this.props.location.state as any).uuid !== null) {
+    if ((this.props.location.state as any).uuid !== null && (this.props.location.state as any).uuid !== undefined) {
       htmlStr = localStorage.getItem(this.bookmark?.fileName!)!;
     } else {
       //try {
