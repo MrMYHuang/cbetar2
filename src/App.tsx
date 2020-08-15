@@ -54,6 +54,10 @@ class DebugRouter extends IonReactRouter {
 }
 */
 
+// Apply the dark mode setting.
+const state = store.getState();
+document.body.classList.toggle('dark', state.settings.darkMode);
+
 const App: React.FC = () => (
   <Provider store={store}>
     <IonApp>

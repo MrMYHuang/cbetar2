@@ -19,8 +19,8 @@ class SettingsPage extends React.Component<PageProps> {
     super(props);
   }*/
 
-  uuidStr = '';
   render() {
+    console.log(this.props.darkMode)
     return (
       <IonPage>
         <IonHeader>
@@ -33,7 +33,7 @@ class SettingsPage extends React.Component<PageProps> {
             <IonItem>
               <IonIcon icon={moon} slot='start' />
               <IonLabel>暗色模式</IonLabel>
-              <IonToggle slot='end' value={(this.props as any).darkMode} onIonChange={e => {
+              <IonToggle slot='end' checked={(this.props as any).darkMode} onIonChange={e => {
                 const isChecked = e.detail.checked;
                 document.body.classList.toggle('dark', isChecked);
                 (this.props as any).dispatch({
