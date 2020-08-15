@@ -16,7 +16,7 @@ interface PageProps extends RouteComponentProps<{
 
 const urlWork = `${Globals.cbetaApiUrl}/works?work=`;
 class _WorkPage extends React.Component<PageProps> {
-  constructor(props) {
+  constructor(props: any) {
     super(props);
     this.state = {
       work: null,

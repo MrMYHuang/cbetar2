@@ -13,7 +13,7 @@ interface PageProps extends RouteComponentProps<{
 
 const searchUrl = `${Globals.cbetaApiUrl}/toc?q=`;
 class _SearchPage extends React.Component<PageProps> {
-  constructor(props) {
+  constructor(props: any) {
     super(props);
     this.state = {
       searches: [],

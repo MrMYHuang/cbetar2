@@ -11,7 +11,7 @@ interface PageProps extends RouteComponentProps<{
 }> { }
 
 class _BookmarkPage extends React.Component<PageProps> {
-  constructor(props) {
+  constructor(props: any) {
     super(props);
     this.state = {
       work: null,
@@ -71,7 +71,7 @@ class _BookmarkPage extends React.Component<PageProps> {
   }
 };
 
-const mapStateToProps = (state /*, ownProps*/) => {
+const mapStateToProps = (state: any /*, ownProps*/) => {
   return {
     bookmarks: state.settings.bookmarks,
     listFontSize: state.settings.listFontSize,

@@ -41,7 +41,7 @@ import SearchPage from './pages/SearchPage';
 let store = getSavedStore();
 /*
 class DebugRouter extends IonReactRouter {
-  constructor(props) {
+  constructor(props: any) {
     super(props);
     console.log('initial history is: ', JSON.stringify(this.history, null, 2))
     this.history.listen((location, action) => {
@@ -60,9 +60,9 @@ const App: React.FC = () => (
       <IonReactRouter>
         <IonTabs>
           <IonRouterOutlet animated={false}>
-            <Route path="/:tab(catalog)" component={props => <CatalogPage {...props} />} exact={true} />
-            <Route path="/:tab(catalog)/:path" component={props => <CatalogPage {...props} />} exact={true} />
-            <Route path="/:tab(catalog)/work/:path" component={props => <WorkPage {...props} />} exact={true} />
+            <Route path="/:tab(catalog)" component={(props: any) => <CatalogPage {...props} />} exact={true} />
+            <Route path="/:tab(catalog)/:path" component={(props: any) => <CatalogPage {...props} />} exact={true} />
+            <Route path="/:tab(catalog)/work/:path" component={(props: any) => <WorkPage {...props} />} exact={true} />
             <Route path={`/:tab(catalog)/webview/:work/:path`} render={props => <WebViewPage {...props} />} exact={true} />
             <Route path={`/:tab(catalog)/search/:keyword`} render={props => <SearchPage {...props} />} exact={true} />
             <Route path="/:tab(bookmarks)" component={BookmarkPage} exact={true} />

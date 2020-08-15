@@ -25,7 +25,7 @@ interface PageProps extends RouteComponentProps<{
 
 const url = `${Globals.cbetaApiUrl}/juans?edition=CBETA`;
 class _WebViewPage extends React.Component<PageProps> {
-  constructor(props) {
+  constructor(props: any) {
     super(props);
     this.state = {
       htmlStr: null,

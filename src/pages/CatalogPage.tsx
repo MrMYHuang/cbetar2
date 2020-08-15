@@ -18,7 +18,7 @@ interface PageProps extends RouteComponentProps<{
 
 const url = `${Globals.cbetaApiUrl}/catalog_entry?q=`;
 class _CatalogPage extends React.Component<PageProps> {
-  constructor(props) {
+  constructor(props: any) {
     super(props);
     this.state = {
       catalogs: [],

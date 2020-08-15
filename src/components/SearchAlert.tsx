@@ -3,7 +3,7 @@ import { IonAlert } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
 
 class SearchAlert extends React.Component<RouteComponentProps> {
-  constructor(props) {
+  constructor(props: any) {
     super(props);
     this.state = {
     };

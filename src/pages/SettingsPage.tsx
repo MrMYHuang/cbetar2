@@ -15,7 +15,7 @@ interface PageProps extends RouteComponentProps<{
 
 class SettingsPage extends React.Component<PageProps> {
   /*
-  constructor(props) {
+  constructor(props: any) {
     super(props);
   }*/
 
@@ -39,7 +39,7 @@ class SettingsPage extends React.Component<PageProps> {
                     this.props.dispatch({
                       type: "SET_KEY_VAL",
                       key: 'listFontSize',
-                      val: e.currentTarget.value
+                      val: e?.currentTarget?.value
                     });
                   }} />
                 </div>
@@ -63,7 +63,7 @@ class SettingsPage extends React.Component<PageProps> {
               <div><IonIcon icon={star}></IonIcon></div>
               <div class="contentBlock">
                 <div>特色</div>
-                <div>搜尋經文、書籤功能、離線瀏覽、暗色模式、字型調整。</div>
+                <div>搜尋經文、書籤功能、離線瀏覽、暗色主題、字型調整。</div>
               </div>
             </IonItem>
             <IonItem style={{ alignItems: "start" }}>
