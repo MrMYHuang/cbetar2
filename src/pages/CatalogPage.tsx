@@ -69,7 +69,6 @@ class _CatalogPage extends React.Component<PageProps> {
   }*/
   }
 
-
   getTopCatalogs() {
     let catalogs = Array<Catalog>();
     Object.keys(Globals.topCatalogs).forEach((key) => {
@@ -85,13 +84,17 @@ class _CatalogPage extends React.Component<PageProps> {
     return catalogs;
   }
 
+  get isTopCatalog() {
+    return this.props.match.params.path == null;
+  }
+
   addBookmarkHandler() {
     this.props.dispatch({
       type: "ADD_BOOKMARK",
       val: new Bookmark({
         type: BookmarkType.CATALOG,
         uuid: this.props.match.params.path,
-        selectedText: 'abc',
+        selectedText: this.props.location.state.label,
         fileName: '',
         work: null,
       }),
@@ -101,6 +104,10 @@ class _CatalogPage extends React.Component<PageProps> {
   get hasBookmark() {
     return (this.props.bookmarks as [Bookmark]).find(
             (e) => e.type == BookmarkType.CATALOG && e.uuid == this.props.match.params.path) != null;
+  }
+
+  goToHome() {
+    this.props.history.push('/catalog');
   }
 
   render() {
@@ -113,11 +120,14 @@ class _CatalogPage extends React.Component<PageProps> {
         rows.push(
           <IonItem key={`${catalog.n}item` + index} button={true} onClick={async event => {
             event.preventDefault();
-            this.props.history.push(routeLink);
+            this.props.history.push({
+              pathname: routeLink,
+              state: {label: catalog.label},
+            });
           }}>
-            <a><IonLabel key={`${catalog.n}label` + index}>
+            <IonLabel key={`${catalog.n}label` + index}>
               {catalog.label}
-            </IonLabel></a>
+            </IonLabel>
           </IonItem>
         );
       } else {
@@ -143,10 +153,10 @@ class _CatalogPage extends React.Component<PageProps> {
             <IonButton fill="clear" slot='start'>
               <IonBackButton icon={arrowBack} />
             </IonButton>
-            <IonButton fill="clear" color={this.hasBookmark ? 'warning' : 'primary'} slot='end' onClick={e => this.addBookmarkHandler()}>
+            <IonButton hidden={this.isTopCatalog} fill="clear" color={this.hasBookmark ? 'warning' : 'primary'} slot='end' onClick={e => this.addBookmarkHandler()}>
               <IonIcon icon={bookmark} slot='icon-only' />
             </IonButton>
-            <IonButton fill="clear" slot='end'>
+            <IonButton hidden={this.isTopCatalog} fill="clear" slot='end' onClick={e => this.goToHome()}>
               <IonIcon icon={home} slot='icon-only' />
             </IonButton>
             <IonButton fill="clear" slot='end'>

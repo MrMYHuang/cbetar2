@@ -12,7 +12,7 @@ export default function reducer(state = {
       break;
     }
     case "ADD_BOOKMARK": {
-      newState.bookmarks.push(action.val);
+      newState.bookmarks = [...newState.bookmarks, action.val];
       break;
     }
   }
