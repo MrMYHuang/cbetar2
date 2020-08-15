@@ -12,8 +12,8 @@ import { Work } from '../models/Work';
 
 const bookmarkPrefix = 'bookmark_';
 function scrollToBookmark(uuidStr: string) {
-  //console.log('Bookmark uuid: ' + bookmarkPrefix + uuid);
-  document.getElementById(bookmarkPrefix + uuidStr)!.scrollIntoView();
+  console.log('Bookmark uuid: ' + bookmarkPrefix + uuidStr);
+  document.getElementById(bookmarkPrefix + uuidStr)?.scrollIntoView();
 }
 window.scrollToBookmark = scrollToBookmark;
 
@@ -22,10 +22,6 @@ interface PageProps extends RouteComponentProps<{
   work: string;
   path: string;
 }> { }
-
-window.onload = function () {
-  //SaveHtml.postMessage(JSON.stringify({status: 'loaded'}));
-}
 
 const url = `${Globals.cbetaApiUrl}/juans?edition=CBETA`;
 class _WebViewPage extends React.Component<PageProps> {
@@ -39,6 +35,10 @@ class _WebViewPage extends React.Component<PageProps> {
   ionViewWillEnter() {
     //console.log( 'view will enter' );
     this.fetchData(this.props.match.params.path);
+  }
+
+  ionViewDidEnter() {
+    window.scrollToBookmark(this.props.location.state ? this.props.location.state.uuid : '');
   }
 
   async fetchData(juan: string) {
@@ -147,10 +147,6 @@ class _WebViewPage extends React.Component<PageProps> {
         </IonHeader>
         <IonContent>
           <div id='cbetarWebView' style={{ userSelect: "text" }} dangerouslySetInnerHTML={{ __html: this.state.htmlStr }}></div>
-          <script dangerouslySetInnerHTML={{
-            __html: `window.scrollToBookmark('${this.props.location.state ? this.props.location.state.uuid : ''}')`
-          }}>
-          </script>
         </IonContent>
       </IonPage>
     );
