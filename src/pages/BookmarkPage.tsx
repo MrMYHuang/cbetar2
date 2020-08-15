@@ -3,7 +3,6 @@ import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem,
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import './WorkPage.css';
-import Globals from '../Globals';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
 
 interface PageProps extends RouteComponentProps<{

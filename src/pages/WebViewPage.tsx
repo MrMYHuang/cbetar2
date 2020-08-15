@@ -115,7 +115,7 @@ class _WebViewPage extends React.Component<PageProps> {
 
   get bookmark() {
     return (this.props.bookmarks as [Bookmark]).find(
-      (e) => e.type == BookmarkType.JUAN && e.uuid == this.props.location.state?.uuid);
+      (e) => e.type === BookmarkType.JUAN && e.uuid === this.props.location.state?.uuid);
   }
 
   get hasBookmark() {

@@ -13,7 +13,7 @@ export default function reducer(state = {
       localStorage.setItem(Globals.storeFile, JSON.stringify({settings: newSettings}));
       break;
     case "ADD_BOOKMARK":
-      if (action.bookmark.fileName != null && action.bookmark.fileName != '') {
+      if (action.bookmark.fileName !== null && action.bookmark.fileName !== '') {
         localStorage.setItem(action.bookmark.fileName, action.htmlStr);
       }
       newSettings.bookmarks = [...newSettings.bookmarks, action.bookmark];
@@ -21,18 +21,18 @@ export default function reducer(state = {
       break;
     case "DEL_BOOKMARK":
       var bookmarksTemp = newSettings.bookmarks as [Bookmark];
-      const idxToDel = bookmarksTemp.findIndex((b) => { return b.uuid == action.uuid });
-      if (idxToDel != -1) {
+      const idxToDel = bookmarksTemp.findIndex((b) => { return b.uuid === action.uuid });
+      if (idxToDel !== -1) {
         bookmarksTemp.splice(idxToDel, 1);
       }
-      if (bookmarksTemp.find((b) => b.fileName == action.fileName) == null) {
+      if (bookmarksTemp.find((b) => b.fileName === action.fileName) == null) {
         localStorage.removeItem(action.fileName);
       }
       newSettings.bookmarks = [...bookmarksTemp];
       localStorage.setItem(Globals.storeFile, JSON.stringify({settings: newSettings}));
       break;
     default:
-      if (Object.keys(newSettings).length == 0) {
+      if (Object.keys(newSettings).length === 0) {
         // Setting default values.
         var keys = ['fontSize', 'listFontSize', 'darkMode', 'showComments', 'bookmarks'];
         var vals = [32, 24, 0, 0, []];

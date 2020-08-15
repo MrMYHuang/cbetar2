@@ -39,6 +39,7 @@ import BookmarkPage from './pages/BookmarkPage';
 import SearchPage from './pages/SearchPage';
 
 let store = getSavedStore();
+/*
 class DebugRouter extends IonReactRouter {
   constructor(props) {
     super(props);
@@ -51,11 +52,12 @@ class DebugRouter extends IonReactRouter {
     });
   }
 }
+*/
 
 const App: React.FC = () => (
   <Provider store={store}>
     <IonApp>
-      <DebugRouter>
+      <IonReactRouter>
         <IonTabs>
           <IonRouterOutlet animated={false}>
             <Route path="/:tab(catalog)" component={props => <CatalogPage {...props} />} exact={true} />
@@ -80,7 +82,7 @@ const App: React.FC = () => (
             </IonTabButton>
           </IonTabBar>
         </IonTabs>
-      </DebugRouter>
+      </IonReactRouter>
     </IonApp>
   </Provider>
 );

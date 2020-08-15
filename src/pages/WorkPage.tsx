@@ -69,7 +69,7 @@ class _WorkPage extends React.Component<PageProps> {
 
   get hasBookmark() {
     return (this.props.bookmarks as [Bookmark]).find(
-      (e) => e.type == BookmarkType.WORK && e.uuid == this.props.match.params.path) != null;
+      (e) => e.type === BookmarkType.WORK && e.uuid === this.props.match.params.path) != null;
   }
 
   getRows() {

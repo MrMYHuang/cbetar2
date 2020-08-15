@@ -14,9 +14,10 @@ interface PageProps extends RouteComponentProps<{
 }> { }
 
 class SettingsPage extends React.Component<PageProps> {
+  /*
   constructor(props) {
     super(props);
-  }
+  }*/
 
   uuidStr = '';
   render() {

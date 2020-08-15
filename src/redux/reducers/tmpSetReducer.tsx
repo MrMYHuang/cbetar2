@@ -9,6 +9,8 @@ export default function reducer(state = {
     case "TMP_SET_KEY_VAL": {
       return newState
     }
+    default:
+      break;
   }
   return state
 }

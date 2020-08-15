@@ -45,7 +45,7 @@ class _CatalogPage extends React.Component<PageProps> {
   }*/
 
   async fetchData(path: string) {
-    console.log('fetch');
+    //console.log('fetch');
     this.catalogs = new Array<Catalog>();
 
     if (this.props.match.params.path == null) {
@@ -112,7 +112,7 @@ class _CatalogPage extends React.Component<PageProps> {
 
   get hasBookmark() {
     return (this.props.bookmarks as [Bookmark])?.find(
-      (e) => e.type == BookmarkType.CATALOG && e.uuid == this.props.match.params.path) != null;
+      (e) => e.type === BookmarkType.CATALOG && e.uuid === this.props.match.params.path) != null;
   }
 
   getRows() {
