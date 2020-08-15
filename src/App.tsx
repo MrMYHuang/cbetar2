@@ -69,6 +69,7 @@ const App: React.FC = () => (
             <Route path="/:tab(bookmarks)" component={BookmarkPage} exact={true} />
             <Route path={`/:tab(bookmarks)/search/:keyword`} render={props => <SearchPage {...props} />} exact={true} />
             <Route path="/settings" component={SettingsPage} />
+            <Route path="/" render={() => <Redirect to="/catalog" />} exact={true} />
           </IonRouterOutlet>
           <IonTabBar slot="bottom">
             <IonTabButton tab="catalog" href="/catalog">

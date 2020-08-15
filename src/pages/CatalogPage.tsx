@@ -96,20 +96,23 @@ class _CatalogPage extends React.Component<PageProps> {
       val: new Bookmark({
         type: BookmarkType.CATALOG,
         uuid: this.props.match.params.path,
-        selectedText: this.props.location.state.label,
+        selectedText: this.props.location.state.label || this.props.match.params.path,
         fileName: '',
         work: null,
       }),
     });
   }
 
+  delBookmarkHandler() {
+    this.props.dispatch({
+      type: "DEL_BOOKMARK",
+      uuid: this.props.match.params.path,
+    });
+  }
+
   get hasBookmark() {
     return (this.props.bookmarks as [Bookmark]).find(
       (e) => e.type == BookmarkType.CATALOG && e.uuid == this.props.match.params.path) != null;
-  }
-
-  goToHome() {
-    this.props.history.push('/catalog');
   }
 
   getRows() {
@@ -130,7 +133,7 @@ class _CatalogPage extends React.Component<PageProps> {
             state: { label: catalog.label },
           });
         }}>
-          <IonLabel style={{fontSize: this.props.listFontSize}} key={`${catalog.n}label` + index}>
+          <IonLabel style={{ fontSize: this.props.listFontSize }} key={`${catalog.n}label` + index}>
             {catalog.label}
           </IonLabel>
         </IonItem>
@@ -150,10 +153,10 @@ class _CatalogPage extends React.Component<PageProps> {
             <IonButton fill="clear" slot='start'>
               <IonBackButton icon={arrowBack} />
             </IonButton>
-            <IonButton hidden={this.isTopCatalog} fill="clear" color={this.hasBookmark ? 'warning' : 'primary'} slot='end' onClick={e => this.addBookmarkHandler()}>
+            <IonButton hidden={this.isTopCatalog} fill="clear" color={this.hasBookmark ? 'warning' : 'primary'} slot='end' onClick={e => this.hasBookmark ? this.delBookmarkHandler() : this.addBookmarkHandler()}>
               <IonIcon icon={bookmark} slot='icon-only' />
             </IonButton>
-            <IonButton hidden={this.isTopCatalog} fill="clear" slot='end' onClick={e => this.goToHome()}>
+            <IonButton hidden={this.isTopCatalog} fill="clear" slot='end' onClick={e => this.props.history.push(`/${this.props.match.params.tab}`)}>
               <IonIcon icon={home} slot='icon-only' />
             </IonButton>
             <IonButton fill="clear" slot='end' onClick={e => this.setState({ showSearchAlert: true })}>
@@ -169,11 +172,11 @@ class _CatalogPage extends React.Component<PageProps> {
           <SearchAlert
             showSearchAlert={this.state.showSearchAlert}
             searchCancel={() =>
-              this.setState({showSearchAlert: false})
+              this.setState({ showSearchAlert: false })
             }
             searchOk={(keyword: string) => {
               this.props.history.push(`/catalog/search/${keyword}`);
-              this.setState({showSearchAlert: false});
+              this.setState({ showSearchAlert: false });
             }}
           />
         </IonContent>
