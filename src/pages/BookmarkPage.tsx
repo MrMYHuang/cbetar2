@@ -29,8 +29,8 @@ class _BookmarkPage extends React.Component<PageProps> {
   render() {
     let bookmarks = this.props.bookmarks as [Bookmark];
     let rows = Array<object>();
-    let routeLink = ``;
     bookmarks.forEach((bookmark, i) => {
+      let routeLink = ``;
       let label = `${bookmark.selectedText}`;
       switch (bookmark.type) {
         case BookmarkType.CATALOG:
@@ -39,7 +39,7 @@ class _BookmarkPage extends React.Component<PageProps> {
           routeLink = `/catalog/work/${bookmark.uuid}`; break;
         case BookmarkType.JUAN:
           label = `${bookmark.work?.title}第${bookmark.work?.juan}卷 - ${label}`;
-          routeLink = `/catalog/webview/${bookmark.work}/${bookmark.fileName}`; break;
+          routeLink = `/catalog/webview/${bookmark.work?.work}/${bookmark.fileName}`; break;
       }
       rows.push(
         <IonItem key={`bookmarkItem_` + i} button={true} onClick={async event => {
@@ -59,20 +59,18 @@ class _BookmarkPage extends React.Component<PageProps> {
       );
     });
     return (
-      <>
-        <IonPage>
-          <IonHeader>
-            <IonToolbar>
-              <IonTitle>書籤</IonTitle>
-            </IonToolbar>
-          </IonHeader>
-          <IonContent>
-            <IonList>
-              {rows}
-            </IonList>
-          </IonContent>
-        </IonPage>
-      </>
+      <IonPage>
+        <IonHeader>
+          <IonToolbar>
+            <IonTitle>書籤</IonTitle>
+          </IonToolbar>
+        </IonHeader>
+        <IonContent>
+          <IonList>
+            {rows}
+          </IonList>
+        </IonContent>
+      </IonPage>
     );
   }
 };
