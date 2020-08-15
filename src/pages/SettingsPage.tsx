@@ -34,9 +34,9 @@ class SettingsPage extends React.Component<PageProps> {
               <div><IonIcon icon={text}></IonIcon></div>
               <div className="contentBlock">
                 <div style={{ flexDirection: "column" }}>
-                  <div>列表字型大小: {this.props.settings.listFontSize}</div>
-                  <IonRange min={10} max={64} value={this.props.settings.listFontSize} onIonChange={e => {
-                    this.props.dispatch({
+                  <div>列表字型大小: {(this.props as any).settings.listFontSize}</div>
+                  <IonRange min={10} max={64} value={(this.props as any).settings.listFontSize} onIonChange={e => {
+                    (this.props as any).dispatch({
                       type: "SET_KEY_VAL",
                       key: 'listFontSize',
                       val: e?.currentTarget?.value
@@ -49,9 +49,9 @@ class SettingsPage extends React.Component<PageProps> {
               <div><IonIcon icon={text}></IonIcon></div>
               <div class="contentBlock">
                 <div style={{ flexDirection: "column" }}>
-                  <div>經文字型大小: {this.props.settings.fontSize}</div>
-                  <IonRange min={10} max={64} value={this.props.settings.fontSize} onIonChange={e => {
-                    this.props.dispatch({
+                  <div>經文字型大小: {(this.props as any).settings.fontSize}</div>
+                  <IonRange min={10} max={64} value={(this.props as any).settings.fontSize} onIonChange={e => {
+                    (this.props as any).dispatch({
                       type: "SET_KEY_VAL",
                       key: 'fontSize',
                       val: e.currentTarget.value

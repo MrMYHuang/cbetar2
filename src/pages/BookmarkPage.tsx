@@ -23,7 +23,7 @@ class _BookmarkPage extends React.Component<PageProps> {
   }
 
   render() {
-    let bookmarks = this.props.bookmarks as [Bookmark];
+    let bookmarks = (this.props as any).bookmarks as [Bookmark];
     let rows = Array<object>();
     bookmarks.forEach((bookmark, i) => {
       let routeLink = ``;
@@ -48,7 +48,7 @@ class _BookmarkPage extends React.Component<PageProps> {
             },
           });
         }}>
-          <IonLabel style={{ fontSize: this.props.listFontSize }} key={`bookmarkItemLabel_` + i}>
+          <IonLabel style={{ fontSize: (this.props as any).listFontSize }} key={`bookmarkItemLabel_` + i}>
             {label}
           </IonLabel>
         </IonItem>

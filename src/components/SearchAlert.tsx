@@ -12,7 +12,7 @@ class SearchAlert extends React.Component<RouteComponentProps> {
   render() {
     return (
       <IonAlert
-      isOpen={this.props.showSearchAlert}
+      isOpen={(this.props as any).showSearchAlert}
       header={'搜尋經文'}
       subHeader='輸入搜尋'
       inputs={[
@@ -27,13 +27,13 @@ class SearchAlert extends React.Component<RouteComponentProps> {
           text: '取消',
           role: 'cancel',
           cssClass: 'secondary',
-          handler: () => this.props.searchCancel(),
+          handler: () => (this.props as any).searchCancel(),
         },
         {
           text: '確定',
           cssClass: 'primary',
           handler: (value) => {
-            this.props.searchOk(value.name0);
+            (this.props as any).searchOk(value.name0);
           },
         }
       ]}

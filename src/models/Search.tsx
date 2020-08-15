@@ -6,7 +6,7 @@ export class Search {
     title: string;
     creators: string;
 
-    constructor(json) {
+    constructor(json: any) {
         this.type = json["type"];
         this.n = json["n"];
         this.label = json["label"];

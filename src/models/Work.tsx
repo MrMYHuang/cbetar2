@@ -4,7 +4,7 @@ export class Work {
     juan_list: string
     work: string
 
-    constructor(json) {
+    constructor(json: any) {
         this.title = json.title;
         this.juan = json.juan;
         this.juan_list = json.juan_list;

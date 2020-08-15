@@ -76,7 +76,7 @@ class _WebViewPage extends React.Component<PageProps> {
 
         const docBody = document.getElementById('cbetarWebView')?.innerHTML;
 
-        this.props.dispatch({
+        (this.props as any).dispatch({
           type: "ADD_BOOKMARK",
           htmlStr: docBody,
           bookmark: new Bookmark({
@@ -105,7 +105,7 @@ class _WebViewPage extends React.Component<PageProps> {
     var oldBookmark = document.getElementById(bookmarkPrefix + uuidStr);
     if (oldBookmark) {
       oldBookmark.id = '';
-      this.props.dispatch({
+      (this.props as any).dispatch({
         type: "DEL_BOOKMARK",
         uuid: uuidStr,
         fileName: this.bookmark?.fileName,
@@ -114,7 +114,7 @@ class _WebViewPage extends React.Component<PageProps> {
   }
 
   get bookmark() {
-    return (this.props.bookmarks as [Bookmark]).find(
+    return ((this.props as any).bookmarks as [Bookmark]).find(
       (e) => e.type === BookmarkType.JUAN && e.uuid === this.props.location.state?.uuid);
   }
 
@@ -127,11 +127,11 @@ class _WebViewPage extends React.Component<PageProps> {
       <IonPage>
         <style dangerouslySetInnerHTML={{
           __html: `
-      .t, p { font-size: ${this.props.fontSize}px }
+      .t, p { font-size: ${(this.props as any).fontSize}px }
     `}} />
         <IonHeader>
           <IonToolbar>
-            <IonTitle>{this.props.workTitle}</IonTitle>            <IonButton fill="clear" slot='start'>
+            <IonTitle>{(this.props as any).workTitle}</IonTitle>            <IonButton fill="clear" slot='start'>
               <IonBackButton icon={arrowBack} />
             </IonButton>
             <IonButton fill="clear" color={this.hasBookmark ? 'warning' : 'primary'} slot='end' onClick={e => this.hasBookmark ? this.delBookmarkHandler() : this.addBookmarkHandler()}>

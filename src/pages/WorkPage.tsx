@@ -48,12 +48,12 @@ class _WorkPage extends React.Component<PageProps> {
   }
 
   addBookmarkHandler() {
-    this.props.dispatch({
+    (this.props as any).dispatch({
       type: "ADD_BOOKMARK",
       bookmark: new Bookmark({
         type: BookmarkType.WORK,
         uuid: this.props.match.params.path,
-        selectedText: this.props.location.state.label || this.props.match.params.path,
+        selectedText: (this.props.location.state as any).label || this.props.match.params.path,
         fileName: '',
         work: null,
       }),
@@ -61,19 +61,19 @@ class _WorkPage extends React.Component<PageProps> {
   }
 
   delBookmarkHandler() {
-    this.props.dispatch({
+    (this.props as any).dispatch({
       type: "DEL_BOOKMARK",
       uuid: this.props.match.params.path,
     });
   }
 
   get hasBookmark() {
-    return (this.props.bookmarks as [Bookmark]).find(
+    return ((this.props as any).bookmarks as [Bookmark]).find(
       (e) => e.type === BookmarkType.WORK && e.uuid === this.props.match.params.path) != null;
   }
 
   getRows() {
-    let work = this.state.work as Work
+    let work = (this.state as any).work as Work
     let rows = Array<object>();
     let juans = work.juan_list.split(',');
     for (let i = 0; i < juans.length; i++) {
@@ -89,7 +89,7 @@ class _WorkPage extends React.Component<PageProps> {
             },
           });
         }}>
-          <IonLabel style={{ fontSize: this.props.listFontSize }} key={`juanLabel` + i}>
+          <IonLabel style={{ fontSize: (this.props as any).listFontSize }} key={`juanLabel` + i}>
             卷{juans[i]}
           </IonLabel>
         </IonItem>
@@ -100,7 +100,7 @@ class _WorkPage extends React.Component<PageProps> {
 
   //work = this.works[0] as Work;
   render() {
-    let work = this.state.work as Work
+    let work = (this.state as any).work as Work
     if (work == null) {
       return <IonPage></IonPage>
     }
@@ -110,7 +110,7 @@ class _WorkPage extends React.Component<PageProps> {
       <IonPage>
         <IonHeader>
           <IonToolbar>
-            <IonTitle>{this.state.work.title}</IonTitle>
+            <IonTitle>{(this.state as any).work.title}</IonTitle>
             <IonButton fill="clear" slot='start'>
               <IonBackButton icon={arrowBack} />
             </IonButton>
@@ -137,7 +137,7 @@ class _WorkPage extends React.Component<PageProps> {
 
 const WorkPage = withIonLifeCycle(_WorkPage);
 
-const mapStateToProps = (state /*, ownProps*/) => {
+const mapStateToProps = (state: any /*, ownProps*/) => {
   return {
     bookmarks: state.settings.bookmarks,
     listFontSize: state.settings.listFontSize,

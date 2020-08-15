@@ -5,7 +5,7 @@ export class Catalog {
     work: string | null | undefined;
     file: string | null | undefined;
 
-    constructor(json) {
+    constructor(json: any) {
         this.n = json.n;
         this.nodeType = json.node_type;
         this.label = json.label;

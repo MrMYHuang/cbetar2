@@ -91,12 +91,12 @@ class _CatalogPage extends React.Component<PageProps> {
   }
 
   addBookmarkHandler() {
-    this.props.dispatch({
+    (this.props as any).dispatch({
       type: "ADD_BOOKMARK",
       bookmark: new Bookmark({
         type: BookmarkType.CATALOG,
         uuid: this.props.match.params.path,
-        selectedText: this.props.location.state.label || this.props.match.params.path,
+        selectedText: (this.props.location?.state as any).label || this.props.match.params.path,
         fileName: '',
         work: null,
       }),
@@ -104,20 +104,20 @@ class _CatalogPage extends React.Component<PageProps> {
   }
 
   delBookmarkHandler() {
-    this.props.dispatch({
+    (this.props as any).dispatch({
       type: "DEL_BOOKMARK",
       uuid: this.props.match.params.path,
     });
   }
 
   get hasBookmark() {
-    return (this.props.bookmarks as [Bookmark])?.find(
+    return ((this.props as any).bookmarks as [Bookmark])?.find(
       (e) => e.type === BookmarkType.CATALOG && e.uuid === this.props.match.params.path) != null;
   }
 
   getRows() {
     let rows = Array<object>();
-    this.state.catalogs.forEach((catalog, index) => {
+    (this.state as any).catalogs.forEach((catalog: Catalog, index: number) => {
       //if (catalog.nodeType == 'html')
       let routeLink = '';
       if (catalog.work == null) {
@@ -133,7 +133,7 @@ class _CatalogPage extends React.Component<PageProps> {
             state: { label: catalog.label },
           });
         }}>
-          <IonLabel style={{ fontSize: this.props.listFontSize }} key={`${catalog.n}label` + index}>
+          <IonLabel style={{ fontSize: (this.props as any).listFontSize }} key={`${catalog.n}label` + index}>
             {catalog.label}
           </IonLabel>
         </IonItem>
@@ -170,7 +170,7 @@ class _CatalogPage extends React.Component<PageProps> {
           </IonList>
 
           <SearchAlert
-            showSearchAlert={this.state.showSearchAlert}
+            showSearchAlert={(this.state as any).showSearchAlert}
             searchCancel={() =>
               this.setState({ showSearchAlert: false })
             }
@@ -185,7 +185,7 @@ class _CatalogPage extends React.Component<PageProps> {
   }
 };
 
-const mapStateToProps = (state /*, ownProps*/) => {
+const mapStateToProps = (state: any /*, ownProps*/) => {
   return {
     bookmarks: state.settings.bookmarks,
     listFontSize: state.settings.listFontSize,
