@@ -80,6 +80,7 @@ class _WebViewPage extends React.Component<PageProps> {
             work: new Work({
               juan: this.props.match.params.path,
               title: this.props.location.state.label,
+              work: this.props.match.params.work,
             }),
           }),
         });
@@ -119,7 +120,6 @@ class _WebViewPage extends React.Component<PageProps> {
     return this.bookmark != null;
   }
 
-  uuidStr = '';
   render() {
     return (
       <IonPage>
