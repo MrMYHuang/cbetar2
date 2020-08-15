@@ -1,11 +1,13 @@
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonLabel, withIonLifeCycle } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonLabel, withIonLifeCycle, IonButton, IonBackButton, IonIcon } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import './WorkPage.css';
 import { Work } from '../models/Work';
 import Globals from '../Globals';
+import { bookmark, arrowBack, home, search } from 'ionicons/icons';
+import { Bookmark, BookmarkType } from '../models/Bookmark';
 
 interface PageProps extends RouteComponentProps<{
   tab: string;
@@ -45,6 +47,31 @@ class _WorkPage extends React.Component<PageProps> {
   }*/
   }
 
+  addBookmarkHandler() {
+    this.props.dispatch({
+      type: "ADD_BOOKMARK",
+      val: new Bookmark({
+        type: BookmarkType.WORK,
+        uuid: this.props.match.params.path,
+        selectedText: this.props.location.state.label || this.props.match.params.path,
+        fileName: '',
+        work: null,
+      }),
+    });
+  }
+
+  delBookmarkHandler() {
+    this.props.dispatch({
+      type: "DEL_BOOKMARK",
+      uuid: this.props.match.params.path,
+    });
+  }
+
+  get hasBookmark() {
+    return (this.props.bookmarks as [Bookmark]).find(
+      (e) => e.type == BookmarkType.WORK && e.uuid == this.props.match.params.path) != null;
+  }
+
   getRows() {
     let work = this.state.work as Work
     let rows = Array<object>();
@@ -79,6 +106,18 @@ class _WorkPage extends React.Component<PageProps> {
         <IonHeader>
           <IonToolbar>
             <IonTitle>{this.state.work.title}</IonTitle>
+            <IonButton fill="clear" slot='start'>
+              <IonBackButton icon={arrowBack} />
+            </IonButton>
+            <IonButton fill="clear" color={this.hasBookmark ? 'warning' : 'primary'} slot='end' onClick={e => this.hasBookmark ? this.delBookmarkHandler() : this.addBookmarkHandler()}>
+              <IonIcon icon={bookmark} slot='icon-only' />
+            </IonButton>
+            <IonButton fill="clear" slot='end' onClick={e => this.props.history.push(`/${this.props.match.params.tab}`)}>
+              <IonIcon icon={home} slot='icon-only' />
+            </IonButton>
+            <IonButton fill="clear" slot='end' onClick={e => this.setState({ showSearchAlert: true })}>
+              <IonIcon icon={search} slot='icon-only' />
+            </IonButton>
           </IonToolbar>
         </IonHeader>
         <IonContent>
@@ -95,6 +134,7 @@ const WorkPage = withIonLifeCycle(_WorkPage);
 
 const mapStateToProps = (state /*, ownProps*/) => {
   return {
+    bookmarks: state.settings.bookmarks,
     listFontSize: state.settings.listFontSize,
   }
 };
