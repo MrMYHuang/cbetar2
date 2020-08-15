@@ -20,7 +20,6 @@ class SettingsPage extends React.Component<PageProps> {
   }*/
 
   render() {
-    console.log(this.props.darkMode)
     return (
       <IonPage>
         <IonHeader>
