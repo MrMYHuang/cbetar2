@@ -36,6 +36,11 @@ class SettingsPage extends React.Component<PageProps> {
               <IonToggle slot='end' value={(this.props as any).darkMode} onIonChange={e => {
                 const isChecked = e.detail.checked;
                 document.body.classList.toggle('dark', isChecked);
+                (this.props as any).dispatch({
+                  type: "SET_KEY_VAL",
+                  key: 'darkMode',
+                  val: isChecked
+                });
               }} />
             </IonItem>
             <IonItem>
@@ -47,7 +52,7 @@ class SettingsPage extends React.Component<PageProps> {
                     (this.props as any).dispatch({
                       type: "SET_KEY_VAL",
                       key: 'listFontSize',
-                      val: (e.currentTarget as any).value
+                      val: e.detail.value,
                     });
                   }} />
                 </div>
@@ -62,7 +67,7 @@ class SettingsPage extends React.Component<PageProps> {
                     (this.props as any).dispatch({
                       type: "SET_KEY_VAL",
                       key: 'fontSize',
-                      val: (e.currentTarget as any).value
+                      val: e.detail.value,
                     });
                   }} />
                 </div>
