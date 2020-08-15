@@ -3,7 +3,7 @@ import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem,
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import axios from 'axios';
-import './WorkPage.css';
+import './SearchPage.css';
 import { Work } from '../models/Work';
 import Globals from '../Globals';
 
@@ -13,7 +13,7 @@ interface PageProps extends RouteComponentProps<{
 }> { }
 
 const urlWork = `${Globals.cbetaApiUrl}/works?work=`;
-class _WorkPage extends React.Component<PageProps> {
+class _SearchPage extends React.Component<PageProps> {
   constructor(props) {
     super(props);
     this.state = {
@@ -45,8 +45,12 @@ class _WorkPage extends React.Component<PageProps> {
   }*/
   }
 
-  getRows() {
+  //work = this.works[0] as Work;
+  render() {
     let work = this.state.work as Work
+    if (work == null) {
+      return <IonPage></IonPage>
+    }
     let rows = Array<object>();
     let juans = work.juan_list.split(',');
     for (let i = 0; i < juans.length; i++) {
@@ -57,23 +61,12 @@ class _WorkPage extends React.Component<PageProps> {
           event.preventDefault();
           this.props.history.push(routeLink);
         }}>
-          <IonLabel style={{fontSize: this.props.listFontSize}} key={`juanLabel` + i}>
+          <IonLabel key={`juanLabel` + i}>
             卷{juans[i]}
           </IonLabel>
         </IonItem>
       );
     }
-    return rows;
-  }
-
-  //work = this.works[0] as Work;
-  render() {
-    let work = this.state.work as Work
-    if (work == null) {
-      return <IonPage></IonPage>
-    }
-
-    let rows = this.getRows();    
     return (
       <>
         <IonPage>
@@ -93,7 +86,7 @@ class _WorkPage extends React.Component<PageProps> {
   }
 };
 
-const WorkPage = withIonLifeCycle(_WorkPage);
+const SearchPage = withIonLifeCycle(_SearchPage);
 
 const mapStateToProps = (state /*, ownProps*/) => {
   return {
@@ -105,4 +98,4 @@ const mapStateToProps = (state /*, ownProps*/) => {
 
 export default connect(
   mapStateToProps,
-)(WorkPage);
+)(SearchPage);

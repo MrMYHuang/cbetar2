@@ -1,6 +1,6 @@
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonLabel, IonButton, IonBackButton, IonIcon, withIonLifeCycle } from '@ionic/react';
-import { RouteComponentProps, Route } from 'react-router-dom';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonLabel, IonButton, IonBackButton, IonIcon, withIonLifeCycle, IonAlert } from '@ionic/react';
+import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import './CatalogPage.css';
@@ -8,6 +8,7 @@ import { Catalog } from '../models/Catalog';
 import Globals from '../Globals';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
 import { bookmark, arrowBack, home, search } from 'ionicons/icons';
+import SearchAlert from '../components/SearchAlert';
 
 interface PageProps extends RouteComponentProps<{
   tab: string;
@@ -21,7 +22,8 @@ class _CatalogPage extends React.Component<PageProps> {
     super(props);
     this.state = {
       catalogs: [],
-    }
+      showSearchAlert: false,
+    };
   }
 
   catalogs = Array<Catalog>();
@@ -103,48 +105,43 @@ class _CatalogPage extends React.Component<PageProps> {
 
   get hasBookmark() {
     return (this.props.bookmarks as [Bookmark]).find(
-            (e) => e.type == BookmarkType.CATALOG && e.uuid == this.props.match.params.path) != null;
+      (e) => e.type == BookmarkType.CATALOG && e.uuid == this.props.match.params.path) != null;
   }
 
   goToHome() {
     this.props.history.push('/catalog');
   }
 
-  render() {
+  getRows() {
     let rows = Array<object>();
     this.state.catalogs.forEach((catalog, index) => {
       //if (catalog.nodeType == 'html')
       let routeLink = '';
       if (catalog.work == null) {
         routeLink = `/catalog/${catalog.n}`;
-        rows.push(
-          <IonItem key={`${catalog.n}item` + index} button={true} onClick={async event => {
-            event.preventDefault();
-            this.props.history.push({
-              pathname: routeLink,
-              state: {label: catalog.label},
-            });
-          }}>
-            <IonLabel key={`${catalog.n}label` + index}>
-              {catalog.label}
-            </IonLabel>
-          </IonItem>
-        );
       } else {
         routeLink = `/catalog/work/${catalog.work}`;
-        rows.push(
-          <IonItem key={`${catalog.n}item` + index} button={true} onClick={async event => {
-            event.preventDefault();
-            this.props.history.push(routeLink);
-          }}>
-            <IonLabel key={`${catalog.n}label` + index}>
-              {catalog.label}
-            </IonLabel>
-          </IonItem>
-        );
       }
+      rows.push(
+        <IonItem key={`${catalog.n}item` + index} button={true} onClick={async event => {
+          event.preventDefault();
+          this.props.history.push({
+            pathname: routeLink,
+            state: { label: catalog.label },
+          });
+        }}>
+          <IonLabel style={{fontSize: this.props.listFontSize}} key={`${catalog.n}label` + index}>
+            {catalog.label}
+          </IonLabel>
+        </IonItem>
+      );
     });
-    console.log(`${this.props.match.url} render`)
+    return rows;
+  }
+
+  render() {
+    let rows = this.getRows();
+    //console.log(`${this.props.match.url} render`)
     return (
       <IonPage>
         <IonHeader>
@@ -159,7 +156,7 @@ class _CatalogPage extends React.Component<PageProps> {
             <IonButton hidden={this.isTopCatalog} fill="clear" slot='end' onClick={e => this.goToHome()}>
               <IonIcon icon={home} slot='icon-only' />
             </IonButton>
-            <IonButton fill="clear" slot='end'>
+            <IonButton fill="clear" slot='end' onClick={e => this.setState({ showSearchAlert: true })}>
               <IonIcon icon={search} slot='icon-only' />
             </IonButton>
           </IonToolbar>
@@ -168,6 +165,16 @@ class _CatalogPage extends React.Component<PageProps> {
           <IonList>
             {rows}
           </IonList>
+
+          <SearchAlert
+            showSearchAlert={this.state.showSearchAlert}
+            searchCancel={() =>
+              this.setState({showSearchAlert: false})
+            }
+            searchOk={() =>
+              this.setState({showSearchAlert: false})
+            }
+          />
         </IonContent>
       </IonPage>
     );
@@ -177,6 +184,7 @@ class _CatalogPage extends React.Component<PageProps> {
 const mapStateToProps = (state /*, ownProps*/) => {
   return {
     bookmarks: state.settings.bookmarks,
+    listFontSize: state.settings.listFontSize,
   }
 };
 
