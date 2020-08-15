@@ -31,9 +31,11 @@ class _BookmarkPage extends React.Component<PageProps> {
     let rows = Array<object>();
     let routeLink = ``;
     bookmarks.forEach((bookmark, i) => {
-      switch(bookmark.type) {
+      switch (bookmark.type) {
         case BookmarkType.CATALOG:
           routeLink = `/catalog/${bookmark.uuid}`; break;
+        case BookmarkType.WORK:
+          routeLink = `/catalog/work/${bookmark.uuid}`; break;
       }
       rows.push(
         <IonItem key={`bookmarkItem_` + i} button={true} onClick={async event => {
