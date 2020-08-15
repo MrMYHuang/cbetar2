@@ -15,7 +15,7 @@ function scrollToBookmark(uuidStr: string) {
   console.log('Bookmark uuid: ' + bookmarkPrefix + uuidStr);
   document.getElementById(bookmarkPrefix + uuidStr)?.scrollIntoView();
 }
-window.scrollToBookmark = scrollToBookmark;
+//window.scrollToBookmark = scrollToBookmark;
 
 interface PageProps extends RouteComponentProps<{
   tab: string;
@@ -38,12 +38,12 @@ class _WebViewPage extends React.Component<PageProps> {
   }
 
   ionViewDidEnter() {
-    window.scrollToBookmark(this.props.location.state ? this.props.location.state.uuid : '');
+    scrollToBookmark(this.props.location.state ? (this.props.location.state as any).uuid : '');
   }
 
   async fetchData(juan: string) {
     let htmlStr = '';
-    if (this.props.location.state?.uuid != null) {
+    if ((this.props.location.state as any).uuid !== null) {
       htmlStr = localStorage.getItem(this.bookmark?.fileName!)!;
     } else {
       //try {
@@ -69,7 +69,7 @@ class _WebViewPage extends React.Component<PageProps> {
     let uuidStr = uuid.v4();
     var sel, range;
     if (window.getSelection) {
-      sel = window.getSelection();
+      sel = (window.getSelection() as any);
       if (sel.rangeCount) {
         range = sel.getRangeAt(0);
         range.startContainer.parentElement.id = bookmarkPrefix + uuidStr;
@@ -86,12 +86,12 @@ class _WebViewPage extends React.Component<PageProps> {
             fileName: `${this.props.match.params.work}_juan${this.props.match.params.path}.html`,
             work: new Work({
               juan: this.props.match.params.path,
-              title: this.props.location.state.label,
+              title: (this.props.location.state as any).label,
               work: this.props.match.params.work,
             }),
           }),
         });
-        this.props.location.state.uuid = uuidStr;
+        (this.props.location.state as any).uuid = uuidStr;
         return;
       }
     }
@@ -101,7 +101,7 @@ class _WebViewPage extends React.Component<PageProps> {
   }
 
   delBookmarkHandler() {
-    let uuidStr = this.props.location.state.uuid;
+    let uuidStr = (this.props.location.state as any).uuid;
     var oldBookmark = document.getElementById(bookmarkPrefix + uuidStr);
     if (oldBookmark) {
       oldBookmark.id = '';
@@ -115,7 +115,7 @@ class _WebViewPage extends React.Component<PageProps> {
 
   get bookmark() {
     return ((this.props as any).bookmarks as [Bookmark]).find(
-      (e) => e.type === BookmarkType.JUAN && e.uuid === this.props.location.state?.uuid);
+      (e) => e.type === BookmarkType.JUAN && e.uuid === (this.props.location.state as any).uuid);
   }
 
   get hasBookmark() {
@@ -146,14 +146,14 @@ class _WebViewPage extends React.Component<PageProps> {
           </IonToolbar>
         </IonHeader>
         <IonContent>
-          <div id='cbetarWebView' style={{ userSelect: "text" }} dangerouslySetInnerHTML={{ __html: this.state.htmlStr }}></div>
+          <div id='cbetarWebView' style={{ userSelect: "text" }} dangerouslySetInnerHTML={{ __html: (this.state as any).htmlStr }}></div>
         </IonContent>
       </IonPage>
     );
   }
 };
 
-const mapStateToProps = (state /*, ownProps*/) => {
+const mapStateToProps = (state: any /*, ownProps*/) => {
   return {
     bookmarks: state.settings.bookmarks,
     fontSize: state.settings.fontSize,

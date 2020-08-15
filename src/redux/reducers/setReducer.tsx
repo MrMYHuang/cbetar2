@@ -3,8 +3,8 @@ import { Bookmark } from '../../models/Bookmark';
 
 // Used to store settings. They will be saved to file.
 export default function reducer(state = {
-}, action) {
-  var newSettings = { ...state };
+}, action: any) {
+  var newSettings = { ...state } as any;
   switch (action.type) {
     case "SET_KEY_VAL":
       var key = action.key;

@@ -42,7 +42,7 @@ class _SearchPage extends React.Component<PageProps> {
 
   getRows() {
     let rows = Array<object>();
-    const searches = this.state.searches as [Search];
+    const searches = (this.state as any).searches as [Search];
     searches.forEach((search, i) => {
       const isCatalog = search.type === 'catalog';
       let label = isCatalog ? search.label : `${search.title}\n作者:${search.creators}`;
@@ -55,7 +55,7 @@ class _SearchPage extends React.Component<PageProps> {
             state: { label: search.label },
           });
         }}>
-          <IonLabel style={{ fontSize: this.props.listFontSize }} key={`searchLabel_` + i}>
+          <IonLabel style={{ fontSize: (this.props as any).listFontSize }} key={`searchLabel_` + i}>
             {label}
           </IonLabel>
         </IonItem>
@@ -85,7 +85,7 @@ class _SearchPage extends React.Component<PageProps> {
 
 const SearchPage = withIonLifeCycle(_SearchPage);
 
-const mapStateToProps = (state /*, ownProps*/) => {
+const mapStateToProps = (state: any /*, ownProps*/) => {
   return {
     listFontSize: state.settings.listFontSize,
   }

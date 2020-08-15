@@ -2,10 +2,21 @@ import React from 'react';
 import { IonAlert } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
 
-class SearchAlert extends React.Component<RouteComponentProps> {
+interface SearchAlertProps {
+  showSearchAlert: Boolean | null | undefined;
+}
+
+interface PageProps extends RouteComponentProps<{
+  tab: string;
+  path: string;
+  label: string;
+}> { }
+
+class SearchAlert extends React.Component<PageProps, SearchAlertProps> {
   constructor(props: any) {
     super(props);
     this.state = {
+      showSearchAlert: false,
     };
   }
 

@@ -68,14 +68,14 @@ const App: React.FC = () => (
             <Route path="/:tab(bookmarks)" component={BookmarkPage} exact={true} />
             <Route path={`/:tab(bookmarks)/search/:keyword`} render={props => <SearchPage {...props} />} exact={true} />
             <Route path="/settings" component={SettingsPage} />
-            <Route path="/" render={() => <Redirect to="/catalog" />} exact={true} />
+            <Route path="/" render={() => <Redirect to="/bookmarks" />} exact={true} />
           </IonRouterOutlet>
           <IonTabBar slot="bottom">
-            <IonTabButton tab="catalog" href="/catalog">
-              <IonIcon icon={book} />
-            </IonTabButton>
             <IonTabButton tab="bookmarks" href="/bookmarks">
               <IonIcon icon={bookmark} />
+            </IonTabButton>
+            <IonTabButton tab="catalog" href="/catalog">
+              <IonIcon icon={book} />
             </IonTabButton>
             <IonTabButton tab="settings" href="/settings">
               <IonIcon icon={settings} />

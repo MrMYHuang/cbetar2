@@ -39,7 +39,7 @@ class SettingsPage extends React.Component<PageProps> {
                     (this.props as any).dispatch({
                       type: "SET_KEY_VAL",
                       key: 'listFontSize',
-                      val: e?.currentTarget?.value
+                      val: (e.currentTarget as any).value
                     });
                   }} />
                 </div>
@@ -47,28 +47,28 @@ class SettingsPage extends React.Component<PageProps> {
             </IonItem>
             <IonItem>
               <div><IonIcon icon={text}></IonIcon></div>
-              <div class="contentBlock">
+              <div className="contentBlock">
                 <div style={{ flexDirection: "column" }}>
                   <div>經文字型大小: {(this.props as any).settings.fontSize}</div>
                   <IonRange min={10} max={64} value={(this.props as any).settings.fontSize} onIonChange={e => {
                     (this.props as any).dispatch({
                       type: "SET_KEY_VAL",
                       key: 'fontSize',
-                      val: e.currentTarget.value
+                      val: (e.currentTarget as any).value
                     });
                   }} /></div>
               </div>
             </IonItem>
             <IonItem>
               <div><IonIcon icon={star}></IonIcon></div>
-              <div class="contentBlock">
+              <div className="contentBlock">
                 <div>特色</div>
                 <div>搜尋經文、書籤功能、離線瀏覽、暗色主題、字型調整。</div>
               </div>
             </IonItem>
             <IonItem style={{ alignItems: "start" }}>
               <div><IonIcon icon={helpCircle}></IonIcon></div>
-              <div class="contentBlock">
+              <div className="contentBlock">
                 <div>關於</div>
                 <div>程式版本: {PackageInfos.version}</div>
                 <div>CBETA API版本: {Globals.apiVersion}</div>
@@ -85,7 +85,7 @@ class SettingsPage extends React.Component<PageProps> {
   }
 };
 
-const mapStateToProps = (state /*, ownProps*/) => {
+const mapStateToProps = (state: any /*, ownProps*/) => {
   return {
     settings: state.settings
   }
