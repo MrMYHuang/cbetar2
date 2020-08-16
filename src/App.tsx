@@ -16,7 +16,6 @@ import { bookmark, book, settings } from 'ionicons/icons';
 import CatalogPage from './pages/CatalogPage';
 import WorkPage from './pages/WorkPage';
 import WebViewPage from './pages/WebViewPage';
-import * as serviceWorker from './serviceWorker';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -60,7 +59,10 @@ class DebugRouter extends IonReactRouter {
 const state = store.getState();
 document.body.classList.toggle('dark', state.settings.darkMode);
 
-let showUpdateAlertCallback: any;
+export var serviceWorkCallbacks = {
+  onSuccess: function () {},
+  onUpdate: function () {},
+};
 
 class App extends React.Component {
   constructor(props: any) {
@@ -68,7 +70,7 @@ class App extends React.Component {
     this.state = {
       showUpdateAlert: false,
     };
-    showUpdateAlertCallback = () => {
+    serviceWorkCallbacks.onUpdate = () => {
       this.setState({showUpdateAlert: true});
     };
   }
@@ -103,7 +105,7 @@ class App extends React.Component {
             </IonTabs>
           </IonReactRouter>
           <IonAlert
-            isOpen={(this.props as any).showUpdateAlert}
+            isOpen={(this.state as any).showUpdateAlert}
             header={'App更新已下載，請關閉、重新啟動app完成更新。'}
             buttons={[
               {
@@ -122,13 +124,5 @@ class App extends React.Component {
     );
   }
 }
-
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.register({
-  onSuccess: () => {console.log('Precache app loaded!');},
-  onUpdate: showUpdateAlertCallback,
-});
 
 export default App;
