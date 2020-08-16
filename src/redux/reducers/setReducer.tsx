@@ -27,6 +27,8 @@ export default function reducer(state = {
       }
       if (bookmarksTemp.find((b) => b.fileName === action.fileName) == null) {
         localStorage.removeItem(action.fileName);
+      } else {
+        localStorage.setItem(action.fileName, action.htmlStr);
       }
       newSettings.bookmarks = [...bookmarksTemp];
       localStorage.setItem(Globals.storeFile, JSON.stringify({settings: newSettings}));

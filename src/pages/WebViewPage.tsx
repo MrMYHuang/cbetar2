@@ -33,21 +33,25 @@ class _WebViewPage extends React.Component<PageProps> {
     }
   }
 
+  uuidStr = '';
   ionViewWillEnter() {
+    let state = this.props.location.state as any;
+    this.uuidStr = state ? state.uuid : '';
     //console.log( 'view will enter' );
     this.fetchData(this.props.match.params.path);
   }
 
   ionViewDidEnter() {
-    scrollToBookmark(this.props.location.state ? (this.props.location.state as any).uuid : '');
+    scrollToBookmark(this.uuidStr);
+  }
+
+  get fileName() {
+    return `${this.props.match.params.work}_juan${this.props.match.params.path}.html`;
   }
 
   async fetchData(juan: string) {
-    let htmlStr = '';
-    const state = this.props.location.state as any;
-    if ((state ? state.uuid : state) !== null && (state ? state.uuid : state) !== undefined) {
-      htmlStr = localStorage.getItem(this.bookmark?.fileName!)!;
-    } else {
+    let htmlStr = localStorage.getItem(this.fileName);
+    if (htmlStr == null) {
       //try {
       const res = await axios.get(`${url}&work=${this.props.match.params.work}&juan=${juan}`, {
         responseType: 'arraybuffer',
@@ -78,7 +82,6 @@ class _WebViewPage extends React.Component<PageProps> {
 
         const docBody = document.getElementById('cbetarWebView')?.innerHTML;
 
-        const state = this.props.location.state as any;
         (this.props as any).dispatch({
           type: "ADD_BOOKMARK",
           htmlStr: docBody,
@@ -94,7 +97,7 @@ class _WebViewPage extends React.Component<PageProps> {
             }),
           }),
         });
-        state && (state.uuid = uuidStr);
+        this.uuidStr = uuidStr;
         return;
       }
     }
@@ -104,27 +107,23 @@ class _WebViewPage extends React.Component<PageProps> {
   }
 
   delBookmarkHandler() {
-    const state = this.props.location.state as any;
-    if (!state) {
-      return;
-    }
-
-    let uuidStr = state.uuid;
-    var oldBookmark = document.getElementById(bookmarkPrefix + uuidStr);
+    var oldBookmark = document.getElementById(bookmarkPrefix + this.uuidStr);
     if (oldBookmark) {
       oldBookmark.id = '';
+      const docBody = document.getElementById('cbetarWebView')?.innerHTML;
       (this.props as any).dispatch({
         type: "DEL_BOOKMARK",
-        uuid: uuidStr,
+        uuid: this.uuidStr,
+        htmlStr: docBody,
         fileName: this.bookmark?.fileName,
       });
+      this.uuidStr = '';
     }
   }
 
   get bookmark() {
-    const state = this.props.location.state as any;
     return ((this.props as any).bookmarks as [Bookmark]).find(
-      (e) => e.type === BookmarkType.JUAN && e.uuid === (state ? state.uuid : null));
+      (e) => e.type === BookmarkType.JUAN && e.uuid === this.uuidStr);
   }
 
   get hasBookmark() {
