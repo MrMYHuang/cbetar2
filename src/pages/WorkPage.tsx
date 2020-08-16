@@ -8,6 +8,7 @@ import { Work } from '../models/Work';
 import Globals from '../Globals';
 import { bookmark, arrowBack, home, search } from 'ionicons/icons';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
+import SearchAlert from '../components/SearchAlert';
 
 interface PageProps extends RouteComponentProps<{
   tab: string;
@@ -127,6 +128,17 @@ class _WorkPage extends React.Component<PageProps> {
           <IonList>
             {rows}
           </IonList>
+
+          <SearchAlert
+            {...{
+              showSearchAlert: (this.state as any).showSearchAlert,
+              searchCancel: () => { this.setState({ showSearchAlert: false }) },
+              searchOk: (keyword: string) => {
+                this.props.history.push(`/catalog/search/${keyword}`);
+                this.setState({ showSearchAlert: false });
+              }, ...this.props
+            }}
+          />
         </IonContent>
       </IonPage>
     );

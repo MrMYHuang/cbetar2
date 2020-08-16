@@ -28,7 +28,7 @@ class _CatalogPage extends React.Component<PageProps> {
 
   catalogs = Array<Catalog>();
   ionViewWillEnter() {
-    //console.log( 'view will enter' );
+    console.log( `view will enter: ${this.props.match.url}` );
     this.fetchData(this.props.match.params.path);
   }
 
@@ -121,7 +121,7 @@ class _CatalogPage extends React.Component<PageProps> {
       //if (catalog.nodeType == 'html')
       let routeLink = '';
       if (catalog.work == null) {
-        routeLink = `/catalog/${catalog.n}/${catalog.label}`;
+        routeLink = `/catalog/catalog/${catalog.n}/${catalog.label}`;
       } else {
         routeLink = `/catalog/work/${catalog.work}/${catalog.label}`;
       }

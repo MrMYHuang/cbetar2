@@ -1,13 +1,17 @@
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonLabel, withIonLifeCycle } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonLabel, withIonLifeCycle, IonButton, IonIcon } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import Globals from '../Globals';
 import { Search } from '../models/Search';
+import SearchAlert from '../components/SearchAlert';
+import { home, search } from 'ionicons/icons';
 
 interface PageProps extends RouteComponentProps<{
   tab: string;
+  path: string;
+  label: string;
   keyword: string;
 }> { }
 
@@ -46,7 +50,7 @@ class _SearchPage extends React.Component<PageProps> {
     searches.forEach((search, i) => {
       const isCatalog = search.type === 'catalog';
       let label = isCatalog ? search.label : `${search.title}\n作者:${search.creators}`;
-      let routeLink = `/${this.props.match.params.tab}` + (isCatalog ? `/${search.n}` : `/work/${search.work}`) + `/${search.title}`;
+      let routeLink = `/${this.props.match.params.tab}` + (isCatalog ? `/catalog/${search.n}` : `/work/${search.work}`) + `/${search.title}`;
       rows.push(
         <IonItem key={`searchItem_` + i} button={true} onClick={async event => {
           event.preventDefault();
@@ -70,12 +74,29 @@ class _SearchPage extends React.Component<PageProps> {
         <IonHeader>
           <IonToolbar>
             <IonTitle>搜尋 - {this.props.match.params.keyword}</IonTitle>
+            <IonButton fill="clear" slot='end' onClick={e => this.props.history.push(`/${this.props.match.params.tab}`)}>
+              <IonIcon icon={home} slot='icon-only' />
+            </IonButton>
+            <IonButton fill="clear" slot='end' onClick={e => this.setState({ showSearchAlert: true })}>
+              <IonIcon icon={search} slot='icon-only' />
+            </IonButton>
           </IonToolbar>
         </IonHeader>
         <IonContent>
           <IonList>
             {rows}
           </IonList>
+
+          <SearchAlert
+            {...{
+              showSearchAlert: (this.state as any).showSearchAlert,
+              searchCancel: () => { this.setState({ showSearchAlert: false }) },
+              searchOk: (keyword: string) => {
+                this.props.history.push(`/catalog/search/${keyword}`);
+                this.setState({ showSearchAlert: false });
+              }, ...this.props
+            }}
+          />
         </IonContent>
       </IonPage>
     );

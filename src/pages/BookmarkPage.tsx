@@ -34,7 +34,7 @@ class _BookmarkPage extends React.Component<PageProps> {
       let label = `${bookmark.selectedText}`;
       switch (bookmark.type) {
         case BookmarkType.CATALOG:
-          routeLink = `/catalog/${bookmark.uuid}/${label}`; break;
+          routeLink = `/catalog/catalog/${bookmark.uuid}/${label}`; break;
         case BookmarkType.WORK:
           routeLink = `/catalog/work/${bookmark.uuid}/${label}`; break;
         case BookmarkType.JUAN:

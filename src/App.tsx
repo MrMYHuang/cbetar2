@@ -64,11 +64,11 @@ const App: React.FC = () => (
       <IonReactRouter>
         <IonTabs>
           <IonRouterOutlet animated={false}>
-            <Route path="/:tab(catalog)" component={(props: any) => <CatalogPage {...props} />} exact={true} />
-            <Route path="/:tab(catalog)/:path/:label" component={(props: any) => <CatalogPage {...props} />} exact={true} />
+            <Route path="/:tab(catalog)/webview/:work/:path/:label" render={props => <WebViewPage {...props} />} exact={true} />
             <Route path="/:tab(catalog)/work/:path/:label" component={(props: any) => <WorkPage {...props} />} exact={true} />
-            <Route path={`/:tab(catalog)/webview/:work/:path/:label`} render={props => <WebViewPage {...props} />} exact={true} />
-            <Route path={`/:tab(catalog)/search/:keyword`} render={props => <SearchPage {...props} />} exact={true} />
+            <Route path="/:tab(catalog)/search/:keyword" render={props => <SearchPage {...props} />} exact={true} />
+            <Route path="/:tab(catalog)/catalog/:path/:label" component={(props: any) => <CatalogPage {...props} />} exact={true} />
+            <Route path="/:tab(catalog)" component={(props: any) => <CatalogPage {...props} />} exact={true} />
             <Route path="/:tab(bookmarks)" component={BookmarkPage} exact={true} />
             <Route path={`/:tab(bookmarks)/search/:keyword`} render={props => <SearchPage {...props} />} exact={true} />
             <Route path="/settings" component={SettingsPage} />

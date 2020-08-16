@@ -9,6 +9,7 @@ import Globals from '../Globals';
 import { bookmark, arrowBack, home, search } from 'ionicons/icons';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
 import { Work } from '../models/Work';
+import SearchAlert from '../components/SearchAlert';
 
 const bookmarkPrefix = 'bookmark_';
 function scrollToBookmark(uuidStr: string) {
@@ -156,6 +157,17 @@ class _WebViewPage extends React.Component<PageProps> {
         </IonHeader>
         <IonContent>
           <div id='cbetarWebView' style={{ userSelect: "text", WebkitUserSelect: "text" }} dangerouslySetInnerHTML={{ __html: (this.state as any).htmlStr }}></div>
+
+          <SearchAlert
+            {...{
+              showSearchAlert: (this.state as any).showSearchAlert,
+              searchCancel: () => { this.setState({ showSearchAlert: false }) },
+              searchOk: (keyword: string) => {
+                this.props.history.push(`/catalog/search/${keyword}`);
+                this.setState({ showSearchAlert: false });
+              }, ...this.props
+            }}
+          />
         </IonContent>
       </IonPage>
     );
