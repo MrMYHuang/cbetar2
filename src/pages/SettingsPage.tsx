@@ -74,7 +74,6 @@ class SettingsPage extends React.Component<PageProps> {
             <IonItem>
               <IonIcon icon={text} slot='start' />
               <div className="contentBlock">
-                <div style={{ flexDirection: "column" }}>
                   <IonLabel>經文字型大小: {(this.props as any).settings.fontSize}</IonLabel>
                   <IonRange min={10} max={64} value={(this.props as any).settings.fontSize} onIonChange={e => {
                     (this.props as any).dispatch({
@@ -83,7 +82,6 @@ class SettingsPage extends React.Component<PageProps> {
                       val: e.detail.value,
                     });
                   }} />
-                </div>
               </div>
             </IonItem>
             <IonItem>

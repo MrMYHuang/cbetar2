@@ -1,17 +1,3 @@
-ion-item {
-    align-items: start;
-}
-
-ion-icon {
-    width: 24px;
-    height: 24px;
-}
-
-.inlineBlock {
-    display: inline-block;
-    vertical-align: top;
-}
-
 .contentBlock {
     flex-grow: 1;
 }
