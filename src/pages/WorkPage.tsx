@@ -12,6 +12,7 @@ import { Bookmark, BookmarkType } from '../models/Bookmark';
 interface PageProps extends RouteComponentProps<{
   tab: string;
   path: string;
+  label: string;
 }> { }
 
 const urlWork = `${Globals.cbetaApiUrl}/works?work=`;
@@ -48,14 +49,12 @@ class _WorkPage extends React.Component<PageProps> {
   }
 
   addBookmarkHandler() {
-    const state = this.props.location.state as any;
-
     (this.props as any).dispatch({
       type: "ADD_BOOKMARK",
       bookmark: new Bookmark({
         type: BookmarkType.WORK,
         uuid: this.props.match.params.path,
-        selectedText: state ? state.label : this.props.match.params.path,
+        selectedText: this.props.match.params.label,
         fileName: '',
         work: null,
       }),
@@ -80,15 +79,12 @@ class _WorkPage extends React.Component<PageProps> {
     let juans = work.juan_list.split(',');
     for (let i = 0; i < juans.length; i++) {
       //if (work.nodeType == 'html')
-      let routeLink = `/catalog/webview/${work.work}/${juans[i]}`;
+      let routeLink = `/catalog/webview/${work.work}/${juans[i]}/${work.title}`;
       rows.push(
         <IonItem key={`juanItem` + i} button={true} onClick={async event => {
           event.preventDefault();
           this.props.history.push({
             pathname: routeLink,
-            state: {
-              label: work.title,
-            },
           });
         }}>
           <IonLabel style={{ fontSize: (this.props as any).listFontSize }} key={`juanLabel` + i}>

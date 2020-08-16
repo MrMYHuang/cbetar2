@@ -34,12 +34,12 @@ class _BookmarkPage extends React.Component<PageProps> {
       let label = `${bookmark.selectedText}`;
       switch (bookmark.type) {
         case BookmarkType.CATALOG:
-          routeLink = `/catalog/${bookmark.uuid}`; break;
+          routeLink = `/catalog/${bookmark.uuid}/${label}`; break;
         case BookmarkType.WORK:
-          routeLink = `/catalog/work/${bookmark.uuid}`; break;
+          routeLink = `/catalog/work/${bookmark.uuid}/${label}`; break;
         case BookmarkType.JUAN:
-          label = `${bookmark.work?.title}第${bookmark.work?.juan}卷 - ${label}`;
-          routeLink = `/catalog/webview/${bookmark.work?.work}/${bookmark.fileName}`; break;
+          routeLink = `/catalog/webview/${bookmark.work?.work}/${bookmark.fileName}/${label}`;
+          label = `${bookmark.work?.title}第${bookmark.work?.juan}卷 - ${label}`; break;
       }
       rows.push(
         <IonItem key={`bookmarkItem_` + i} button={true} onClick={async event => {
@@ -48,7 +48,6 @@ class _BookmarkPage extends React.Component<PageProps> {
             pathname: routeLink,
             state: {
               uuid: bookmark.uuid,
-              label: bookmark.work,
             },
           });
         }}>

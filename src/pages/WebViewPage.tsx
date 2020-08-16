@@ -21,6 +21,7 @@ interface PageProps extends RouteComponentProps<{
   tab: string;
   work: string;
   path: string;
+  label: string;
 }> { }
 
 const url = `${Globals.cbetaApiUrl}/juans?edition=CBETA`;
@@ -88,7 +89,7 @@ class _WebViewPage extends React.Component<PageProps> {
             fileName: `${this.props.match.params.work}_juan${this.props.match.params.path}.html`,
             work: new Work({
               juan: this.props.match.params.path,
-              title: (state ? state.label : this.props.match.params.work),
+              title: this.props.match.params.label,
               work: this.props.match.params.work,
             }),
           }),
@@ -139,7 +140,8 @@ class _WebViewPage extends React.Component<PageProps> {
     `}} />
         <IonHeader>
           <IonToolbar>
-            <IonTitle>{(this.props as any).workTitle}</IonTitle>            <IonButton fill="clear" slot='start'>
+            <IonTitle>{this.props.match.params.label}</IonTitle>
+            <IonButton fill="clear" slot='start'>
               <IonBackButton icon={arrowBack} />
             </IonButton>
             <IonButton fill="clear" color={this.hasBookmark ? 'warning' : 'primary'} slot='end' onClick={e => this.hasBookmark ? this.delBookmarkHandler() : this.addBookmarkHandler()}>

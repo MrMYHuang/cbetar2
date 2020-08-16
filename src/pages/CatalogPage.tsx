@@ -96,7 +96,7 @@ class _CatalogPage extends React.Component<PageProps> {
       bookmark: new Bookmark({
         type: BookmarkType.CATALOG,
         uuid: this.props.match.params.path,
-        selectedText: (this.props.location?.state as any).label || this.props.match.params.path,
+        selectedText: this.props.match.params.label,
         fileName: '',
         work: null,
       }),
@@ -121,16 +121,15 @@ class _CatalogPage extends React.Component<PageProps> {
       //if (catalog.nodeType == 'html')
       let routeLink = '';
       if (catalog.work == null) {
-        routeLink = `/catalog/${catalog.n}`;
+        routeLink = `/catalog/${catalog.n}/${catalog.label}`;
       } else {
-        routeLink = `/catalog/work/${catalog.work}`;
+        routeLink = `/catalog/work/${catalog.work}/${catalog.label}`;
       }
       rows.push(
         <IonItem key={`${catalog.n}item` + index} button={true} onClick={async event => {
           event.preventDefault();
           this.props.history.push({
             pathname: routeLink,
-            state: { label: catalog.label },
           });
         }}>
           <IonLabel style={{ fontSize: (this.props as any).listFontSize }} key={`${catalog.n}label` + index}>

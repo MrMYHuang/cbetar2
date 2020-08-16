@@ -46,13 +46,12 @@ class _SearchPage extends React.Component<PageProps> {
     searches.forEach((search, i) => {
       const isCatalog = search.type === 'catalog';
       let label = isCatalog ? search.label : `${search.title}\n作者:${search.creators}`;
-      let routeLink = `/${this.props.match.params.tab}` + (isCatalog ? `/${search.n}` : `/work/${search.work}`);
+      let routeLink = `/${this.props.match.params.tab}` + (isCatalog ? `/${search.n}` : `/work/${search.work}`) + `/${search.title}`;
       rows.push(
         <IonItem key={`searchItem_` + i} button={true} onClick={async event => {
           event.preventDefault();
           this.props.history.push({
             pathname: routeLink,
-            state: { label: search.label },
           });
         }}>
           <IonLabel style={{ fontSize: (this.props as any).listFontSize }} key={`searchLabel_` + i}>
