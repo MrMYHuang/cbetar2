@@ -69,6 +69,10 @@ class _WorkPage extends React.Component<PageProps> {
     });
   }
 
+  get isTopPage() {
+    return this.props.match.url === '/catalog';
+  }
+
   get hasBookmark() {
     return ((this.props as any).bookmarks as [Bookmark]).find(
       (e) => e.type === BookmarkType.WORK && e.uuid === this.props.match.params.path) != null;
@@ -110,8 +114,8 @@ class _WorkPage extends React.Component<PageProps> {
         <IonHeader>
           <IonToolbar>
             <IonTitle>{(this.state as any).work.title}</IonTitle>
-            <IonButton fill="clear" slot='start'>
-              <IonBackButton icon={arrowBack} />
+            <IonButton hidden={this.isTopPage} fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
+              <IonIcon icon={arrowBack} slot='icon-only' />
             </IonButton>
             <IonButton fill="clear" color={this.hasBookmark ? 'warning' : 'primary'} slot='end' onClick={e => this.hasBookmark ? this.delBookmarkHandler() : this.addBookmarkHandler()}>
               <IonIcon icon={bookmark} slot='icon-only' />

@@ -26,9 +26,8 @@ class _CatalogPage extends React.Component<PageProps> {
     };
   }
 
-  catalogs = Array<Catalog>();
   ionViewWillEnter() {
-    console.log( `view will enter: ${this.props.match.url}` );
+    //console.log( `view will enter: ${this.props.match.url}` );
     this.fetchData(this.props.match.params.path);
   }
 
@@ -46,10 +45,10 @@ class _CatalogPage extends React.Component<PageProps> {
 
   async fetchData(path: string) {
     //console.log('fetch');
-    this.catalogs = new Array<Catalog>();
+    let catalogs = new Array<Catalog>();
 
     if (this.props.match.params.path == null) {
-      this.catalogs = this.getTopCatalogs();
+      catalogs = this.getTopCatalogs();
     } else {
 
       //try {
@@ -57,10 +56,10 @@ class _CatalogPage extends React.Component<PageProps> {
         responseType: 'arraybuffer',
       });
       const data = JSON.parse(new Buffer(res.data).toString());
-      this.catalogs = data.results as [Catalog];
+      catalogs = data.results as [Catalog];
     }
 
-    this.setState({ catalogs: this.catalogs });
+    this.setState({ catalogs: catalogs });
     return true;
 
     /*data..forEach((element) {
@@ -87,7 +86,7 @@ class _CatalogPage extends React.Component<PageProps> {
   }
 
   get isTopCatalog() {
-    return this.props.match.params.path == null;
+    return this.props.match.url === '/catalog';
   }
 
   addBookmarkHandler() {
@@ -149,8 +148,8 @@ class _CatalogPage extends React.Component<PageProps> {
         <IonHeader>
           <IonToolbar>
             <IonTitle>目錄</IonTitle>
-            <IonButton hidden={this.isTopCatalog} fill="clear" slot='start'>
-              <IonBackButton icon={arrowBack} />
+            <IonButton hidden={this.isTopCatalog} fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
+              <IonIcon icon={arrowBack} slot='icon-only' />
             </IonButton>
             <IonButton hidden={this.isTopCatalog} fill="clear" color={this.hasBookmark ? 'warning' : 'primary'} slot='end' onClick={e => this.hasBookmark ? this.delBookmarkHandler() : this.addBookmarkHandler()}>
               <IonIcon icon={bookmark} slot='icon-only' />
@@ -170,13 +169,13 @@ class _CatalogPage extends React.Component<PageProps> {
 
           <SearchAlert
             {...{
-            showSearchAlert: (this.state as any).showSearchAlert,
-            searchCancel: () => {this.setState({ showSearchAlert: false })},
-            searchOk: (keyword: string) => {
-              this.props.history.push(`/catalog/search/${keyword}`);
-              this.setState({ showSearchAlert: false });
-            }, ...this.props
-          }}
+              showSearchAlert: (this.state as any).showSearchAlert,
+              searchCancel: () => { this.setState({ showSearchAlert: false }) },
+              searchOk: (keyword: string) => {
+                this.props.history.push(`/catalog/search/${keyword}`);
+                this.setState({ showSearchAlert: false });
+              }, ...this.props
+            }}
           />
         </IonContent>
       </IonPage>

@@ -6,7 +6,7 @@ import axios from 'axios';
 import Globals from '../Globals';
 import { Search } from '../models/Search';
 import SearchAlert from '../components/SearchAlert';
-import { home, search } from 'ionicons/icons';
+import { home, search, arrowBack } from 'ionicons/icons';
 
 interface PageProps extends RouteComponentProps<{
   tab: string;
@@ -44,6 +44,10 @@ class _SearchPage extends React.Component<PageProps> {
     }
   }
 
+  get isTopPage() {
+    return this.props.match.url === '/catalog';
+  }
+
   getRows() {
     let rows = Array<object>();
     const searches = (this.state as any).searches as [Search];
@@ -74,6 +78,9 @@ class _SearchPage extends React.Component<PageProps> {
         <IonHeader>
           <IonToolbar>
             <IonTitle>搜尋 - {this.props.match.params.keyword}</IonTitle>
+            <IonButton hidden={this.isTopPage} fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
+              <IonIcon icon={arrowBack} slot='icon-only' />
+            </IonButton>
             <IonButton fill="clear" slot='end' onClick={e => this.props.history.push(`/${this.props.match.params.tab}`)}>
               <IonIcon icon={home} slot='icon-only' />
             </IonButton>
