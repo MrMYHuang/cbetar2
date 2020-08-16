@@ -6,7 +6,6 @@ import Globals from '../Globals';
 import { star, helpCircle, text, moon, documentText } from 'ionicons/icons';
 import './SettingsPage.css';
 import PackageInfos from '../../package.json';
-import { stat } from 'fs';
 
 interface PageProps extends RouteComponentProps<{
   tab: string;
