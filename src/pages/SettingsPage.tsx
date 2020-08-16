@@ -3,7 +3,7 @@ import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem,
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import Globals from '../Globals';
-import { star, helpCircle, text, moon } from 'ionicons/icons';
+import { star, helpCircle, text, moon, documentText } from 'ionicons/icons';
 import './SettingsPage.css';
 import PackageInfos from '../../package.json';
 import { stat } from 'fs';
@@ -44,7 +44,7 @@ class SettingsPage extends React.Component<PageProps> {
               }} />
             </IonItem>
             <IonItem>
-              <IonIcon icon={moon} slot='start' />
+              <IonIcon icon={documentText} slot='start' />
               <IonLabel>顯示經文註解</IonLabel>
               <IonToggle slot='end' checked={(this.props as any).showComments} onIonChange={e => {
                 const isChecked = e.detail.checked;
