@@ -137,7 +137,10 @@ class _WebViewPage extends React.Component<PageProps> {
         <style dangerouslySetInnerHTML={{
           __html: `
       .t, p { font-size: ${(this.props as any).fontSize}px }
-    `}} />
+      #back {
+        display: ${(this.props as any).showComments ? "visible" : "none"}
+      }
+        `}} />
         <IonHeader>
           <IonToolbar>
             <IonTitle>{this.props.match.params.label}</IonTitle>
@@ -178,7 +181,8 @@ const mapStateToProps = (state: any /*, ownProps*/) => {
   return {
     bookmarks: state.settings.bookmarks,
     fontSize: state.settings.fontSize,
-    settings: state.settings
+    showComments: state.settings.showComments,
+    settings: state.settings,
   }
 };
 

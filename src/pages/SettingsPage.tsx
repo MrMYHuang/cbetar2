@@ -6,6 +6,7 @@ import Globals from '../Globals';
 import { star, helpCircle, text, moon } from 'ionicons/icons';
 import './SettingsPage.css';
 import PackageInfos from '../../package.json';
+import { stat } from 'fs';
 
 interface PageProps extends RouteComponentProps<{
   tab: string;
@@ -38,6 +39,19 @@ class SettingsPage extends React.Component<PageProps> {
                 (this.props as any).dispatch({
                   type: "SET_KEY_VAL",
                   key: 'darkMode',
+                  val: isChecked
+                });
+              }} />
+            </IonItem>
+            <IonItem>
+              <IonIcon icon={moon} slot='start' />
+              <IonLabel>顯示經文註解</IonLabel>
+              <IonToggle slot='end' checked={(this.props as any).showComments} onIonChange={e => {
+                const isChecked = e.detail.checked;
+                document.body.classList.toggle('dark', isChecked);
+                (this.props as any).dispatch({
+                  type: "SET_KEY_VAL",
+                  key: 'showComments',
                   val: isChecked
                 });
               }} />
@@ -101,7 +115,8 @@ class SettingsPage extends React.Component<PageProps> {
 const mapStateToProps = (state: any /*, ownProps*/) => {
   return {
     settings: state.settings,
-    darkMode: state.settings.darkMode
+    darkMode: state.settings.darkMode,
+    showComments: state.settings.showComments,
   }
 };
 
