@@ -76,7 +76,7 @@ class SettingsPage extends React.Component<PageProps> {
               <IonIcon icon={star} slot='start' />
               <div>
                 <IonLabel>特色</IonLabel>
-                <IonLabel>搜尋經文、書籤功能、離線瀏覽、暗色模式、字型調整。</IonLabel>
+                <IonLabel className='ion-text-wrap'>搜尋經文、書籤功能、離線瀏覽、暗色模式、字型調整。</IonLabel>
               </div>
             </IonItem>
             <IonItem>

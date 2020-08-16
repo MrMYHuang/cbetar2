@@ -54,7 +54,7 @@ class _SearchPage extends React.Component<PageProps> {
             pathname: routeLink,
           });
         }}>
-          <IonLabel style={{ fontSize: (this.props as any).listFontSize }} key={`searchLabel_` + i}>
+          <IonLabel className='ion-text-wrap' style={{ fontSize: (this.props as any).listFontSize }} key={`searchLabel_` + i}>
             {label}
           </IonLabel>
         </IonItem>

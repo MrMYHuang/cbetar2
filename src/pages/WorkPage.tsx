@@ -87,7 +87,7 @@ class _WorkPage extends React.Component<PageProps> {
             pathname: routeLink,
           });
         }}>
-          <IonLabel style={{ fontSize: (this.props as any).listFontSize }} key={`juanLabel` + i}>
+          <IonLabel className='ion-text-wrap' style={{ fontSize: (this.props as any).listFontSize }} key={`juanLabel` + i}>
             卷{juans[i]}
           </IonLabel>
         </IonItem>

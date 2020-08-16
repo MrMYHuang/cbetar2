@@ -51,7 +51,7 @@ class _BookmarkPage extends React.Component<PageProps> {
             },
           });
         }}>
-          <IonLabel style={{ fontSize: (this.props as any).listFontSize }} key={`bookmarkItemLabel_` + i}>
+          <IonLabel className='ion-text-wrap' style={{ fontSize: (this.props as any).listFontSize }} key={`bookmarkItemLabel_` + i}>
             {label}
           </IonLabel>
         </IonItem>

@@ -132,7 +132,7 @@ class _CatalogPage extends React.Component<PageProps> {
             pathname: routeLink,
           });
         }}>
-          <IonLabel style={{ fontSize: (this.props as any).listFontSize }} key={`${catalog.n}label` + index}>
+          <IonLabel className='ion-text-wrap' style={{ fontSize: (this.props as any).listFontSize }} key={`${catalog.n}label` + index}>
             {catalog.label}
           </IonLabel>
         </IonItem>
