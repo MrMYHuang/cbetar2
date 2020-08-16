@@ -38,7 +38,7 @@ class _BookmarkPage extends React.Component<PageProps> {
         case BookmarkType.WORK:
           routeLink = `/catalog/work/${bookmark.uuid}/${label}`; break;
         case BookmarkType.JUAN:
-          routeLink = `/catalog/webview/${bookmark.work?.work}/${bookmark.fileName}/${label}`;
+          routeLink = `/catalog/webview/${bookmark.work?.work}/${bookmark.work?.juan}/${bookmark.work?.title}`;
           label = `${bookmark.work?.title}第${bookmark.work?.juan}卷 - ${label}`; break;
       }
       rows.push(
