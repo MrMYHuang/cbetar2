@@ -104,31 +104,6 @@ class SettingsPage extends React.Component<PageProps> {
                 <div><a href="http://cbdata.dila.edu.tw/v1.2/" target="__new">CBETA API參考文件</a></div>
               </div>
             </IonItem>
-            <IonItem>
-              <IonIcon icon={refreshCircle} slot='start' />
-              <IonButton onClick={e => {
-                  this.setState({
-                    showUpdateAlert: true,
-                  });
-              }}>更新App</IonButton>
-            </IonItem>
-            <IonAlert
-            isOpen={(this.state as any).showUpdateAlert}
-            backdropDismiss={false}
-            header={'請重啟app完成更新!'}
-            buttons={[
-              {
-                text: '確定',
-                cssClass: 'primary',
-                handler: (value) => {
-                  this.setState({
-                    showUpdateAlert: false,
-                  });
-                  Globals.updateApp();
-                },
-              }
-            ]}
-          />
           </IonList>
         </IonContent>
       </IonPage >
