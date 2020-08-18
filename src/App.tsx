@@ -38,6 +38,7 @@ import './theme/variables.css';
 import SettingsPage from './pages/SettingsPage';
 import BookmarkPage from './pages/BookmarkPage';
 import SearchPage from './pages/SearchPage';
+import Globals from './Globals';
 
 let store = getSavedStore();
 /*
@@ -107,7 +108,7 @@ class App extends React.Component {
           <IonAlert
             isOpen={(this.state as any).showUpdateAlert}
             backdropDismiss={false}
-            header={'App更新已下載，請關閉、重新啟動app完成更新。'}
+            header={'發現app更新，請按下確定完成更新。'}
             buttons={[
               {
                 text: '確定',
@@ -116,6 +117,7 @@ class App extends React.Component {
                   this.setState({
                     showUpdateAlert: false,
                   });
+                  Globals.updateApp();
                 },
               }
             ]}

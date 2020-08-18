@@ -10,5 +10,5 @@ ReactDOM.render(<App />, document.getElementById('root'));
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.register({
     onSuccess: () => { console.log('Precache app loaded!'); },
-    onUpdate: serviceWorkCallbacks.onUpdate,
+    onUpdate: () => { console.log('Found app updated!'); serviceWorkCallbacks.onUpdate(); },
 });

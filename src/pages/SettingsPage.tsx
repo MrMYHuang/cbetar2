@@ -1,9 +1,9 @@
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonRange, IonIcon, IonLabel, IonToggle } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonRange, IonIcon, IonLabel, IonToggle, IonButton } from '@ionic/react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import Globals from '../Globals';
-import { star, helpCircle, text, moon, documentText } from 'ionicons/icons';
+import { star, helpCircle, text, moon, documentText, refreshCircle } from 'ionicons/icons';
 import './SettingsPage.css';
 import PackageInfos from '../../package.json';
 
@@ -73,14 +73,14 @@ class SettingsPage extends React.Component<PageProps> {
             <IonItem>
               <IonIcon icon={text} slot='start' />
               <div className="contentBlock">
-                  <IonLabel>經文字型大小: {(this.props as any).settings.fontSize}</IonLabel>
-                  <IonRange min={10} max={64} value={(this.props as any).settings.fontSize} onIonChange={e => {
-                    (this.props as any).dispatch({
-                      type: "SET_KEY_VAL",
-                      key: 'fontSize',
-                      val: e.detail.value,
-                    });
-                  }} />
+                <IonLabel>經文字型大小: {(this.props as any).settings.fontSize}</IonLabel>
+                <IonRange min={10} max={64} value={(this.props as any).settings.fontSize} onIonChange={e => {
+                  (this.props as any).dispatch({
+                    type: "SET_KEY_VAL",
+                    key: 'fontSize',
+                    val: e.detail.value,
+                  });
+                }} />
               </div>
             </IonItem>
             <IonItem>
@@ -101,6 +101,12 @@ class SettingsPage extends React.Component<PageProps> {
                 <div><a href="https://github.com/MrMYHuang/cbetar2" target="__new">操作說明與開放原始碼</a></div>
                 <div><a href="http://cbdata.dila.edu.tw/v1.2/" target="__new">CBETA API參考文件</a></div>
               </div>
+            </IonItem>
+            <IonItem>
+              <IonIcon icon={refreshCircle} slot='start' />
+              <IonButton onClick={e => {
+                Globals.updateApp();
+              }}>更新App</IonButton>
             </IonItem>
           </IonList>
         </IonContent>

@@ -36,4 +36,11 @@ export default {
         "Vol-ZW": "藏外佛教文獻",
         "Vol-Y": "印順法師佛學著作集",
       } as Record<string, string>,
+      updateApp: () => {
+        navigator.serviceWorker.getRegistrations().then(regs => {
+          return Promise.all(regs.map(reg => reg.unregister()));
+        }).then(() => {
+          window.location.reload();
+        });
+      }
 };
