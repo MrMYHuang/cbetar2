@@ -108,7 +108,7 @@ class App extends React.Component {
           <IonAlert
             isOpen={(this.state as any).showUpdateAlert}
             backdropDismiss={false}
-            header={'發現app更新，請按下確定完成更新。'}
+            header={'發現app更新，請按下確定完成更新，並重啟app!'}
             buttons={[
               {
                 text: '確定',

@@ -40,7 +40,8 @@ export default {
         navigator.serviceWorker.getRegistrations().then(regs => {
           return Promise.all(regs.map(reg => reg.unregister()));
         }).then(() => {
-          window.location.reload();
+          window.location.replace('/');
+          //window.location.reload();
         });
       }
 };
