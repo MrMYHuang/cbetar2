@@ -106,6 +106,7 @@ class App extends React.Component {
           </IonReactRouter>
           <IonAlert
             isOpen={(this.state as any).showUpdateAlert}
+            backdropDismiss={false}
             header={'App更新已下載，請關閉、重新啟動app完成更新。'}
             buttons={[
               {

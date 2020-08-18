@@ -66,6 +66,11 @@ function registerValidSW(swUrl: string, config?: Config) {
   navigator.serviceWorker
     .register(swUrl)
     .then(registration => {
+      if(registration.waiting) {
+        const reg = registration.waiting;
+        reg.postMessage({ type: 'SKIP_WAITING' });
+      }
+
       registration.onupdatefound = () => {
         const installingWorker = registration.installing;
         if (installingWorker == null) {
@@ -84,7 +89,7 @@ function registerValidSW(swUrl: string, config?: Config) {
 
               // Execute callback
               if (config && config.onUpdate) {
-                config.onUpdate(registration);
+                //config.onUpdate(registration);
               }
             } else {
               // At this point, everything has been precached.
