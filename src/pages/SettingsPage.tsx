@@ -1,5 +1,5 @@
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonRange, IonIcon, IonLabel, IonToggle, IonButton, IonAlert } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonRange, IonIcon, IonLabel, IonToggle, IonButton } from '@ionic/react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import Globals from '../Globals';
@@ -14,12 +14,10 @@ interface PageProps extends RouteComponentProps<{
 }> { }
 
 class SettingsPage extends React.Component<PageProps> {
+  /*
   constructor(props: any) {
     super(props);
-    this.state = {
-      showUpdateAlert: false,
-    }
-  }
+  }*/
 
   render() {
     return (
@@ -107,28 +105,9 @@ class SettingsPage extends React.Component<PageProps> {
             <IonItem>
               <IonIcon icon={refreshCircle} slot='start' />
               <IonButton onClick={e => {
-                  this.setState({
-                    showUpdateAlert: true,
-                  });
-              }}>更新App</IonButton>
+                Globals.updateApp();
+              }}>檢查app更新 (若無更新則無回應)</IonButton>
             </IonItem>
-            <IonAlert
-            isOpen={(this.state as any).showUpdateAlert}
-            backdropDismiss={false}
-            header={'請重啟app完成更新!'}
-            buttons={[
-              {
-                text: '確定',
-                cssClass: 'primary',
-                handler: (value) => {
-                  this.setState({
-                    showUpdateAlert: false,
-                  });
-                  Globals.updateApp();
-                },
-              }
-            ]}
-          />
           </IonList>
         </IonContent>
       </IonPage >

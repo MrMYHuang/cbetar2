@@ -108,7 +108,7 @@ class App extends React.Component {
           <IonAlert
             isOpen={(this.state as any).showUpdateAlert}
             backdropDismiss={false}
-            header={'發現app更新，請按下確定完成更新，並重啟app!'}
+            header={'發現app更新，請重啟app!重啟後可至設定頁檢查版本號。'}
             buttons={[
               {
                 text: '確定',
@@ -117,7 +117,6 @@ class App extends React.Component {
                   this.setState({
                     showUpdateAlert: false,
                   });
-                  Globals.updateApp();
                 },
               }
             ]}

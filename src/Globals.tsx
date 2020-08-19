@@ -38,10 +38,7 @@ export default {
       } as Record<string, string>,
       updateApp: () => {
         navigator.serviceWorker.getRegistrations().then(regs => {
-          return Promise.all(regs.map(reg => reg.unregister()));
-        }).then(() => {
-          window.location.replace('/');
-          //window.location.reload();
+          return Promise.all(regs.map(reg => reg.update()));
         });
       }
 };
