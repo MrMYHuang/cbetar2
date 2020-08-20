@@ -1,5 +1,5 @@
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton, withIonLifeCycle, IonIcon } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton, withIonLifeCycle, IonIcon, IonAlert } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as uuid from 'uuid';
@@ -31,6 +31,7 @@ class _WebViewPage extends React.Component<PageProps> {
     super(props);
     this.state = {
       htmlStr: null,
+      showBookmarkingAlert: false,
     }
   }
 
@@ -99,11 +100,11 @@ class _WebViewPage extends React.Component<PageProps> {
           }),
         });
         this.uuidStr = uuidStr;
-        return;
+      } else {
+        this.setState({showBookmarkingAlert: true});
       }
     }
 
-    //SaveHtml.postMessage(JSON.stringify({status: 'error'}));    
     return;
   }
 
@@ -174,6 +175,24 @@ class _WebViewPage extends React.Component<PageProps> {
                 this.setState({ showSearchAlert: false });
               }, ...this.props
             }}
+          />          
+          
+          <IonAlert
+            isOpen={(this.state as any).showBookmarkingAlert}
+            backdropDismiss={false}
+            header='書籤新增失敗'
+            message='請確認是否已選擇一段文字，再新增書籤!'
+            buttons={[
+              {
+                text: '確定',
+                cssClass: 'primary',
+                handler: (value) => {
+                  this.setState({
+                    showBookmarkingAlert: false,
+                  });
+                },
+              }
+            ]}
           />
         </IonContent>
       </IonPage>
