@@ -1,6 +1,7 @@
 import React from 'react';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonLabel, IonButton, IonIcon, withIonLifeCycle } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
+import queryString from 'query-string';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import './CatalogPage.css';
@@ -55,8 +56,8 @@ class _CatalogPage extends React.Component<PageProps> {
       const res = await axios.get(url + path, {
         responseType: 'arraybuffer',
       });
-      const data = JSON.parse(new Buffer(res.data).toString());
-      catalogs = data.results as [Catalog];
+      const data = JSON.parse(new TextDecoder().decode(res.data)).results as [any];
+      catalogs = data.map((json) => new Catalog(json));
     }
 
     this.setState({ catalogs: catalogs });
@@ -119,7 +120,9 @@ class _CatalogPage extends React.Component<PageProps> {
     (this.state as any).catalogs.forEach((catalog: Catalog, index: number) => {
       //if (catalog.nodeType == 'html')
       let routeLink = '';
-      if (catalog.work == null) {
+      if (catalog.nodeType == 'html') {
+        routeLink = `/catalog/webview/${catalog.n}/1/${catalog.label}`;
+      } else if (catalog.work == null) {
         routeLink = `/catalog/catalog/${catalog.n}/${catalog.label}`;
       } else {
         routeLink = `/catalog/work/${catalog.work}/${catalog.label}`;
@@ -129,6 +132,7 @@ class _CatalogPage extends React.Component<PageProps> {
           event.preventDefault();
           this.props.history.push({
             pathname: routeLink,
+            search: queryString.stringify({file: catalog.file!}),
           });
         }}>
           <IonLabel className='ion-text-wrap' style={{ fontSize: (this.props as any).listFontSize }} key={`${catalog.n}label` + index}>

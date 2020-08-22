@@ -38,7 +38,6 @@ import './theme/variables.css';
 import SettingsPage from './pages/SettingsPage';
 import BookmarkPage from './pages/BookmarkPage';
 import SearchPage from './pages/SearchPage';
-import Globals from './Globals';
 
 let store = getSavedStore();
 /*
@@ -82,7 +81,7 @@ class App extends React.Component {
           <IonReactRouter>
             <IonTabs>
               <IonRouterOutlet animated={false}>
-                <Route path="/:tab(catalog)/webview/:work/:path/:label" render={props => <WebViewPage {...props} />} exact={true} />
+                <Route path="/:tab(catalog)/webview/:work/:path/:label" render={props => <WebViewPage {...props} />} />
                 <Route path="/:tab(catalog)/work/:path/:label" component={(props: any) => <WorkPage {...props} />} exact={true} />
                 <Route path="/:tab(catalog)/search/:keyword" render={props => <SearchPage {...props} />} exact={true} />
                 <Route path="/:tab(catalog)/catalog/:path/:label" component={(props: any) => <CatalogPage {...props} />} exact={true} />

@@ -35,7 +35,7 @@ class _WorkPage extends React.Component<PageProps> {
     const res = await axios.get(urlWork + path, {
       responseType: 'arraybuffer',
     });
-    const data = JSON.parse(new Buffer(res.data).toString());
+    const data = JSON.parse(new TextDecoder().decode(res.data));
     const works = data.results as [Work];
 
     this.setState({ work: works[0] });

@@ -3,6 +3,7 @@ import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton, withIo
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as uuid from 'uuid';
+import queryString from 'query-string';
 import axios from 'axios';
 import './WebViewPage.css';
 import Globals from '../Globals';
@@ -27,16 +28,20 @@ interface PageProps extends RouteComponentProps<{
 
 const url = `${Globals.cbetaApiUrl}/juans?edition=CBETA`;
 class _WebViewPage extends React.Component<PageProps> {
+  htmlFile: string;
   constructor(props: any) {
     super(props);
     this.state = {
       htmlStr: null,
       showBookmarkingAlert: false,
     }
+    this.htmlFile = '';
   }
 
   uuidStr = '';
   ionViewWillEnter() {
+    let queryParams = queryString.parse(this.props.location.search) as any;
+    this.htmlFile = queryParams.file;
     let state = this.props.location.state as any;
     this.uuidStr = state ? state.uuid : '';
     //console.log( 'view will enter' );
@@ -53,12 +58,28 @@ class _WebViewPage extends React.Component<PageProps> {
 
   async fetchData(juan: string) {
     let htmlStr = localStorage.getItem(this.fileName);
-    if (htmlStr == null) {
+    if (htmlStr != null) {
+      this.setState({ htmlStr: htmlStr });
+      return true;
+    }
+
+    if (this.htmlFile) {
+      const res = await axios.get(`${Globals.cbetaApiUrl}/${this.htmlFile}`, {
+        responseType: 'arraybuffer',
+      });
+      let tryDecoder = new TextDecoder();
+      let tryDecodeHtmlStr = tryDecoder.decode(res.data);
+      if (tryDecodeHtmlStr.includes('charset=big5')) {
+        htmlStr = new TextDecoder('big5').decode(res.data);
+      } else {
+        htmlStr = tryDecodeHtmlStr;
+      }
+    } else {
       //try {
       const res = await axios.get(`${url}&work=${this.props.match.params.work}&juan=${juan}`, {
         responseType: 'arraybuffer',
       });
-      let data = JSON.parse(new Buffer(res.data).toString());
+      let data = JSON.parse(new TextDecoder().decode(res.data));
       htmlStr = data.results[0];
     }
 
