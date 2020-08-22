@@ -47,7 +47,6 @@ class SettingsPage extends React.Component<PageProps> {
               <IonLabel>顯示經文註解</IonLabel>
               <IonToggle slot='end' checked={(this.props as any).showComments} onIonChange={e => {
                 const isChecked = e.detail.checked;
-                document.body.classList.toggle('dark', isChecked);
                 (this.props as any).dispatch({
                   type: "SET_KEY_VAL",
                   key: 'showComments',
