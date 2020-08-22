@@ -34,8 +34,8 @@ class _SearchPage extends React.Component<PageProps> {
       const res = await axios.get(searchUrl + keyword, {
         responseType: 'arraybuffer',
       });
-      const data = JSON.parse(new TextDecoder().decode(res.data));
-      const searches = data.results as [Search];
+      const data = JSON.parse(new TextDecoder().decode(res.data)).results as [any];
+      const searches = data.map((json) => new Search(json));
 
       this.setState({ searches: searches });
       return true;

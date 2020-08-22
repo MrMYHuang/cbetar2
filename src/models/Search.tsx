@@ -12,6 +12,6 @@ export class Search {
         this.label = json["label"];
         this.work = json["work"];
         this.title = json["title"];
-        this.creators = json["creators"];
+        this.creators = json["creators"] ?? '無';
     }
 }
