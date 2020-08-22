@@ -23,7 +23,14 @@ CBETA電子佛典閱讀器2(非官方)，使用CBETA API存取電子佛經，支
 
 ## 程式
 
-使用Ionic開發的Web App (PWA)，請參考 https://ionicframework.com/ 作開發環境建置。已在Android, iOS, macOS, Windows使用Google Chrome安裝測試，Linux應該也能使用。
+使用Ionic開發的Web App (PWA)，請參考 https://ionicframework.com/ 作開發環境建置。已在這些環境作過安裝、測試:
+
+* Windows 10 + Edge Chrome
+* Android 9 + Chrome
+* macOS 10.15 + Edge Chrome
+* iPad 7 (模擬器) + Safari
+* iPhone 8 (模擬器) + Safari
+* Debian Linux 10 + Chrome
 
 ## Web App網址
 https://MrMYHuang.github.io
