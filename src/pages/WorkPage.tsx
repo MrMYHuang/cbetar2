@@ -2,7 +2,6 @@ import React from 'react';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonLabel, withIonLifeCycle, IonButton, IonIcon } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
-import axios from 'axios';
 import './WorkPage.css';
 import { Work } from '../models/Work';
 import Globals from '../Globals';
@@ -16,7 +15,6 @@ interface PageProps extends RouteComponentProps<{
   label: string;
 }> { }
 
-const urlWork = `${Globals.cbetaApiUrl}/works?work=`;
 class _WorkPage extends React.Component<PageProps> {
   constructor(props: any) {
     super(props);
@@ -32,7 +30,7 @@ class _WorkPage extends React.Component<PageProps> {
 
   async fetchWork(path: string) {
     //try {
-    const res = await axios.get(urlWork + path, {
+    const res = await Globals.axiosInstance.get(`/works?work=${path}`, {
       responseType: 'arraybuffer',
     });
     const data = JSON.parse(new TextDecoder().decode(res.data));

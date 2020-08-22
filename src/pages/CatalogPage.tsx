@@ -3,7 +3,6 @@ import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem,
 import { RouteComponentProps } from 'react-router-dom';
 import queryString from 'query-string';
 import { connect } from 'react-redux';
-import axios from 'axios';
 import './CatalogPage.css';
 import { Catalog } from '../models/Catalog';
 import Globals from '../Globals';
@@ -17,7 +16,6 @@ interface PageProps extends RouteComponentProps<{
   label: string;
 }> { }
 
-const url = `${Globals.cbetaApiUrl}/catalog_entry?q=`;
 class _CatalogPage extends React.Component<PageProps> {
   constructor(props: any) {
     super(props);
@@ -53,7 +51,7 @@ class _CatalogPage extends React.Component<PageProps> {
     } else {
 
       //try {
-      const res = await axios.get(url + path, {
+      const res = await Globals.axiosInstance.get(`/catalog_entry?q=${path}`, {
         responseType: 'arraybuffer',
       });
       const data = JSON.parse(new TextDecoder().decode(res.data)).results as [any];

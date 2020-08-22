@@ -4,7 +4,6 @@ import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as uuid from 'uuid';
 import queryString from 'query-string';
-import axios from 'axios';
 import './WebViewPage.css';
 import Globals from '../Globals';
 import { bookmark, arrowBack, home, search, ellipsisHorizontal, ellipsisVertical } from 'ionicons/icons';
@@ -26,7 +25,6 @@ interface PageProps extends RouteComponentProps<{
   label: string;
 }> { }
 
-const url = `${Globals.cbetaApiUrl}/juans?edition=CBETA`;
 class _WebViewPage extends React.Component<PageProps> {
   htmlFile: string;
   constructor(props: any) {
@@ -68,7 +66,7 @@ class _WebViewPage extends React.Component<PageProps> {
     }
 
     if (this.htmlFile) {
-      const res = await axios.get(`${Globals.cbetaApiUrl}/${this.htmlFile}`, {
+      const res = await Globals.axiosInstance.get(`/${this.htmlFile}`, {
         responseType: 'arraybuffer',
       });
       let tryDecoder = new TextDecoder();
@@ -80,7 +78,7 @@ class _WebViewPage extends React.Component<PageProps> {
       }
     } else {
       //try {
-      const res = await axios.get(`${url}&work=${this.props.match.params.work}&juan=${juan}`, {
+      const res = await Globals.axiosInstance.get(`/juans?edition=CBETA&work=${this.props.match.params.work}&juan=${juan}`, {
         responseType: 'arraybuffer',
       });
       let data = JSON.parse(new TextDecoder().decode(res.data));

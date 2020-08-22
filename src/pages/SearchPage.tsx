@@ -2,7 +2,6 @@ import React from 'react';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonLabel, withIonLifeCycle, IonButton, IonIcon } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
-import axios from 'axios';
 import Globals from '../Globals';
 import { Search } from '../models/Search';
 import SearchAlert from '../components/SearchAlert';
@@ -15,7 +14,6 @@ interface PageProps extends RouteComponentProps<{
   keyword: string;
 }> { }
 
-const searchUrl = `${Globals.cbetaApiUrl}/toc?q=`;
 class _SearchPage extends React.Component<PageProps> {
   constructor(props: any) {
     super(props);
@@ -31,7 +29,7 @@ class _SearchPage extends React.Component<PageProps> {
 
   async search(keyword: string) {
     try {
-      const res = await axios.get(searchUrl + keyword, {
+      const res = await Globals.axiosInstance.get(`/toc?q=${keyword}`, {
         responseType: 'arraybuffer',
       });
       const data = JSON.parse(new TextDecoder().decode(res.data)).results as [any];

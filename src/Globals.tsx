@@ -1,10 +1,20 @@
+import axios from 'axios';
+
 const apiVersion = 'v1.2';
+const cbetaApiUrl = `https://cbdata.dila.edu.tw/${apiVersion}`;
+
+const axiosInstance = axios.create({
+  baseURL: cbetaApiUrl,
+  timeout: 3000,
+});
+
 export default {
     storeFile: 'Settings.json',
     fontSizeNorm: 24,
     fontSizeLarge: 48,
     apiVersion,
-    cbetaApiUrl: `https://cbdata.dila.edu.tw/${apiVersion}`,
+    cbetaApiUrl,
+    axiosInstance,
     topCatalogs: {
         "CBETA": "CBETA 部類",
         "others": "歷代藏經補輯",
