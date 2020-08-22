@@ -1,5 +1,5 @@
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton, withIonLifeCycle, IonIcon, IonAlert } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton, withIonLifeCycle, IonIcon, IonAlert, IonPopover, IonList, IonItem, IonLabel } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as uuid from 'uuid';
@@ -7,7 +7,7 @@ import queryString from 'query-string';
 import axios from 'axios';
 import './WebViewPage.css';
 import Globals from '../Globals';
-import { bookmark, arrowBack, home, search } from 'ionicons/icons';
+import { bookmark, arrowBack, home, search, ellipsisHorizontal, ellipsisVertical } from 'ionicons/icons';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
 import { Work } from '../models/Work';
 import SearchAlert from '../components/SearchAlert';
@@ -34,6 +34,10 @@ class _WebViewPage extends React.Component<PageProps> {
     this.state = {
       htmlStr: null,
       showBookmarkingAlert: false,
+      popover: {
+        show: false,
+        event: null,
+      },
     }
     this.htmlFile = '';
   }
@@ -86,9 +90,7 @@ class _WebViewPage extends React.Component<PageProps> {
     this.setState({ htmlStr: htmlStr });
     return true;
 
-    /*data..forEach((element) {
-      catalogs.add(Catalog.fromJson(element));
-    });
+    /*
   } catch (e) {
     fetchFail = true;
   }*/
@@ -122,7 +124,7 @@ class _WebViewPage extends React.Component<PageProps> {
         });
         this.uuidStr = uuidStr;
       } else {
-        this.setState({showBookmarkingAlert: true});
+        this.setState({ showBookmarkingAlert: true });
       }
     }
 
@@ -176,12 +178,33 @@ class _WebViewPage extends React.Component<PageProps> {
             <IonButton fill="clear" color={this.hasBookmark ? 'warning' : 'primary'} slot='end' onClick={e => this.hasBookmark ? this.delBookmarkHandler() : this.addBookmarkHandler()}>
               <IonIcon icon={bookmark} slot='icon-only' />
             </IonButton>
-            <IonButton fill="clear" slot='end' onClick={e => this.props.history.push(`/${this.props.match.params.tab}`)}>
-              <IonIcon icon={home} slot='icon-only' />
+            <IonButton fill="clear" slot='end' onClick={e => this.setState({ popover: { show: true, event: e.nativeEvent } })}>
+              <IonIcon ios={ellipsisHorizontal} md={ellipsisVertical} slot='icon-only' />
             </IonButton>
-            <IonButton fill="clear" slot='end' onClick={e => this.setState({ showSearchAlert: true })}>
-              <IonIcon icon={search} slot='icon-only' />
-            </IonButton>
+            <IonPopover
+              isOpen={(this.state as any).popover.show}
+              event={(this.state as any).popover.event}
+              onDidDismiss={e => { this.setState({ popover: { show: false, event: null } }) }}
+            >
+              <IonList>
+                <IonItem button onClick={e => {
+                  this.props.history.push(`/${this.props.match.params.tab}`);
+                  this.setState({ popover: { show: false, event: null } });
+                }}>
+                  <IonIcon icon={home} slot='start' />
+                  <IonLabel>回首頁</IonLabel>
+                </IonItem>
+              </IonList>
+              <IonList>
+                <IonItem button onClick={e => {
+                  this.setState({ showSearchAlert: true });
+                  this.setState({ popover: { show: false, event: null } });
+                }}>
+                  <IonIcon icon={search} slot='start' />
+                  <IonLabel>搜尋經文</IonLabel>
+                </IonItem>
+              </IonList>
+            </IonPopover>
           </IonToolbar>
         </IonHeader>
         <IonContent>
@@ -196,8 +219,8 @@ class _WebViewPage extends React.Component<PageProps> {
                 this.setState({ showSearchAlert: false });
               }, ...this.props
             }}
-          />          
-          
+          />
+
           <IonAlert
             isOpen={(this.state as any).showBookmarkingAlert}
             backdropDismiss={false}

@@ -120,7 +120,7 @@ class _CatalogPage extends React.Component<PageProps> {
     (this.state as any).catalogs.forEach((catalog: Catalog, index: number) => {
       //if (catalog.nodeType == 'html')
       let routeLink = '';
-      if (catalog.nodeType == 'html') {
+      if (catalog.nodeType === 'html') {
         routeLink = `/catalog/webview/${catalog.n}/1/${catalog.label}`;
       } else if (catalog.work == null) {
         routeLink = `/catalog/catalog/${catalog.n}/${catalog.label}`;
