@@ -164,14 +164,14 @@ class _WebViewPage extends React.Component<PageProps> {
     display: inline-block;
     white-space: normal;
     text-align: left;
-    height: 100%;
-    overflow: auto;
   }
 
   #cbetarWebView {
     white-space: nowrap;
+    overflow: scroll;
     direction: rtl;
     display: flex;
+    height: 100%;
   }`;
 
   render() {
@@ -226,7 +226,7 @@ class _WebViewPage extends React.Component<PageProps> {
             </IonPopover>
           </IonToolbar>
         </IonHeader>
-        <IonContent>
+        <IonContent scrollX scrollY>
           <div id='cbetarWebView' style={{ userSelect: "text", WebkitUserSelect: "text" }} dangerouslySetInnerHTML={{ __html: (this.state as any).htmlStr }}></div>
 
           <SearchAlert
