@@ -157,14 +157,36 @@ class _WebViewPage extends React.Component<PageProps> {
     return this.bookmark != null;
   }
 
+  rtlVerticalStyles = `
+  #cbetarWebView p, #body, #cbetarWebView div {
+    direction: ltr;
+    writing-mode: vertical-rl;
+    display: inline-block;
+    white-space: normal;
+    text-align: left;
+    height: 100%;
+    overflow: auto;
+  }
+
+  #cbetarWebView {
+    white-space: nowrap;
+    direction: rtl;
+    display: flex;
+  }`;
+
   render() {
     return (
       <IonPage>
         <style dangerouslySetInnerHTML={{
           __html: `
-      .t, p { font-size: ${(this.props as any).fontSize}px }
+      ${(this.props as any).rtlVerticalLayout ? this.rtlVerticalStyles : ''}
+
+      .t, p {
+        font-size: ${(this.props as any).fontSize}px;
+        font-family: 標楷體;
+      }
       #back {
-        display: ${(this.props as any).showComments ? "visible" : "none"}
+        display: ${(this.props as any).showComments ? "visible" : "none"} !important;
       }
         `}} />
         <IonHeader>
@@ -247,6 +269,7 @@ const mapStateToProps = (state: any /*, ownProps*/) => {
     bookmarks: state.settings.bookmarks,
     fontSize: state.settings.fontSize,
     showComments: state.settings.showComments,
+    rtlVerticalLayout: state.settings.rtlVerticalLayout,
     settings: state.settings,
   }
 };

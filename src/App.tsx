@@ -38,6 +38,7 @@ import './theme/variables.css';
 import SettingsPage from './pages/SettingsPage';
 import BookmarkPage from './pages/BookmarkPage';
 import SearchPage from './pages/SearchPage';
+import Globals from './Globals';
 
 let store = getSavedStore();
 /*
@@ -58,6 +59,7 @@ class DebugRouter extends IonReactRouter {
 // Apply the dark mode setting.
 const state = store.getState();
 document.body.classList.toggle('dark', state.settings.darkMode);
+Globals.updateFont(state.settings.useFontDFKaiSB);
 
 export var serviceWorkCallbacks = {
   onSuccess: function () {},

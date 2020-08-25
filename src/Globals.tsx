@@ -50,5 +50,8 @@ export default {
         navigator.serviceWorker.getRegistrations().then(regs => {
           return Promise.all(regs.map(reg => reg.update()));
         });
+      },
+      updateFont: (useFontDFKaiSB: Boolean) => {
+        document.documentElement.style.cssText = '--ion-font-family:' + (useFontDFKaiSB ? '標楷體' : '細明體');
       }
 };

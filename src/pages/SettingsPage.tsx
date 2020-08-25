@@ -34,10 +34,35 @@ class SettingsPage extends React.Component<PageProps> {
               <IonLabel>暗色模式</IonLabel>
               <IonToggle slot='end' checked={(this.props as any).darkMode} onIonChange={e => {
                 const isChecked = e.detail.checked;
-                document.body.classList.toggle('dark', isChecked);
+                document.body.classList.toggle('dark', isChecked);  
                 (this.props as any).dispatch({
                   type: "SET_KEY_VAL",
                   key: 'darkMode',
+                  val: isChecked
+                });
+              }} />
+            </IonItem>
+            <IonItem>
+              <IonIcon icon={documentText} slot='start' />
+              <IonLabel>經文直式、右至左書寫</IonLabel>
+              <IonToggle slot='end' checked={(this.props as any).rtlVerticalLayout} onIonChange={e => {
+                const isChecked = e.detail.checked;
+                (this.props as any).dispatch({
+                  type: "SET_KEY_VAL",
+                  key: 'rtlVerticalLayout',
+                  val: isChecked
+                });
+              }} />
+            </IonItem>
+            <IonItem>
+              <IonIcon icon={documentText} slot='start' />
+              <IonLabel>標楷體字型</IonLabel>
+              <IonToggle slot='end' checked={(this.props as any).useFontDFKaiSB} onIonChange={e => {
+                const isChecked = e.detail.checked;
+                Globals.updateFont(isChecked);
+                (this.props as any).dispatch({
+                  type: "SET_KEY_VAL",
+                  key: 'useFontDFKaiSB',
                   val: isChecked
                 });
               }} />
@@ -119,6 +144,8 @@ const mapStateToProps = (state: any /*, ownProps*/) => {
     settings: state.settings,
     darkMode: state.settings.darkMode,
     showComments: state.settings.showComments,
+    rtlVerticalLayout: state.settings.rtlVerticalLayout,
+    useFontDFKaiSB: state.settings.useFontDFKaiSB,
   }
 };
 
