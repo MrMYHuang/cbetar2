@@ -267,6 +267,7 @@ const mapStateToProps = (state: any /*, ownProps*/) => {
   return {
     bookmarks: state.settings.bookmarks,
     fontSize: state.settings.fontSize,
+    uiFontSize: state.settings.uiFontSize,
     showComments: state.settings.showComments,
     rtlVerticalLayout: state.settings.rtlVerticalLayout,
     settings: state.settings,

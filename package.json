@@ -1,6 +1,6 @@
 {
   "name": "cbetar-2",
-  "version": "1.5.4",
+  "version": "1.5.5",
   "private": true,
   "dependencies": {
     "@capacitor-community/electron": "^1.2.3",
