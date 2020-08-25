@@ -59,7 +59,7 @@ class DebugRouter extends IonReactRouter {
 // Apply the dark mode setting.
 const state = store.getState();
 document.body.classList.toggle('dark', state.settings.darkMode);
-Globals.updateFont(state.settings.useFontDFKaiSB);
+Globals.updateFont(state.settings.useFontKai);
 
 export var serviceWorkCallbacks = {
   onSuccess: function () {},

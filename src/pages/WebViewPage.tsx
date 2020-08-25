@@ -183,7 +183,6 @@ class _WebViewPage extends React.Component<PageProps> {
 
       .t, p {
         font-size: ${(this.props as any).fontSize}px;
-        font-family: 標楷體;
       }
       #back {
         display: ${(this.props as any).showComments ? "visible" : "none"} !important;

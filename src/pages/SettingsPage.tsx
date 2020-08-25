@@ -57,12 +57,12 @@ class SettingsPage extends React.Component<PageProps> {
             <IonItem>
               <IonIcon icon={documentText} slot='start' />
               <IonLabel>標楷體字型</IonLabel>
-              <IonToggle slot='end' checked={(this.props as any).useFontDFKaiSB} onIonChange={e => {
+              <IonToggle slot='end' checked={(this.props as any).useFontKai} onIonChange={e => {
                 const isChecked = e.detail.checked;
                 Globals.updateFont(isChecked);
                 (this.props as any).dispatch({
                   type: "SET_KEY_VAL",
-                  key: 'useFontDFKaiSB',
+                  key: 'useFontKai',
                   val: isChecked
                 });
               }} />
@@ -145,7 +145,7 @@ const mapStateToProps = (state: any /*, ownProps*/) => {
     darkMode: state.settings.darkMode,
     showComments: state.settings.showComments,
     rtlVerticalLayout: state.settings.rtlVerticalLayout,
-    useFontDFKaiSB: state.settings.useFontDFKaiSB,
+    useFontKai: state.settings.useFontKai,
   }
 };
 

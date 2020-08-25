@@ -51,7 +51,7 @@ export default {
           return Promise.all(regs.map(reg => reg.update()));
         });
       },
-      updateFont: (useFontDFKaiSB: Boolean) => {
-        document.documentElement.style.cssText = '--ion-font-family:' + (useFontDFKaiSB ? '標楷體' : '細明體');
+      updateFont: (useFontKai: Boolean) => {
+        document.documentElement.style.cssText = '--ion-font-family:' + (useFontKai ? 'cwTeXKai' : '細明體');
       }
 };

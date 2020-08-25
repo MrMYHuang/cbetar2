@@ -2,7 +2,8 @@
  * Dark Colors
  * -------------------------------------------
  */
-
+ @import url(https://fonts.googleapis.com/earlyaccess/cwtexkai.css);
+ 
 body.dark {
     --ion-color-primary: #428cff;
     --ion-color-primary-rgb: 66, 140, 255;
