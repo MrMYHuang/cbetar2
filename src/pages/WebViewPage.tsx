@@ -190,7 +190,7 @@ class _WebViewPage extends React.Component<PageProps> {
         `}} />
         <IonHeader>
           <IonToolbar>
-            <IonTitle>{this.props.match.params.label}</IonTitle>
+            <IonTitle style={{ fontSize: (this.props as any).uiFontSize }}>{this.props.match.params.label}</IonTitle>
             <IonButton hidden={this.isTopPage} fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
               <IonIcon icon={arrowBack} slot='icon-only' />
             </IonButton>
@@ -211,7 +211,7 @@ class _WebViewPage extends React.Component<PageProps> {
                   this.setState({ popover: { show: false, event: null } });
                 }}>
                   <IonIcon icon={home} slot='start' />
-                  <IonLabel>回首頁</IonLabel>
+                  <IonLabel className='ion-text-wrap' style={{ fontSize: (this.props as any).uiFontSize }}>回首頁</IonLabel>
                 </IonItem>
               </IonList>
               <IonList>
@@ -220,7 +220,7 @@ class _WebViewPage extends React.Component<PageProps> {
                   this.setState({ popover: { show: false, event: null } });
                 }}>
                   <IonIcon icon={search} slot='start' />
-                  <IonLabel>搜尋經文</IonLabel>
+                  <IonLabel className='ion-text-wrap' style={{ fontSize: (this.props as any).uiFontSize }}>搜尋經文</IonLabel>
                 </IonItem>
               </IonList>
             </IonPopover>

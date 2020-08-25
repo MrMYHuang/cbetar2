@@ -133,7 +133,7 @@ class _CatalogPage extends React.Component<PageProps> {
             search: queryString.stringify({file: catalog.file!}),
           });
         }}>
-          <IonLabel className='ion-text-wrap' style={{ fontSize: (this.props as any).listFontSize }} key={`${catalog.n}label` + index}>
+          <IonLabel className='ion-text-wrap' style={{ fontSize: (this.props as any).uiFontSize }} key={`${catalog.n}label` + index}>
             {catalog.label}
           </IonLabel>
         </IonItem>
@@ -149,7 +149,7 @@ class _CatalogPage extends React.Component<PageProps> {
       <IonPage>
         <IonHeader>
           <IonToolbar>
-            <IonTitle>目錄</IonTitle>
+            <IonTitle style={{ fontSize: (this.props as any).uiFontSize }}>目錄</IonTitle>
             <IonButton hidden={this.isTopCatalog} fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
               <IonIcon icon={arrowBack} slot='icon-only' />
             </IonButton>
@@ -188,7 +188,7 @@ class _CatalogPage extends React.Component<PageProps> {
 const mapStateToProps = (state: any /*, ownProps*/) => {
   return {
     bookmarks: state.settings.bookmarks,
-    listFontSize: state.settings.listFontSize,
+    uiFontSize: state.settings.uiFontSize,
   }
 };
 

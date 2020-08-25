@@ -51,7 +51,7 @@ class _BookmarkPage extends React.Component<PageProps> {
             },
           });
         }}>
-          <IonLabel className='ion-text-wrap' style={{ fontSize: (this.props as any).listFontSize }} key={`bookmarkItemLabel_` + i}>
+          <IonLabel className='ion-text-wrap' style={{ fontSize: (this.props as any).uiFontSize }} key={`bookmarkItemLabel_` + i}>
             {label}
           </IonLabel>
         </IonItem>
@@ -61,7 +61,7 @@ class _BookmarkPage extends React.Component<PageProps> {
       <IonPage>
         <IonHeader>
           <IonToolbar>
-            <IonTitle>書籤</IonTitle>
+            <IonTitle style={{ fontSize: (this.props as any).uiFontSize }}>書籤</IonTitle>
           </IonToolbar>
         </IonHeader>
         <IonContent>          
@@ -75,7 +75,7 @@ class _BookmarkPage extends React.Component<PageProps> {
 const mapStateToProps = (state: any /*, ownProps*/) => {
   return {
     bookmarks: state.settings.bookmarks,
-    listFontSize: state.settings.listFontSize,
+    uiFontSize: state.settings.uiFontSize,
   }
 };
 

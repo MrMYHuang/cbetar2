@@ -24,14 +24,14 @@ class SettingsPage extends React.Component<PageProps> {
       <IonPage>
         <IonHeader>
           <IonToolbar>
-            <IonTitle>設定</IonTitle>
+            <IonTitle style={{ fontSize: (this.props as any).uiFontSize }}>設定</IonTitle>
           </IonToolbar>
         </IonHeader>
         <IonContent>
           <IonList>
             <IonItem>
               <IonIcon icon={moon} slot='start' />
-              <IonLabel>暗色模式</IonLabel>
+              <IonLabel className='ion-text-wrap' style={{ fontSize: (this.props as any).uiFontSize }}>暗色模式</IonLabel>
               <IonToggle slot='end' checked={(this.props as any).darkMode} onIonChange={e => {
                 const isChecked = e.detail.checked;
                 document.body.classList.toggle('dark', isChecked);  
@@ -44,7 +44,7 @@ class SettingsPage extends React.Component<PageProps> {
             </IonItem>
             <IonItem>
               <IonIcon icon={documentText} slot='start' />
-              <IonLabel>經文直式、右至左書寫</IonLabel>
+              <IonLabel className='ion-text-wrap' style={{ fontSize: (this.props as any).uiFontSize }}>經文直式、右至左書寫</IonLabel>
               <IonToggle slot='end' checked={(this.props as any).rtlVerticalLayout} onIonChange={e => {
                 const isChecked = e.detail.checked;
                 (this.props as any).dispatch({
@@ -56,7 +56,7 @@ class SettingsPage extends React.Component<PageProps> {
             </IonItem>
             <IonItem>
               <IonIcon icon={documentText} slot='start' />
-              <IonLabel>顯示經文註解</IonLabel>
+              <IonLabel className='ion-text-wrap' style={{ fontSize: (this.props as any).uiFontSize }}>顯示經文註解</IonLabel>
               <IonToggle slot='end' checked={(this.props as any).showComments} onIonChange={e => {
                 const isChecked = e.detail.checked;
                 (this.props as any).dispatch({
@@ -67,8 +67,8 @@ class SettingsPage extends React.Component<PageProps> {
               }} />
             </IonItem>
             <IonItem>
-              <IonIcon icon={documentText} slot='start' />
-              <IonLabel>標楷體字型</IonLabel>
+              <IonIcon icon={text} slot='start' />
+              <IonLabel className='ion-text-wrap' style={{ fontSize: (this.props as any).uiFontSize }}>標楷體字型</IonLabel>
               <IonToggle slot='end' checked={(this.props as any).useFontKai} onIonChange={e => {
                 const isChecked = e.detail.checked;
                 Globals.updateFont(isChecked);
@@ -83,11 +83,11 @@ class SettingsPage extends React.Component<PageProps> {
               <IonIcon icon={text} slot='start' />
               <div className="contentBlock">
                 <div style={{ flexDirection: "column" }}>
-                  <IonLabel>列表字型大小: {(this.props as any).settings.listFontSize}</IonLabel>
-                  <IonRange min={10} max={64} value={(this.props as any).settings.listFontSize} onIonChange={e => {
+                  <IonLabel className='ion-text-wrap' style={{ fontSize: (this.props as any).uiFontSize }}>UI字型大小: {(this.props as any).settings.uiFontSize}</IonLabel>
+                  <IonRange min={10} max={64} value={(this.props as any).settings.uiFontSize} onIonChange={e => {
                     (this.props as any).dispatch({
                       type: "SET_KEY_VAL",
-                      key: 'listFontSize',
+                      key: 'uiFontSize',
                       val: e.detail.value,
                     });
                   }} />
@@ -97,7 +97,7 @@ class SettingsPage extends React.Component<PageProps> {
             <IonItem>
               <IonIcon icon={text} slot='start' />
               <div className="contentBlock">
-                <IonLabel>經文字型大小: {(this.props as any).settings.fontSize}</IonLabel>
+                <IonLabel className='ion-text-wrap' style={{ fontSize: (this.props as any).uiFontSize }}>經文字型大小: {(this.props as any).settings.fontSize}</IonLabel>
                 <IonRange min={10} max={64} value={(this.props as any).settings.fontSize} onIonChange={e => {
                   (this.props as any).dispatch({
                     type: "SET_KEY_VAL",
@@ -110,13 +110,13 @@ class SettingsPage extends React.Component<PageProps> {
             <IonItem>
               <IonIcon icon={star} slot='start' />
               <div>
-                <IonLabel>特色</IonLabel>
-                <IonLabel className='ion-text-wrap'>搜尋經文、書籤功能、離線瀏覽、暗色模式、字型調整。</IonLabel>
+                <IonLabel className='ion-text-wrap' style={{ fontSize: (this.props as any).uiFontSize }}>特色</IonLabel>
+                <IonLabel className='ion-text-wrap' style={{ fontSize: (this.props as any).uiFontSize }}>搜尋經文、書籤功能、離線瀏覽、暗色模式、字型調整。</IonLabel>
               </div>
             </IonItem>
             <IonItem>
               <IonIcon icon={helpCircle} slot='start' />
-              <div>
+              <div style={{ fontSize: (this.props as any).uiFontSize }}>
                 <div>關於</div>
                 <div>程式版本: {PackageInfos.version}</div>
                 <div>CBETA API版本: {Globals.apiVersion}</div>
@@ -128,7 +128,7 @@ class SettingsPage extends React.Component<PageProps> {
             </IonItem>
             <IonItem>
               <IonIcon icon={refreshCircle} slot='start' />
-              <IonButton onClick={e => {
+              <IonButton style={{ fontSize: (this.props as any).uiFontSize }} onClick={e => {
                 Globals.updateApp();
               }}>檢查app更新 (若無更新則無回應)</IonButton>
             </IonItem>
@@ -146,6 +146,7 @@ const mapStateToProps = (state: any /*, ownProps*/) => {
     showComments: state.settings.showComments,
     rtlVerticalLayout: state.settings.rtlVerticalLayout,
     useFontKai: state.settings.useFontKai,
+    uiFontSize: state.settings.uiFontSize,
   }
 };
 
