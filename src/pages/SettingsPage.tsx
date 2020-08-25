@@ -56,6 +56,18 @@ class SettingsPage extends React.Component<PageProps> {
             </IonItem>
             <IonItem>
               <IonIcon icon={documentText} slot='start' />
+              <IonLabel>顯示經文註解</IonLabel>
+              <IonToggle slot='end' checked={(this.props as any).showComments} onIonChange={e => {
+                const isChecked = e.detail.checked;
+                (this.props as any).dispatch({
+                  type: "SET_KEY_VAL",
+                  key: 'showComments',
+                  val: isChecked
+                });
+              }} />
+            </IonItem>
+            <IonItem>
+              <IonIcon icon={documentText} slot='start' />
               <IonLabel>標楷體字型</IonLabel>
               <IonToggle slot='end' checked={(this.props as any).useFontKai} onIonChange={e => {
                 const isChecked = e.detail.checked;
@@ -63,18 +75,6 @@ class SettingsPage extends React.Component<PageProps> {
                 (this.props as any).dispatch({
                   type: "SET_KEY_VAL",
                   key: 'useFontKai',
-                  val: isChecked
-                });
-              }} />
-            </IonItem>
-            <IonItem>
-              <IonIcon icon={documentText} slot='start' />
-              <IonLabel>顯示經文註解</IonLabel>
-              <IonToggle slot='end' checked={(this.props as any).showComments} onIonChange={e => {
-                const isChecked = e.detail.checked;
-                (this.props as any).dispatch({
-                  type: "SET_KEY_VAL",
-                  key: 'showComments',
                   val: isChecked
                 });
               }} />
