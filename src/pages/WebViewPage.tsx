@@ -161,6 +161,7 @@ class _WebViewPage extends React.Component<PageProps> {
   #cbetarWebView div {
     direction: ltr;
     writing-mode: vertical-rl;
+    display: inline; /* Work around a layout problem on Safari by inline. Don't use inline-block! */
   }
 
   #cbetarWebView {
@@ -181,11 +182,8 @@ class _WebViewPage extends React.Component<PageProps> {
         font-size: ${(this.props as any).fontSize}px;
       }
       
-      /* #back and #cbeta-copyright cause a text layout problem on Safari.
-      Workaround this problem by also hiding them.
-      */
       #back, #cbeta-copyright {
-        display: ${(this.props as any).showComments ? "visible" : "none"} !important;
+        display: ${(this.props as any).showComments ? "block" : "none"};
       }
         `}} />
         <IonHeader>
