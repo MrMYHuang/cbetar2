@@ -56,8 +56,10 @@ class DebugRouter extends IonReactRouter {
 }
 */
 
-// Apply the dark mode setting.
 const state = store.getState();
+
+// ----- Initializing UI settings -----
+// Apply the dark mode setting.
 document.body.classList.toggle('dark', state.settings.darkMode);
 Globals.updateFont(state.settings.useFontKai);
 

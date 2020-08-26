@@ -158,16 +158,12 @@ class _WebViewPage extends React.Component<PageProps> {
   }
 
   rtlVerticalStyles = `
-  #cbetarWebView p, #body, #cbetarWebView div {
+  #cbetarWebView div {
     direction: ltr;
     writing-mode: vertical-rl;
-    display: inline-block;
-    white-space: normal;
-    text-align: left;
   }
 
   #cbetarWebView {
-    white-space: nowrap;
     overflow: scroll;
     direction: rtl;
     display: flex;
@@ -181,10 +177,14 @@ class _WebViewPage extends React.Component<PageProps> {
           __html: `
       ${(this.props as any).rtlVerticalLayout ? this.rtlVerticalStyles : ''}
 
-      .t, p {
+      .t, p, #cbetarWebView div {
         font-size: ${(this.props as any).fontSize}px;
       }
-      #back {
+      
+      /* #back and #cbeta-copyright cause a text layout problem on Safari.
+      Workaround this problem by also hiding them.
+      */
+      #back, #cbeta-copyright {
         display: ${(this.props as any).showComments ? "visible" : "none"} !important;
       }
         `}} />

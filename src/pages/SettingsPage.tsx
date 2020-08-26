@@ -56,7 +56,7 @@ class SettingsPage extends React.Component<PageProps> {
             </IonItem>
             <IonItem>
               <IonIcon icon={documentText} slot='start' />
-              <IonLabel className='ion-text-wrap' style={{ fontSize: (this.props as any).uiFontSize }}>顯示經文註解</IonLabel>
+              <IonLabel className='ion-text-wrap' style={{ fontSize: (this.props as any).uiFontSize }}>顯示經文註解、版權(註：Safari顯示有問題)</IonLabel>
               <IonToggle slot='end' checked={(this.props as any).showComments} onIonChange={e => {
                 const isChecked = e.detail.checked;
                 (this.props as any).dispatch({
