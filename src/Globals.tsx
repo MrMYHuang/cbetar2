@@ -52,6 +52,6 @@ export default {
         });
       },
       updateFont: (useFontKai: Boolean) => {
-        document.documentElement.style.cssText = '--ion-font-family:' + (useFontKai ? 'cwTeXKai' : '細明體');
+        document.documentElement.style.cssText = '--ion-font-family:' + (useFontKai ? 'Kai' : '細明體');
       }
 };
