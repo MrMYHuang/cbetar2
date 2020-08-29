@@ -1,6 +1,7 @@
 import React from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import {
+  setupConfig,
   IonApp,
   IonIcon,
   IonRouterOutlet,
@@ -62,6 +63,9 @@ const state = store.getState();
 // Apply the dark mode setting.
 document.body.classList.toggle('dark', state.settings.darkMode);
 Globals.updateFont(state.settings.useFontKai);
+setupConfig({
+  swipeBackEnabled: false,
+});
 
 export var serviceWorkCallbacks = {
   onSuccess: function () {},
