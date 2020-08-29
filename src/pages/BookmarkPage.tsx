@@ -64,8 +64,16 @@ class _BookmarkPage extends React.Component<PageProps> {
             <IonTitle style={{ fontSize: (this.props as any).uiFontSize }}>書籤</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <IonContent>          
-            {this.hasBookmark ? <IonList>{rows}</IonList> : <IonLabel style={{fontSize: 48, textAlign: 'center', height: '100%', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>無書籤</IonLabel>}
+        <IonContent>
+          {this.hasBookmark ?
+            <IonList>{rows}</IonList> :
+            <IonLabel style={{ fontSize: 48, textAlign: 'center', height: '100%', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div>
+                <div>無書籤</div>
+                <div style={{ fontSize: (this.props as any).uiFontSize, paddingTop: 24 }}>請切換至目錄頁新增</div>
+              </div>
+            </IonLabel>
+          }
         </IonContent>
       </IonPage>
     );
