@@ -35,11 +35,13 @@ export default function reducer(state = {
       break;
     default:
       if (Object.keys(newSettings).length === 0) {
-        // Setting default values.
-        var keys = ['rtlVerticalLayout', 'useFontKai', 'fontSize', 'uiFontSize', 'darkMode', 'showComments', 'bookmarks'];
-        var vals = [1, 1, 32, 24, 1, 0, []];
         newSettings = {};
-        for (let k = 0; k < keys.length; k++) {
+      }
+      // Setting default values.
+      var keys = ['rtlVerticalLayout', 'showScrollbar', 'useFontKai', 'fontSize', 'uiFontSize', 'darkMode', 'showComments', 'bookmarks'];
+      var vals = [1, 1, 1, 32, 24, 1, 0, []];
+      for (let k = 0; k < keys.length; k++) {
+        if (newSettings[keys[k]] === undefined) {
           newSettings[keys[k]] = vals[k];
         }
       }

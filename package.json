@@ -33,7 +33,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build && CopyBuild.ps1",
+    "build": "react-scripts build && powershell -file CopyBuild.ps1",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "android": "npx cap open android",
