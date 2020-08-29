@@ -75,20 +75,24 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
             <IonItem>
               <IonIcon icon={documentText} slot='start' />
               <IonLabel className='ion-text-wrap' style={{ fontSize: this.props.uiFontSize }}>經文捲軸大小</IonLabel>
-              <IonSelect slot='end' value={this.props.scrollbarSize} interface='popover' onIonChange={ e => {
-                const value = e.detail.value;
-                let size = 0;
-                switch(value) {
-                  case 1: size = 20; break;
-                  case 2: size = 40; break;
-                }
-                Globals.updateScrollbarSize(size);
-                (this.props as any).dispatch({
-                  type: "SET_KEY_VAL",
-                  key: 'scrollbarSize',
-                  val: value,
-                });
-              }}>
+              <IonSelect slot='end'
+                value={this.props.scrollbarSize}
+                style={{ fontSize: this.props.uiFontSize }}
+                interface='popover'
+                onIonChange={e => {
+                  const value = e.detail.value;
+                  let size = 0;
+                  switch (value) {
+                    case 1: size = 20; break;
+                    case 2: size = 40; break;
+                  }
+                  Globals.updateScrollbarSize(size);
+                  this.props.dispatch({
+                    type: "SET_KEY_VAL",
+                    key: 'scrollbarSize',
+                    val: value,
+                  });
+                }}>
                 <IonSelectOption value={0}>無</IonSelectOption>
                 <IonSelectOption value={1}>中</IonSelectOption>
                 <IonSelectOption value={2}>大</IonSelectOption>
@@ -108,7 +112,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
             </IonItem>
             <IonItem>
               <IonIcon icon={text} slot='start' />
-              <IonLabel className='ion-text-wrap' style={{ fontSize: (this.props as any).uiFontSize }}>楷書字型(初次載入要等待)</IonLabel>
+              <IonLabel className='ion-text-wrap' style={{ fontSize: this.props.uiFontSize }}>楷書字型(初次載入要等待)</IonLabel>
               <IonToggle slot='end' checked={this.props.useFontKai} onIonChange={e => {
                 const isChecked = e.detail.checked;
                 Globals.updateFont(isChecked);

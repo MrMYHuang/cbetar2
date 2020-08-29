@@ -59,11 +59,6 @@ class DebugRouter extends IonReactRouter {
 
 const state = store.getState();
 
-// ----- Initializing UI settings -----
-// Apply the dark mode setting.
-document.body.classList.toggle('dark', state.settings.darkMode);
-Globals.updateFont(state.settings.useFontKai);
-Globals.updateScrollbarSize(state.settings.scrollbarSize);
 setupConfig({
   swipeBackEnabled: false,
 });
@@ -76,6 +71,12 @@ export var serviceWorkCallbacks = {
 class App extends React.Component {
   constructor(props: any) {
     super(props);
+    // ----- Initializing UI settings -----
+    // Apply the dark mode setting.
+    document.body.classList.toggle('dark', state.settings.darkMode);
+    Globals.updateScrollbarSize(state.settings.scrollbarSize);
+    Globals.updateFont(state.settings.useFontKai);
+
     this.state = {
       showUpdateAlert: false,
     };
