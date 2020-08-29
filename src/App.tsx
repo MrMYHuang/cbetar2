@@ -63,6 +63,7 @@ const state = store.getState();
 // Apply the dark mode setting.
 document.body.classList.toggle('dark', state.settings.darkMode);
 Globals.updateFont(state.settings.useFontKai);
+Globals.updateScrollbarSize(state.settings.scrollbarSize);
 setupConfig({
   swipeBackEnabled: false,
 });

@@ -14,7 +14,7 @@ interface StateProps {
 interface Props {
   dispatch: Function;
   uiFontSize: number;
-  scrollbarSize: boolean;
+  scrollbarSize: number;
   settings: any;
   darkMode: boolean;
   showComments: boolean;
@@ -82,7 +82,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
                   case 1: size = 20; break;
                   case 2: size = 40; break;
                 }
-                document.documentElement.style.cssText = `--scrollbar-size: ${size}px`;
+                Globals.updateScrollbarSize(size);
                 (this.props as any).dispatch({
                   type: "SET_KEY_VAL",
                   key: 'scrollbarSize',

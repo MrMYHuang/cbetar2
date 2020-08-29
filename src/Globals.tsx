@@ -53,5 +53,8 @@ export default {
       },
       updateFont: (useFontKai: Boolean) => {
         document.documentElement.style.cssText = '--ion-font-family:' + (useFontKai ? 'Kai' : '細明體');
+      },
+      updateScrollbarSize: (size: Number) => {
+        document.documentElement.style.cssText = `--scrollbar-size: ${size}px`;
       }
 };
