@@ -4,20 +4,27 @@
  */
 
  ::-webkit-scrollbar {
-    width: 10px;
+    width: 0px;
+    height: 15px;
 }
 
 ::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.4); 
+    -webkit-box-shadow: inset 0 0 6px var(--ion-color-primary); 
+    box-shadow: inset 0 0 6px var(--ion-color-primary); 
     border-radius: 8px;
     -webkit-border-radius: 8px;
 }
 
 ::-webkit-scrollbar-thumb {
-    -webkit-border-radius: 10px;
-    border-radius: 10px;
-    background: rgba(100,100,100,0.8); 
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+    -webkit-border-radius: 20px;
+    border-radius: 20px;
+    background: var(--ion-color-primary);
+    -webkit-box-shadow: inset 0 0 6px var(--ion-color-primary); 
+    box-shadow: inset 0 0 6px var(--ion-color-primary); 
+}
+
+body {
+    --ion-color-primary: #428cff;
 }
 
 body.dark {
