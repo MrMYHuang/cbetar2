@@ -81,17 +81,12 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
                 interface='popover'
                 onIonChange={e => {
                   const value = e.detail.value;
-                  let size = 0;
-                  switch (value) {
-                    case 1: size = 20; break;
-                    case 2: size = 40; break;
-                  }
-                  Globals.updateScrollbarSize(size);
                   this.props.dispatch({
                     type: "SET_KEY_VAL",
                     key: 'scrollbarSize',
                     val: value,
                   });
+                  Globals.updateCssVars(this.props.settings);
                 }}>
                 <IonSelectOption value={0}>無</IonSelectOption>
                 <IonSelectOption value={1}>中</IonSelectOption>
@@ -115,12 +110,12 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
               <IonLabel className='ion-text-wrap' style={{ fontSize: this.props.uiFontSize }}>楷書字型(初次載入要等待)</IonLabel>
               <IonToggle slot='end' checked={this.props.useFontKai} onIonChange={e => {
                 const isChecked = e.detail.checked;
-                Globals.updateFont(isChecked);
                 (this.props as any).dispatch({
                   type: "SET_KEY_VAL",
                   key: 'useFontKai',
                   val: isChecked
                 });
+                Globals.updateCssVars(this.props.settings);
               }} />
             </IonItem>
             <IonItem>

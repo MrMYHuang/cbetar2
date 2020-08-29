@@ -74,8 +74,7 @@ class App extends React.Component {
     // ----- Initializing UI settings -----
     // Apply the dark mode setting.
     document.body.classList.toggle('dark', state.settings.darkMode);
-    Globals.updateScrollbarSize(state.settings.scrollbarSize);
-    Globals.updateFont(state.settings.useFontKai);
+    Globals.updateCssVars(state.settings);
 
     this.state = {
       showUpdateAlert: false,

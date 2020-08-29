@@ -51,10 +51,13 @@ export default {
           return Promise.all(regs.map(reg => reg.update()));
         });
       },
-      updateFont: (useFontKai: Boolean) => {
-        document.documentElement.style.cssText = '--ion-font-family:' + (useFontKai ? 'Kai' : '細明體');
+      updateCssVars: (settings: any) => {
+        let scrollbarSize = 0;
+        switch (settings.scrollbarSize) {
+          case 1: scrollbarSize = 20; break;
+          case 2: scrollbarSize = 40; break;
+        }
+        document.documentElement.style.cssText = `--ion-font-family: ${settings.useFontKai ? 'Kai' : '細明體'};
+        --scrollbar-size: ${scrollbarSize}px;`
       },
-      updateScrollbarSize: (size: Number) => {
-        document.documentElement.style.cssText = `--scrollbar-size: ${size}px`;
-      }
 };
