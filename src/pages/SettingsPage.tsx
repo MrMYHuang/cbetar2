@@ -7,13 +7,28 @@ import { star, helpCircle, text, moon, documentText, refreshCircle } from 'ionic
 import './SettingsPage.css';
 import PackageInfos from '../../package.json';
 
-interface PageProps extends RouteComponentProps<{
+interface StateProps {
+  showFontLicense: boolean;
+}
+
+interface Props {
+  dispatch: Function;
+  uiFontSize: number;
+  showScrollbar: boolean;
+  settings: any;
+  darkMode: boolean;
+  showComments: boolean;
+  rtlVerticalLayout: boolean;
+  useFontKai: boolean;
+}
+
+interface PageProps extends Props, RouteComponentProps<{
   tab: string;
   path: string;
   label: string;
 }> { }
 
-class SettingsPage extends React.Component<PageProps> {
+class SettingsPage extends React.Component<PageProps, StateProps> {
   constructor(props: any) {
     super(props);
 
@@ -27,7 +42,7 @@ class SettingsPage extends React.Component<PageProps> {
       <IonPage>
         <IonHeader>
           <IonToolbar>
-            <IonTitle style={{ fontSize: (this.props as any).uiFontSize }}>設定</IonTitle>
+            <IonTitle style={{ fontSize: this.props.uiFontSize }}>設定</IonTitle>
           </IonToolbar>
         </IonHeader>
         <IonContent>
@@ -59,6 +74,19 @@ class SettingsPage extends React.Component<PageProps> {
             </IonItem>
             <IonItem>
               <IonIcon icon={documentText} slot='start' />
+              <IonLabel className='ion-text-wrap' style={{ fontSize: this.props.uiFontSize }}>經文捲軸</IonLabel>
+              <IonToggle slot='end' checked={ this.props.showScrollbar } onIonChange={e => {
+                const isChecked = e.detail.checked;
+                document.getElementById('cbetarWebView')?.classList.toggle('scrollbar', isChecked);
+                (this.props as any).dispatch({
+                  type: "SET_KEY_VAL",
+                  key: 'showScrollbar',
+                  val: isChecked
+                });
+              }} />
+            </IonItem>
+            <IonItem>
+              <IonIcon icon={documentText} slot='start' />
               <IonLabel className='ion-text-wrap' style={{ fontSize: (this.props as any).uiFontSize }}>顯示經文註解、版權</IonLabel>
               <IonToggle slot='end' checked={(this.props as any).showComments} onIonChange={e => {
                 const isChecked = e.detail.checked;
@@ -72,7 +100,7 @@ class SettingsPage extends React.Component<PageProps> {
             <IonItem>
               <IonIcon icon={text} slot='start' />
               <IonLabel className='ion-text-wrap' style={{ fontSize: (this.props as any).uiFontSize }}>楷書字型(初次載入要等待)</IonLabel>
-              <IonToggle slot='end' checked={(this.props as any).useFontKai} onIonChange={e => {
+              <IonToggle slot='end' checked={this.props.useFontKai} onIonChange={e => {
                 const isChecked = e.detail.checked;
                 Globals.updateFont(isChecked);
                 (this.props as any).dispatch({
@@ -100,9 +128,9 @@ class SettingsPage extends React.Component<PageProps> {
             <IonItem>
               <IonIcon icon={text} slot='start' />
               <div className="contentBlock">
-                <IonLabel className='ion-text-wrap' style={{ fontSize: (this.props as any).uiFontSize }}>經文字型大小: {(this.props as any).settings.fontSize}</IonLabel>
-                <IonRange min={10} max={64} value={(this.props as any).settings.fontSize} onIonChange={e => {
-                  (this.props as any).dispatch({
+                <IonLabel className='ion-text-wrap' style={{ fontSize: (this.props as any).uiFontSize }}>經文字型大小: {this.props.settings.fontSize}</IonLabel>
+                <IonRange min={10} max={64} value={this.props.settings.fontSize} onIonChange={e => {
+                  this.props.dispatch({
                     type: "SET_KEY_VAL",
                     key: 'fontSize',
                     val: e.detail.value,
@@ -127,7 +155,10 @@ class SettingsPage extends React.Component<PageProps> {
                 <div><a href="mailto:myh@live.com" target="__new">myh@live.com</a></div>
                 <div><a href="https://github.com/MrMYHuang/cbetar2" target="__new">操作說明與開放原始碼</a></div>
                 <div><a href="http://cbdata.dila.edu.tw/v1.2/" target="__new">CBETA API參考文件</a></div>
-                <div><a href='javascript:void(0)' onClick={e => this.setState({ showFontLicense: true })}>全字庫字型版權聲明</a></div>
+                <div><a href='#' onClick={e => {
+                  e.preventDefault();
+                  this.setState({ showFontLicense: true });
+                }}>全字庫字型版權聲明</a></div>
               </div>
             </IonItem>
             <IonItem>
@@ -138,7 +169,7 @@ class SettingsPage extends React.Component<PageProps> {
               }}>檢查</IonButton>
             </IonItem>
             <IonAlert
-              isOpen={(this.state as any).showFontLicense}
+              isOpen={this.state.showFontLicense}
               backdropDismiss={false}
               message="此app使用的全字庫字型(2020-08-18版)由國家發展委員會提供。此開放資料依政府資料開放授權條款 (Open Government Data License) 進行公眾釋出，使用者於遵守本條款各項規定之前提下，得利用之。政府資料開放授權條款：https://data.gov.tw/license"
               buttons={[
@@ -176,6 +207,7 @@ const mapStateToProps = (state: any /*, ownProps*/) => {
     darkMode: state.settings.darkMode,
     showComments: state.settings.showComments,
     rtlVerticalLayout: state.settings.rtlVerticalLayout,
+    showScrollbar: state.settings.showScrollbar,
     useFontKai: state.settings.useFontKai,
     uiFontSize: state.settings.uiFontSize,
   }

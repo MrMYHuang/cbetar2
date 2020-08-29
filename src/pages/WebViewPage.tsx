@@ -165,10 +165,8 @@ class _WebViewPage extends React.Component<PageProps> {
   }
 
   #cbetarWebView {
-    overflow: scroll;
     direction: rtl;
     display: flex;
-    height: 100%;
   }`;
 
   render() {
@@ -177,6 +175,11 @@ class _WebViewPage extends React.Component<PageProps> {
         <style dangerouslySetInnerHTML={{
           __html: `
       ${(this.props as any).rtlVerticalLayout ? this.rtlVerticalStyles : ''}
+
+      #cbetarWebView {
+        overflow: scroll;
+        height: 100%;
+      }
 
       .t, p, #cbetarWebView div {
         font-size: ${(this.props as any).fontSize}px;
@@ -225,7 +228,7 @@ class _WebViewPage extends React.Component<PageProps> {
           </IonToolbar>
         </IonHeader>
         <IonContent scrollX scrollY>
-          <div id='cbetarWebView' style={{ userSelect: "text", WebkitUserSelect: "text" }} dangerouslySetInnerHTML={{ __html: (this.state as any).htmlStr }}></div>
+          <div id='cbetarWebView' className='scrollbar' style={{ userSelect: "text", WebkitUserSelect: "text" }} dangerouslySetInnerHTML={{ __html: (this.state as any).htmlStr }}></div>
 
           <SearchAlert
             {...{
