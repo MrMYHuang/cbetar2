@@ -158,7 +158,7 @@ class _WebViewPage extends React.Component<PageProps> {
   }
 
   rtlVerticalStyles = `
-  #cbetarWebView div, #cbetarWebView p {
+  #cbetarWebView>div, #cbetarWebView>p {
     direction: ltr;
     writing-mode: vertical-rl;
     display: inline; /* Work around a layout problem on Safari by inline. Don't use inline-block! */
