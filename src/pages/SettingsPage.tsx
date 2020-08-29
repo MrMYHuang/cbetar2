@@ -1,5 +1,5 @@
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonRange, IonIcon, IonLabel, IonToggle, IonButton, IonAlert } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonRange, IonIcon, IonLabel, IonToggle, IonButton, IonAlert, IonSelect, IonSelectOption } from '@ionic/react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import Globals from '../Globals';
@@ -14,7 +14,7 @@ interface StateProps {
 interface Props {
   dispatch: Function;
   uiFontSize: number;
-  showScrollbar: boolean;
+  scrollbarSize: boolean;
   settings: any;
   darkMode: boolean;
   showComments: boolean;
@@ -74,16 +74,25 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
             </IonItem>
             <IonItem>
               <IonIcon icon={documentText} slot='start' />
-              <IonLabel className='ion-text-wrap' style={{ fontSize: this.props.uiFontSize }}>經文捲軸</IonLabel>
-              <IonToggle slot='end' checked={ this.props.showScrollbar } onIonChange={e => {
-                const isChecked = e.detail.checked;
-                document.getElementById('cbetarWebView')?.classList.toggle('scrollbar', isChecked);
+              <IonLabel className='ion-text-wrap' style={{ fontSize: this.props.uiFontSize }}>經文捲軸大小</IonLabel>
+              <IonSelect slot='end' value={this.props.scrollbarSize} interface='popover' onIonChange={ e => {
+                const value = e.detail.value;
+                let size = 0;
+                switch(value) {
+                  case 1: size = 20; break;
+                  case 2: size = 40; break;
+                }
+                document.documentElement.style.cssText = `--scrollbar-size: ${size}px`;
                 (this.props as any).dispatch({
                   type: "SET_KEY_VAL",
-                  key: 'showScrollbar',
-                  val: isChecked
+                  key: 'scrollbarSize',
+                  val: value,
                 });
-              }} />
+              }}>
+                <IonSelectOption value={0}>無</IonSelectOption>
+                <IonSelectOption value={1}>中</IonSelectOption>
+                <IonSelectOption value={2}>大</IonSelectOption>
+              </IonSelect>
             </IonItem>
             <IonItem>
               <IonIcon icon={documentText} slot='start' />
@@ -207,7 +216,7 @@ const mapStateToProps = (state: any /*, ownProps*/) => {
     darkMode: state.settings.darkMode,
     showComments: state.settings.showComments,
     rtlVerticalLayout: state.settings.rtlVerticalLayout,
-    showScrollbar: state.settings.showScrollbar,
+    scrollbarSize: state.settings.scrollbarSize,
     useFontKai: state.settings.useFontKai,
     uiFontSize: state.settings.uiFontSize,
   }

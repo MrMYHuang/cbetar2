@@ -3,8 +3,8 @@
 }
 
 .scrollbar::-webkit-scrollbar {
-    width: 40px;
-    height: 40px;
+    width: var(--scrollbar-size);
+    height: var(--scrollbar-size);
 }
 
 .scrollbar::-webkit-scrollbar-track {

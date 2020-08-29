@@ -3,6 +3,10 @@
  * -------------------------------------------
  */
 
+:root {
+    --scrollbar-size: 20px;
+}
+
 body {
     --ion-color-primary: #428cff;
 }
