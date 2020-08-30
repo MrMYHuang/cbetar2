@@ -6,10 +6,12 @@ import * as uuid from 'uuid';
 import queryString from 'query-string';
 import './WebViewPage.css';
 import Globals from '../Globals';
-import { bookmark, arrowBack, home, search, ellipsisHorizontal, ellipsisVertical } from 'ionicons/icons';
+import { bookmark, arrowBack, home, search, ellipsisHorizontal, ellipsisVertical, arrowForward } from 'ionicons/icons';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
 import { Work } from '../models/Work';
 import SearchAlert from '../components/SearchAlert';
+import ePub, { Book, Rendition } from 'epubjs';
+import * as nodepub from 'nodepub';
 
 const bookmarkPrefix = 'bookmark_';
 function scrollToBookmark(uuidStr: string) {
@@ -27,6 +29,11 @@ interface PageProps extends RouteComponentProps<{
 
 class _WebViewPage extends React.Component<PageProps> {
   htmlFile: string;
+  book: Book | null;
+  rendition: Rendition | null;
+  epub: any;
+  displayed: any;
+
   constructor(props: any) {
     super(props);
     this.state = {
@@ -38,6 +45,8 @@ class _WebViewPage extends React.Component<PageProps> {
       },
     }
     this.htmlFile = '';
+    this.book = null;
+    this.rendition = null;
   }
 
   uuidStr = '';
@@ -61,11 +70,11 @@ class _WebViewPage extends React.Component<PageProps> {
   async fetchData(juan: string) {
     let htmlStr = localStorage.getItem(this.fileName);
     if (htmlStr != null) {
-      this.setState({ htmlStr: htmlStr });
-      return true;
+      //this.setState({ htmlStr: htmlStr });
+      //return true;
     }
 
-    if (this.htmlFile) {
+    else if (this.htmlFile) {
       const res = await Globals.axiosInstance.get(`/${this.htmlFile}`, {
         responseType: 'arraybuffer',
       });
@@ -84,8 +93,49 @@ class _WebViewPage extends React.Component<PageProps> {
       let data = JSON.parse(new TextDecoder().decode(res.data));
       htmlStr = data.results[0];
     }
+    let fs = require('fs');
+    const res = await Globals.axiosInstance.get(`https://www.google.com.tw/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png`, {
+      responseType: 'arraybuffer',
+    });
+    fs.writeFileSync('1.png', res.data);
 
-    this.setState({ htmlStr: htmlStr });
+
+    this.epub = nodepub.document({
+      id: '278-123456789',
+      title: 'Unnamed Document',
+      series: 'My Series',
+      sequence: 1,
+      author: 'KA Cartlidge',
+      fileAs: 'Cartlidge,KA',
+      genre: 'Non-Fiction',
+      tags: 'Sample,Example,Test',
+      copyright: 'Anonymous, 1980',
+      publisher: 'My Fake Publisher',
+      published: '2000-12-31',
+      language: 'en',
+      description: 'A test book.',
+      contents: 'Table of Contents',
+      source: 'http://www.kcartlidge.com',
+      images: ['1.png'],
+    }, '1.png');
+    this.epub.addSection('', htmlStr, true, false);
+    this.epub.addCSS('.lb {display:none}');
+    this.epub.writeEPUB(
+      (e: any) => {
+        console.log(`Error: ${e}`);
+      },
+      '.', 'temp',
+      () => {
+        let a = fs.readFileSync('temp.epub');
+        this.book = ePub(a, { openAs: 'binary' });
+        this.rendition = this.book.renderTo('cbetarWebView', { width: "100%", height: "100%" });
+        this.displayed = this.rendition.display();
+        this.displayed.then(() => {
+          this.rendition?.next();
+          this.setState({ htmlStr: htmlStr });
+        })
+      }
+    );
     return true;
 
     /*
@@ -170,14 +220,14 @@ class _WebViewPage extends React.Component<PageProps> {
   }`;
 
   render() {
-    return (
-      <IonPage>
-        <style dangerouslySetInnerHTML={{
-          __html: `
+    return (this.state as any).hmtlStr == '' ? <></> :
+      (
+        <IonPage>
+          <style dangerouslySetInnerHTML={{
+            __html: `
       ${(this.props as any).rtlVerticalLayout ? this.rtlVerticalStyles : ''}
 
       #cbetarWebView {
-        overflow: auto;
         height: 100%;
       }
 
@@ -189,78 +239,81 @@ class _WebViewPage extends React.Component<PageProps> {
         display: ${(this.props as any).showComments ? "block" : "none"};
       }
         `}} />
-        <IonHeader>
-          <IonToolbar>
-            <IonTitle style={{ fontSize: (this.props as any).uiFontSize }}>{this.props.match.params.label}</IonTitle>
-            <IonButton hidden={this.isTopPage} fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
-              <IonIcon icon={arrowBack} slot='icon-only' />
-            </IonButton>
-            <IonButton fill="clear" color={this.hasBookmark ? 'warning' : 'primary'} slot='end' onClick={e => this.hasBookmark ? this.delBookmarkHandler() : this.addBookmarkHandler()}>
-              <IonIcon icon={bookmark} slot='icon-only' />
-            </IonButton>
-            <IonButton fill="clear" slot='end' onClick={e => this.setState({ popover: { show: true, event: e.nativeEvent } })}>
-              <IonIcon ios={ellipsisHorizontal} md={ellipsisVertical} slot='icon-only' />
-            </IonButton>
-            <IonPopover
-              isOpen={(this.state as any).popover.show}
-              event={(this.state as any).popover.event}
-              onDidDismiss={e => { this.setState({ popover: { show: false, event: null } }) }}
-            >
-              <IonList>
-                <IonItem button onClick={e => {
-                  this.props.history.push(`/${this.props.match.params.tab}`);
-                  this.setState({ popover: { show: false, event: null } });
-                }}>
-                  <IonIcon icon={home} slot='start' />
-                  <IonLabel className='ion-text-wrap' style={{ fontSize: (this.props as any).uiFontSize }}>回首頁</IonLabel>
-                </IonItem>
-              </IonList>
-              <IonList>
-                <IonItem button onClick={e => {
-                  this.setState({ showSearchAlert: true });
-                  this.setState({ popover: { show: false, event: null } });
-                }}>
-                  <IonIcon icon={search} slot='start' />
-                  <IonLabel className='ion-text-wrap' style={{ fontSize: (this.props as any).uiFontSize }}>搜尋經文</IonLabel>
-                </IonItem>
-              </IonList>
-            </IonPopover>
-          </IonToolbar>
-        </IonHeader>
-        <IonContent>
-          <div id='cbetarWebView' className='scrollbar' style={{ userSelect: "text", WebkitUserSelect: "text" }} dangerouslySetInnerHTML={{ __html: (this.state as any).htmlStr }}></div>
+          <IonHeader>
+            <IonToolbar>
+              <IonTitle style={{ fontSize: (this.props as any).uiFontSize }}>{this.props.match.params.label}</IonTitle>
+              <IonButton hidden={this.isTopPage} fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
+                <IonIcon icon={arrowBack} slot='icon-only' />
+              </IonButton>
+              <IonButton fill="clear" color={this.hasBookmark ? 'warning' : 'primary'} slot='end' onClick={e => this.hasBookmark ? this.delBookmarkHandler() : this.addBookmarkHandler()}>
+                <IonIcon icon={bookmark} slot='icon-only' />
+              </IonButton>
+              <IonButton fill="clear" slot='end' onClick={e => this.rendition?.next()}>
+                <IonIcon icon={arrowForward} slot='icon-only' />
+              </IonButton>
+              <IonButton fill="clear" slot='end' onClick={e => this.setState({ popover: { show: true, event: e.nativeEvent } })}>
+                <IonIcon ios={ellipsisHorizontal} md={ellipsisVertical} slot='icon-only' />
+              </IonButton>
+              <IonPopover
+                isOpen={(this.state as any).popover.show}
+                event={(this.state as any).popover.event}
+                onDidDismiss={e => { this.setState({ popover: { show: false, event: null } }) }}
+              >
+                <IonList>
+                  <IonItem button onClick={e => {
+                    this.props.history.push(`/${this.props.match.params.tab}`);
+                    this.setState({ popover: { show: false, event: null } });
+                  }}>
+                    <IonIcon icon={home} slot='start' />
+                    <IonLabel className='ion-text-wrap' style={{ fontSize: (this.props as any).uiFontSize }}>回首頁</IonLabel>
+                  </IonItem>
+                </IonList>
+                <IonList>
+                  <IonItem button onClick={e => {
+                    this.setState({ showSearchAlert: true });
+                    this.setState({ popover: { show: false, event: null } });
+                  }}>
+                    <IonIcon icon={search} slot='start' />
+                    <IonLabel className='ion-text-wrap' style={{ fontSize: (this.props as any).uiFontSize }}>搜尋經文</IonLabel>
+                  </IonItem>
+                </IonList>
+              </IonPopover>
+            </IonToolbar>
+          </IonHeader>
+          <IonContent>
+            <div id='cbetarWebView' className='scrollbar' style={{ userSelect: "text", WebkitUserSelect: "text" }} dangerouslySetInnerHTML={{ __html: '' }}></div>
 
-          <SearchAlert
-            {...{
-              showSearchAlert: (this.state as any).showSearchAlert,
-              searchCancel: () => { this.setState({ showSearchAlert: false }) },
-              searchOk: (keyword: string) => {
-                this.props.history.push(`/catalog/search/${keyword}`);
-                this.setState({ showSearchAlert: false });
-              }, ...this.props
-            }}
-          />
+            <SearchAlert
+              {...{
+                showSearchAlert: (this.state as any).showSearchAlert,
+                searchCancel: () => { this.setState({ showSearchAlert: false }) },
+                searchOk: (keyword: string) => {
+                  this.props.history.push(`/catalog/search/${keyword}`);
+                  this.setState({ showSearchAlert: false });
+                }, ...this.props
+              }}
+            />
 
-          <IonAlert
-            isOpen={(this.state as any).showBookmarkingAlert}
-            backdropDismiss={false}
-            header='書籤新增失敗'
-            message='請確認是否已選擇一段文字，再新增書籤!'
-            buttons={[
-              {
-                text: '確定',
-                cssClass: 'primary',
-                handler: (value) => {
-                  this.setState({
-                    showBookmarkingAlert: false,
-                  });
-                },
-              }
-            ]}
-          />
-        </IonContent>
-      </IonPage>
-    );
+            <IonAlert
+              isOpen={(this.state as any).showBookmarkingAlert}
+              backdropDismiss={false}
+              header='書籤新增失敗'
+              message='請確認是否已選擇一段文字，再新增書籤!'
+              buttons={[
+                {
+                  text: '確定',
+                  cssClass: 'primary',
+                  handler: (value) => {
+                    this.setState({
+                      showBookmarkingAlert: false,
+                    });
+                  },
+                }
+              ]}
+            />
+          </IonContent>
+        </IonPage>
+      );
   }
 };
 
