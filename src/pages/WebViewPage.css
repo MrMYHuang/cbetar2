@@ -1,7 +1,3 @@
-.lb {
-    display: none
-}
-
 .scrollbar::-webkit-scrollbar {
     width: var(--scrollbar-size);
     height: var(--scrollbar-size);

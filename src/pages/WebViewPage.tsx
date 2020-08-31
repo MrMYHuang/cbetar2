@@ -100,6 +100,19 @@ class _WebViewPage extends React.Component<PageProps> {
     fs.writeFileSync('1.png', res.data);
 
 
+
+  let rtlVerticalStyles = `
+  #body, #back, #cbeta-copyright, #cbetarWebView>p {
+    direction: ltr;
+    writing-mode: vertical-rl;
+    display: inline; /* Work around a layout problem on Safari by inline. Don't use inline-block! */
+  }
+
+  #abc {
+    direction: rtl;
+    display: flex;
+  }`;
+
     this.epub = nodepub.document({
       id: '278-123456789',
       title: 'Unnamed Document',
@@ -119,19 +132,35 @@ class _WebViewPage extends React.Component<PageProps> {
       images: ['1.png'],
     }, '1.png');
     this.epub.addSection('', htmlStr, true, false);
-    this.epub.addCSS('.lb {display:none}');
+    this.epub.addCSS(`
+    .lb {
+      display: none
+    }
+  
+    ${(this.props as any).rtlVerticalLayout ? rtlVerticalStyles : ''}
+
+    .t, p, #cbetarWebView div {
+      color: ${getComputedStyle(document.body).getPropertyValue('--ion-text-color')};
+      font-family: ${getComputedStyle(document.body).getPropertyValue('--ion-font-family')};
+      font-size: ${(this.props as any).fontSize}px;
+    }
+    
+    #back, #cbeta-copyright {
+      display: ${(this.props as any).showComments ? "block" : "none"};
+    }
+    `);
     this.epub.writeEPUB(
       (e: any) => {
         console.log(`Error: ${e}`);
       },
       '.', 'temp',
       () => {
+        this.render();
         let a = fs.readFileSync('temp.epub');
         this.book = ePub(a, { openAs: 'binary' });
-        this.rendition = this.book.renderTo('cbetarWebView', { width: "100%", height: "100%" });
+        this.rendition = this.book.renderTo('cbetarWebView', { width: "98%", height: "98%", defaultDirection: (this.props as any).rtlVerticalLayout ? 'ltr' : 'ltr'});
         this.displayed = this.rendition.display();
         this.displayed.then(() => {
-          this.rendition?.next();
           this.setState({ htmlStr: htmlStr });
         })
       }
@@ -207,38 +236,9 @@ class _WebViewPage extends React.Component<PageProps> {
     return this.bookmark != null;
   }
 
-  rtlVerticalStyles = `
-  #cbetarWebView>div, #cbetarWebView>p {
-    direction: ltr;
-    writing-mode: vertical-rl;
-    display: inline; /* Work around a layout problem on Safari by inline. Don't use inline-block! */
-  }
-
-  #cbetarWebView {
-    direction: rtl;
-    display: flex;
-  }`;
-
   render() {
-    return (this.state as any).hmtlStr == '' ? <></> :
-      (
+    return (
         <IonPage>
-          <style dangerouslySetInnerHTML={{
-            __html: `
-      ${(this.props as any).rtlVerticalLayout ? this.rtlVerticalStyles : ''}
-
-      #cbetarWebView {
-        height: 100%;
-      }
-
-      .t, p, #cbetarWebView div {
-        font-size: ${(this.props as any).fontSize}px;
-      }
-      
-      #back, #cbeta-copyright {
-        display: ${(this.props as any).showComments ? "block" : "none"};
-      }
-        `}} />
           <IonHeader>
             <IonToolbar>
               <IonTitle style={{ fontSize: (this.props as any).uiFontSize }}>{this.props.match.params.label}</IonTitle>
@@ -247,6 +247,9 @@ class _WebViewPage extends React.Component<PageProps> {
               </IonButton>
               <IonButton fill="clear" color={this.hasBookmark ? 'warning' : 'primary'} slot='end' onClick={e => this.hasBookmark ? this.delBookmarkHandler() : this.addBookmarkHandler()}>
                 <IonIcon icon={bookmark} slot='icon-only' />
+              </IonButton>
+              <IonButton fill="clear" slot='end' onClick={e => this.rendition?.prev()}>
+                <IonIcon icon={arrowBack} slot='icon-only' />
               </IonButton>
               <IonButton fill="clear" slot='end' onClick={e => this.rendition?.next()}>
                 <IonIcon icon={arrowForward} slot='icon-only' />
@@ -281,7 +284,7 @@ class _WebViewPage extends React.Component<PageProps> {
             </IonToolbar>
           </IonHeader>
           <IonContent>
-            <div id='cbetarWebView' className='scrollbar' style={{ userSelect: "text", WebkitUserSelect: "text" }} dangerouslySetInnerHTML={{ __html: '' }}></div>
+            <div id='cbetarWebView' className='scrollbar' style={{ width: '100%', height: '100%', userSelect: "text", WebkitUserSelect: "text" }} dangerouslySetInnerHTML={{ __html: '' }}></div>
 
             <SearchAlert
               {...{
