@@ -1,3 +1,4 @@
+//import * as fs from 'fs';
 import React from 'react';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton, withIonLifeCycle, IonIcon, IonAlert, IonPopover, IonList, IonItem, IonLabel } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
@@ -39,7 +40,14 @@ interface PageProps extends Props, RouteComponentProps<{
   label: string;
 }> { }
 
-class _WebViewPage extends React.Component<PageProps> {
+interface State {
+  htmlStr: string | null;
+  showBookmarkingAlert: boolean;
+  showSearchAlert: boolean;
+  popover: any;
+}
+
+class _WebViewPage extends React.Component<PageProps, State> {
   htmlFile: string;
   book: Book | null;
   rendition: Rendition | null;
@@ -51,6 +59,7 @@ class _WebViewPage extends React.Component<PageProps> {
     this.state = {
       htmlStr: null,
       showBookmarkingAlert: false,
+      showSearchAlert: false,
       popover: {
         show: false,
         event: null,
@@ -102,19 +111,13 @@ class _WebViewPage extends React.Component<PageProps> {
       let data = JSON.parse(new TextDecoder().decode(res.data));
       htmlStr = data.results[0];
     }
-    let fs = require('fs');
+
+    // Download book logo.
     const res = await Globals.axiosInstance.get(`https://github.com/MrMYHuang/MrMYHuang.github.io/raw/master/assets/icon/icon.png`, {
       responseType: 'arraybuffer',
     });
-    fs.writeFileSync('logo.png', res.data);
-
-    let rtlVerticalStyles = `
-    #body, #back, #cbeta-copyright, #cbetarWebView>p {
-      direction: ltr;
-      writing-mode: vertical-rl;
-      display: inline;
-    }
-    `;
+    let fs = require('fs');
+    fs.writeFileSync('logo.png', res.data);    
 
     // Convert HTML to XML, because ePub requires XHTML.
     // Bad structured HTML will cause DOMParser parse error on some browsers!
@@ -125,58 +128,7 @@ class _WebViewPage extends React.Component<PageProps> {
     htmlStr = htmlStr.replace('<body', '<div');
     htmlStr = htmlStr.replace('/body>', '/div>');
 
-    this.epub = nodepub.document({
-      id: '123-123456789',
-      title: 'Title',
-      series: '',
-      sequence: 1,
-      author: 'Author',
-      fileAs: '',
-      genre: 'genre',
-      tags: '',
-      copyright: '',
-      publisher: '',
-      published: '',
-      language: 'en',
-      description: 'A temp book.',
-      contents: 'Table of Contents',
-      source: '',
-      images: ['logo.png'],
-    }, 'logo.png');
-    this.epub.addSection('', htmlStr, true, false);
-    this.epub.addCSS(`
-    .lb {
-      display: none
-    }
-  
-    ${this.props.rtlVerticalLayout ? rtlVerticalStyles : ''}
-
-    .t, p, div {
-      color: ${getComputedStyle(document.body).getPropertyValue('--ion-text-color')};
-      font-family: ${getComputedStyle(document.body).getPropertyValue('--ion-font-family')};
-      font-size: ${(this.props as any).fontSize}px;
-    }
-    
-    #back, #cbeta-copyright {
-      display: ${(this.props as any).showComments ? "block" : "none"};
-    }
-    `);
-    this.epub.writeEPUB(
-      (e: any) => {
-        console.log(`Error: ${e}`);
-      },
-      '.', 'temp',
-      () => {
-        this.render();
-        let a = fs.readFileSync('temp.epub');
-        this.book = ePub(a, { openAs: 'binary' });
-        this.rendition = this.book.renderTo('cbetarWebView', { width: "100%", height: "100%", defaultDirection: this.props.rtlVerticalLayout ? 'rtl' : 'ltr' });
-        this.displayed = this.rendition.display();
-        this.displayed.then(() => {
-          this.setState({ htmlStr: htmlStr });
-        })
-      }
-    );
+    this.setState({htmlStr: htmlStr});
     return true;
 
     /*
@@ -248,7 +200,72 @@ class _WebViewPage extends React.Component<PageProps> {
     return this.bookmark != null;
   }
 
+  html2Epub() {
+    this.epub = nodepub.document({
+      id: '123-123456789',
+      title: 'Title',
+      series: '',
+      sequence: 1,
+      author: 'Author',
+      fileAs: '',
+      genre: 'genre',
+      tags: '',
+      copyright: '',
+      publisher: '',
+      published: '',
+      language: 'en',
+      description: 'A temp book.',
+      contents: 'Table of Contents',
+      source: '',
+      images: ['logo.png'],
+    }, 'logo.png');
+    this.epub.addSection('', this.state.htmlStr, true, false);
+
+    let rtlVerticalStyles = `
+    #body, #back, #cbeta-copyright, #cbetarWebView>p {
+      direction: ltr;
+      writing-mode: vertical-rl;
+      display: inline;
+    }
+    `;
+    this.epub.addCSS(`
+    .lb {
+      display: none
+    }
+  
+    ${this.props.rtlVerticalLayout ? rtlVerticalStyles : ''}
+
+    .t, p, div {
+      color: ${getComputedStyle(document.body).getPropertyValue('--ion-text-color')};
+      font-family: ${getComputedStyle(document.body).getPropertyValue('--ion-font-family')};
+      font-size: ${(this.props as any).fontSize}px;
+    }
+    
+    #back, #cbeta-copyright {
+      display: ${(this.props as any).showComments ? "block" : "none"};
+    }
+    `);
+    this.epub.writeEPUB(
+      (e: any) => {
+        console.log(`Error: ${e}`);
+      },
+      '.', 'temp',
+      () => {
+        let fs = require('fs');
+        let tempEpubBuffer = fs.readFileSync('temp.epub');
+        this.book = ePub(tempEpubBuffer, { openAs: 'binary' });
+        this.rendition = this.book.renderTo('cbetarWebView', { width: "100%", height: "100%", defaultDirection: this.props.rtlVerticalLayout ? 'rtl' : 'ltr' });
+        this.displayed = this.rendition.display();
+        /*
+        this.displayed.then(() => {
+          this.setState({ htmlStr: htmlStr });
+        })*/
+      }
+    );
+  }
+
   render() {
+    this.html2Epub();
     return (
       <IonPage>
         <IonHeader>
