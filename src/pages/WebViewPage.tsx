@@ -116,6 +116,15 @@ class _WebViewPage extends React.Component<PageProps> {
     }
     `;
 
+    // Convert HTML to XML, because ePub requires XHTML.
+    // Bad structured HTML will cause DOMParser parse error!
+    let doc = document.implementation.createHTMLDocument("");
+    doc.body.innerHTML = htmlStr!;
+    htmlStr = new XMLSerializer().serializeToString(doc.body);
+    // Remove body tag.
+    htmlStr = htmlStr.replace('<body', '<div');
+    htmlStr = htmlStr.replace('/body>', '/div>');
+
     this.epub = nodepub.document({
       id: '123-123456789',
       title: 'Title',
