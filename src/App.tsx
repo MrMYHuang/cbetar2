@@ -90,7 +90,7 @@ class App extends React.Component {
           <IonReactRouter>
             <IonTabs>
               <IonRouterOutlet animated={false}>
-                <Route path="/:tab(catalog)/webview/:work/:path/:label" render={props => <WebViewPage {...props} />} />
+                <Route path="/:tab(catalog)/webview/:work/:path/:label" render={(props: any) => <WebViewPage {...props} />}  exact={true} />
                 <Route path="/:tab(catalog)/work/:path/:label" component={(props: any) => <WorkPage {...props} />} exact={true} />
                 <Route path="/:tab(catalog)/search/:keyword" render={props => <SearchPage {...props} />} exact={true} />
                 <Route path="/:tab(catalog)/catalog/:path/:label" component={(props: any) => <CatalogPage {...props} />} exact={true} />

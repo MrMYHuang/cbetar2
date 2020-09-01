@@ -18,6 +18,7 @@ interface Props {
   settings: any;
   darkMode: boolean;
   showComments: boolean;
+  paginated: boolean;
   rtlVerticalLayout: boolean;
   useFontKai: boolean;
 }
@@ -62,10 +63,22 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
             </IonItem>
             <IonItem>
               <IonIcon icon={documentText} slot='start' />
-              <IonLabel className='ion-text-wrap' style={{ fontSize: (this.props as any).uiFontSize }}>經文直式、右至左書寫</IonLabel>
-              <IonToggle slot='end' checked={(this.props as any).rtlVerticalLayout} onIonChange={e => {
+              <IonLabel className='ion-text-wrap' style={{ fontSize: this.props.uiFontSize }}>分頁</IonLabel>
+              <IonToggle slot='end' checked={this.props.paginated} onIonChange={e => {
                 const isChecked = e.detail.checked;
-                (this.props as any).dispatch({
+                this.props.dispatch({
+                  type: "SET_KEY_VAL",
+                  key: 'paginated',
+                  val: isChecked
+                });
+              }} />
+            </IonItem>
+            <IonItem>
+              <IonIcon icon={documentText} slot='start' />
+              <IonLabel className='ion-text-wrap' style={{ fontSize: this.props.uiFontSize }}>經文直式、右至左書寫</IonLabel>
+              <IonToggle slot='end' checked={this.props.rtlVerticalLayout} onIonChange={e => {
+                const isChecked = e.detail.checked;
+                this.props.dispatch({
                   type: "SET_KEY_VAL",
                   key: 'rtlVerticalLayout',
                   val: isChecked
@@ -214,6 +227,7 @@ const mapStateToProps = (state: any /*, ownProps*/) => {
     settings: state.settings,
     darkMode: state.settings.darkMode,
     showComments: state.settings.showComments,
+    paginated: state.settings.paginated,
     rtlVerticalLayout: state.settings.rtlVerticalLayout,
     scrollbarSize: state.settings.scrollbarSize,
     useFontKai: state.settings.useFontKai,

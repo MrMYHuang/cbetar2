@@ -29,6 +29,7 @@ interface Props {
   settings: any;
   darkMode: boolean;
   showComments: boolean;
+  paginated: Boolean;
   rtlVerticalLayout: boolean;
   useFontKai: boolean;
 }
@@ -117,7 +118,7 @@ class _WebViewPage extends React.Component<PageProps, State> {
       responseType: 'arraybuffer',
     });
     let fs = require('fs');
-    fs.writeFileSync('logo.png', res.data);    
+    fs.writeFileSync('logo.png', res.data);
 
     // Convert HTML to XML, because ePub requires XHTML.
     // Bad structured HTML will cause DOMParser parse error on some browsers!
@@ -128,7 +129,7 @@ class _WebViewPage extends React.Component<PageProps, State> {
     htmlStr = htmlStr.replace('<body', '<div');
     htmlStr = htmlStr.replace('/body>', '/div>');
 
-    this.setState({htmlStr: htmlStr});
+    this.setState({ htmlStr: htmlStr });
     return true;
 
     /*
@@ -200,7 +201,16 @@ class _WebViewPage extends React.Component<PageProps, State> {
     return this.bookmark != null;
   }
 
-  html2Epub() {
+  ionViewWillLeave() {
+    this.setState({htmlStr: null});
+    this.book?.destroy();
+    this.book = null;
+    this.bookCreated = false;
+  }
+
+  bookCreated = false;
+  async html2Epub() {
+    this.bookCreated = true;
     this.epub = nodepub.document({
       id: '123-123456789',
       title: 'Title',
@@ -245,27 +255,32 @@ class _WebViewPage extends React.Component<PageProps, State> {
       display: ${(this.props as any).showComments ? "block" : "none"};
     }
     `);
-    this.epub.writeEPUB(
-      (e: any) => {
-        console.log(`Error: ${e}`);
-      },
-      '.', 'temp',
-      () => {
-        let fs = require('fs');
-        let tempEpubBuffer = fs.readFileSync('temp.epub');
-        this.book = ePub(tempEpubBuffer, { openAs: 'binary' });
-        this.rendition = this.book.renderTo('cbetarWebView', { width: "100%", height: "100%", defaultDirection: this.props.rtlVerticalLayout ? 'rtl' : 'ltr' });
-        this.displayed = this.rendition.display();
-        /*
-        this.displayed.then(() => {
-          this.setState({ htmlStr: htmlStr });
-        })*/
-      }
-    );
+    //await new Promise((ok, fail) => {
+      this.epub.writeEPUB(
+        (e: any) => {
+          console.log(`Error: ${e}`);
+        },
+        '.', 'temp',
+        () => {
+          let fs = require('fs');
+          let tempEpubBuffer = fs.readFileSync('temp.epub');
+          this.book = ePub(tempEpubBuffer, { openAs: 'binary' });
+          this.rendition = this.book.renderTo('cbetarWebView', {
+            width: "100%", height: "100%",
+            flow: this.props.paginated ? 'paginated' : 'scrolled',
+            defaultDirection: this.props.rtlVerticalLayout ? 'rtl' : 'ltr',
+          });
+          this.rendition.display();
+          //this.rendition.display().then(() => {ok()});
+        }
+      );
+    //});
   }
 
   render() {
-    this.html2Epub();
+    if (!this.bookCreated && this.state.htmlStr != null) {
+      this.html2Epub();
+    }
     return (
       <IonPage>
         <IonHeader>
@@ -355,6 +370,7 @@ const mapStateToProps = (state: any /*, ownProps*/) => {
     fontSize: state.settings.fontSize,
     uiFontSize: state.settings.uiFontSize,
     showComments: state.settings.showComments,
+    paginated: state.settings.paginated,
     rtlVerticalLayout: state.settings.rtlVerticalLayout,
     settings: state.settings,
   }
