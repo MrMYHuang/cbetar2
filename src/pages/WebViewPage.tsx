@@ -117,7 +117,7 @@ class _WebViewPage extends React.Component<PageProps> {
     `;
 
     // Convert HTML to XML, because ePub requires XHTML.
-    // Bad structured HTML will cause DOMParser parse error!
+    // Bad structured HTML will cause DOMParser parse error on some browsers!
     let doc = document.implementation.createHTMLDocument("");
     doc.body.innerHTML = htmlStr!;
     htmlStr = new XMLSerializer().serializeToString(doc.body);
