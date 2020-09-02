@@ -54,6 +54,7 @@ class _WebViewPage extends React.Component<PageProps, State> {
   rendition: Rendition | null;
   epub: any;
   displayed: any;
+  cfiRange: string;
 
   constructor(props: any) {
     super(props);
@@ -69,6 +70,7 @@ class _WebViewPage extends React.Component<PageProps, State> {
     this.htmlFile = '';
     this.book = null;
     this.rendition = null;
+    this.cfiRange = '';
   }
 
   uuidStr = '';
@@ -202,21 +204,37 @@ class _WebViewPage extends React.Component<PageProps, State> {
   }
 
   ionViewWillLeave() {
-    this.setState({htmlStr: null});
+    this.setState({ htmlStr: null });
     this.book?.destroy();
     this.book = null;
     this.bookCreated = false;
   }
 
-  keyListener(e: any) {
-    // Left Key
-    if ((e.keyCode || e.which) == 37) {
+  prevPage() {
+    if (this.props.rtlVerticalLayout)
+      this.rendition?.next();
+    else
       this.rendition?.prev();
+  }
+
+  nextPage() {
+    if (this.props.rtlVerticalLayout)
+      this.rendition?.prev();
+    else
+      this.rendition?.next();
+  }
+
+  keyListener(e: any) {
+    let key = e.keyCode || e.which;
+
+    // Left Key
+    if (key === (this.props.rtlVerticalLayout ? 37 : 38)) {
+      this.prevPage();
     }
 
-    // Right Key
-    if ((e.keyCode || e.which) == 39) {
-      this.rendition?.next();
+    // Right/down Key
+    if (key === (this.props.rtlVerticalLayout ? 39 : 40)) {
+      this.nextPage();
     }
 
   };
@@ -269,27 +287,36 @@ class _WebViewPage extends React.Component<PageProps, State> {
     }
     `);
     //await new Promise((ok, fail) => {
-      this.epub.writeEPUB(
-        (e: any) => {
-          console.log(`Error: ${e}`);
-        },
-        '.', 'temp',
-        () => {
-          let fs = require('fs');
-          let tempEpubBuffer = fs.readFileSync('temp.epub');
-          this.book = ePub(tempEpubBuffer, { openAs: 'binary' });
-          this.rendition = this.book.renderTo('cbetarWebView', {
-            width: "100%", height: "100%",
-            spread: 'none',
-            flow: this.props.paginated ? 'paginated' : 'scrolled',
-            defaultDirection: this.props.rtlVerticalLayout ? 'rtl' : 'ltr',
+    this.epub.writeEPUB(
+      (e: any) => {
+        console.log(`Error: ${e}`);
+      },
+      '.', 'temp',
+      () => {
+        let fs = require('fs');
+        let tempEpubBuffer = fs.readFileSync('temp.epub');
+        this.book = ePub(tempEpubBuffer, { openAs: 'binary' });
+        this.rendition = this.book.renderTo('cbetarWebView', {
+          width: "100%", height: "100%",
+          spread: 'none',
+          flow: this.props.paginated ? 'paginated' : 'scrolled',
+          defaultDirection: this.props.rtlVerticalLayout ? 'rtl' : 'ltr',
+        });
+        this.rendition.on("keyup", this.keyListener.bind(this));
+        document.addEventListener("keyup", this.keyListener.bind(this), false);
+
+        this.rendition.on("selected", (cfiRange: any, contents: any) => {
+          this.cfiRange = cfiRange;
+          this.rendition?.annotations.highlight(cfiRange, {}, (e:any) => {
+            console.log("highlight clicked", e.target);
           });
-          this.rendition.on("keyup", this.keyListener.bind(this));
-          document.addEventListener("keyup", this.keyListener.bind(this), false);
-          this.rendition.display()
-          //this.rendition.display().then(() => {ok()});
-        }
-      );
+          contents.window.getSelection().removeAllRanges();
+
+        });
+        this.rendition.display();
+        //this.rendition.display().then(() => {ok()});
+      }
+    );
     //});
   }
 
@@ -310,11 +337,12 @@ class _WebViewPage extends React.Component<PageProps, State> {
             </IonButton>
             <IonButton fill="clear" slot='end' onClick={e => {
               //this.props.rtlVerticalLayout ? this.rendition?.next() : this.rendition?.prev();
-              //alert(this.book?.re);
+              //alert(this.cfiRange);
+              this.rendition?.display(this.cfiRange);
             }}>
               <IonIcon icon={arrowBack} slot='icon-only' />
             </IonButton>
-            <IonButton fill="clear" slot='end' onClick={e => this.props.rtlVerticalLayout ? this.rendition?.prev() : this.rendition?.next()}>
+            <IonButton fill="clear" slot='end' onClick={e => this.nextPage()}>
               <IonIcon icon={arrowForward} slot='icon-only' />
             </IonButton>
             <IonButton fill="clear" slot='end' onClick={e => this.setState({ popover: { show: true, event: e.nativeEvent } })}>
