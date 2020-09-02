@@ -208,6 +208,19 @@ class _WebViewPage extends React.Component<PageProps, State> {
     this.bookCreated = false;
   }
 
+  keyListener(e: any) {
+    // Left Key
+    if ((e.keyCode || e.which) == 37) {
+      this.rendition?.prev();
+    }
+
+    // Right Key
+    if ((e.keyCode || e.which) == 39) {
+      this.rendition?.next();
+    }
+
+  };
+
   bookCreated = false;
   async html2Epub() {
     this.bookCreated = true;
@@ -267,10 +280,13 @@ class _WebViewPage extends React.Component<PageProps, State> {
           this.book = ePub(tempEpubBuffer, { openAs: 'binary' });
           this.rendition = this.book.renderTo('cbetarWebView', {
             width: "100%", height: "100%",
+            spread: 'none',
             flow: this.props.paginated ? 'paginated' : 'scrolled',
             defaultDirection: this.props.rtlVerticalLayout ? 'rtl' : 'ltr',
           });
-          this.rendition.display();
+          this.rendition.on("keyup", this.keyListener.bind(this));
+          document.addEventListener("keyup", this.keyListener.bind(this), false);
+          this.rendition.display()
           //this.rendition.display().then(() => {ok()});
         }
       );
@@ -292,7 +308,10 @@ class _WebViewPage extends React.Component<PageProps, State> {
             <IonButton fill="clear" color={this.hasBookmark ? 'warning' : 'primary'} slot='end' onClick={e => this.hasBookmark ? this.delBookmarkHandler() : this.addBookmarkHandler()}>
               <IonIcon icon={bookmark} slot='icon-only' />
             </IonButton>
-            <IonButton fill="clear" slot='end' onClick={e => this.props.rtlVerticalLayout ? this.rendition?.next() : this.rendition?.prev()}>
+            <IonButton fill="clear" slot='end' onClick={e => {
+              //this.props.rtlVerticalLayout ? this.rendition?.next() : this.rendition?.prev();
+              //alert(this.book?.re);
+            }}>
               <IonIcon icon={arrowBack} slot='icon-only' />
             </IonButton>
             <IonButton fill="clear" slot='end' onClick={e => this.props.rtlVerticalLayout ? this.rendition?.prev() : this.rendition?.next()}>
@@ -302,8 +321,8 @@ class _WebViewPage extends React.Component<PageProps, State> {
               <IonIcon ios={ellipsisHorizontal} md={ellipsisVertical} slot='icon-only' />
             </IonButton>
             <IonPopover
-              isOpen={(this.state as any).popover.show}
-              event={(this.state as any).popover.event}
+              isOpen={this.state.popover.show}
+              event={this.state.popover.event}
               onDidDismiss={e => { this.setState({ popover: { show: false, event: null } }) }}
             >
               <IonList>
