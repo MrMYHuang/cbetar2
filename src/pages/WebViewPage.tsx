@@ -7,7 +7,7 @@ import * as uuid from 'uuid';
 import queryString from 'query-string';
 import './WebViewPage.css';
 import Globals from '../Globals';
-import { bookmark, arrowBack, home, search, ellipsisHorizontal, ellipsisVertical, arrowForward } from 'ionicons/icons';
+import { bookmark, arrowBack, home, search, ellipsisHorizontal, ellipsisVertical, arrowForward, arrowUp, arrowDown } from 'ionicons/icons';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
 import { Work } from '../models/Work';
 import SearchAlert from '../components/SearchAlert';
@@ -210,36 +210,38 @@ class _WebViewPage extends React.Component<PageProps, State> {
     this.bookCreated = false;
   }
 
-  prevPage() {
-    if (this.props.rtlVerticalLayout)
-      this.rendition?.next();
-    else
+  pagePrev() {
+    // Used to avoid navigating to cover pages.
+    let isFirstPage = this.pageCounter == 1;
+    if (this.props.paginated && !isFirstPage) {
+      this.pageCounter--;
       this.rendition?.prev();
+    }
   }
 
-  nextPage() {
-    if (this.props.rtlVerticalLayout)
-      this.rendition?.prev();
-    else
+  pageNext() {
+    if (this.props.paginated) {
+      this.pageCounter++;
       this.rendition?.next();
+    }
   }
 
   keyListener(e: any) {
     let key = e.keyCode || e.which;
 
-    // Left Key
-    if (key === (this.props.rtlVerticalLayout ? 37 : 38)) {
-      this.prevPage();
+    // Left/down Key
+    if (key === (this.props.rtlVerticalLayout ? 37 : 40)) {
+      this.pageNext()
     }
 
-    // Right/down Key
-    if (key === (this.props.rtlVerticalLayout ? 39 : 40)) {
-      this.nextPage();
+    // Right/top Key
+    if (key === (this.props.rtlVerticalLayout ? 39 : 38)) {
+      this.pagePrev();
     }
-
   };
 
   bookCreated = false;
+  pageCounter = 1;
   async html2Epub() {
     this.bookCreated = true;
     this.epub = nodepub.document({
@@ -263,9 +265,11 @@ class _WebViewPage extends React.Component<PageProps, State> {
     this.epub.addSection('', this.state.htmlStr, true, false);
 
     let rtlVerticalStyles = `
+    html {
+      writing-mode: vertical-rl;
+    }
     #body, #back, #cbeta-copyright, #cbetarWebView>p {
       direction: ltr;
-      writing-mode: vertical-rl;
       display: inline;
     }
     `;
@@ -307,14 +311,17 @@ class _WebViewPage extends React.Component<PageProps, State> {
 
         this.rendition.on("selected", (cfiRange: any, contents: any) => {
           this.cfiRange = cfiRange;
-          this.rendition?.annotations.highlight(cfiRange, {}, (e:any) => {
+          console.log(cfiRange);
+          this.rendition?.annotations.highlight(cfiRange, {}, (e: any) => {
             console.log("highlight clicked", e.target);
           });
           contents.window.getSelection().removeAllRanges();
-
         });
-        this.rendition.display();
-        //this.rendition.display().then(() => {ok()});
+
+        if (this.props.paginated) {
+          this.pageCounter = 1;
+        }
+        this.rendition.display('epubcfi(/6/6[s1]!/4/4/2/6[body]/6,/1:0,/1:1)');
       }
     );
     //});
@@ -335,15 +342,11 @@ class _WebViewPage extends React.Component<PageProps, State> {
             <IonButton fill="clear" color={this.hasBookmark ? 'warning' : 'primary'} slot='end' onClick={e => this.hasBookmark ? this.delBookmarkHandler() : this.addBookmarkHandler()}>
               <IonIcon icon={bookmark} slot='icon-only' />
             </IonButton>
-            <IonButton fill="clear" slot='end' onClick={e => {
-              //this.props.rtlVerticalLayout ? this.rendition?.next() : this.rendition?.prev();
-              //alert(this.cfiRange);
-              this.rendition?.display(this.cfiRange);
-            }}>
-              <IonIcon icon={arrowBack} slot='icon-only' />
+            <IonButton fill="clear" slot='end' onClick={e => this.pageNext()}>
+              <IonIcon icon={this.props.rtlVerticalLayout ? arrowBack : arrowDown} slot='icon-only' />
             </IonButton>
-            <IonButton fill="clear" slot='end' onClick={e => this.nextPage()}>
-              <IonIcon icon={arrowForward} slot='icon-only' />
+            <IonButton fill="clear" slot='end' onClick={e => this.pagePrev()}>
+              <IonIcon icon={this.props.rtlVerticalLayout ? arrowForward : arrowUp} slot='icon-only' />
             </IonButton>
             <IonButton fill="clear" slot='end' onClick={e => this.setState({ popover: { show: true, event: e.nativeEvent } })}>
               <IonIcon ios={ellipsisHorizontal} md={ellipsisVertical} slot='icon-only' />
@@ -359,7 +362,7 @@ class _WebViewPage extends React.Component<PageProps, State> {
                   this.setState({ popover: { show: false, event: null } });
                 }}>
                   <IonIcon icon={home} slot='start' />
-                  <IonLabel className='ion-text-wrap' style={{ fontSize: (this.props as any).uiFontSize }}>回首頁</IonLabel>
+                  <IonLabel className='ion-text-wrap' style={{ fontSize: this.props.uiFontSize }}>回首頁</IonLabel>
                 </IonItem>
               </IonList>
               <IonList>
