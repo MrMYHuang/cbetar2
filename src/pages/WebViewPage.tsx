@@ -1,13 +1,13 @@
 //import * as fs from 'fs';
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton, withIonLifeCycle, IonIcon, IonAlert, IonPopover, IonList, IonItem, IonLabel } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton, withIonLifeCycle, IonIcon, IonAlert, IonPopover, IonList, IonItem, IonLabel, IonRange } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as uuid from 'uuid';
 import queryString from 'query-string';
 import './WebViewPage.css';
 import Globals from '../Globals';
-import { bookmark, arrowBack, home, search, ellipsisHorizontal, ellipsisVertical, arrowForward, arrowUp, arrowDown } from 'ionicons/icons';
+import { bookmark, arrowBack, home, search, ellipsisHorizontal, ellipsisVertical, arrowForward, arrowUp, arrowDown, text } from 'ionicons/icons';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
 import { Work } from '../models/Work';
 import SearchAlert from '../components/SearchAlert';
@@ -25,6 +25,7 @@ interface Props {
   dispatch: Function;
   bookmarks: [Bookmark];
   uiFontSize: number;
+  fontSize: number;
   scrollbarSize: number;
   settings: any;
   darkMode: boolean;
@@ -120,7 +121,7 @@ class _WebViewPage extends React.Component<PageProps, State> {
       responseType: 'arraybuffer',
     });
     let fs = require('fs');
-    fs.writeFileSync('logo.png', res.data);
+    fs.writeFileSync('logo.png', new Uint8Array(res.data));
 
     // Convert HTML to XML, because ePub requires XHTML.
     // Bad structured HTML will cause DOMParser parse error on some browsers!
@@ -211,9 +212,7 @@ class _WebViewPage extends React.Component<PageProps, State> {
   }
 
   pagePrev() {
-    // Used to avoid navigating to cover pages.
-    let isFirstPage = this.pageCounter === 1;
-    if (this.props.paginated && !isFirstPage) {
+    if (this.props.paginated) {
       this.pageCounter--;
       this.rendition?.prev();
     }
@@ -283,11 +282,11 @@ class _WebViewPage extends React.Component<PageProps, State> {
     .t, p, div {
       color: ${getComputedStyle(document.body).getPropertyValue('--ion-text-color')};
       font-family: ${getComputedStyle(document.body).getPropertyValue('--ion-font-family')};
-      font-size: ${(this.props as any).fontSize}px;
+      font-size: ${this.props.fontSize}px;
     }
     
     #back, #cbeta-copyright {
-      display: ${(this.props as any).showComments ? "block" : "none"};
+      display: ${this.props.showComments ? "block" : "none"};
     }
     `);
     //await new Promise((ok, fail) => {
@@ -299,7 +298,11 @@ class _WebViewPage extends React.Component<PageProps, State> {
       () => {
         let fs = require('fs');
         let tempEpubBuffer = fs.readFileSync('temp.epub');
-        this.book = ePub(tempEpubBuffer, { openAs: 'binary' });
+        this.book = ePub(tempEpubBuffer.buffer, {
+          openAs: 'binary',
+          //openAs: 'epub'
+          //replacements: 'base64',
+         });
         this.rendition = this.book.renderTo('cbetarWebView', {
           width: "100%", height: "100%",
           spread: 'none',
@@ -321,7 +324,9 @@ class _WebViewPage extends React.Component<PageProps, State> {
         if (this.props.paginated) {
           this.pageCounter = 1;
         }
-        this.rendition.display('epubcfi(/6/6[s1]!/4/4/2/6[body]/6,/1:0,/1:1)');
+        this.rendition.display('epubcfi(/6/6[s1]!/4/4/2/6[body]/6,/1:0,/1:1)').then(() => {
+          this.book?.locations.generate(150);
+        });
       }
     );
     //});
@@ -364,14 +369,22 @@ class _WebViewPage extends React.Component<PageProps, State> {
                   <IonIcon icon={home} slot='start' />
                   <IonLabel className='ion-text-wrap' style={{ fontSize: this.props.uiFontSize }}>回首頁</IonLabel>
                 </IonItem>
-              </IonList>
-              <IonList>
                 <IonItem button onClick={e => {
                   this.setState({ showSearchAlert: true });
                   this.setState({ popover: { show: false, event: null } });
                 }}>
                   <IonIcon icon={search} slot='start' />
                   <IonLabel className='ion-text-wrap' style={{ fontSize: this.props.uiFontSize }}>搜尋經文</IonLabel>
+                </IonItem>
+                <IonItem>
+                  <IonIcon icon={text} slot='start' />
+                    <IonLabel className='ion-text-wrap' style={{ fontSize: this.props.uiFontSize }}>跳頁(%)</IonLabel>
+                    <IonRange min={0} max={100} step={10} snaps pin onIonChange={e => {
+                      let percent = e.detail.value as number;
+                      let ratio = percent / 100 + '';
+                      ratio = (ratio === '0' || ratio === '1') ? `${ratio}.0` : ratio;
+                      this.rendition?.display(ratio);
+                    }} />
                 </IonItem>
               </IonList>
             </IonPopover>
