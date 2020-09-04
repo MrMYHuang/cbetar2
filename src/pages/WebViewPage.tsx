@@ -212,7 +212,7 @@ class _WebViewPage extends React.Component<PageProps, State> {
 
   pagePrev() {
     // Used to avoid navigating to cover pages.
-    let isFirstPage = this.pageCounter == 1;
+    let isFirstPage = this.pageCounter === 1;
     if (this.props.paginated && !isFirstPage) {
       this.pageCounter--;
       this.rendition?.prev();

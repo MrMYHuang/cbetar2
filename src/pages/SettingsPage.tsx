@@ -176,7 +176,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
                 <div><a href="mailto:myh@live.com" target="__new">myh@live.com</a></div>
                 <div><a href="https://github.com/MrMYHuang/cbetar2" target="__new">操作說明與開放原始碼</a></div>
                 <div><a href="http://cbdata.dila.edu.tw/v1.2/" target="__new">CBETA API參考文件</a></div>
-                <div><a href='#' onClick={e => {
+                <div><a href='/' onClick={e => {
                   e.preventDefault();
                   this.setState({ showFontLicense: true });
                 }}>全字庫字型版權聲明</a></div>
