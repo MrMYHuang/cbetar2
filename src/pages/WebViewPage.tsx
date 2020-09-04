@@ -74,6 +74,22 @@ class _WebViewPage extends React.Component<PageProps, State> {
     this.cfiRange = '';
   }
 
+  async loadEpubCoverToMemFs() {
+    let logoArray = new Uint8Array(JSON.parse(localStorage.getItem('logo.png') || '[]'));
+
+    if (logoArray.length === 0) {
+      // Download book logo.
+      const res = await Globals.axiosInstance.get(`https://github.com/MrMYHuang/MrMYHuang.github.io/raw/master/assets/icon/icon.png`, {
+        responseType: 'arraybuffer',
+      });
+      logoArray = new Uint8Array(res.data);
+      let logoStr = JSON.stringify(Array.from(logoArray));
+      localStorage.setItem('logo.png', logoStr);
+    }
+    let fs = require('fs');
+    fs.writeFileSync('logo.png', logoArray);
+  }
+
   uuidStr = '';
   ionViewWillEnter() {
     let queryParams = queryString.parse(this.props.location.search) as any;
@@ -116,12 +132,7 @@ class _WebViewPage extends React.Component<PageProps, State> {
       htmlStr = data.results[0];
     }
 
-    // Download book logo.
-    const res = await Globals.axiosInstance.get(`https://github.com/MrMYHuang/MrMYHuang.github.io/raw/master/assets/icon/icon.png`, {
-      responseType: 'arraybuffer',
-    });
-    let fs = require('fs');
-    fs.writeFileSync('logo.png', new Uint8Array(res.data));
+    await this.loadEpubCoverToMemFs();
 
     // Convert HTML to XML, because ePub requires XHTML.
     // Bad structured HTML will cause DOMParser parse error on some browsers!
