@@ -1,11 +1,18 @@
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonLabel, withIonLifeCycle } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonLabel, withIonLifeCycle, IonItemSliding, IonItemOptions, IonItemOption } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import './WorkPage.css';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
 
-interface PageProps extends RouteComponentProps<{
+interface Props {
+  dispatch: Function;
+  bookmarks: [Bookmark];
+  uiFontSize: number;
+  fontSize: number;
+}
+
+interface PageProps extends Props, RouteComponentProps<{
   tab: string;
   path: string;
 }> { }
@@ -26,8 +33,15 @@ class _BookmarkPage extends React.Component<PageProps> {
     return ((this.props as any).bookmarks as [Bookmark]).length > 0;
   }
 
+  delBookmarkHandler(uuidStr: string) {
+    this.props.dispatch({
+      type: "DEL_BOOKMARK",
+      uuid: uuidStr,
+    });
+  }
+
   render() {
-    let bookmarks = (this.props as any).bookmarks as [Bookmark];
+    let bookmarks = this.props.bookmarks;
     let rows = Array<object>();
     bookmarks.forEach((bookmark, i) => {
       let routeLink = ``;
@@ -42,19 +56,25 @@ class _BookmarkPage extends React.Component<PageProps> {
           label = `${bookmark.work?.title}第${bookmark.work?.juan}卷 - ${label}`; break;
       }
       rows.push(
-        <IonItem key={`bookmarkItem_` + i} button={true} onClick={async event => {
-          event.preventDefault();
-          this.props.history.push({
-            pathname: routeLink,
-            state: {
-              uuid: bookmark.uuid,
-            },
-          });
-        }}>
-          <IonLabel className='ion-text-wrap' style={{ fontSize: (this.props as any).uiFontSize }} key={`bookmarkItemLabel_` + i}>
-            {label}
-          </IonLabel>
-        </IonItem>
+        <IonItemSliding>
+          <IonItem key={`bookmarkItem_` + i} button={true} onClick={async event => {
+            event.preventDefault();
+            this.props.history.push({
+              pathname: routeLink,
+              state: {
+                uuid: bookmark.uuid,
+              },
+            });
+          }}>
+            <IonLabel className='ion-text-wrap' style={{ fontSize: (this.props as any).uiFontSize }} key={`bookmarkItemLabel_` + i}>
+              {label}
+            </IonLabel>
+          </IonItem>
+
+          <IonItemOptions side="end">
+            <IonItemOption color='danger' onClick={() => this.delBookmarkHandler(bookmark.uuid)}>刪除</IonItemOption>
+          </IonItemOptions>
+        </IonItemSliding>
       );
     });
     return (
