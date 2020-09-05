@@ -56,7 +56,7 @@ class _BookmarkPage extends React.Component<PageProps> {
           label = `${bookmark.work?.title}第${bookmark.work?.juan}卷 - ${label}`; break;
       }
       rows.push(
-        <IonItemSliding>
+        <IonItemSliding key={`bookmarkItemSliding_` + i}>
           <IonItem key={`bookmarkItem_` + i} button={true} onClick={async event => {
             event.preventDefault();
             this.props.history.push({
