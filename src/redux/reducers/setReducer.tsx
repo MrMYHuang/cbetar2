@@ -13,9 +13,6 @@ export default function reducer(state = {
       localStorage.setItem(Globals.storeFile, JSON.stringify({ settings: newSettings }));
       break;
     case "ADD_BOOKMARK":
-      if (action.bookmark.fileName !== null && action.bookmark.fileName !== '') {
-        localStorage.setItem(action.bookmark.fileName, action.htmlStr);
-      }
       newSettings.bookmarks = [...newSettings.bookmarks, action.bookmark];
       localStorage.setItem(Globals.storeFile, JSON.stringify({ settings: newSettings }));
       break;

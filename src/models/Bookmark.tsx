@@ -12,6 +12,7 @@ export class Bookmark {
     uuid: string = '';
     work: Work | null | undefined = null;
     selectedText: string = '';
+    epubcfi: string = '';
     fileName: string = '';
 
     constructor(json: Bookmark) {
@@ -19,6 +20,7 @@ export class Bookmark {
         this.uuid = json.uuid;
         this.work = json.work;
         this.selectedText = json.selectedText;
+        this.epubcfi = json.epubcfi;
         this.fileName = json.fileName;
     }
 }

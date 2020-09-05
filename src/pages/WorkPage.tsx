@@ -54,6 +54,7 @@ class _WorkPage extends React.Component<PageProps> {
         type: BookmarkType.WORK,
         uuid: this.props.match.params.path,
         selectedText: this.props.match.params.label,
+        epubcfi: '',
         fileName: '',
         work: null,
       }),

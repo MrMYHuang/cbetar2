@@ -95,6 +95,7 @@ class _CatalogPage extends React.Component<PageProps> {
         type: BookmarkType.CATALOG,
         uuid: this.props.match.params.path,
         selectedText: this.props.match.params.label,
+        epubcfi: '',
         fileName: '',
         work: null,
       }),

@@ -152,24 +152,20 @@ class _WebViewPage extends React.Component<PageProps, State> {
   }*/
   }
 
+  epubcfi = '';
   addBookmarkHandler() {
     let uuidStr = uuid.v4();
-    var sel, range;
+    var sel;
     if (window.getSelection) {
       sel = (window.getSelection() as any);
       if (sel.rangeCount) {
-        range = sel.getRangeAt(0);
-        range.startContainer.parentElement.id = bookmarkPrefix + uuidStr;
-
-        const docBody = document.getElementById('cbetarWebView')?.innerHTML;
-
         this.props.dispatch({
           type: "ADD_BOOKMARK",
-          htmlStr: docBody,
           bookmark: new Bookmark({
             type: BookmarkType.JUAN,
             uuid: uuidStr,
             selectedText: sel.toString(),
+            epubcfi: this.epubcfi,
             fileName: `${this.props.match.params.work}_juan${this.props.match.params.path}.html`,
             work: new Work({
               juan: this.props.match.params.path,
@@ -187,21 +183,6 @@ class _WebViewPage extends React.Component<PageProps, State> {
     return;
   }
 
-  delBookmarkHandler() {
-    var oldBookmark = document.getElementById(bookmarkPrefix + this.uuidStr);
-    if (oldBookmark) {
-      oldBookmark.id = '';
-      const docBody = document.getElementById('cbetarWebView')?.innerHTML;
-      this.props.dispatch({
-        type: "DEL_BOOKMARK",
-        uuid: this.uuidStr,
-        htmlStr: docBody,
-        fileName: this.bookmark?.fileName,
-      });
-      this.uuidStr = '';
-    }
-  }
-
   get isTopPage() {
     return this.props.match.url === '/catalog';
   }
@@ -209,10 +190,6 @@ class _WebViewPage extends React.Component<PageProps, State> {
   get bookmark() {
     return this.props.bookmarks.find(
       (e) => e.type === BookmarkType.JUAN && e.uuid === this.uuidStr);
-  }
-
-  get hasBookmark() {
-    return this.bookmark != null;
   }
 
   ionViewWillLeave() {
@@ -324,12 +301,12 @@ class _WebViewPage extends React.Component<PageProps, State> {
         document.addEventListener("keyup", this.keyListener.bind(this), false);
 
         this.rendition.on("selected", (cfiRange: any, contents: any) => {
-          this.cfiRange = cfiRange;
-          console.log(cfiRange);
+          this.epubcfi = cfiRange.cfi;
+          /*
           this.rendition?.annotations.highlight(cfiRange, {}, (e: any) => {
             console.log("highlight clicked", e.target);
-          });
-          contents.window.getSelection().removeAllRanges();
+          });*/
+          //contents.window.getSelection().removeAllRanges();
         });
 
         if (this.props.paginated) {
@@ -355,7 +332,7 @@ class _WebViewPage extends React.Component<PageProps, State> {
             <IonButton hidden={this.isTopPage} fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
               <IonIcon icon={arrowBack} slot='icon-only' />
             </IonButton>
-            <IonButton fill="clear" color={this.hasBookmark ? 'warning' : 'primary'} slot='end' onClick={e => this.hasBookmark ? this.delBookmarkHandler() : this.addBookmarkHandler()}>
+            <IonButton fill="clear" slot='end' onClick={e => this.addBookmarkHandler()}>
               <IonIcon icon={bookmark} slot='icon-only' />
             </IonButton>
             <IonButton fill="clear" slot='end' onClick={e => this.pageNext()}>
