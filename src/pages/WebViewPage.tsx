@@ -14,13 +14,6 @@ import SearchAlert from '../components/SearchAlert';
 import ePub, { Book, Rendition } from 'epubjs';
 import * as nodepub from 'nodepub';
 
-const bookmarkPrefix = 'bookmark_';
-function scrollToBookmark(uuidStr: string) {
-  console.log('Bookmark uuid: ' + bookmarkPrefix + uuidStr);
-  document.getElementById(bookmarkPrefix + uuidStr)?.scrollIntoView();
-}
-//window.scrollToBookmark = scrollToBookmark;
-
 interface Props {
   dispatch: Function;
   bookmarks: [Bookmark];
@@ -90,18 +83,15 @@ class _WebViewPage extends React.Component<PageProps, State> {
     fs.writeFileSync('logo.png', logoArray);
   }
 
-  uuidStr = '';
   ionViewWillEnter() {
     let queryParams = queryString.parse(this.props.location.search) as any;
     this.htmlFile = queryParams.file;
     let state = this.props.location.state as any;
-    this.uuidStr = state ? state.uuid : '';
     //console.log( 'view will enter' );
     this.fetchData(this.props.match.params.path);
   }
 
   ionViewDidEnter() {
-    scrollToBookmark(this.uuidStr);
   }
 
   get fileName() {
@@ -155,29 +145,26 @@ class _WebViewPage extends React.Component<PageProps, State> {
   epubcfi = '';
   addBookmarkHandler() {
     let uuidStr = uuid.v4();
-    var sel;
-    if (window.getSelection) {
-      sel = (window.getSelection() as any);
-      if (sel.rangeCount) {
-        this.props.dispatch({
-          type: "ADD_BOOKMARK",
-          bookmark: new Bookmark({
-            type: BookmarkType.JUAN,
-            uuid: uuidStr,
-            selectedText: sel.toString(),
-            epubcfi: this.epubcfi,
-            fileName: `${this.props.match.params.work}_juan${this.props.match.params.path}.html`,
-            work: new Work({
-              juan: this.props.match.params.path,
-              title: this.props.match.params.label,
-              work: this.props.match.params.work,
-            }),
+    let iframeWin = document.getElementsByTagName('iframe')[0].contentWindow;
+    let sel = iframeWin?.getSelection();
+    if (sel?.rangeCount) {
+      this.props.dispatch({
+        type: "ADD_BOOKMARK",
+        bookmark: new Bookmark({
+          type: BookmarkType.JUAN,
+          uuid: uuidStr,
+          selectedText: sel.toString(),
+          epubcfi: this.epubcfi,
+          fileName: `${this.props.match.params.work}_juan${this.props.match.params.path}.html`,
+          work: new Work({
+            juan: this.props.match.params.path,
+            title: this.props.match.params.label,
+            work: this.props.match.params.work,
           }),
-        });
-        this.uuidStr = uuidStr;
-      } else {
-        this.setState({ showBookmarkingAlert: true });
-      }
+        }),
+      });
+    } else {
+      this.setState({ showBookmarkingAlert: true });
     }
 
     return;
@@ -187,10 +174,11 @@ class _WebViewPage extends React.Component<PageProps, State> {
     return this.props.match.url === '/catalog';
   }
 
+  /*
   get bookmark() {
     return this.props.bookmarks.find(
       (e) => e.type === BookmarkType.JUAN && e.uuid === this.uuidStr);
-  }
+  }*/
 
   ionViewWillLeave() {
     this.setState({ htmlStr: null });
@@ -290,7 +278,7 @@ class _WebViewPage extends React.Component<PageProps, State> {
           openAs: 'binary',
           //openAs: 'epub'
           //replacements: 'base64',
-         });
+        });
         this.rendition = this.book.renderTo('cbetarWebView', {
           width: "100%", height: "100%",
           spread: 'none',
@@ -366,13 +354,13 @@ class _WebViewPage extends React.Component<PageProps, State> {
                 </IonItem>
                 <IonItem>
                   <IonIcon icon={text} slot='start' />
-                    <IonLabel className='ion-text-wrap' style={{ fontSize: this.props.uiFontSize }}>跳頁(%)</IonLabel>
-                    <IonRange min={0} max={100} step={10} snaps pin onIonChange={e => {
-                      let percent = e.detail.value as number;
-                      let ratio = percent / 100 + '';
-                      ratio = (ratio === '0' || ratio === '1') ? `${ratio}.0` : ratio;
-                      this.rendition?.display(ratio);
-                    }} />
+                  <IonLabel className='ion-text-wrap' style={{ fontSize: this.props.uiFontSize }}>跳頁(%)</IonLabel>
+                  <IonRange min={0} max={100} step={10} snaps pin onIonChange={e => {
+                    let percent = e.detail.value as number;
+                    let ratio = percent / 100 + '';
+                    ratio = (ratio === '0' || ratio === '1') ? `${ratio}.0` : ratio;
+                    this.rendition?.display(ratio);
+                  }} />
                 </IonItem>
               </IonList>
             </IonPopover>
