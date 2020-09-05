@@ -11,7 +11,7 @@ import { bookmark, arrowBack, home, search, ellipsisHorizontal, ellipsisVertical
 import { Bookmark, BookmarkType } from '../models/Bookmark';
 import { Work } from '../models/Work';
 import SearchAlert from '../components/SearchAlert';
-import ePub, { Book, Rendition } from 'epubjs';
+import ePub, { Book, Rendition } from 'epubjs-myh';
 import * as nodepub from 'nodepub';
 
 interface Props {
@@ -83,10 +83,12 @@ class _WebViewPage extends React.Component<PageProps, State> {
     fs.writeFileSync('logo.png', logoArray);
   }
 
+  uuidStr = '';
   ionViewWillEnter() {
     let queryParams = queryString.parse(this.props.location.search) as any;
     this.htmlFile = queryParams.file;
     let state = this.props.location.state as any;
+    this.uuidStr = state ? state.uuid : '';
     //console.log( 'view will enter' );
     this.fetchData(this.props.match.params.path);
   }
@@ -174,11 +176,14 @@ class _WebViewPage extends React.Component<PageProps, State> {
     return this.props.match.url === '/catalog';
   }
 
-  /*
   get bookmark() {
     return this.props.bookmarks.find(
       (e) => e.type === BookmarkType.JUAN && e.uuid === this.uuidStr);
-  }*/
+  }
+
+  get hasBookmark() {
+    return this.bookmark != null;
+  }
 
   ionViewWillLeave() {
     this.setState({ htmlStr: null });
@@ -189,14 +194,12 @@ class _WebViewPage extends React.Component<PageProps, State> {
 
   pagePrev() {
     if (this.props.paginated) {
-      this.pageCounter--;
       this.rendition?.prev();
     }
   }
 
   pageNext() {
     if (this.props.paginated) {
-      this.pageCounter++;
       this.rendition?.next();
     }
   }
@@ -216,7 +219,6 @@ class _WebViewPage extends React.Component<PageProps, State> {
   };
 
   bookCreated = false;
-  pageCounter = 1;
   async html2Epub() {
     this.bookCreated = true;
     this.epub = nodepub.document({
@@ -233,7 +235,7 @@ class _WebViewPage extends React.Component<PageProps, State> {
       published: '',
       language: 'en',
       description: 'A temp book.',
-      contents: 'Table of Contents',
+      contents: this.props.match.params.label,
       source: '',
       images: ['logo.png'],
     }, 'logo.png');
@@ -276,8 +278,6 @@ class _WebViewPage extends React.Component<PageProps, State> {
         let tempEpubBuffer = fs.readFileSync('temp.epub');
         this.book = ePub(tempEpubBuffer.buffer, {
           openAs: 'binary',
-          //openAs: 'epub'
-          //replacements: 'base64',
         });
         this.rendition = this.book.renderTo('cbetarWebView', {
           width: "100%", height: "100%",
@@ -289,7 +289,7 @@ class _WebViewPage extends React.Component<PageProps, State> {
         document.addEventListener("keyup", this.keyListener.bind(this), false);
 
         this.rendition.on("selected", (cfiRange: any, contents: any) => {
-          this.epubcfi = cfiRange.cfi;
+          this.epubcfi = cfiRange;
           /*
           this.rendition?.annotations.highlight(cfiRange, {}, (e: any) => {
             console.log("highlight clicked", e.target);
@@ -297,10 +297,12 @@ class _WebViewPage extends React.Component<PageProps, State> {
           //contents.window.getSelection().removeAllRanges();
         });
 
-        if (this.props.paginated) {
-          this.pageCounter = 1;
-        }
-        this.rendition.display('epubcfi(/6/6[s1]!/4/4/2/6[body]/6,/1:0,/1:1)').then(() => {
+        let epubcfi = this.hasBookmark ? this.bookmark!.epubcfi : 'epubcfi(/6/6[s1]!/4/4/2/6[body]/6,/1:0,/1:1)';
+        this.rendition.display(epubcfi).then(() => {
+          //let iframeWindow = document.getElementsByTagName('iframe')[0].contentWindow;
+          //iframeWindow?.scrollTo({left: iframeWindow.outerWidth});
+          //window.scrollTo({left: iframeWindow?.outerWidth});
+          this.rendition?.annotations.highlight(epubcfi);
           this.book?.locations.generate(150);
         });
       }
@@ -309,6 +311,13 @@ class _WebViewPage extends React.Component<PageProps, State> {
   }
 
   render() {
+    let epubjsScrollRtlModeVerticalScrollbarBugWokaroundCss = `
+    <style>
+    .epub-view {
+      height: 100% !important;
+    }
+    </style>
+  `;
     if (!this.bookCreated && this.state.htmlStr != null) {
       this.html2Epub();
     }
@@ -367,7 +376,11 @@ class _WebViewPage extends React.Component<PageProps, State> {
           </IonToolbar>
         </IonHeader>
         <IonContent>
-          <div id='cbetarWebView' className='scrollbar' style={{ width: '100%', height: '100%', userSelect: "text", WebkitUserSelect: "text" }} dangerouslySetInnerHTML={{ __html: '' }}></div>
+          <div id='cbetarWebView' className='scrollbar' style={{ width: '100%', height: '100%', userSelect: "text", WebkitUserSelect: "text" }} dangerouslySetInnerHTML={{
+            __html: `
+            ${this.props.rtlVerticalLayout && !this.props.paginated ? epubjsScrollRtlModeVerticalScrollbarBugWokaroundCss : ''}
+            `
+          }}></div>
 
           <SearchAlert
             {...{
