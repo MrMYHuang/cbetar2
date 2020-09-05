@@ -244,10 +244,7 @@ class _WebViewPage extends React.Component<PageProps, State> {
     let rtlVerticalStyles = `
     html {
       writing-mode: vertical-rl;
-    }
-    #body, #back, #cbeta-copyright, #cbetarWebView>p {
       direction: ltr;
-      display: inline;
     }
     `;
     this.epub.addCSS(`
@@ -263,9 +260,10 @@ class _WebViewPage extends React.Component<PageProps, State> {
       font-size: ${this.props.fontSize}px;
     }
     
+    /* Disable this to workaround epubjs page counting problem.
     #back, #cbeta-copyright {
       display: ${this.props.showComments ? "block" : "none"};
-    }
+    }*/
     `);
     //await new Promise((ok, fail) => {
     this.epub.writeEPUB(
