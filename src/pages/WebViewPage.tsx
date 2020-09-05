@@ -72,7 +72,7 @@ class _WebViewPage extends React.Component<PageProps, State> {
 
     if (logoArray.length === 0) {
       // Download book logo.
-      const res = await Globals.axiosInstance.get(`https://github.com/MrMYHuang/MrMYHuang.github.io/raw/master/assets/icon/icon.png`, {
+      const res = await Globals.axiosInstance.get(`${window.location.origin}/assets/icon/icon.png`, {
         responseType: 'arraybuffer',
       });
       logoArray = new Uint8Array(res.data);
