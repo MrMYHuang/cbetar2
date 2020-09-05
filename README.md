@@ -49,8 +49,7 @@ cd cbetar2
 npm run start
 
 ## Web App網址
-* 2.y.z版: https://MrRogerHuang.github.io
-* 1.y.z版: https://MrMYHuang.github.io
+https://MrMYHuang.github.io
 
 ## 版本歷史
 * 2.0.0:

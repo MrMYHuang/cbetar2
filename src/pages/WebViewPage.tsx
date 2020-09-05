@@ -1,6 +1,6 @@
 //import * as fs from 'fs';
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton, withIonLifeCycle, IonIcon, IonAlert, IonPopover, IonList, IonItem, IonLabel, IonRange } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton, withIonLifeCycle, IonIcon, IonAlert, IonPopover, IonList, IonItem, IonLabel, IonRange, IonFab, IonFabButton } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as uuid from 'uuid';
@@ -318,6 +318,29 @@ class _WebViewPage extends React.Component<PageProps, State> {
     }
     </style>
   `;
+
+    const fabButtonOpacity = 0.2;
+    let navButtons = (<>
+      <IonFab vertical='center' horizontal='start' slot='fixed'>
+        <IonFabButton style={{ opacity: fabButtonOpacity }} onClick={e => this.props.rtlVerticalLayout ? this.pageNext() : this.pagePrev()} onMouseOver={e => {
+          e.currentTarget.style.setProperty('opacity', '1');
+        }} onMouseLeave={e => {
+          e.currentTarget.style.setProperty('opacity', `${fabButtonOpacity}`);
+        }}>
+          <IonIcon icon={arrowBack} />
+        </IonFabButton>
+      </IonFab>
+      <IonFab vertical='center' horizontal='end' slot='fixed'>
+        <IonFabButton style={{ opacity: fabButtonOpacity }} onClick={e => this.props.rtlVerticalLayout ? this.pagePrev() : this.pageNext()} onMouseOver={e => {
+          e.currentTarget.style.setProperty('opacity', '1');
+        }} onMouseLeave={e => {
+          e.currentTarget.style.setProperty('opacity', `${fabButtonOpacity}`);
+        }}>
+          <IonIcon icon={arrowForward} />
+        </IonFabButton>
+      </IonFab>
+    </>);
+
     if (!this.bookCreated && this.state.htmlStr != null) {
       this.html2Epub();
     }
@@ -332,12 +355,7 @@ class _WebViewPage extends React.Component<PageProps, State> {
             <IonButton fill="clear" slot='end' onClick={e => this.addBookmarkHandler()}>
               <IonIcon icon={bookmark} slot='icon-only' />
             </IonButton>
-            <IonButton fill="clear" slot='end' onClick={e => this.pageNext()}>
-              <IonIcon icon={this.props.rtlVerticalLayout ? arrowBack : arrowDown} slot='icon-only' />
-            </IonButton>
-            <IonButton fill="clear" slot='end' onClick={e => this.pagePrev()}>
-              <IonIcon icon={this.props.rtlVerticalLayout ? arrowForward : arrowUp} slot='icon-only' />
-            </IonButton>
+
             <IonButton fill="clear" slot='end' onClick={e => this.setState({ popover: { show: true, event: e.nativeEvent } })}>
               <IonIcon ios={ellipsisHorizontal} md={ellipsisVertical} slot='icon-only' />
             </IonButton>
@@ -376,6 +394,7 @@ class _WebViewPage extends React.Component<PageProps, State> {
           </IonToolbar>
         </IonHeader>
         <IonContent>
+          {this.props.paginated ? navButtons : <></>}
           <div id='cbetarWebView' className='scrollbar' style={{ width: '100%', height: '100%', userSelect: "text", WebkitUserSelect: "text" }} dangerouslySetInnerHTML={{
             __html: `
             ${this.props.rtlVerticalLayout && !this.props.paginated ? epubjsScrollRtlModeVerticalScrollbarBugWokaroundCss : ''}
