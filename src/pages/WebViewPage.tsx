@@ -248,6 +248,15 @@ class _WebViewPage extends React.Component<PageProps, State> {
     }
     `;
     this.epub.addCSS(`
+    @font-face {
+        font-family: 'Kai';
+        font-style: normal;
+        font-weight: 500;
+        /* Font source: https://data.gov.tw/dataset/5961 */
+        src: url('${window.location.origin}/assets/TW-Kai-98_1.woff');
+        font-display: swap;
+    }
+
     .lb {
       display: none
     }
@@ -379,6 +388,7 @@ class _WebViewPage extends React.Component<PageProps, State> {
                 </IonItem>
                 <IonItem>
                   <IonIcon icon={text} slot='start' />
+                  <div>
                   <IonLabel className='ion-text-wrap' style={{ fontSize: this.props.uiFontSize }}>跳頁(%)</IonLabel>
                   <IonRange min={0} max={100} step={10} snaps pin onIonChange={e => {
                     let percent = e.detail.value as number;
@@ -386,6 +396,7 @@ class _WebViewPage extends React.Component<PageProps, State> {
                     ratio = (ratio === '0' || ratio === '1') ? `${ratio}.0` : ratio;
                     this.rendition?.display(ratio);
                   }} />
+                  </div>
                 </IonItem>
               </IonList>
             </IonPopover>
