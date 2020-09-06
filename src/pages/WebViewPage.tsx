@@ -1,6 +1,6 @@
 //import * as fs from 'fs';
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton, withIonLifeCycle, IonIcon, IonAlert, IonPopover, IonList, IonItem, IonLabel, IonRange, IonFab, IonFabButton } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton, withIonLifeCycle, IonIcon, IonAlert, IonPopover, IonList, IonItem, IonLabel, IonRange, IonFab, IonFabButton, isPlatform } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as uuid from 'uuid';
@@ -331,18 +331,46 @@ class _WebViewPage extends React.Component<PageProps, State> {
     const fabButtonOpacity = 0.2;
     let navButtons = (<>
       <IonFab vertical='center' horizontal='start' slot='fixed'>
-        <IonFabButton style={{ opacity: fabButtonOpacity }} onClick={e => this.props.rtlVerticalLayout ? this.pageNext() : this.pagePrev()} onMouseOver={e => {
+        <IonFabButton style={{ opacity: fabButtonOpacity }} onClick={e => this.props.rtlVerticalLayout ? this.pageNext() : this.pagePrev()}
+        onTouchStart={e => {
           e.currentTarget.style.setProperty('opacity', '1');
-        }} onMouseLeave={e => {
+        }}
+        onMouseOver={e => {
+          // Disable mouse events for iOS. Because a touch stat gesture can trigger onMouseOver, but a touch-end gesture can't trigger onMouseLeave.
+          if (isPlatform('ios')) {
+            return;
+          }
+          e.currentTarget.style.setProperty('opacity', '1');
+        }}
+        onTouchEnd={e => {
+          e.currentTarget.style.setProperty('opacity', `${fabButtonOpacity}`);
+        }}
+        onMouseLeave={e => {
+          if (isPlatform('ios')) {
+            return;
+          }
           e.currentTarget.style.setProperty('opacity', `${fabButtonOpacity}`);
         }}>
           <IonIcon icon={arrowBack} />
         </IonFabButton>
       </IonFab>
       <IonFab vertical='center' horizontal='end' slot='fixed'>
-        <IonFabButton style={{ opacity: fabButtonOpacity }} onClick={e => this.props.rtlVerticalLayout ? this.pagePrev() : this.pageNext()} onMouseOver={e => {
+        <IonFabButton style={{ opacity: fabButtonOpacity }} onClick={e => this.props.rtlVerticalLayout ? this.pagePrev() : this.pageNext()}         onTouchStart={e => {
           e.currentTarget.style.setProperty('opacity', '1');
-        }} onMouseLeave={e => {
+        }}
+        onMouseOver={e => {
+          if (isPlatform('ios')) {
+            return;
+          }
+          e.currentTarget.style.setProperty('opacity', '1');
+        }}
+        onTouchEnd={e => {
+          e.currentTarget.style.setProperty('opacity', `${fabButtonOpacity}`);
+        }}
+        onMouseLeave={e => {
+          if (isPlatform('ios')) {
+            return;
+          }
           e.currentTarget.style.setProperty('opacity', `${fabButtonOpacity}`);
         }}>
           <IonIcon icon={arrowForward} />
