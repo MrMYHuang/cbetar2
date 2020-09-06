@@ -1,6 +1,6 @@
 {
   "name": "cbetar2",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "private": true,
   "dependencies": {
     "@capacitor-community/electron": "^1.2.3",
@@ -19,7 +19,7 @@
     "@types/react-router-dom": "^5.1.5",
     "axios": "^0.19.2",
     "epubjs": "^0.3.88",
-    "epubjs-myh": "^0.3.89",
+    "epubjs-myh": "^0.3.90",
     "history": "^4.10.1",
     "ionicons": "^5.0.0",
     "memfs": "^3.2.0",
