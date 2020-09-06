@@ -1,6 +1,6 @@
 //import * as fs from 'fs';
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton, withIonLifeCycle, IonIcon, IonAlert, IonPopover, IonList, IonItem, IonLabel, IonRange, IonFab, IonFabButton, isPlatform } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton, withIonLifeCycle, IonIcon, IonAlert, IonPopover, IonList, IonItem, IonLabel, IonRange, IonFab, IonFabButton } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as uuid from 'uuid';
@@ -337,7 +337,7 @@ class _WebViewPage extends React.Component<PageProps, State> {
         }}
         onMouseOver={e => {
           // Disable mouse events for iOS. Because a touch stat gesture can trigger onMouseOver, but a touch-end gesture can't trigger onMouseLeave.
-          if (isPlatform('ios')) {
+          if (Globals.isTouchDevice()) {
             return;
           }
           e.currentTarget.style.setProperty('opacity', '1');
@@ -346,7 +346,7 @@ class _WebViewPage extends React.Component<PageProps, State> {
           e.currentTarget.style.setProperty('opacity', `${fabButtonOpacity}`);
         }}
         onMouseLeave={e => {
-          if (isPlatform('ios')) {
+          if (Globals.isTouchDevice()) {
             return;
           }
           e.currentTarget.style.setProperty('opacity', `${fabButtonOpacity}`);
@@ -359,7 +359,7 @@ class _WebViewPage extends React.Component<PageProps, State> {
           e.currentTarget.style.setProperty('opacity', '1');
         }}
         onMouseOver={e => {
-          if (isPlatform('ios')) {
+          if (Globals.isTouchDevice()) {
             return;
           }
           e.currentTarget.style.setProperty('opacity', '1');
@@ -368,7 +368,7 @@ class _WebViewPage extends React.Component<PageProps, State> {
           e.currentTarget.style.setProperty('opacity', `${fabButtonOpacity}`);
         }}
         onMouseLeave={e => {
-          if (isPlatform('ios')) {
+          if (Globals.isTouchDevice()) {
             return;
           }
           e.currentTarget.style.setProperty('opacity', `${fabButtonOpacity}`);

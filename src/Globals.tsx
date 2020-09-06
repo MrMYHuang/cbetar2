@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { isPlatform } from '@ionic/react';
 
 const apiVersion = 'v1.2';
 const cbetaApiUrl = `https://cbdata.dila.edu.tw/${apiVersion}`;
@@ -60,4 +61,7 @@ export default {
         document.documentElement.style.cssText = `--ion-font-family: ${settings.useFontKai ? 'Kai' : '細明體'};
         --scrollbar-size: ${scrollbarSize}px;`
       },
+      isTouchDevice: () => {
+        return isPlatform('ios') || isPlatform('android');
+      }
 };
