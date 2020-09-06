@@ -45,9 +45,12 @@ CBETA電子佛典閱讀器2(非官方)，使用CBETA API存取電子佛經，支
 * Debian Linux 10 + Chrome
 
 ## Run Locally
+```
 git clone https://github.com/MrMYHuang/cbetar2.git
 cd cbetar2
 npm run start
+
+```
 
 ## Web App網址
 https://MrMYHuang.github.io
