@@ -309,7 +309,9 @@ class _WebViewPage extends React.Component<PageProps, State> {
           //let iframeWindow = document.getElementsByTagName('iframe')[0].contentWindow;
           //iframeWindow?.scrollTo({left: iframeWindow.outerWidth});
           //window.scrollTo({left: iframeWindow?.outerWidth});
-          this.rendition?.annotations.highlight(epubcfi);
+          if (this.hasBookmark) {
+            this.rendition?.annotations.highlight(epubcfi);
+          }
           this.book?.locations.generate(150);
         });
       }
