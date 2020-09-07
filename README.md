@@ -54,7 +54,7 @@ https://MrMYHuang.github.io
 
 https://support.google.com/chrome/answer/9658361?hl=zh-Hant&co=GENIE.Platform%3DDesktop
 
-### Safari (iOS)
+#### Safari (iOS)
 1. 使用Safari開啟web app網址，再點擊下方中間的"分享"圖示：
 
 <img src='./docs/images/Safari/OpenAppUrl.png' width='25%' height='25%' />
