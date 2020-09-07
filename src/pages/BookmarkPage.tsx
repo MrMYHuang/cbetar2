@@ -18,11 +18,13 @@ interface PageProps extends Props, RouteComponentProps<{
 }> { }
 
 class _BookmarkPage extends React.Component<PageProps> {
+  bookmarkListRef: React.RefObject<HTMLIonListElement>;
   constructor(props: any) {
     super(props);
     this.state = {
       work: null,
     }
+    this.bookmarkListRef = React.createRef<HTMLIonListElement>();
   }
 
   ionViewWillEnter() {
@@ -72,7 +74,10 @@ class _BookmarkPage extends React.Component<PageProps> {
           </IonItem>
 
           <IonItemOptions side="end">
-            <IonItemOption color='danger' onClick={() => this.delBookmarkHandler(bookmark.uuid)}>刪除</IonItemOption>
+            <IonItemOption color='danger' onClick={(e) => {
+              this.delBookmarkHandler(bookmark.uuid);
+              this.bookmarkListRef.current?.closeSlidingItems();
+            }}>刪除</IonItemOption>
           </IonItemOptions>
         </IonItemSliding>
       );
@@ -86,7 +91,7 @@ class _BookmarkPage extends React.Component<PageProps> {
         </IonHeader>
         <IonContent>
           {this.hasBookmark ?
-            <IonList>{rows}</IonList> :
+            <IonList ref={this.bookmarkListRef}>{rows}</IonList> :
             <IonLabel style={{ fontSize: 48, textAlign: 'center', height: '100%', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <div>
                 <div>無書籤</div>
