@@ -57,19 +57,19 @@ https://support.google.com/chrome/answer/9658361?hl=zh-Hant&co=GENIE.Platform%3D
 ### Safari (iOS)
 1. 使用Safari開啟web app網址，再點擊下方中間的"分享"圖示：
 
-<img src='./docs/images/Safari/OpenAppUrl.png' width='50%' height='50%' />
+<img src='./docs/images/Safari/OpenAppUrl.png' width='25%' height='25%' />
 
 2. 滑動頁面至下方，點選"加入主畫面"(Add to Home Screen)：
 
-<img src='./docs/images/Safari/AddToHomeScreen.png' width='50%' height='50%' />
+<img src='./docs/images/Safari/AddToHomeScreen.png' width='25%' height='25%' />
 
 3. 點擊"新增"(Add)：
 
-<img src='./docs/images/Safari/AddToHomeScreen2.png' width='50%' height='50%' />
+<img src='./docs/images/Safari/AddToHomeScreen2.png' width='25%' height='25%' />
 
 4. App安裝完，出現在主畫面的圖示：
 
-<img src='./docs/images/Safari/AppIcon.png' width='50%' height='50%' />
+<img src='./docs/images/Safari/AppIcon.png' width='25%' height='25%' />
 
 ## Run Locally
 ```
