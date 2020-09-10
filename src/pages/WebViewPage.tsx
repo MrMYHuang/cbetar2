@@ -159,6 +159,7 @@ class _WebViewPage extends React.Component<PageProps, State> {
       let uuidStr = uuid.v4();
       this.props.dispatch({
         type: "ADD_BOOKMARK",
+        htmlStr: this.state.htmlStr,
         bookmark: new Bookmark({
           type: BookmarkType.JUAN,
           uuid: uuidStr,
