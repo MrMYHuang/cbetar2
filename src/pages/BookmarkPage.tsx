@@ -8,7 +8,6 @@ import { Bookmark, BookmarkType } from '../models/Bookmark';
 interface Props {
   dispatch: Function;
   bookmarks: [Bookmark];
-  uiFontSize: number;
   fontSize: number;
 }
 
@@ -68,7 +67,7 @@ class _BookmarkPage extends React.Component<PageProps> {
               },
             });
           }}>
-            <IonLabel className='ion-text-wrap' style={{ fontSize: (this.props as any).uiFontSize }} key={`bookmarkItemLabel_` + i}>
+            <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }} key={`bookmarkItemLabel_` + i}>
               {label}
             </IonLabel>
           </IonItem>
@@ -86,7 +85,7 @@ class _BookmarkPage extends React.Component<PageProps> {
       <IonPage>
         <IonHeader>
           <IonToolbar>
-            <IonTitle style={{ fontSize: (this.props as any).uiFontSize }}>書籤</IonTitle>
+            <IonTitle style={{ fontSize: 'var(--ui-font-size)' }}>書籤</IonTitle>
           </IonToolbar>
         </IonHeader>
         <IonContent>
@@ -95,7 +94,7 @@ class _BookmarkPage extends React.Component<PageProps> {
             <IonLabel style={{ fontSize: 48, textAlign: 'center', height: '100%', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <div>
                 <div>無書籤</div>
-                <div style={{ fontSize: (this.props as any).uiFontSize, paddingTop: 24 }}>請切換至目錄頁新增</div>
+                <div style={{ fontSize: 'var(--ui-font-size)', paddingTop: 24 }}>請切換至目錄頁新增</div>
               </div>
             </IonLabel>
           }
@@ -108,7 +107,6 @@ class _BookmarkPage extends React.Component<PageProps> {
 const mapStateToProps = (state: any /*, ownProps*/) => {
   return {
     bookmarks: state.settings.bookmarks,
-    uiFontSize: state.settings.uiFontSize,
   }
 };
 

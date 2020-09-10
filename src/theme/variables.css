@@ -5,6 +5,7 @@
 
 :root {
     --scrollbar-size: 20px;
+    --ui-font-size: 16px;
 }
 
 body {

@@ -59,7 +59,7 @@ export default {
           case 2: scrollbarSize = 40; break;
         }
         document.documentElement.style.cssText = `--ion-font-family: ${settings.useFontKai ? 'Times, Kai' : 'Times, 細明體'};
-        --scrollbar-size: ${scrollbarSize}px;`
+        --scrollbar-size: ${scrollbarSize}px; --ui-font-size: ${settings.uiFontSize}px`
       },
       isTouchDevice: () => {
         return isPlatform('ios') || isPlatform('android');

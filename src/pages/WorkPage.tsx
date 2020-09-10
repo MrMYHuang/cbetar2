@@ -91,7 +91,7 @@ class _WorkPage extends React.Component<PageProps> {
             pathname: routeLink,
           });
         }}>
-          <IonLabel className='ion-text-wrap' style={{ fontSize: (this.props as any).uiFontSize }} key={`juanLabel` + i}>
+          <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }} key={`juanLabel` + i}>
             卷{juans[i]}
           </IonLabel>
         </IonItem>
@@ -112,7 +112,7 @@ class _WorkPage extends React.Component<PageProps> {
       <IonPage>
         <IonHeader>
           <IonToolbar>
-            <IonTitle style={{ fontSize: (this.props as any).uiFontSize }}>{(this.state as any).work.title}</IonTitle>
+            <IonTitle style={{ fontSize: 'var(--ui-font-size)' }}>{(this.state as any).work.title}</IonTitle>
             <IonButton hidden={this.isTopPage} fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
               <IonIcon icon={arrowBack} slot='icon-only' />
             </IonButton>
@@ -153,7 +153,6 @@ const WorkPage = withIonLifeCycle(_WorkPage);
 const mapStateToProps = (state: any /*, ownProps*/) => {
   return {
     bookmarks: state.settings.bookmarks,
-    uiFontSize: state.settings.uiFontSize,
   }
 };
 

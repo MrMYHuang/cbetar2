@@ -60,7 +60,7 @@ class _SearchPage extends React.Component<PageProps> {
             pathname: routeLink,
           });
         }}>
-          <IonLabel className='ion-text-wrap' style={{ fontSize: (this.props as any).uiFontSize }} key={`searchLabel_` + i}>
+          <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }} key={`searchLabel_` + i}>
             {label}
           </IonLabel>
         </IonItem>
@@ -75,7 +75,7 @@ class _SearchPage extends React.Component<PageProps> {
       <IonPage>
         <IonHeader>
           <IonToolbar>
-            <IonTitle style={{ fontSize: (this.props as any).uiFontSize }}>搜尋 - {this.props.match.params.keyword}</IonTitle>
+            <IonTitle style={{ fontSize: 'var(--ui-font-size)' }}>搜尋 - {this.props.match.params.keyword}</IonTitle>
             <IonButton hidden={this.isTopPage} fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
               <IonIcon icon={arrowBack} slot='icon-only' />
             </IonButton>
@@ -112,7 +112,6 @@ const SearchPage = withIonLifeCycle(_SearchPage);
 
 const mapStateToProps = (state: any /*, ownProps*/) => {
   return {
-    uiFontSize: state.settings.uiFontSize,
   }
 };
 

@@ -1,6 +1,6 @@
 //import * as fs from 'fs';
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton, withIonLifeCycle, IonIcon, IonAlert, IonPopover, IonList, IonItem, IonLabel, IonRange, IonFab, IonFabButton, IonToast } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton, withIonLifeCycle, IonIcon, IonAlert, IonPopover, IonList, IonItem, IonLabel, IonRange, IonFab, IonFabButton, IonToast, IonLoading } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as uuid from 'uuid';
@@ -17,7 +17,6 @@ import * as nodepub from 'nodepub';
 interface Props {
   dispatch: Function;
   bookmarks: [Bookmark];
-  uiFontSize: number;
   fontSize: number;
   scrollbarSize: number;
   settings: any;
@@ -36,6 +35,7 @@ interface PageProps extends Props, RouteComponentProps<{
 }> { }
 
 interface State {
+  isLoading: boolean;
   htmlStr: string | null;
   showBookmarkingAlert: boolean;
   showAddBookmarkSuccess: boolean;
@@ -54,6 +54,7 @@ class _WebViewPage extends React.Component<PageProps, State> {
   constructor(props: any) {
     super(props);
     this.state = {
+      isLoading: true,
       htmlStr: null,
       showBookmarkingAlert: false,
       showAddBookmarkSuccess: false,
@@ -88,6 +89,7 @@ class _WebViewPage extends React.Component<PageProps, State> {
 
   uuidStr = '';
   ionViewWillEnter() {
+    this.setState({isLoading: true});
     let queryParams = queryString.parse(this.props.location.search) as any;
     this.htmlFile = queryParams.file;
     let state = this.props.location.state as any;
@@ -315,6 +317,7 @@ class _WebViewPage extends React.Component<PageProps, State> {
           //let iframeWindow = document.getElementsByTagName('iframe')[0].contentWindow;
           //iframeWindow?.scrollTo({left: iframeWindow.outerWidth});
           //window.scrollTo({left: iframeWindow?.outerWidth});
+          this.setState({isLoading: false});
           if (this.hasBookmark) {
             this.rendition?.annotations.highlight(epubcfi);
           }
@@ -332,7 +335,59 @@ class _WebViewPage extends React.Component<PageProps, State> {
       height: 100% !important;
     }
     </style>
-  `;
+    `;
+
+    let header = (
+      <IonHeader>
+        <IonToolbar>
+          <IonTitle style={{ fontSize: 'var(--ui-font-size)' }}>{this.props.match.params.label}</IonTitle>
+          <IonButton hidden={this.isTopPage} fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
+            <IonIcon icon={arrowBack} slot='icon-only' />
+          </IonButton>
+          <IonButton fill="clear" slot='end' onClick={e => this.addBookmarkHandler()}>
+            <IonIcon icon={bookmark} slot='icon-only' />
+          </IonButton>
+
+          <IonButton fill="clear" slot='end' onClick={e => this.setState({ popover: { show: true, event: e.nativeEvent } })}>
+            <IonIcon ios={ellipsisHorizontal} md={ellipsisVertical} slot='icon-only' />
+          </IonButton>
+          <IonPopover
+            isOpen={this.state.popover.show}
+            event={this.state.popover.event}
+            onDidDismiss={e => { this.setState({ popover: { show: false, event: null } }) }}
+          >
+            <IonList>
+              <IonItem button onClick={e => {
+                this.props.history.push(`/${this.props.match.params.tab}`);
+                this.setState({ popover: { show: false, event: null } });
+              }}>
+                <IonIcon icon={home} slot='start' />
+                <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>回首頁</IonLabel>
+              </IonItem>
+              <IonItem button onClick={e => {
+                this.setState({ showSearchAlert: true });
+                this.setState({ popover: { show: false, event: null } });
+              }}>
+                <IonIcon icon={search} slot='start' />
+                <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>搜尋經文</IonLabel>
+              </IonItem>
+              <IonItem>
+                <IonIcon icon={text} slot='start' />
+                <div>
+                  <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>跳頁(%)</IonLabel>
+                  <IonRange min={0} max={100} step={10} snaps pin onIonChange={e => {
+                    let percent = e.detail.value as number;
+                    let ratio = percent / 100 + '';
+                    ratio = (ratio === '0' || ratio === '1') ? `${ratio}.0` : ratio;
+                    this.rendition?.display(ratio);
+                  }} />
+                </div>
+              </IonItem>
+            </IonList>
+          </IonPopover>
+        </IonToolbar>
+      </IonHeader>
+    );
 
     const fabButtonOpacity = 0.2;
     let navButtons = (<>
@@ -389,63 +444,17 @@ class _WebViewPage extends React.Component<PageProps, State> {
     }
     return (
       <IonPage>
-        <IonToast
-          isOpen={this.state.showAddBookmarkSuccess}
-          onDidDismiss={() => this.setState({showAddBookmarkSuccess: false})}
-          message="書籤新增成功！"
-          duration={2000}
-        />
-        <IonHeader>
-          <IonToolbar>
-            <IonTitle style={{ fontSize: this.props.uiFontSize }}>{this.props.match.params.label}</IonTitle>
-            <IonButton hidden={this.isTopPage} fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
-              <IonIcon icon={arrowBack} slot='icon-only' />
-            </IonButton>
-            <IonButton fill="clear" slot='end' onClick={e => this.addBookmarkHandler()}>
-              <IonIcon icon={bookmark} slot='icon-only' />
-            </IonButton>
-
-            <IonButton fill="clear" slot='end' onClick={e => this.setState({ popover: { show: true, event: e.nativeEvent } })}>
-              <IonIcon ios={ellipsisHorizontal} md={ellipsisVertical} slot='icon-only' />
-            </IonButton>
-            <IonPopover
-              isOpen={this.state.popover.show}
-              event={this.state.popover.event}
-              onDidDismiss={e => { this.setState({ popover: { show: false, event: null } }) }}
-            >
-              <IonList>
-                <IonItem button onClick={e => {
-                  this.props.history.push(`/${this.props.match.params.tab}`);
-                  this.setState({ popover: { show: false, event: null } });
-                }}>
-                  <IonIcon icon={home} slot='start' />
-                  <IonLabel className='ion-text-wrap' style={{ fontSize: this.props.uiFontSize }}>回首頁</IonLabel>
-                </IonItem>
-                <IonItem button onClick={e => {
-                  this.setState({ showSearchAlert: true });
-                  this.setState({ popover: { show: false, event: null } });
-                }}>
-                  <IonIcon icon={search} slot='start' />
-                  <IonLabel className='ion-text-wrap' style={{ fontSize: this.props.uiFontSize }}>搜尋經文</IonLabel>
-                </IonItem>
-                <IonItem>
-                  <IonIcon icon={text} slot='start' />
-                  <div>
-                    <IonLabel className='ion-text-wrap' style={{ fontSize: this.props.uiFontSize }}>跳頁(%)</IonLabel>
-                    <IonRange min={0} max={100} step={10} snaps pin onIonChange={e => {
-                      let percent = e.detail.value as number;
-                      let ratio = percent / 100 + '';
-                      ratio = (ratio === '0' || ratio === '1') ? `${ratio}.0` : ratio;
-                      this.rendition?.display(ratio);
-                    }} />
-                  </div>
-                </IonItem>
-              </IonList>
-            </IonPopover>
-          </IonToolbar>
-        </IonHeader>
+        {header}
         <IonContent>
           {this.props.paginated ? navButtons : <></>}
+
+          <IonLoading
+            cssClass='loadingView'
+            isOpen={this.state.isLoading}
+            onDidDismiss={() => this.setState({isLoading: false})}
+            message={'載入中...'}
+          />
+
           <div id='cbetarWebView' className='scrollbar' style={{ width: '100%', height: '100%', userSelect: "text", WebkitUserSelect: "text" }} dangerouslySetInnerHTML={{
             __html: `
             ${this.props.rtlVerticalLayout && !this.props.paginated ? epubjsScrollRtlModeVerticalScrollbarBugWokaroundCss : ''}
@@ -480,6 +489,13 @@ class _WebViewPage extends React.Component<PageProps, State> {
               }
             ]}
           />
+
+          <IonToast
+            isOpen={this.state.showAddBookmarkSuccess}
+            onDidDismiss={() => this.setState({ showAddBookmarkSuccess: false })}
+            message="書籤新增成功！"
+            duration={2000}
+          />
         </IonContent>
       </IonPage>
     );
@@ -490,7 +506,6 @@ const mapStateToProps = (state: any /*, ownProps*/) => {
   return {
     bookmarks: state.settings.bookmarks,
     fontSize: state.settings.fontSize,
-    uiFontSize: state.settings.uiFontSize,
     showComments: state.settings.showComments,
     paginated: state.settings.paginated,
     rtlVerticalLayout: state.settings.rtlVerticalLayout,
