@@ -36,6 +36,7 @@ interface PageProps extends Props, RouteComponentProps<{
 
 interface State {
   isLoading: boolean;
+  fetchError: boolean;
   htmlStr: string | null;
   showBookmarkingAlert: boolean;
   showAddBookmarkSuccess: boolean;
@@ -55,6 +56,7 @@ class _WebViewPage extends React.Component<PageProps, State> {
     super(props);
     this.state = {
       isLoading: true,
+      fetchError: false,
       htmlStr: null,
       showBookmarkingAlert: false,
       showAddBookmarkSuccess: false,
@@ -89,7 +91,7 @@ class _WebViewPage extends React.Component<PageProps, State> {
 
   uuidStr = '';
   ionViewWillEnter() {
-    this.setState({isLoading: true});
+    this.setState({ isLoading: true });
     let queryParams = queryString.parse(this.props.location.search) as any;
     this.htmlFile = queryParams.file;
     let state = this.props.location.state as any;
@@ -107,26 +109,31 @@ class _WebViewPage extends React.Component<PageProps, State> {
 
   async fetchData(juan: string) {
     let htmlStr = localStorage.getItem(this.fileName);
-    if (htmlStr != null) {
-      // Do nothing.
-    } else if (this.htmlFile) {
-      const res = await Globals.axiosInstance.get(`/${this.htmlFile}`, {
-        responseType: 'arraybuffer',
-      });
-      let tryDecoder = new TextDecoder();
-      let tryDecodeHtmlStr = tryDecoder.decode(res.data);
-      if (tryDecodeHtmlStr.includes('charset=big5')) {
-        htmlStr = new TextDecoder('big5').decode(res.data);
+
+    try {
+      if (htmlStr != null) {
+        // Do nothing.
+      } else if (this.htmlFile) {
+        const res = await Globals.axiosInstance.get(`/${this.htmlFile}`, {
+          responseType: 'arraybuffer',
+        });
+        let tryDecoder = new TextDecoder();
+        let tryDecodeHtmlStr = tryDecoder.decode(res.data);
+        if (tryDecodeHtmlStr.includes('charset=big5')) {
+          htmlStr = new TextDecoder('big5').decode(res.data);
+        } else {
+          htmlStr = tryDecodeHtmlStr;
+        }
       } else {
-        htmlStr = tryDecodeHtmlStr;
+        const res = await Globals.axiosInstance.get(`/juans?edition=CBETA&work=${this.props.match.params.work}&juan=${juan}`, {
+          responseType: 'arraybuffer',
+        });
+        let data = JSON.parse(new TextDecoder().decode(res.data));
+        htmlStr = data.results[0];
       }
-    } else {
-      //try {
-      const res = await Globals.axiosInstance.get(`/juans?edition=CBETA&work=${this.props.match.params.work}&juan=${juan}`, {
-        responseType: 'arraybuffer',
-      });
-      let data = JSON.parse(new TextDecoder().decode(res.data));
-      htmlStr = data.results[0];
+    } catch (e) {
+      this.setState({ isLoading: false, fetchError: true });
+      return false;
     }
 
     await this.loadEpubCoverToMemFs();
@@ -142,11 +149,6 @@ class _WebViewPage extends React.Component<PageProps, State> {
 
     this.setState({ htmlStr: htmlStr });
     return true;
-
-    /*
-  } catch (e) {
-    fetchFail = true;
-  }*/
   }
 
   epubcfi = '';
@@ -317,7 +319,7 @@ class _WebViewPage extends React.Component<PageProps, State> {
           //let iframeWindow = document.getElementsByTagName('iframe')[0].contentWindow;
           //iframeWindow?.scrollTo({left: iframeWindow.outerWidth});
           //window.scrollTo({left: iframeWindow?.outerWidth});
-          this.setState({isLoading: false});
+          this.setState({ isLoading: false });
           if (this.hasBookmark) {
             this.rendition?.annotations.highlight(epubcfi);
           }
@@ -442,6 +444,7 @@ class _WebViewPage extends React.Component<PageProps, State> {
     if (!this.bookCreated && this.state.htmlStr != null) {
       this.html2Epub();
     }
+
     return (
       <IonPage>
         {header}
@@ -451,15 +454,18 @@ class _WebViewPage extends React.Component<PageProps, State> {
           <IonLoading
             cssClass='loadingView'
             isOpen={this.state.isLoading}
-            onDidDismiss={() => this.setState({isLoading: false})}
+            onDidDismiss={() => this.setState({ isLoading: false })}
             message={'載入中...'}
           />
+          
+          {this.state.fetchError ? Globals.fetchErrorContent : <></>}
 
           <div id='cbetarWebView' className='scrollbar' style={{ width: '100%', height: '100%', userSelect: "text", WebkitUserSelect: "text" }} dangerouslySetInnerHTML={{
             __html: `
             ${this.props.rtlVerticalLayout && !this.props.paginated ? epubjsScrollRtlModeVerticalScrollbarBugWokaroundCss : ''}
             `
-          }}></div>
+          }}>
+          </div>
 
           <SearchAlert
             {...{
