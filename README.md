@@ -2,9 +2,9 @@
 
 ## 特色
 
-搜尋經文、書籤功能、離線瀏覽、經文分頁、暗色模式、字型調整、直式文字、app更新。
+搜尋經文、書籤功能、離線瀏覽、經文分頁、暗色模式、字型調整、直式文字、app更新、跨平台、無廣告、開放源始碼。
 
-## 介紹
+## 說明
 
 CBETA電子佛典閱讀器2(非官方)，使用CBETA API存取電子佛經，支援以下功能
 
@@ -33,10 +33,8 @@ CBETA電子佛典閱讀器2(非官方)，使用CBETA API存取電子佛經，支
 
 程式碼為開放，可自由下載修改。
 
-## 程式
-
-使用Ionic開發的Web App (PWA)，請參考 https://ionicframework.com/ 作開發環境建置。已在這些環境作過安裝、測試:
-
+## 支援平台
+已在這些環境作過安裝、測試:
 * Windows 10 + Edge Chrome
 * Android 9 + Chrome
 * macOS 10.15 + Edge Chrome
@@ -45,12 +43,14 @@ CBETA電子佛典閱讀器2(非官方)，使用CBETA API存取電子佛經，支
 * Debian Linux 10 + Chrome
 
 ## Web App
+此progressive web app (PWA)，可不安裝直接在網頁瀏覧器執行，或安裝至手機、平板、筆電、桌機。建議安裝，以避免瀏覧器定期清除快取，導致書籤資料不見！
+
 ### 網址
 https://MrMYHuang.github.io
 
 ### 安裝
 #### Chrome (Windows, macOS, Linux, Android)
-請參考： 
+請參考Chrome官方文件： 
 
 https://support.google.com/chrome/answer/9658361?hl=zh-Hant&co=GENIE.Platform%3DDesktop
 
@@ -72,6 +72,7 @@ https://support.google.com/chrome/answer/9658361?hl=zh-Hant&co=GENIE.Platform%3D
 <img src='./docs/images/Safari/AppIcon.png' width='25%' height='25%' />
 
 ## Run Locally
+Please refer to https://ionicframework.com/ for building Ionic development environment.
 ```
 git clone https://github.com/MrMYHuang/cbetar2.git
 cd cbetar2
@@ -79,22 +80,25 @@ npm run start
 ```
 
 ## 版本歷史
+* Prerelease:
+  * 修正書籤頁左滑刪除一書籤後，刪除鈕不會隱藏。
+  * Basic Latin字元改用Times New Roman字型。
 * 2.0.6:
-    * 支援分頁。
-    * 書籤改用ePub CFI。
-    * 刪除書籤改成在書籤頁左滑，再點刪除。
+  * 支援分頁。
+  * 書籤改用ePub CFI。
+  * 刪除書籤改成在書籤頁左滑，再點刪除。
 * 1.6.0:
-    * 支援經文捲軸。
+  * 支援經文捲軸。
 * 1.5.10:
-    * 使用全字庫字型作楷書支援。
+  * 使用全字庫字型作楷書支援。
 * 1.5.1:
-    * 支援直式文字與楷書。
+  * 支援直式文字與楷書。
 * 1.2.26:
-    * 修正app無法在Chrome安裝的問題。
+  * 修正app無法在Chrome安裝的問題。
 * 1.2.20:
-    * 支援app啟動與手動檢查更新。
+  * 支援app啟動與手動檢查更新。
 * 1.0.0:
-    * 第1版。
+  * 第1版。
 
 ## 隱私政策聲明
 
