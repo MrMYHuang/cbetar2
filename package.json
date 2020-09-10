@@ -1,6 +1,6 @@
 {
   "name": "cbetar2",
-  "version": "2.0.7",
+  "version": "2.1.0",
   "private": true,
   "dependencies": {
     "@capacitor-community/electron": "^1.2.3",
@@ -38,6 +38,7 @@
   "scripts": {
     "start": "react-app-rewired start",
     "build": "react-app-rewired build && powershell -file CopyBuild.ps1",
+    "build_linux": "react-app-rewired build && ./CopyBuild.sh",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject",
     "android": "npx cap open android",
