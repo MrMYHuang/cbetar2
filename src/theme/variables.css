@@ -69,7 +69,6 @@ body.dark {
     --ion-color-light-tint: #383a3e;
 }
 
-
 /*
  * iOS Dark Theme
  * -------------------------------------------
@@ -104,7 +103,6 @@ body.dark {
     --ion-item-border-color: white;
     --ion-card-background: #1c1c1d;
 }
-
 
 /*
  * Material Design Dark Theme
@@ -141,4 +139,14 @@ body.dark {
     --ion-toolbar-background: #1f1f1f;
     --ion-tab-bar-background: #1f1f1f;
     --ion-card-background: #1e1e1e;
+}
+
+.contentCenter {
+    font-size: 48px;
+    text-align: center;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

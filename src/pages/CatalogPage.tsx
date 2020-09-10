@@ -16,10 +16,17 @@ interface PageProps extends RouteComponentProps<{
   label: string;
 }> { }
 
-class _CatalogPage extends React.Component<PageProps> {
+interface State {
+  showSearchAlert: boolean;
+  fetchError: boolean;
+  catalogs: Array<Catalog>;
+}
+
+class _CatalogPage extends React.Component<PageProps, State> {
   constructor(props: any) {
     super(props);
     this.state = {
+      fetchError: false,
       catalogs: [],
       showSearchAlert: false,
     };
@@ -49,24 +56,20 @@ class _CatalogPage extends React.Component<PageProps> {
     if (this.props.match.params.path == null) {
       catalogs = this.getTopCatalogs();
     } else {
-
-      //try {
-      const res = await Globals.axiosInstance.get(`/catalog_entry?q=${path}`, {
-        responseType: 'arraybuffer',
-      });
-      const data = JSON.parse(new TextDecoder().decode(res.data)).results as [any];
-      catalogs = data.map((json) => new Catalog(json));
+      try {
+        const res = await Globals.axiosInstance.get(`/catalog_entry?q=${path}`, {
+          responseType: 'arraybuffer',
+        });
+        const data = JSON.parse(new TextDecoder().decode(res.data)).results as [any];
+        catalogs = data.map((json) => new Catalog(json));
+      } catch (e) {
+        this.setState({ fetchError: true });
+        return false;
+      }
     }
 
     this.setState({ catalogs: catalogs });
     return true;
-
-    /*data..forEach((element) {
-      catalogs.add(Catalog.fromJson(element));
-    });
-  } catch (e) {
-    fetchFail = true;
-  }*/
   }
 
   getTopCatalogs() {
@@ -131,7 +134,7 @@ class _CatalogPage extends React.Component<PageProps> {
           event.preventDefault();
           this.props.history.push({
             pathname: routeLink,
-            search: queryString.stringify({file: catalog.file!}),
+            search: queryString.stringify({ file: catalog.file! }),
           });
         }}>
           <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }} key={`${catalog.n}label` + index}>
@@ -143,9 +146,21 @@ class _CatalogPage extends React.Component<PageProps> {
     return rows;
   }
 
+  fetchErrorContent = 
+  <IonLabel className='contentCenter'>
+    <div>
+      <div>連線失敗!</div>
+      <div style={{ fontSize: 'var(--ui-font-size)', paddingTop: 24 }}>若其它app能上網，可能是CBETA API異常，請靜待修復。</div>
+    </div>
+  </IonLabel>;
+  
   render() {
-    let rows = this.getRows();
     //console.log(`${this.props.match.url} render`)
+
+    let list = <IonList>
+      {this.getRows()}
+    </IonList>
+    
     return (
       <IonPage>
         <IonHeader>
@@ -166,9 +181,7 @@ class _CatalogPage extends React.Component<PageProps> {
           </IonToolbar>
         </IonHeader>
         <IonContent>
-          <IonList>
-            {rows}
-          </IonList>
+          {this.state.fetchError ? this.fetchErrorContent : list }
 
           <SearchAlert
             {...{

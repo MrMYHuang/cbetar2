@@ -91,7 +91,7 @@ class _BookmarkPage extends React.Component<PageProps> {
         <IonContent>
           {this.hasBookmark ?
             <IonList ref={this.bookmarkListRef}>{rows}</IonList> :
-            <IonLabel style={{ fontSize: 48, textAlign: 'center', height: '100%', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <IonLabel className='contentCenter'>
               <div>
                 <div>無書籤</div>
                 <div style={{ fontSize: 'var(--ui-font-size)', paddingTop: 24 }}>請切換至目錄頁新增</div>
