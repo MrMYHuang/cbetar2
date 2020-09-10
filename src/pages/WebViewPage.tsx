@@ -67,6 +67,7 @@ class _WebViewPage extends React.Component<PageProps, State> {
     this.book = null;
     this.rendition = null;
     this.cfiRange = '';
+    document.addEventListener("keyup", this.keyListener.bind(this), false);
   }
 
   async loadEpubCoverToMemFs() {
@@ -208,8 +209,10 @@ class _WebViewPage extends React.Component<PageProps, State> {
     }
   }
 
-  keyListener(e: any) {
+  keyListener(e: KeyboardEvent) {
     let key = e.keyCode || e.which;
+
+    console.log(e.type)
 
     // Left/down Key
     if (key === (this.props.rtlVerticalLayout ? 37 : 40)) {
@@ -296,8 +299,7 @@ class _WebViewPage extends React.Component<PageProps, State> {
           flow: this.props.paginated ? 'paginated' : 'scrolled',
           defaultDirection: this.props.rtlVerticalLayout ? 'rtl' : 'ltr',
         });
-        this.rendition.on("keyup", this.keyListener.bind(this));
-        document.addEventListener("keyup", this.keyListener.bind(this), false);
+        //this.rendition.on("keyup", this.keyListener.bind(this));
 
         this.rendition.on("selected", (cfiRange: any, contents: any) => {
           this.epubcfi = cfiRange;

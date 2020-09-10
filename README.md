@@ -83,6 +83,7 @@ npm run start
 * Prerelease:
   * 修正書籤頁左滑刪除一書籤後，刪除鈕不會隱藏。
   * 經文頁新增書籤成功會有提示訊息。
+  * 修正經文頁用鍵盤操作時會一次跳多頁。
   * Basic Latin字元改用Times New Roman字型。
 * 2.0.6:
   * 支援分頁。
