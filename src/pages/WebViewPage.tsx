@@ -1,6 +1,6 @@
 //import * as fs from 'fs';
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton, withIonLifeCycle, IonIcon, IonAlert, IonPopover, IonList, IonItem, IonLabel, IonRange, IonFab, IonFabButton } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton, withIonLifeCycle, IonIcon, IonAlert, IonPopover, IonList, IonItem, IonLabel, IonRange, IonFab, IonFabButton, IonToast } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as uuid from 'uuid';
@@ -38,6 +38,7 @@ interface PageProps extends Props, RouteComponentProps<{
 interface State {
   htmlStr: string | null;
   showBookmarkingAlert: boolean;
+  showAddBookmarkSuccess: boolean;
   showSearchAlert: boolean;
   popover: any;
 }
@@ -55,6 +56,7 @@ class _WebViewPage extends React.Component<PageProps, State> {
     this.state = {
       htmlStr: null,
       showBookmarkingAlert: false,
+      showAddBookmarkSuccess: false,
       showSearchAlert: false,
       popover: {
         show: false,
@@ -146,10 +148,10 @@ class _WebViewPage extends React.Component<PageProps, State> {
 
   epubcfi = '';
   addBookmarkHandler() {
-    let uuidStr = uuid.v4();
     let iframeWin = document.getElementsByTagName('iframe')[0].contentWindow;
     let sel = iframeWin?.getSelection();
     if (sel?.rangeCount) {
+      let uuidStr = uuid.v4();
       this.props.dispatch({
         type: "ADD_BOOKMARK",
         bookmark: new Bookmark({
@@ -165,6 +167,8 @@ class _WebViewPage extends React.Component<PageProps, State> {
           }),
         }),
       });
+      sel?.removeAllRanges();
+      this.setState({ showAddBookmarkSuccess: true });
     } else {
       this.setState({ showBookmarkingAlert: true });
     }
@@ -332,47 +336,47 @@ class _WebViewPage extends React.Component<PageProps, State> {
     let navButtons = (<>
       <IonFab vertical='center' horizontal='start' slot='fixed'>
         <IonFabButton style={{ opacity: fabButtonOpacity }} onClick={e => this.props.rtlVerticalLayout ? this.pageNext() : this.pagePrev()}
-        onTouchStart={e => {
-          e.currentTarget.style.setProperty('opacity', '1');
-        }}
-        onMouseOver={e => {
-          // Disable mouse events for iOS. Because a touch stat gesture can trigger onMouseOver, but a touch-end gesture can't trigger onMouseLeave.
-          if (Globals.isTouchDevice()) {
-            return;
-          }
-          e.currentTarget.style.setProperty('opacity', '1');
-        }}
-        onTouchEnd={e => {
-          e.currentTarget.style.setProperty('opacity', `${fabButtonOpacity}`);
-        }}
-        onMouseLeave={e => {
-          if (Globals.isTouchDevice()) {
-            return;
-          }
-          e.currentTarget.style.setProperty('opacity', `${fabButtonOpacity}`);
-        }}>
+          onTouchStart={e => {
+            e.currentTarget.style.setProperty('opacity', '1');
+          }}
+          onMouseOver={e => {
+            // Disable mouse events for iOS. Because a touch stat gesture can trigger onMouseOver, but a touch-end gesture can't trigger onMouseLeave.
+            if (Globals.isTouchDevice()) {
+              return;
+            }
+            e.currentTarget.style.setProperty('opacity', '1');
+          }}
+          onTouchEnd={e => {
+            e.currentTarget.style.setProperty('opacity', `${fabButtonOpacity}`);
+          }}
+          onMouseLeave={e => {
+            if (Globals.isTouchDevice()) {
+              return;
+            }
+            e.currentTarget.style.setProperty('opacity', `${fabButtonOpacity}`);
+          }}>
           <IonIcon icon={arrowBack} />
         </IonFabButton>
       </IonFab>
       <IonFab vertical='center' horizontal='end' slot='fixed'>
-        <IonFabButton style={{ opacity: fabButtonOpacity }} onClick={e => this.props.rtlVerticalLayout ? this.pagePrev() : this.pageNext()}         onTouchStart={e => {
+        <IonFabButton style={{ opacity: fabButtonOpacity }} onClick={e => this.props.rtlVerticalLayout ? this.pagePrev() : this.pageNext()} onTouchStart={e => {
           e.currentTarget.style.setProperty('opacity', '1');
         }}
-        onMouseOver={e => {
-          if (Globals.isTouchDevice()) {
-            return;
-          }
-          e.currentTarget.style.setProperty('opacity', '1');
-        }}
-        onTouchEnd={e => {
-          e.currentTarget.style.setProperty('opacity', `${fabButtonOpacity}`);
-        }}
-        onMouseLeave={e => {
-          if (Globals.isTouchDevice()) {
-            return;
-          }
-          e.currentTarget.style.setProperty('opacity', `${fabButtonOpacity}`);
-        }}>
+          onMouseOver={e => {
+            if (Globals.isTouchDevice()) {
+              return;
+            }
+            e.currentTarget.style.setProperty('opacity', '1');
+          }}
+          onTouchEnd={e => {
+            e.currentTarget.style.setProperty('opacity', `${fabButtonOpacity}`);
+          }}
+          onMouseLeave={e => {
+            if (Globals.isTouchDevice()) {
+              return;
+            }
+            e.currentTarget.style.setProperty('opacity', `${fabButtonOpacity}`);
+          }}>
           <IonIcon icon={arrowForward} />
         </IonFabButton>
       </IonFab>
@@ -383,6 +387,12 @@ class _WebViewPage extends React.Component<PageProps, State> {
     }
     return (
       <IonPage>
+        <IonToast
+          isOpen={this.state.showAddBookmarkSuccess}
+          onDidDismiss={() => this.setState({showAddBookmarkSuccess: false})}
+          message="書籤新增成功！"
+          duration={2000}
+        />
         <IonHeader>
           <IonToolbar>
             <IonTitle style={{ fontSize: this.props.uiFontSize }}>{this.props.match.params.label}</IonTitle>
@@ -419,13 +429,13 @@ class _WebViewPage extends React.Component<PageProps, State> {
                 <IonItem>
                   <IonIcon icon={text} slot='start' />
                   <div>
-                  <IonLabel className='ion-text-wrap' style={{ fontSize: this.props.uiFontSize }}>跳頁(%)</IonLabel>
-                  <IonRange min={0} max={100} step={10} snaps pin onIonChange={e => {
-                    let percent = e.detail.value as number;
-                    let ratio = percent / 100 + '';
-                    ratio = (ratio === '0' || ratio === '1') ? `${ratio}.0` : ratio;
-                    this.rendition?.display(ratio);
-                  }} />
+                    <IonLabel className='ion-text-wrap' style={{ fontSize: this.props.uiFontSize }}>跳頁(%)</IonLabel>
+                    <IonRange min={0} max={100} step={10} snaps pin onIonChange={e => {
+                      let percent = e.detail.value as number;
+                      let ratio = percent / 100 + '';
+                      ratio = (ratio === '0' || ratio === '1') ? `${ratio}.0` : ratio;
+                      this.rendition?.display(ratio);
+                    }} />
                   </div>
                 </IonItem>
               </IonList>
