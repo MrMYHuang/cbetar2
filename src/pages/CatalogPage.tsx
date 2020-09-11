@@ -63,6 +63,7 @@ class _CatalogPage extends React.Component<PageProps, State> {
         const data = JSON.parse(new TextDecoder().decode(res.data)).results as [any];
         catalogs = data.map((json) => new Catalog(json));
       } catch (e) {
+        console.error(e);
         this.setState({ fetchError: true });
         return false;
       }

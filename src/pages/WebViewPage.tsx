@@ -132,6 +132,7 @@ class _WebViewPage extends React.Component<PageProps, State> {
         htmlStr = data.results[0];
       }
     } catch (e) {
+      console.error(e);
       this.setState({ isLoading: false, fetchError: true });
       return false;
     }
@@ -322,7 +323,12 @@ class _WebViewPage extends React.Component<PageProps, State> {
           //window.scrollTo({left: iframeWindow?.outerWidth});
           this.setState({ isLoading: false });
           if (this.hasBookmark) {
-            this.rendition?.annotations.highlight(epubcfi);
+            try {
+              // TODO: fix hightlight bug?
+              //this.rendition?.annotations.highlight(epubcfi);
+            } catch (e) {
+              console.error(e);
+            }
           }
           this.book?.locations.generate(150);
         });
