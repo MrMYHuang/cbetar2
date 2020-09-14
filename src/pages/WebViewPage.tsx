@@ -270,6 +270,19 @@ class _WebViewPage extends React.Component<PageProps, State> {
         font-display: swap;
     }
 
+    @font-face {
+        font-family: 'Times';
+        src: local('Times New Roman');
+        unicode-range: U+0-007F;
+    }
+
+    /* Workaround parenthesis orientation problem of TW-Kai-98_1 on iOS Safari. */
+    @font-face {
+        font-family: 'Heiti';
+        src: local('Heiti TC');
+        unicode-range: U+3008-301B, U+FF01-FF60;
+    }
+
     .lb {
       display: none
     }
