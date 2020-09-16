@@ -1,7 +1,3 @@
-.loadingView {
-    font-size: var(--ui-font-size);
-}
-
 .scrollbar::-webkit-scrollbar {
     width: var(--scrollbar-size);
     height: var(--scrollbar-size);
