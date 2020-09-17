@@ -150,3 +150,15 @@ body.dark {
     align-items: center;
     justify-content: center;
 }
+
+.alert-title {
+    font-size: var(--ui-font-size)px !important;
+}
+
+.alert-sub-title {
+    font-size: calc(var(--ui-font-size) * 0.8) !important;
+}
+
+.uiFont {
+    font-size: var(--ui-font-size) !important;
+}

@@ -68,7 +68,13 @@ export var serviceWorkCallbacks = {
   onUpdate: function () {},
 };
 
-class App extends React.Component {
+interface Props { }
+
+interface State {
+  showUpdateAlert: boolean;
+}
+
+class App extends React.Component<Props, State> {
   constructor(props: any) {
     super(props);
     // ----- Initializing UI settings -----
@@ -79,6 +85,7 @@ class App extends React.Component {
     this.state = {
       showUpdateAlert: false,
     };
+
     serviceWorkCallbacks.onUpdate = () => {
       this.setState({showUpdateAlert: true});
     };
@@ -114,13 +121,13 @@ class App extends React.Component {
             </IonTabs>
           </IonReactRouter>
           <IonAlert
-            isOpen={(this.state as any).showUpdateAlert}
+            isOpen={this.state.showUpdateAlert}
             backdropDismiss={false}
             header={'發現app更新，請重啟app!重啟後可至設定頁檢查版本號。'}
             buttons={[
               {
                 text: '確定',
-                cssClass: 'primary',
+                cssClass: 'primary uiFont',
                 handler: (value) => {
                   this.setState({
                     showUpdateAlert: false,

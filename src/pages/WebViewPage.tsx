@@ -475,7 +475,7 @@ class _WebViewPage extends React.Component<PageProps, State> {
           {this.props.paginated ? navButtons : <></>}
 
           <IonLoading
-            cssClass='loadingView'
+            cssClass='uiFont'
             isOpen={this.state.isLoading}
             onDidDismiss={() => this.setState({ isLoading: false })}
             message={'載入中...'}
@@ -520,6 +520,7 @@ class _WebViewPage extends React.Component<PageProps, State> {
           />
 
           <IonToast
+            cssClass='uiFont'
             isOpen={this.state.showAddBookmarkSuccess}
             onDidDismiss={() => this.setState({ showAddBookmarkSuccess: false })}
             message="書籤新增成功！"
