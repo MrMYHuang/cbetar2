@@ -49,6 +49,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
         <IonContent>
           <IonList>
             <IonItem>
+              <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={moon} slot='start' />
               <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>暗色模式</IonLabel>
               <IonToggle slot='end' checked={(this.props as any).darkMode} onIonChange={e => {
@@ -62,6 +63,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
               }} />
             </IonItem>
             <IonItem>
+              <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={documentText} slot='start' />
               <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>分頁</IonLabel>
               <IonToggle slot='end' checked={this.props.paginated} onIonChange={e => {
@@ -74,6 +76,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
               }} />
             </IonItem>
             <IonItem>
+              <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={documentText} slot='start' />
               <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>經文直式、右至左書寫</IonLabel>
               <IonToggle slot='end' checked={this.props.rtlVerticalLayout} onIonChange={e => {
@@ -86,6 +89,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
               }} />
             </IonItem>
             <IonItem>
+              <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={documentText} slot='start' />
               <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>經文捲軸大小</IonLabel>
               <IonSelect slot='end'
@@ -107,6 +111,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
               </IonSelect>
             </IonItem>
             <IonItem>
+              <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={documentText} slot='start' />
               <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>顯示經文註解、版權(bug!)</IonLabel>
               <IonToggle slot='end' checked={true/*this.props.showComments*/} onIonChange={e => {
@@ -119,6 +124,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
               }} />
             </IonItem>
             <IonItem>
+              <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={text} slot='start' />
               <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>楷書字型(初次載入要等待)</IonLabel>
               <IonToggle slot='end' checked={this.props.useFontKai} onIonChange={e => {
@@ -132,6 +138,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
               }} />
             </IonItem>
             <IonItem>
+              <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={text} slot='start' />
               <div className="contentBlock">
                 <div style={{ flexDirection: "column" }}>
@@ -148,6 +155,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
               </div>
             </IonItem>
             <IonItem>
+              <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={text} slot='start' />
               <div className="contentBlock">
                 <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>經文字型大小: {this.props.settings.fontSize}</IonLabel>
@@ -161,6 +169,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
               </div>
             </IonItem>
             <IonItem>
+              <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={star} slot='start' />
               <div>
                 <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>特色</IonLabel>
@@ -168,6 +177,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
               </div>
             </IonItem>
             <IonItem>
+              <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={helpCircle} slot='start' />
               <div style={{ fontSize: 'var(--ui-font-size)' }}>
                 <div>關於</div>
@@ -184,6 +194,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
               </div>
             </IonItem>
             <IonItem>
+              <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={refreshCircle} slot='start' />
               <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>檢查app更新 (若無更新則無回應)</IonLabel>
               <IonButton slot='end' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={e => {

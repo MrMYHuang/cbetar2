@@ -383,6 +383,7 @@ class _WebViewPage extends React.Component<PageProps, State> {
                 this.props.history.push(`/${this.props.match.params.tab}`);
                 this.setState({ popover: { show: false, event: null } });
               }}>
+                <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
                 <IonIcon icon={home} slot='start' />
                 <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>回首頁</IonLabel>
               </IonItem>
@@ -390,10 +391,12 @@ class _WebViewPage extends React.Component<PageProps, State> {
                 this.setState({ showSearchAlert: true });
                 this.setState({ popover: { show: false, event: null } });
               }}>
+                <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
                 <IonIcon icon={search} slot='start' />
                 <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>搜尋經文</IonLabel>
               </IonItem>
               <IonItem>
+                <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
                 <IonIcon icon={text} slot='start' />
                 <div>
                   <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>跳頁(%)</IonLabel>

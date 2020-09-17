@@ -67,6 +67,7 @@ class _BookmarkPage extends React.Component<PageProps> {
               },
             });
           }}>
+            <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
             <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }} key={`bookmarkItemLabel_` + i}>
               {label}
             </IonLabel>

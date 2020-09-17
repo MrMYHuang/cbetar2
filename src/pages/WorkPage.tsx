@@ -91,6 +91,7 @@ class _WorkPage extends React.Component<PageProps> {
             pathname: routeLink,
           });
         }}>
+          <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
           <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }} key={`juanLabel` + i}>
             卷{juans[i]}
           </IonLabel>
