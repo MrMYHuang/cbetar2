@@ -330,7 +330,13 @@ class _WebViewPage extends React.Component<PageProps, State> {
         });
 
         let epubcfi = this.hasBookmark ? this.bookmark!.epubcfi : 'epubcfi(/6/6[s1]!/4/4/2/6[body]/6,/1:0,/1:1)';
-        this.rendition.display(epubcfi).then(() => {
+        this.rendition.display(this.props.paginated ? epubcfi : undefined).then(() => {
+          if (!this.props.paginated) {
+            // Skip cover page.
+            this.rendition?.next();
+            // Skip TOC page.
+            this.rendition?.next();
+          }
           //let iframeWindow = document.getElementsByTagName('iframe')[0].contentWindow;
           //iframeWindow?.scrollTo({left: iframeWindow.outerWidth});
           //window.scrollTo({left: iframeWindow?.outerWidth});
