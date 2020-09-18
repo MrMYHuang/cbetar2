@@ -344,7 +344,7 @@ class _WebViewPage extends React.Component<PageProps, State> {
           if (this.hasBookmark) {
             try {
               // TODO: fix hightlight bug?
-              //this.rendition?.annotations.highlight(epubcfi);
+              this.rendition?.annotations.highlight(epubcfi);
             } catch (e) {
               console.error(e);
             }
