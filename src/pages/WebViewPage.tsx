@@ -508,14 +508,15 @@ class _WebViewPage extends React.Component<PageProps, State> {
           />
 
           <IonAlert
-            isOpen={(this.state as any).showBookmarkingAlert}
+            cssClass='uiFont'
+            isOpen={this.state.showBookmarkingAlert}
             backdropDismiss={false}
             header='書籤新增失敗'
             message='請確認是否已選擇一段文字，再新增書籤!'
             buttons={[
               {
                 text: '確定',
-                cssClass: 'primary',
+                cssClass: 'primary uiFont',
                 handler: (value) => {
                   this.setState({
                     showBookmarkingAlert: false,

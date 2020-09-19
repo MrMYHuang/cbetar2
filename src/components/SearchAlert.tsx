@@ -2,8 +2,8 @@ import React from 'react';
 import { IonAlert } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
 
-interface SearchAlertProps {
-  showSearchAlert: Boolean | null | undefined;
+interface State {
+  showSearchAlert: boolean;
 }
 
 interface PageProps extends RouteComponentProps<{
@@ -12,7 +12,7 @@ interface PageProps extends RouteComponentProps<{
   label: string;
 }> { }
 
-class SearchAlert extends React.Component<PageProps, SearchAlertProps> {
+class SearchAlert extends React.Component<PageProps, State> {
   constructor(props: any) {
     super(props);
     this.state = {
@@ -24,7 +24,7 @@ class SearchAlert extends React.Component<PageProps, SearchAlertProps> {
     return (
       <IonAlert
       cssClass='uiFont'
-      isOpen={(this.props as any).showSearchAlert}
+      isOpen={this.state.showSearchAlert}
       header={'搜尋經文'}      
       subHeader='輸入搜尋'
       inputs={[
