@@ -120,7 +120,8 @@ class App extends React.Component<Props, State> {
               </IonTabBar>
             </IonTabs>
           </IonReactRouter>
-          <IonAlert
+          <IonAlert            
+            cssClass='uiFont'
             isOpen={this.state.showUpdateAlert}
             backdropDismiss={false}
             header={'發現app更新，請重啟app!重啟後可至設定頁檢查版本號。'}

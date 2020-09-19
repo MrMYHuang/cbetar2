@@ -155,7 +155,7 @@ body.dark {
     font-size: var(--ui-font-size)px !important;
 }
 
-.alert-sub-title {
+.alert-sub-title, .alert-message {
     font-size: calc(var(--ui-font-size) * 0.8) !important;
 }
 
