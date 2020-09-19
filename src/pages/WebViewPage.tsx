@@ -344,7 +344,7 @@ class _WebViewPage extends React.Component<PageProps, State> {
           if (this.hasBookmark) {
             try {
               // TODO: fix hightlight bug?
-              //this.rendition?.annotations.highlight(epubcfi);
+              this.rendition?.annotations.highlight(epubcfi);
             } catch (e) {
               console.error(e);
             }
@@ -404,7 +404,7 @@ class _WebViewPage extends React.Component<PageProps, State> {
               <IonItem>
                 <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
                 <IonIcon icon={text} slot='start' />
-                <div>
+                <div style={{width: '100%'}}>
                   <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>跳頁(%)</IonLabel>
                   <IonRange min={0} max={100} step={10} snaps pin onIonChange={e => {
                     let percent = e.detail.value as number;
