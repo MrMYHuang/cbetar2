@@ -490,7 +490,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
           {this.state.fetchError ? Globals.fetchErrorContent : <></>}
 
-          <div id='cbetarEPubView' className='scrollbar' style={{ width: '100%', height: '100%', userSelect: "text", WebkitUserSelect: "text" }} dangerouslySetInnerHTML={{
+          <div id='cbetarEPubView' style={{ width: '100%', height: '100%', userSelect: "text", WebkitUserSelect: "text" }} dangerouslySetInnerHTML={{
             __html: `
             ${this.props.rtlVerticalLayout && !this.props.paginated ? epubjsScrollRtlModeVerticalScrollbarBugWokaroundCss : ''}
             `
