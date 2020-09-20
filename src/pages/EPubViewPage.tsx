@@ -113,23 +113,34 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     try {
       if (htmlStr != null) {
         // Do nothing.
-      } else if (this.htmlFile) {
-        const res = await Globals.axiosInstance.get(`/${this.htmlFile}`, {
-          responseType: 'arraybuffer',
-        });
-        let tryDecoder = new TextDecoder();
-        let tryDecodeHtmlStr = tryDecoder.decode(res.data);
-        if (tryDecodeHtmlStr.includes('charset=big5')) {
-          htmlStr = new TextDecoder('big5').decode(res.data);
-        } else {
-          htmlStr = tryDecodeHtmlStr;
-        }
       } else {
-        const res = await Globals.axiosInstance.get(`/juans?edition=CBETA&work=${this.props.match.params.work}&juan=${juan}`, {
-          responseType: 'arraybuffer',
-        });
-        let data = JSON.parse(new TextDecoder().decode(res.data));
-        htmlStr = data.results[0];
+        if (this.htmlFile) {
+          const res = await Globals.axiosInstance.get(`/${this.htmlFile}`, {
+            responseType: 'arraybuffer',
+          });
+          let tryDecoder = new TextDecoder();
+          let tryDecodeHtmlStr = tryDecoder.decode(res.data);
+          if (tryDecodeHtmlStr.includes('charset=big5')) {
+            htmlStr = new TextDecoder('big5').decode(res.data);
+          } else {
+            htmlStr = tryDecodeHtmlStr;
+          }
+        } else {
+          const res = await Globals.axiosInstance.get(`/juans?edition=CBETA&work=${this.props.match.params.work}&juan=${juan}`, {
+            responseType: 'arraybuffer',
+          });
+          let data = JSON.parse(new TextDecoder().decode(res.data));
+          htmlStr = data.results[0];
+        }
+
+        // Convert HTML to XML, because ePub requires XHTML.
+        // Bad structured HTML will cause DOMParser parse error on some browsers!
+        let doc = document.implementation.createHTMLDocument("");
+        doc.body.innerHTML = htmlStr!;
+        htmlStr = new XMLSerializer().serializeToString(doc.body);
+        // Remove body tag.
+        htmlStr = htmlStr.replace('<body', '<div');
+        htmlStr = htmlStr.replace('/body>', '/div>');
       }
     } catch (e) {
       console.error(e);
@@ -138,15 +149,6 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     }
 
     await this.loadEpubCoverToMemFs();
-
-    // Convert HTML to XML, because ePub requires XHTML.
-    // Bad structured HTML will cause DOMParser parse error on some browsers!
-    let doc = document.implementation.createHTMLDocument("");
-    doc.body.innerHTML = htmlStr!;
-    htmlStr = new XMLSerializer().serializeToString(doc.body);
-    // Remove body tag.
-    htmlStr = htmlStr.replace('<body', '<div');
-    htmlStr = htmlStr.replace('/body>', '/div>');
 
     this.setState({ htmlStr: htmlStr });
     return true;
@@ -160,6 +162,8 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       let uuidStr = uuid.v4();
       this.props.dispatch({
         type: "ADD_BOOKMARK",
+        // IMPORTANT!!! Don't arbitrarily change the HTML structure of htmlStr.
+        // Otherwise, saved epubcfi bookmarks will become invalid!
         htmlStr: this.state.htmlStr,
         bookmark: new Bookmark({
           type: BookmarkType.JUAN,
@@ -404,7 +408,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
               <IonItem>
                 <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
                 <IonIcon icon={text} slot='start' />
-                <div style={{width: '100%'}}>
+                <div style={{ width: '100%' }}>
                   <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>跳頁(%)</IonLabel>
                   <IonRange min={0} max={100} step={10} snaps pin onIonChange={e => {
                     let percent = e.detail.value as number;
@@ -486,7 +490,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
             onDidDismiss={() => this.setState({ isLoading: false })}
             message={'載入中...'}
           />
-          
+
           {this.state.fetchError ? Globals.fetchErrorContent : <></>}
 
           <div id='cbetarEPubView' className='scrollbar' style={{ width: '100%', height: '100%', userSelect: "text", WebkitUserSelect: "text" }} dangerouslySetInnerHTML={{
