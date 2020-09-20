@@ -174,7 +174,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
               <div style={{ fontSize: 'var(--ui-font-size)' }}>
                 <div>關於</div>
                 <div>App版本: {PackageInfos.version}</div>
-                <div><a href="https://github.com/MrMYHuang/cbetar2#%E5%AE%89%E8%A3%9D" target="__new">程式安裝說明</a></div>
+                <div><a href="https://github.com/MrMYHuang/cbetar2#web-app" target="__new">程式安裝說明</a></div>
                 <div><a href="https://github.com/MrMYHuang/cbetar2" target="__new">操作說明與開放原始碼</a></div>
                 <div>CBETA API版本: {Globals.apiVersion}</div>
                 <div><a href="http://cbdata.dila.edu.tw/v1.2/" target="__new">CBETA API參考文件</a></div>
