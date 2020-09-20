@@ -320,6 +320,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
           width: "100%", height: "100%",
           spread: 'none',
           flow: this.props.paginated ? 'paginated' : 'scrolled',
+          scrollbarWidth: Globals.scrollbarSizeIdToValue(this.props.scrollbarSize),
           defaultDirection: this.props.rtlVerticalLayout ? 'rtl' : 'ltr',
         });
         //this.rendition.on("keyup", this.keyListener.bind(this));
@@ -547,6 +548,7 @@ const mapStateToProps = (state: any /*, ownProps*/) => {
     paginated: state.settings.paginated,
     rtlVerticalLayout: state.settings.rtlVerticalLayout,
     settings: state.settings,
+    scrollbarSize: state.settings.scrollbarSize,
   }
 };
 

@@ -91,11 +91,12 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={documentText} slot='start' />
-              <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>經文捲軸大小(bug!)</IonLabel>
+              <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>經文捲軸大小</IonLabel>
               <IonSelect slot='end'
                 value={this.props.scrollbarSize}
                 style={{ fontSize: 'var(--ui-font-size)' }}
                 interface='popover'
+                interfaceOptions={{cssClass: 'uiFont'}}
                 onIonChange={e => {
                   const value = e.detail.value;
                   this.props.dispatch({
@@ -110,11 +111,12 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
                 <IonSelectOption value={2}>大</IonSelectOption>
               </IonSelect>
             </IonItem>
+            {/*
             <IonItem>
-              <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
+              <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. * /}
               <IonIcon icon={documentText} slot='start' />
-              <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>顯示經文註解、版權(bug!)</IonLabel>
-              <IonToggle slot='end' checked={true/*this.props.showComments*/} onIonChange={e => {
+              <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>顯示經文註解、版權</IonLabel>
+              <IonToggle slot='end' checked={this.props.showComments} onIonChange={e => {
                 const isChecked = e.detail.checked;
                 (this.props as any).dispatch({
                   type: "SET_KEY_VAL",
@@ -123,6 +125,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
                 });
               }} />
             </IonItem>
+            */}
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={text} slot='start' />

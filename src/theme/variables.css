@@ -162,3 +162,7 @@ body.dark {
 .uiFont {
     font-size: var(--ui-font-size) !important;
 }
+
+.uiFont .select-interface-option {
+    font-size: var(--ui-font-size) !important;
+}

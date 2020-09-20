@@ -10,6 +10,15 @@ const axiosInstance = axios.create({
   timeout: 3000,
 });
 
+
+function scrollbarSizeIdToValue(id: number) {
+  switch (id) {
+    case 0: return 0;
+    case 1: return 20;
+    case 2: return 40;
+  }
+}
+
 export default {
   storeFile: 'Settings.json',
   fontSizeNorm: 24,
@@ -60,12 +69,9 @@ export default {
       return Promise.all(regs.map(reg => reg.update()));
     });
   },
+  scrollbarSizeIdToValue,
   updateCssVars: (settings: any) => {
-    let scrollbarSize = 0;
-    switch (settings.scrollbarSize) {
-      case 1: scrollbarSize = 20; break;
-      case 2: scrollbarSize = 40; break;
-    }
+    let scrollbarSize = scrollbarSizeIdToValue(settings.scrollbarSize);
     document.documentElement.style.cssText = `--ion-font-family: ${settings.useFontKai ? 'Heiti, Times, Kai' : 'Times, Heiti'};
         --scrollbar-size: ${scrollbarSize}px; --ui-font-size: ${settings.uiFontSize}px`
   },

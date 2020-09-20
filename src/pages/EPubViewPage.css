@@ -1,16 +1,16 @@
-.scrollbar::-webkit-scrollbar {
+.epub-container::-webkit-scrollbar {
     width: var(--scrollbar-size);
     height: var(--scrollbar-size);
 }
 
-.scrollbar::-webkit-scrollbar-track {
+.epub-container::-webkit-scrollbar-track {
     -webkit-box-shadow: inset 0 0 6px var(--ion-color-primary);
     box-shadow: inset 0 0 6px var(--ion-color-primary); 
     border-radius: 8px;
     -webkit-border-radius: 8px;
 }
 
-.scrollbar::-webkit-scrollbar-thumb {
+.epub-container::-webkit-scrollbar-thumb {
     -webkit-border-radius: 20px;
     border-radius: 20px;
     background: var(--ion-color-primary);
@@ -18,6 +18,6 @@
     box-shadow: inset 0 0 6px var(--ion-color-primary); 
 }
 
-.scrollbar::-webkit-scrollbar-corner {
+.epub-container::-webkit-scrollbar-corner {
     background-color: var(--ion-background-color);
 }
