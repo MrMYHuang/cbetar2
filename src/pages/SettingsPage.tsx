@@ -3,7 +3,7 @@ import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem,
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import Globals from '../Globals';
-import { star, helpCircle, text, moon, documentText, refreshCircle } from 'ionicons/icons';
+import { helpCircle, text, moon, documentText, refreshCircle } from 'ionicons/icons';
 import './SettingsPage.css';
 import PackageInfos from '../../package.json';
 
@@ -65,7 +65,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={documentText} slot='start' />
-              <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>分頁</IonLabel>
+              <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>單頁/分頁</IonLabel>
               <IonToggle slot='end' checked={this.props.paginated} onIonChange={e => {
                 const isChecked = e.detail.checked;
                 this.props.dispatch({
@@ -91,7 +91,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={documentText} slot='start' />
-              <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>經文捲軸大小</IonLabel>
+              <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>經文捲軸大小(bug!)</IonLabel>
               <IonSelect slot='end'
                 value={this.props.scrollbarSize}
                 style={{ fontSize: 'var(--ui-font-size)' }}
@@ -126,7 +126,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={text} slot='start' />
-              <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>楷書字型(初次載入要等待)</IonLabel>
+              <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>黑體/楷書字體(初次載入要等待)</IonLabel>
               <IonToggle slot='end' checked={this.props.useFontKai} onIonChange={e => {
                 const isChecked = e.detail.checked;
                 (this.props as any).dispatch({
@@ -170,23 +170,16 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
             </IonItem>
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
-              <IonIcon icon={star} slot='start' />
-              <div>
-                <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>特色</IonLabel>
-                <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>搜尋經文、書籤功能、離線瀏覽、暗色模式、字型調整、直式文字。</IonLabel>
-              </div>
-            </IonItem>
-            <IonItem>
-              <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={helpCircle} slot='start' />
               <div style={{ fontSize: 'var(--ui-font-size)' }}>
                 <div>關於</div>
-                <div>程式版本: {PackageInfos.version}</div>
+                <div>App版本: {PackageInfos.version}</div>
+                <div><a href="https://github.com/MrMYHuang/cbetar2#%E5%AE%89%E8%A3%9D" target="__new">程式安裝說明</a></div>
+                <div><a href="https://github.com/MrMYHuang/cbetar2" target="__new">操作說明與開放原始碼</a></div>
                 <div>CBETA API版本: {Globals.apiVersion}</div>
+                <div><a href="http://cbdata.dila.edu.tw/v1.2/" target="__new">CBETA API參考文件</a></div>
                 <div>作者: Meng-Yuan Huang</div>
                 <div><a href="mailto:myh@live.com" target="__new">myh@live.com</a></div>
-                <div><a href="https://github.com/MrMYHuang/cbetar2" target="__new">操作說明與開放原始碼</a></div>
-                <div><a href="http://cbdata.dila.edu.tw/v1.2/" target="__new">CBETA API參考文件</a></div>
                 <div><a href='/' onClick={e => {
                   e.preventDefault();
                   this.setState({ showFontLicense: true });
