@@ -16,7 +16,7 @@ import getSavedStore from './redux/store';
 import { bookmark, book, settings } from 'ionicons/icons';
 import CatalogPage from './pages/CatalogPage';
 import WorkPage from './pages/WorkPage';
-import WebViewPage from './pages/WebViewPage';
+import EPubViewPage from './pages/EPubViewPage';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -97,7 +97,7 @@ class App extends React.Component<Props, State> {
           <IonReactRouter>
             <IonTabs>
               <IonRouterOutlet animated={false}>
-                <Route path="/:tab(catalog)/webview/:work/:path/:label" render={(props: any) => <WebViewPage {...props} />}  exact={true} />
+                <Route path="/:tab(catalog)/webview/:work/:path/:label" render={(props: any) => <EPubViewPage {...props} />}  exact={true} />
                 <Route path="/:tab(catalog)/work/:path/:label" component={(props: any) => <WorkPage {...props} />} exact={true} />
                 <Route path="/:tab(catalog)/search/:keyword" render={props => <SearchPage {...props} />} exact={true} />
                 <Route path="/:tab(catalog)/catalog/:path/:label" component={(props: any) => <CatalogPage {...props} />} exact={true} />

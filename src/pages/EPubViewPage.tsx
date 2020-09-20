@@ -5,7 +5,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as uuid from 'uuid';
 import queryString from 'query-string';
-import './WebViewPage.css';
+import './EPubViewPage.css';
 import Globals from '../Globals';
 import { bookmark, arrowBack, home, search, ellipsisHorizontal, ellipsisVertical, arrowForward, text } from 'ionicons/icons';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
@@ -44,7 +44,7 @@ interface State {
   popover: any;
 }
 
-class _WebViewPage extends React.Component<PageProps, State> {
+class _EPubViewPage extends React.Component<PageProps, State> {
   htmlFile: string;
   book: Book | null;
   rendition: Rendition | null;
@@ -312,7 +312,7 @@ class _WebViewPage extends React.Component<PageProps, State> {
         this.book = ePub(tempEpubBuffer.buffer, {
           openAs: 'binary',
         });
-        this.rendition = this.book.renderTo('cbetarWebView', {
+        this.rendition = this.book.renderTo('cbetarEPubView', {
           width: "100%", height: "100%",
           spread: 'none',
           flow: this.props.paginated ? 'paginated' : 'scrolled',
@@ -489,7 +489,7 @@ class _WebViewPage extends React.Component<PageProps, State> {
           
           {this.state.fetchError ? Globals.fetchErrorContent : <></>}
 
-          <div id='cbetarWebView' className='scrollbar' style={{ width: '100%', height: '100%', userSelect: "text", WebkitUserSelect: "text" }} dangerouslySetInnerHTML={{
+          <div id='cbetarEPubView' className='scrollbar' style={{ width: '100%', height: '100%', userSelect: "text", WebkitUserSelect: "text" }} dangerouslySetInnerHTML={{
             __html: `
             ${this.props.rtlVerticalLayout && !this.props.paginated ? epubjsScrollRtlModeVerticalScrollbarBugWokaroundCss : ''}
             `
@@ -550,8 +550,8 @@ const mapStateToProps = (state: any /*, ownProps*/) => {
   }
 };
 
-const WebViewPage = withIonLifeCycle(_WebViewPage);
+const EPubViewPage = withIonLifeCycle(_EPubViewPage);
 
 export default connect(
   mapStateToProps,
-)(WebViewPage);
+)(EPubViewPage);
