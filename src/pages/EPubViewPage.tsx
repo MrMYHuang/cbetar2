@@ -310,7 +310,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         console.log(`Error: ${e}`);
       },
       '.', 'temp',
-      () => {
+      async () => {
         let fs = require('fs');
         let tempEpubBuffer = fs.readFileSync('temp.epub');
         this.book = ePub(tempEpubBuffer.buffer, {
@@ -334,27 +334,23 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         });
 
         let epubcfi = this.hasBookmark ? this.bookmark!.epubcfi : 'epubcfi(/6/6[s1]!/4/4/2/6[body]/6,/1:0,/1:1)';
-        this.rendition.display(this.props.paginated ? epubcfi : undefined).then(() => {
-          if (!this.props.paginated) {
-            // Skip cover page.
-            this.rendition?.next();
-            // Skip TOC page.
-            this.rendition?.next();
+        await this.rendition.display(this.props.paginated ? epubcfi : undefined);
+        if (!this.props.paginated) {
+          // Skip cover page.
+          await this.rendition?.next();
+          // Skip TOC page.
+          await this.rendition?.next();
+        }
+        this.setState({ isLoading: false });
+
+        if (this.hasBookmark) {
+          try {
+            this.rendition?.annotations.highlight(epubcfi);
+          } catch (e) {
+            console.error(e);
           }
-          //let iframeWindow = document.getElementsByTagName('iframe')[0].contentWindow;
-          //iframeWindow?.scrollTo({left: iframeWindow.outerWidth});
-          //window.scrollTo({left: iframeWindow?.outerWidth});
-          this.setState({ isLoading: false });
-          if (this.hasBookmark) {
-            try {
-              // TODO: fix hightlight bug?
-              this.rendition?.annotations.highlight(epubcfi);
-            } catch (e) {
-              console.error(e);
-            }
-          }
-          this.book?.locations.generate(150);
-        });
+        }
+        this.book?.locations.generate(150);
       }
     );
     //});
