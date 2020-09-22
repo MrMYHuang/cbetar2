@@ -66,19 +66,6 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={documentText} slot='start' />
-              <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>單頁/分頁</IonLabel>
-              <IonToggle slot='end' checked={this.props.paginated} onIonChange={e => {
-                const isChecked = e.detail.checked;
-                this.props.dispatch({
-                  type: "SET_KEY_VAL",
-                  key: 'paginated',
-                  val: isChecked
-                });
-              }} />
-            </IonItem>
-            <IonItem>
-              <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
-              <IonIcon icon={documentText} slot='start' />
               <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>經文直式、右至左書寫</IonLabel>
               <IonToggle slot='end' checked={this.props.rtlVerticalLayout} onIonChange={e => {
                 const isChecked = e.detail.checked;
@@ -92,7 +79,20 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={documentText} slot='start' />
-              <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>經文捲軸大小</IonLabel>
+              <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>單頁/分頁</IonLabel>
+              <IonToggle slot='end' checked={this.props.paginated} onIonChange={e => {
+                const isChecked = e.detail.checked;
+                this.props.dispatch({
+                  type: "SET_KEY_VAL",
+                  key: 'paginated',
+                  val: isChecked
+                });
+              }} />
+            </IonItem>
+            <IonItem>
+              <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
+              <IonIcon icon={documentText} slot='start' />
+              <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>單頁經文捲軸大小</IonLabel>
               <IonSelect slot='end'
                 value={this.props.scrollbarSize}
                 style={{ fontSize: 'var(--ui-font-size)' }}
@@ -194,12 +194,12 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
               <div style={{ fontSize: 'var(--ui-font-size)' }}>
                 <div>關於</div>
                 <div>App版本: {PackageInfos.version}</div>
-                <div><a href="https://github.com/MrMYHuang/cbetar2#web-app" target="__new">程式安裝說明</a></div>
-                <div><a href="https://github.com/MrMYHuang/cbetar2" target="__new">操作說明與開放原始碼</a></div>
+                <div><a href="https://github.com/MrMYHuang/cbetar2#web-app" target="_new">程式安裝說明</a></div>
+                <div><a href="https://github.com/MrMYHuang/cbetar2" target="_new">操作說明與開放原始碼</a></div>
                 <div>CBETA API版本: {Globals.apiVersion}</div>
-                <div><a href="http://cbdata.dila.edu.tw/v1.2/" target="__new">CBETA API參考文件</a></div>
+                <div><a href="http://cbdata.dila.edu.tw/v1.2/" target="_new">CBETA API參考文件</a></div>
                 <div>作者: Meng-Yuan Huang</div>
-                <div><a href="mailto:myh@live.com" target="__new">myh@live.com</a></div>
+                <div><a href="mailto:myh@live.com" target="_new">myh@live.com</a></div>
                 <div><a href='/' onClick={e => {
                   e.preventDefault();
                   this.setState({ showFontLicense: true });
