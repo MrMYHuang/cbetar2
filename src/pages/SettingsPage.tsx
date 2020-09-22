@@ -177,12 +177,12 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
               <div style={{ fontSize: 'var(--ui-font-size)' }}>
                 <div>關於</div>
                 <div>App版本: {PackageInfos.version}</div>
-                <div><a href="https://github.com/MrMYHuang/cbetar2#web-app" target="__new">程式安裝說明</a></div>
-                <div><a href="https://github.com/MrMYHuang/cbetar2" target="__new">操作說明與開放原始碼</a></div>
+                <div><a href="https://github.com/MrMYHuang/cbetar2#web-app" target="_new">程式安裝說明</a></div>
+                <div><a href="https://github.com/MrMYHuang/cbetar2" target="_new">操作說明與開放原始碼</a></div>
                 <div>CBETA API版本: {Globals.apiVersion}</div>
-                <div><a href="http://cbdata.dila.edu.tw/v1.2/" target="__new">CBETA API參考文件</a></div>
+                <div><a href="http://cbdata.dila.edu.tw/v1.2/" target="_new">CBETA API參考文件</a></div>
                 <div>作者: Meng-Yuan Huang</div>
-                <div><a href="mailto:myh@live.com" target="__new">myh@live.com</a></div>
+                <div><a href="mailto:myh@live.com" target="_new">myh@live.com</a></div>
                 <div><a href='/' onClick={e => {
                   e.preventDefault();
                   this.setState({ showFontLicense: true });
