@@ -45,8 +45,8 @@ export default function reducer(state = {
         newSettings = {};
       }
       // Setting default values.
-      var keys = ['paginated', 'rtlVerticalLayout', 'scrollbarSize', 'useFontKai', 'fontSize', 'uiFontSize', 'darkMode', 'showComments', 'bookmarks'];
-      var vals = [1, 1, 2, 1, 32, 24, 1, 0, []];
+      var keys = ['paginated', 'rtlVerticalLayout', 'scrollbarSize', 'useFontKai', 'fontSize', 'uiFontSize', 'darkMode', 'showComments', 'speechRate', 'bookmarks'];
+      var vals = [1, 1, 2, 1, 32, 24, 1, 0, 0.8, []];
       for (let k = 0; k < keys.length; k++) {
         if (newSettings[keys[k]] === undefined) {
           newSettings[keys[k]] = vals[k];

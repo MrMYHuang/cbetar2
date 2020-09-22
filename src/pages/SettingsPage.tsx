@@ -21,6 +21,7 @@ interface Props {
   paginated: boolean;
   rtlVerticalLayout: boolean;
   useFontKai: boolean;
+  speechRate: number;
 }
 
 interface PageProps extends Props, RouteComponentProps<{
@@ -173,6 +174,22 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
             </IonItem>
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
+              <IonIcon icon={text} slot='start' />
+              <div className="contentBlock">
+                <div style={{ flexDirection: "column" }}>
+                  <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>合成語音速度: {this.props.uiFontSize}</IonLabel>
+                  <IonRange min={0.1} max={1} value={this.props.speechRate} onIonChange={e => {
+                    this.props.dispatch({
+                      type: "SET_KEY_VAL",
+                      key: 'speechRate',
+                      val: e.detail.value,
+                    });
+                  }} />
+                </div>
+              </div>
+            </IonItem>
+            <IonItem>
+              <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={helpCircle} slot='start' />
               <div style={{ fontSize: 'var(--ui-font-size)' }}>
                 <div>關於</div>
@@ -241,6 +258,7 @@ const mapStateToProps = (state: any /*, ownProps*/) => {
     scrollbarSize: state.settings.scrollbarSize,
     useFontKai: state.settings.useFontKai,
     uiFontSize: state.settings.uiFontSize,
+    speechRate: state.settings.speechRate,
   }
 };
 

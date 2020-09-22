@@ -7,7 +7,7 @@ import * as uuid from 'uuid';
 import queryString from 'query-string';
 import './EPubViewPage.css';
 import Globals from '../Globals';
-import { bookmark, arrowBack, home, search, ellipsisHorizontal, ellipsisVertical, arrowForward, text } from 'ionicons/icons';
+import { bookmark, arrowBack, home, search, ellipsisHorizontal, ellipsisVertical, arrowForward, text, playCircle, pauseCircle } from 'ionicons/icons';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
 import { Work } from '../models/Work';
 import SearchAlert from '../components/SearchAlert';
@@ -34,6 +34,12 @@ interface PageProps extends Props, RouteComponentProps<{
   label: string;
 }> { }
 
+enum SpeechState {
+  UNINITIAL,
+  SPEAKING,
+  PAUSE
+}
+
 interface State {
   isLoading: boolean;
   fetchError: boolean;
@@ -42,6 +48,7 @@ interface State {
   showAddBookmarkSuccess: boolean;
   showSearchAlert: boolean;
   popover: any;
+  speechState: SpeechState;
 }
 
 class _EPubViewPage extends React.Component<PageProps, State> {
@@ -65,6 +72,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         show: false,
         event: null,
       },
+      speechState: SpeechState.UNINITIAL,
     }
     this.htmlFile = '';
     this.book = null;
@@ -201,7 +209,8 @@ class _EPubViewPage extends React.Component<PageProps, State> {
   }
 
   ionViewWillLeave() {
-    this.setState({ htmlStr: null });
+    speechSynthesis.pause();
+    this.setState({ htmlStr: null, speechState: SpeechState.PAUSE });
     this.book?.destroy();
     this.book = null;
     this.bookCreated = false;
@@ -372,6 +381,34 @@ class _EPubViewPage extends React.Component<PageProps, State> {
           <IonTitle style={{ fontSize: 'var(--ui-font-size)' }}>{this.props.match.params.label}</IonTitle>
           <IonButton hidden={this.isTopPage} fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
             <IonIcon icon={arrowBack} slot='icon-only' />
+          </IonButton>
+          <IonButton fill="clear" slot='end' onClick={e => {
+            if (speechSynthesis.getVoices().length === 0) {
+              return;
+            }
+
+            switch (this.state.speechState) {
+              case SpeechState.UNINITIAL:
+                const ePubIframe = document.getElementsByTagName('iframe')[0];
+                const workText = ePubIframe.contentDocument?.getElementById('body')?.innerText;
+                let ssu = new SpeechSynthesisUtterance(workText);
+                //ssu.lang = 'zh_TW_#Hant';
+                ssu.rate = 0.8;
+                ssu.volume = 1;
+                speechSynthesis.speak(ssu);
+                this.setState({speechState: SpeechState.SPEAKING});
+                break;
+              case SpeechState.SPEAKING:
+                speechSynthesis.pause();
+                this.setState({speechState: SpeechState.PAUSE});
+                break;
+              case SpeechState.PAUSE:
+                speechSynthesis.resume();
+                this.setState({speechState: SpeechState.SPEAKING});
+                break;
+            }
+          }}>
+            <IonIcon icon={this.state.speechState === SpeechState.SPEAKING ? pauseCircle : playCircle } slot='icon-only' />
           </IonButton>
           <IonButton fill="clear" slot='end' onClick={e => this.addBookmarkHandler()}>
             <IonIcon icon={bookmark} slot='icon-only' />
