@@ -25,6 +25,7 @@ interface Props {
   paginated: Boolean;
   rtlVerticalLayout: boolean;
   useFontKai: boolean;
+  speechRate: number;
 }
 
 interface PageProps extends Props, RouteComponentProps<{
@@ -58,6 +59,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
   epub: any;
   displayed: any;
   cfiRange: string;
+  speechSynthesisUtterance: SpeechSynthesisUtterance;
 
   constructor(props: any) {
     super(props);
@@ -78,6 +80,8 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     this.book = null;
     this.rendition = null;
     this.cfiRange = '';
+    this.speechSynthesisUtterance = new SpeechSynthesisUtterance();
+    this.speechSynthesisUtterance.lang = 'zh-TW';
     document.addEventListener("keyup", this.keyListener.bind(this), false);
   }
 
@@ -391,11 +395,12 @@ class _EPubViewPage extends React.Component<PageProps, State> {
               case SpeechState.UNINITIAL:
                 const ePubIframe = document.getElementsByTagName('iframe')[0];
                 const workText = ePubIframe.contentDocument?.getElementById('body')?.innerText;
-                let ssu = new SpeechSynthesisUtterance(workText);
+                this.speechSynthesisUtterance.text = workText!;
                 //ssu.lang = 'zh_TW_#Hant';
-                ssu.rate = 0.8;
-                ssu.volume = 1;
-                speechSynthesis.speak(ssu);
+                this.speechSynthesisUtterance.rate = this.props.speechRate;
+                // Improve reliability by cancel first.
+                speechSynthesis.cancel();
+                speechSynthesis.speak(this.speechSynthesisUtterance);
                 this.setState({speechState: SpeechState.SPEAKING});
                 break;
               case SpeechState.SPEAKING:
@@ -586,6 +591,7 @@ const mapStateToProps = (state: any /*, ownProps*/) => {
     rtlVerticalLayout: state.settings.rtlVerticalLayout,
     settings: state.settings,
     scrollbarSize: state.settings.scrollbarSize,
+    speechRate: state.settings.speechRate,
   }
 };
 
