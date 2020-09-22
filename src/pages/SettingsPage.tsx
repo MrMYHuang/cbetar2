@@ -65,12 +65,12 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={documentText} slot='start' />
-              <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>單頁/分頁</IonLabel>
-              <IonToggle slot='end' checked={this.props.paginated} onIonChange={e => {
+              <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>經文直式、右至左書寫</IonLabel>
+              <IonToggle slot='end' checked={this.props.rtlVerticalLayout} onIonChange={e => {
                 const isChecked = e.detail.checked;
                 this.props.dispatch({
                   type: "SET_KEY_VAL",
-                  key: 'paginated',
+                  key: 'rtlVerticalLayout',
                   val: isChecked
                 });
               }} />
@@ -78,12 +78,12 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={documentText} slot='start' />
-              <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>經文直式、右至左書寫</IonLabel>
-              <IonToggle slot='end' checked={this.props.rtlVerticalLayout} onIonChange={e => {
+              <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>單頁/分頁</IonLabel>
+              <IonToggle slot='end' checked={this.props.paginated} onIonChange={e => {
                 const isChecked = e.detail.checked;
                 this.props.dispatch({
                   type: "SET_KEY_VAL",
-                  key: 'rtlVerticalLayout',
+                  key: 'paginated',
                   val: isChecked
                 });
               }} />
