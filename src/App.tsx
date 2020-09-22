@@ -89,6 +89,9 @@ class App extends React.Component<Props, State> {
     serviceWorkCallbacks.onUpdate = () => {
       this.setState({showUpdateAlert: true});
     };
+
+    // Preload speechSynthesis.
+    speechSynthesis.getVoices();
   }
   render() {
     return (
