@@ -91,7 +91,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={documentText} slot='start' />
-              <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>經文捲軸大小</IonLabel>
+              <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>單頁經文捲軸大小</IonLabel>
               <IonSelect slot='end'
                 value={this.props.scrollbarSize}
                 style={{ fontSize: 'var(--ui-font-size)' }}
