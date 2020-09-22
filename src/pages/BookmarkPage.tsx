@@ -74,7 +74,7 @@ class _BookmarkPage extends React.Component<PageProps> {
           </IonItem>
 
           <IonItemOptions side="end">
-            <IonItemOption color='danger' onClick={(e) => {
+            <IonItemOption style={{fontSize: 'var(--ui-font-size)'}} color='danger' onClick={(e) => {
               this.delBookmarkHandler(bookmark.uuid);
               this.bookmarkListRef.current?.closeSlidingItems();
             }}>刪除</IonItemOption>
