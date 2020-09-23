@@ -407,12 +407,20 @@ class _EPubViewPage extends React.Component<PageProps, State> {
             <IonIcon icon={arrowBack} slot='icon-only' />
           </IonButton>
           <IonButton fill="clear" slot='end' onClick={e => {
-            if (speechSynthesis.getVoices().length === 0) {
+            const voices = speechSynthesis.getVoices();
+            if (voices.length === 0) {
               return;
             }
 
             switch (this.state.speechState) {
               case SpeechState.UNINITIAL:
+                const zhTwVoice = voices.find((voice: SpeechSynthesisVoice) => {
+                  return voice.lang.indexOf('zh-TW') > -1 || voice.lang.indexOf('zh_TW') > -1
+                })
+                if (zhTwVoice !== undefined) {
+                  this.speechSynthesisUtterance.voice = zhTwVoice;
+                }
+                
                 const ePubIframe = document.getElementsByTagName('iframe')[0];
                 const workText = ePubIframe.contentDocument?.getElementById('body')?.innerText || '無法取得經文內容';
 
