@@ -178,11 +178,11 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
               <div className="contentBlock">
                 <div style={{ flexDirection: "column" }}>
                   <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>合成語音速度: {this.props.speechRate}</IonLabel>
-                  <IonRange min={0.1} max={1} step={0.1} value={this.props.speechRate} onIonChange={e => {
+                  <IonRange min={0.1} max={1.5} step={0.1} value={this.props.speechRate} onIonChange={e => {
                     this.props.dispatch({
                       type: "SET_KEY_VAL",
                       key: 'speechRate',
-                      val: e.detail.value,
+                      val: (e.detail.value as number).toFixed(1),
                     });
                   }} />
                 </div>
