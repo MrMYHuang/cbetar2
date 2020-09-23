@@ -82,6 +82,18 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     this.cfiRange = '';
     this.speechSynthesisUtterance = new SpeechSynthesisUtterance();
     this.speechSynthesisUtterance.lang = 'zh-TW';
+    this.speechSynthesisUtterance.onend = (ev: SpeechSynthesisEvent) => {
+      if (this.state.speechState === SpeechState.UNINITIAL) {
+        return;
+      }
+
+      if (this.workTextsIndex < this.workTexts.length - 1) {
+        this.workTextsIndex += 1;
+        this.speechSynthesisUtterance.text = this.workTexts[this.workTextsIndex];
+        speechSynthesis.speak(this.speechSynthesisUtterance);
+        console.log(`Play work text part: ${this.workTextsIndex}`);
+      }
+    };
     document.addEventListener("keyup", this.keyListener.bind(this), false);
   }
 
@@ -213,8 +225,8 @@ class _EPubViewPage extends React.Component<PageProps, State> {
   }
 
   ionViewWillLeave() {
-    speechSynthesis.pause();
-    this.setState({ htmlStr: null, speechState: SpeechState.PAUSE });
+    speechSynthesis.cancel();
+    this.setState({ htmlStr: null, speechState: SpeechState.UNINITIAL });
     this.book?.destroy();
     this.book = null;
     this.bookCreated = false;
@@ -370,6 +382,11 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     //});
   }
 
+  // There is a max characters per utterance limit on Android Chrome.
+  // This max value is obtained by try and error.
+  maxCharsPerUtterance = 1000;
+  workTexts: Array<string> = [];
+  workTextsIndex = 0;
   render() {
     let epubjsScrollRtlModeVerticalScrollbarBugWokaroundCss = `
     <style>
@@ -394,9 +411,15 @@ class _EPubViewPage extends React.Component<PageProps, State> {
             switch (this.state.speechState) {
               case SpeechState.UNINITIAL:
                 const ePubIframe = document.getElementsByTagName('iframe')[0];
-                const workText = ePubIframe.contentDocument?.getElementById('body')?.innerText;
-                this.speechSynthesisUtterance.text = workText!;
-                //ssu.lang = 'zh_TW_#Hant';
+                const workText = ePubIframe.contentDocument?.getElementById('body')?.innerText || '無法取得經文內容';
+
+                this.workTexts = [];
+                for (let i = 0; i < Math.ceil(workText.length / this.maxCharsPerUtterance); i++) {
+                  this.workTexts.push(workText.substring(i * this.maxCharsPerUtterance,  (i + 1) * this.maxCharsPerUtterance));
+                }
+
+                this.workTextsIndex = 0;
+                this.speechSynthesisUtterance.text = this.workTexts[this.workTextsIndex];
                 this.speechSynthesisUtterance.rate = this.props.speechRate;
                 // Improve reliability by cancel first.
                 speechSynthesis.cancel();

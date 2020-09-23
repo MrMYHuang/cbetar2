@@ -92,6 +92,7 @@ class App extends React.Component<Props, State> {
 
     // Preload speechSynthesis.
     speechSynthesis.getVoices();
+    speechSynthesis.cancel();
   }
   render() {
     return (
