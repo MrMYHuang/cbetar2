@@ -7,7 +7,7 @@ import * as uuid from 'uuid';
 import queryString from 'query-string';
 import './EPubViewPage.css';
 import Globals from '../Globals';
-import { bookmark, arrowBack, home, search, ellipsisHorizontal, ellipsisVertical, arrowForward, text, playCircle, pauseCircle } from 'ionicons/icons';
+import { bookmark, arrowBack, home, search, ellipsisHorizontal, ellipsisVertical, arrowForward, text, playCircle, stopCircle } from 'ionicons/icons';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
 import { Work } from '../models/Work';
 import SearchAlert from '../components/SearchAlert';
@@ -91,7 +91,10 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         this.workTextsIndex += 1;
         this.speechSynthesisUtterance.text = this.workTexts[this.workTextsIndex];
         speechSynthesis.speak(this.speechSynthesisUtterance);
-        console.log(`Play work text part: ${this.workTextsIndex}`);
+        console.log(`Play work text to speech part: ${this.workTextsIndex}`);
+      } else {
+        this.setState({speechState: SpeechState.UNINITIAL});
+        console.log(`Stop work text to speech.`);
       }
     };
     document.addEventListener("keyup", this.keyListener.bind(this), false);
@@ -427,8 +430,14 @@ class _EPubViewPage extends React.Component<PageProps, State> {
                 this.setState({speechState: SpeechState.SPEAKING});
                 break;
               case SpeechState.SPEAKING:
+                // Unfortunately, pause() doesn't work on most Chrome browser.
+                // Instead, we support stop.
+                /*
                 speechSynthesis.pause();
                 this.setState({speechState: SpeechState.PAUSE});
+                */
+                speechSynthesis.cancel();
+                this.setState({speechState: SpeechState.UNINITIAL});
                 break;
               case SpeechState.PAUSE:
                 speechSynthesis.resume();
@@ -436,7 +445,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
                 break;
             }
           }}>
-            <IonIcon icon={this.state.speechState === SpeechState.SPEAKING ? pauseCircle : playCircle } slot='icon-only' />
+            <IonIcon icon={this.state.speechState === SpeechState.SPEAKING ? stopCircle : playCircle } slot='icon-only' />
           </IonButton>
           <IonButton fill="clear" slot='end' onClick={e => this.addBookmarkHandler()}>
             <IonIcon icon={bookmark} slot='icon-only' />

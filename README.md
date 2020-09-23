@@ -18,6 +18,10 @@ CBETA電子佛典閱讀器2(非官方)，使用CBETA API存取電子佛經，支
     1. 書籤頁包含的經文都具有離線瀏覽的功能。
 * 有聲書:
     1. 使用電腦語音合成技術 - text to speech，作唸經文功能，即所謂的"有聲書"。(注意，當代電腦語音合成技術與"真人發音"仍有落差。因此聽到的經文發音偶爾不正確是正常現象。)
+    2. 播放步驟：開啟經文 / 按下右上方播放鍵（如擷圖所示）
+
+<img src='./docs/images/PlaySpeech.png' width='70%' />
+
 * 經文分頁
     1. 經文可調整成單頁或分頁模式。單頁模式，使用滑動方式閱讀經文。分頁模式，可使用鍵盤方向鍵或螢幕方向鍵切換經文頁。
 * 字型調整
@@ -59,19 +63,19 @@ https://support.google.com/chrome/answer/9658361?hl=zh-Hant&co=GENIE.Platform%3D
 #### Safari (iOS)
 1. 使用Safari開啟web app網址，再點擊下方中間的"分享"圖示：
 
-<img src='./docs/images/Safari/OpenAppUrl.png' width='25%' height='25%' />
+<img src='./docs/images/Safari/OpenAppUrl.png' width='50%' height='50%' />
 
 2. 滑動頁面至下方，點選"加入主畫面"(Add to Home Screen)：
 
-<img src='./docs/images/Safari/AddToHomeScreen.png' width='25%' height='25%' />
+<img src='./docs/images/Safari/AddToHomeScreen.png' width='50%' height='50%' />
 
 3. 點擊"新增"(Add)：
 
-<img src='./docs/images/Safari/AddToHomeScreen2.png' width='25%' height='25%' />
+<img src='./docs/images/Safari/AddToHomeScreen2.png' width='50%' height='50%' />
 
 4. App安裝完，出現在主畫面的圖示：
 
-<img src='./docs/images/Safari/AppIcon.png' width='25%' height='25%' />
+<img src='./docs/images/Safari/AppIcon.png' width='50%' height='50%' />
 
 ## Run Locally
 Please refer to https://ionicframework.com/ for building Ionic development environment.
@@ -84,9 +88,10 @@ npm run start
 ## 已知問題
 1. iOS Safari在單頁模式下，捲軸無法顯示。
 2. 經文註腳、版權無法隱藏(因為會影響跳頁功能正確性)。
+3. 目前多數Chrome無法暫停合成語音播放，因此此app目前有聲書功能不支援暫停，只支援停止。
 
 ## 版本歷史
-* Unreleased:
+* 2.3.0:
   * 支援有聲書功能。
   * 修正部分文字，綁定UI字型大小設定。
 * 2.2.11:
