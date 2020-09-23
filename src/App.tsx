@@ -93,7 +93,25 @@ class App extends React.Component<Props, State> {
     // Preload speechSynthesis.
     speechSynthesis.getVoices();
     speechSynthesis.cancel();
+
+    this.wakeLockScreen();
   }
+
+  // Prevent from device sleeping.
+  wakeLock: any;
+  async wakeLockScreen() {
+    try {
+      const wakeLock = (navigator as any).wakeLock;
+      if (wakeLock !== undefined) {
+        this.wakeLock = await wakeLock.request('screen');
+        console.log('Auto screen lock is disabled.');
+      }
+    } catch (err) {
+      // the wake lock request fails - usually system related, such low as battery
+      console.log(`${err.name}, ${err.message}`);
+    }
+  }
+
   render() {
     return (
       <Provider store={store}>
