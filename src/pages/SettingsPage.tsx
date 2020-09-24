@@ -3,7 +3,7 @@ import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem,
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import Globals from '../Globals';
-import { helpCircle, text, moon, documentText, refreshCircle } from 'ionicons/icons';
+import { helpCircle, text, moon, documentText, refreshCircle, musicalNotes } from 'ionicons/icons';
 import './SettingsPage.css';
 import PackageInfos from '../../package.json';
 
@@ -174,10 +174,10 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
             </IonItem>
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
-              <IonIcon icon={text} slot='start' />
+              <IonIcon icon={musicalNotes} slot='start' />
               <div className="contentBlock">
                 <div style={{ flexDirection: "column" }}>
-                  <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>合成語音速度: {this.props.speechRate}</IonLabel>
+                  <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>合成語音語速: {this.props.speechRate}</IonLabel>
                   <IonRange min={0.1} max={1.5} step={0.1} value={this.props.speechRate} onIonChange={e => {
                     this.props.dispatch({
                       type: "SET_KEY_VAL",
