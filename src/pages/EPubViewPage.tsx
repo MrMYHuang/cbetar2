@@ -93,7 +93,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         speechSynthesis.speak(this.speechSynthesisUtterance);
         console.log(`Play work text to speech part: ${this.workTextsIndex}`);
       } else {
-        this.setState({speechState: SpeechState.UNINITIAL});
+        this.setState({ speechState: SpeechState.UNINITIAL });
         console.log(`Stop work text to speech.`);
       }
     };
@@ -124,51 +124,28 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     let state = this.props.location.state as any;
     this.uuidStr = state ? state.uuid : '';
     //console.log( 'view will enter' );
-    this.fetchData(this.props.match.params.path);
+    this.fetchData();
   }
 
   ionViewDidEnter() {
   }
 
   get fileName() {
-    return `${this.props.match.params.work}_juan${this.props.match.params.path}.html`;
+    return Globals.getFileName(
+      this.props.match.params.work,
+      this.props.match.params.path
+    );
   }
 
-  async fetchData(juan: string) {
-    let htmlStr = localStorage.getItem(this.fileName);
+  async fetchData() {
+    let htmlStr = '';
 
     try {
-      if (htmlStr != null) {
-        // Do nothing.
-      } else {
-        if (this.htmlFile) {
-          const res = await Globals.axiosInstance.get(`/${this.htmlFile}`, {
-            responseType: 'arraybuffer',
-          });
-          let tryDecoder = new TextDecoder();
-          let tryDecodeHtmlStr = tryDecoder.decode(res.data);
-          if (tryDecodeHtmlStr.includes('charset=big5')) {
-            htmlStr = new TextDecoder('big5').decode(res.data);
-          } else {
-            htmlStr = tryDecodeHtmlStr;
-          }
-        } else {
-          const res = await Globals.axiosInstance.get(`/juans?edition=CBETA&work=${this.props.match.params.work}&juan=${juan}`, {
-            responseType: 'arraybuffer',
-          });
-          let data = JSON.parse(new TextDecoder().decode(res.data));
-          htmlStr = data.results[0];
-        }
-
-        // Convert HTML to XML, because ePub requires XHTML.
-        // Bad structured HTML will cause DOMParser parse error on some browsers!
-        let doc = document.implementation.createHTMLDocument("");
-        doc.body.innerHTML = htmlStr!;
-        htmlStr = new XMLSerializer().serializeToString(doc.body);
-        // Remove body tag.
-        htmlStr = htmlStr.replace('<body', '<div');
-        htmlStr = htmlStr.replace('/body>', '/div>');
-      }
+      htmlStr = await Globals.fetchJuan(
+        this.props.match.params.work,
+        this.props.match.params.path,
+        this.htmlFile,
+      );
     } catch (e) {
       console.error(e);
       this.setState({ isLoading: false, fetchError: true });
@@ -420,13 +397,13 @@ class _EPubViewPage extends React.Component<PageProps, State> {
                 if (zhTwVoice !== undefined) {
                   this.speechSynthesisUtterance.voice = zhTwVoice;
                 }
-                
+
                 const ePubIframe = document.getElementsByTagName('iframe')[0];
                 const workText = ePubIframe.contentDocument?.getElementById('body')?.innerText || '無法取得經文內容';
 
                 this.workTexts = [];
                 for (let i = 0; i < Math.ceil(workText.length / this.maxCharsPerUtterance); i++) {
-                  this.workTexts.push(workText.substring(i * this.maxCharsPerUtterance,  (i + 1) * this.maxCharsPerUtterance));
+                  this.workTexts.push(workText.substring(i * this.maxCharsPerUtterance, (i + 1) * this.maxCharsPerUtterance));
                 }
 
                 this.workTextsIndex = 0;
@@ -435,7 +412,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
                 // Improve reliability by cancel first.
                 speechSynthesis.cancel();
                 speechSynthesis.speak(this.speechSynthesisUtterance);
-                this.setState({speechState: SpeechState.SPEAKING});
+                this.setState({ speechState: SpeechState.SPEAKING });
                 break;
               case SpeechState.SPEAKING:
                 // Unfortunately, pause() doesn't work on most Chrome browser.
@@ -445,15 +422,15 @@ class _EPubViewPage extends React.Component<PageProps, State> {
                 this.setState({speechState: SpeechState.PAUSE});
                 */
                 speechSynthesis.cancel();
-                this.setState({speechState: SpeechState.UNINITIAL});
+                this.setState({ speechState: SpeechState.UNINITIAL });
                 break;
               case SpeechState.PAUSE:
                 speechSynthesis.resume();
-                this.setState({speechState: SpeechState.SPEAKING});
+                this.setState({ speechState: SpeechState.SPEAKING });
                 break;
             }
           }}>
-            <IonIcon icon={this.state.speechState === SpeechState.SPEAKING ? stopCircle : playCircle } slot='icon-only' />
+            <IonIcon icon={this.state.speechState === SpeechState.SPEAKING ? stopCircle : playCircle} slot='icon-only' />
           </IonButton>
           <IonButton fill="clear" slot='end' onClick={e => this.addBookmarkHandler()}>
             <IonIcon icon={bookmark} slot='icon-only' />

@@ -1,5 +1,5 @@
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonLabel, withIonLifeCycle, IonButton, IonIcon } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonLabel, withIonLifeCycle, IonButton, IonIcon, IonToast } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import './WorkPage.css';
@@ -9,17 +9,30 @@ import { bookmark, arrowBack, home, search } from 'ionicons/icons';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
 import SearchAlert from '../components/SearchAlert';
 
-interface PageProps extends RouteComponentProps<{
+interface Props {
+  dispatch: Function;
+  bookmarks: [Bookmark];
+}
+
+interface PageProps extends Props, RouteComponentProps<{
   tab: string;
   path: string;
   label: string;
 }> { }
 
-class _WorkPage extends React.Component<PageProps> {
+interface State {
+  work: Work | null;
+  showSearchAlert: boolean;
+  showAddBookmarkDone: boolean;
+}
+
+class _WorkPage extends React.Component<PageProps, State> {
   constructor(props: any) {
     super(props);
     this.state = {
       work: null,
+      showSearchAlert: false,
+      showAddBookmarkDone: false,
     }
   }
 
@@ -29,26 +42,46 @@ class _WorkPage extends React.Component<PageProps> {
   }
 
   async fetchWork(path: string) {
-    //try {
-    const res = await Globals.axiosInstance.get(`/works?work=${path}`, {
-      responseType: 'arraybuffer',
-    });
-    const data = JSON.parse(new TextDecoder().decode(res.data));
-    const works = data.results as [Work];
+    let work: Work | null;
+    if (this.hasBookmark) {
+      work = this.bookmark!.work!;
+    } else {
+      //try {
+      const res = await Globals.axiosInstance.get(`/works?work=${path}`, {
+        responseType: 'arraybuffer',
+      });
+      const data = JSON.parse(new TextDecoder().decode(res.data));
+      const works = data.results as [Work];
+      work = works[0];
+      /*
+    } catch (e) {
+      fetchFail = true;
+    }*/
+    }
 
-    this.setState({ work: works[0] });
+    this.setState({ work: work });
     return true;
-
-    /*data..forEach((element) {
-      works.add(Work.fromJson(element));
-    });
-  } catch (e) {
-    fetchFail = true;
-  }*/
   }
 
-  addBookmarkHandler() {
-    (this.props as any).dispatch({
+  fetchJuan = '';
+  async saveJuans() {
+    let work = this.state.work!;
+    let juans = work.juan_list.split(',');
+    for (let i = 0; i < juans.length; i++) {
+      this.fetchJuan = juans[i];
+      try {
+        const htmlStr = await Globals.fetchJuan(work.work, this.fetchJuan, null);
+        localStorage.setItem(Globals.getFileName(work.work, this.fetchJuan), htmlStr);
+      } catch {
+        console.error(`Fetching juan ${i} failed!`);
+      }
+    }
+    this.setState({ showAddBookmarkDone: true });
+  }
+
+  async addBookmarkHandler() {
+    await this.saveJuans();
+    this.props.dispatch({
       type: "ADD_BOOKMARK",
       bookmark: new Bookmark({
         type: BookmarkType.WORK,
@@ -56,13 +89,13 @@ class _WorkPage extends React.Component<PageProps> {
         selectedText: this.props.match.params.label,
         epubcfi: '',
         fileName: '',
-        work: null,
+        work: this.state.work!,
       }),
     });
   }
 
   delBookmarkHandler() {
-    (this.props as any).dispatch({
+    this.props.dispatch({
       type: "DEL_BOOKMARK",
       uuid: this.props.match.params.path,
     });
@@ -72,13 +105,17 @@ class _WorkPage extends React.Component<PageProps> {
     return this.props.match.url === '/catalog';
   }
 
+  get bookmark() {
+    return this.props.bookmarks.find(
+      (e) => e.type === BookmarkType.WORK && e.uuid === this.props.match.params.path);
+  }
+
   get hasBookmark() {
-    return ((this.props as any).bookmarks as [Bookmark]).find(
-      (e) => e.type === BookmarkType.WORK && e.uuid === this.props.match.params.path) != null;
+    return this.bookmark != null;
   }
 
   getRows() {
-    let work = (this.state as any).work as Work
+    let work = this.state.work!;
     let rows = Array<object>();
     let juans = work.juan_list.split(',');
     for (let i = 0; i < juans.length; i++) {
@@ -103,7 +140,7 @@ class _WorkPage extends React.Component<PageProps> {
 
   //work = this.works[0] as Work;
   render() {
-    let work = (this.state as any).work as Work
+    let work = this.state.work;
     if (work == null) {
       return <IonPage></IonPage>
     }
@@ -142,6 +179,14 @@ class _WorkPage extends React.Component<PageProps> {
                 this.setState({ showSearchAlert: false });
               }, ...this.props
             }}
+          />
+
+          <IonToast
+            cssClass='uiFont'
+            isOpen={this.state.showAddBookmarkDone}
+            onDidDismiss={() => this.setState({ showAddBookmarkDone: false })}
+            message={`書籤新增成功！`}
+            duration={2000}
           />
         </IonContent>
       </IonPage>

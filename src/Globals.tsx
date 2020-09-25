@@ -19,6 +19,48 @@ function scrollbarSizeIdToValue(id: number) {
   }
 }
 
+function getFileName(work: string, juan: string) {
+  return `${work}_juan${juan}.html`;
+}
+
+// Fetch juan or HTML file.
+async function fetchJuan(work: string, juan: string, htmlFile: string | null) {
+  const fileName = getFileName(work, juan);
+  let htmlStr = localStorage.getItem(fileName);
+  if (htmlStr != null) {
+    // Do nothing.
+  } else {
+    if (htmlFile) {
+      const res = await axiosInstance.get(`/${htmlFile}`, {
+        responseType: 'arraybuffer',
+      });
+      let tryDecoder = new TextDecoder();
+      let tryDecodeHtmlStr = tryDecoder.decode(res.data);
+      if (tryDecodeHtmlStr.includes('charset=big5')) {
+        htmlStr = new TextDecoder('big5').decode(res.data);
+      } else {
+        htmlStr = tryDecodeHtmlStr;
+      }
+    } else {
+      const res = await axiosInstance.get(`/juans?edition=CBETA&work=${work}&juan=${juan}`, {
+        responseType: 'arraybuffer',
+      });
+      let data = JSON.parse(new TextDecoder().decode(res.data));
+      htmlStr = data.results[0];
+    }
+
+    // Convert HTML to XML, because ePub requires XHTML.
+    // Bad structured HTML will cause DOMParser parse error on some browsers!
+    let doc = document.implementation.createHTMLDocument("");
+    doc.body.innerHTML = htmlStr!;
+    htmlStr = new XMLSerializer().serializeToString(doc.body);
+    // Remove body tag.
+    htmlStr = htmlStr.replace('<body', '<div');
+    htmlStr = htmlStr.replace('/body>', '/div>');
+  }
+  return htmlStr;
+}
+
 export default {
   storeFile: 'Settings.json',
   fontSizeNorm: 24,
@@ -77,5 +119,7 @@ export default {
   },
   isTouchDevice: () => {
     return isPlatform('ios') || isPlatform('android');
-  }
+  },
+  fetchJuan,
+  getFileName,
 };

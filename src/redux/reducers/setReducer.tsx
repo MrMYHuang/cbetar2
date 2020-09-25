@@ -1,5 +1,5 @@
 import Globals from '../../Globals';
-import { Bookmark } from '../../models/Bookmark';
+import { Bookmark, BookmarkType } from '../../models/Bookmark';
 
 // Used to store settings. They will be saved to file.
 export default function reducer(state = {
@@ -27,13 +27,36 @@ export default function reducer(state = {
       let bookmarksTemp = newSettings.bookmarks as [Bookmark];
       const idxToDel = bookmarksTemp.findIndex((b) => { return b.uuid === action.uuid });
       if (idxToDel !== -1) {
-        let deletedBookmark = bookmarksTemp.splice(idxToDel, 1);
+        let deletedBookmarks = bookmarksTemp.splice(idxToDel, 1);
 
-        if (deletedBookmark.length === 1) {
+        if (deletedBookmarks.length === 1) {
           // Remove the HTML file from localStorage if all its bookmarks are deleted.
-          let fileName = deletedBookmark[0].fileName;
-          if (bookmarksTemp.find((b) => b.fileName === fileName) == null) {
-            localStorage.removeItem(fileName);
+          const deletedBookmark = deletedBookmarks[0];
+          let fileName = deletedBookmark.fileName;
+          let noJuanBookmarkUseTheFile = bookmarksTemp.find((b) => b.type === BookmarkType.JUAN && b.uuid === deletedBookmark.uuid) == null;
+          let noWorkBookmarkUseTheFile = bookmarksTemp.find((b) => b.type === BookmarkType.WORK && b.work?.work === deletedBookmark.work?.work) == null;
+          if (noWorkBookmarkUseTheFile) {
+            switch (deletedBookmark.type) {
+              case BookmarkType.WORK:
+                const work = deletedBookmark.work!;
+                // For back compatibility.
+                if (work == null) {
+                  break;
+                }
+                const juans = work.juan_list.split(',');
+                for (let i = 0; i < juans.length; i++) {
+                  const fileName = Globals.getFileName(work.work, juans[i]);
+                  noJuanBookmarkUseTheFile = bookmarksTemp.find((b) => b.type === BookmarkType.JUAN && b.fileName === fileName) == null;
+                  if (noJuanBookmarkUseTheFile) {
+                    localStorage.removeItem(fileName);
+                  }
+                }
+                break;
+              case BookmarkType.JUAN:
+                if (noJuanBookmarkUseTheFile) 
+                  localStorage.removeItem(fileName);
+                break;
+            }
           }
         }
       }

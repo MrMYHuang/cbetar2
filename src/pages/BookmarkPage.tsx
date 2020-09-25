@@ -1,9 +1,10 @@
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonLabel, withIonLifeCycle, IonItemSliding, IonItemOptions, IonItemOption } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonLabel, withIonLifeCycle, IonItemSliding, IonItemOptions, IonItemOption, IonIcon } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import './WorkPage.css';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
+import { download } from 'ionicons/icons';
 
 interface Props {
   dispatch: Function;
@@ -71,6 +72,7 @@ class _BookmarkPage extends React.Component<PageProps> {
             <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }} key={`bookmarkItemLabel_` + i}>
               {label}
             </IonLabel>
+            {bookmark.type === BookmarkType.CATALOG ? '' : <IonIcon icon={download} slot='end' />}
           </IonItem>
 
           <IonItemOptions side="end">
@@ -99,6 +101,7 @@ class _BookmarkPage extends React.Component<PageProps> {
               </div>
             </IonLabel>
           }
+           <div style={{ fontSize: 'var(--ui-font-size)', textAlign: 'center' }}>離線瀏覽圖示 <IonIcon icon={download}/></div>
         </IonContent>
       </IonPage>
     );
