@@ -1,14 +1,17 @@
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonRange, IonIcon, IonLabel, IonToggle, IonButton, IonAlert, IonSelect, IonSelectOption } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonRange, IonIcon, IonLabel, IonToggle, IonButton, IonAlert, IonSelect, IonSelectOption, IonProgressBar, IonToast } from '@ionic/react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import Globals from '../Globals';
 import { helpCircle, text, moon, documentText, refreshCircle, musicalNotes } from 'ionicons/icons';
 import './SettingsPage.css';
 import PackageInfos from '../../package.json';
+import { Bookmark, BookmarkType } from '../models/Bookmark';
 
 interface StateProps {
   showFontLicense: boolean;
+  juansDownloadedRatio: number;
+  showUpdateAllJuansDone: boolean;
 }
 
 interface Props {
@@ -22,6 +25,7 @@ interface Props {
   rtlVerticalLayout: boolean;
   useFontKai: boolean;
   speechRate: number;
+  bookmarks: [Bookmark];
 }
 
 interface PageProps extends Props, RouteComponentProps<{
@@ -36,7 +40,50 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
 
     this.state = {
       showFontLicense: false,
+      juansDownloadedRatio: 0,
+      showUpdateAllJuansDone: false,
     }
+  }
+
+  async updateAllJuans() {
+    this.setState({ juansDownloadedRatio: 0 });
+    const workBookmarksWithHtml = this.props.bookmarks.filter((b) => b.type === BookmarkType.WORK);
+    const juanBookmarksWithHtml = this.props.bookmarks.filter((b) => b.type === BookmarkType.JUAN);
+    const juanBookmarksNotInWorkBookmarksWithHtml = juanBookmarksWithHtml.filter((b) => workBookmarksWithHtml.findIndex((wb) => wb.work?.work === b.work?.work) === -1);
+
+    // Total juans to download.
+    let juansToDownload = juanBookmarksNotInWorkBookmarksWithHtml.length;
+    for (let i = 0; i < workBookmarksWithHtml.length; i++) {
+      const work = workBookmarksWithHtml[i].work!;
+      juansToDownload += work.juan_list.split(',').length;
+    }
+
+    let juansDownloaded = 0;
+    for (let i = 0; i < workBookmarksWithHtml.length; i++) {
+      const bookmarkWithHtml = workBookmarksWithHtml[i];
+      const work = bookmarkWithHtml.work!;
+      const juans = work.juan_list.split(',');
+      for (let j = 0; j < juans.length; j++) {
+        const fetchJuan = juans[j];
+        juansDownloaded += 1;
+        this.setState({ juansDownloadedRatio: juansDownloaded / juansToDownload });
+        const htmlStr = await Globals.fetchJuan(work.work, fetchJuan, null, true);
+        const fileName = Globals.getFileName(work.work, fetchJuan);
+        localStorage.setItem(fileName, htmlStr);
+        console.log(`File saved: ${fileName}`);
+      }
+    }
+    for (let i = 0; i < juanBookmarksNotInWorkBookmarksWithHtml.length; i++) {
+      juansDownloaded += 1;
+      this.setState({ juansDownloadedRatio: juansDownloaded / juansToDownload });
+      const bookmarkWithHtml = juanBookmarksNotInWorkBookmarksWithHtml[i];
+      const work = bookmarkWithHtml.work!;
+      const htmlStr = await Globals.fetchJuan(work.work, `${work.juan}`, null, true);
+      const fileName = Globals.getFileName(work.work, `${work.juan}`);
+      localStorage.setItem(fileName, htmlStr);
+      console.log(`File saved: ${fileName}`);
+    }
+    this.setState({ showUpdateAllJuansDone: true });
   }
 
   render() {
@@ -49,6 +96,33 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
         </IonHeader>
         <IonContent>
           <IonList>
+            <IonItem>
+              <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
+              <IonIcon icon={refreshCircle} slot='start' />
+              <div style={{ width: '100%' }}>
+              <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>App版本: {PackageInfos.version}</IonLabel>
+                <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>檢查app更新 (若無更新則無回應)</IonLabel>
+              </div>
+              <IonButton slot='end' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={e => {
+                Globals.updateApp();
+              }}>檢查</IonButton>
+            </IonItem>
+            <IonItem>
+              <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
+              <IonIcon icon={refreshCircle} slot='start' />
+              <div style={{ width: '100%' }}>
+                <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>更新離線經文檔</IonLabel>
+                <IonProgressBar value={this.state.juansDownloadedRatio} />
+              </div>
+              <IonButton slot='end' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={async (e) => this.updateAllJuans()}>更新</IonButton>
+              <IonToast
+                cssClass='uiFont'
+                isOpen={this.state.showUpdateAllJuansDone}
+                onDidDismiss={() => this.setState({ showUpdateAllJuansDone: false })}
+                message={`離線經文檔更新完畢！`}
+                duration={2000}
+              />
+            </IonItem>
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={moon} slot='start' />
@@ -97,7 +171,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
                 value={this.props.scrollbarSize}
                 style={{ fontSize: 'var(--ui-font-size)' }}
                 interface='popover'
-                interfaceOptions={{cssClass: 'uiFont'}}
+                interfaceOptions={{ cssClass: 'uiFont' }}
                 onIonChange={e => {
                   const value = e.detail.value;
                   this.props.dispatch({
@@ -193,7 +267,6 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
               <IonIcon icon={helpCircle} slot='start' />
               <div style={{ fontSize: 'var(--ui-font-size)' }}>
                 <div>關於</div>
-                <div>App版本: {PackageInfos.version}</div>
                 <div><a href="https://github.com/MrMYHuang/cbetar2#web-app" target="_new">程式安裝說明</a></div>
                 <div><a href="https://github.com/MrMYHuang/cbetar2" target="_new">操作說明與開放原始碼</a></div>
                 <div>CBETA API版本: {Globals.apiVersion}</div>
@@ -205,14 +278,6 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
                   this.setState({ showFontLicense: true });
                 }}>全字庫字型版權聲明</a></div>
               </div>
-            </IonItem>
-            <IonItem>
-              <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
-              <IonIcon icon={refreshCircle} slot='start' />
-              <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>檢查app更新 (若無更新則無回應)</IonLabel>
-              <IonButton slot='end' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={e => {
-                Globals.updateApp();
-              }}>檢查</IonButton>
             </IonItem>
             <IonAlert
               cssClass='uiFont'
@@ -259,6 +324,7 @@ const mapStateToProps = (state: any /*, ownProps*/) => {
     useFontKai: state.settings.useFontKai,
     uiFontSize: state.settings.uiFontSize,
     speechRate: state.settings.speechRate,
+    bookmarks: state.settings.bookmarks,
   }
 };
 

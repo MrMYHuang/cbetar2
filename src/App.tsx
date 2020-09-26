@@ -96,7 +96,6 @@ class _App extends React.Component<PageProps, State> {
     };
 
     serviceWorkCallbacks.onSuccess = () => {
-      this.routeByQueryString();
     };
 
     // Preload speechSynthesis.
@@ -175,12 +174,22 @@ class _App extends React.Component<PageProps, State> {
             header={'發現app更新，請重啟app!重啟後可至設定頁檢查版本號。'}
             buttons={[
               {
-                text: '確定',
+                text: '關閉',
                 cssClass: 'primary uiFont',
                 handler: (value) => {
                   this.setState({
                     showUpdateAlert: false,
                   });
+                },
+              },
+              {
+                text: '顯示版本歷史',
+                cssClass: 'secondary uiFont',
+                handler: (value) => {
+                  this.setState({
+                    showUpdateAlert: false,
+                  });
+                  window.open('https://github.com/MrMYHuang/cbetar2#%E7%89%88%E6%9C%AC%E6%AD%B7%E5%8F%B2');
                 },
               }
             ]}

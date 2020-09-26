@@ -24,10 +24,10 @@ function getFileName(work: string, juan: string) {
 }
 
 // Fetch juan or HTML file.
-async function fetchJuan(work: string, juan: string, htmlFile: string | null) {
+async function fetchJuan(work: string, juan: string, htmlFile: string | null, update: boolean = false) {
   const fileName = getFileName(work, juan);
   let htmlStr = localStorage.getItem(fileName);
-  if (htmlStr != null) {
+  if (htmlStr != null && !update) {
     // Do nothing.
   } else {
     if (htmlFile) {
