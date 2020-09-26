@@ -1,5 +1,5 @@
 import React from 'react';
-import { Redirect, Route } from 'react-router-dom';
+import { Redirect, Route, RouteComponentProps, withRouter } from 'react-router-dom';
 import {
   setupConfig,
   IonApp,
@@ -8,7 +8,7 @@ import {
   IonTabBar,
   IonTabButton,
   IonTabs,
-  IonAlert
+  IonAlert,
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { Provider } from 'react-redux';
@@ -70,11 +70,16 @@ export var serviceWorkCallbacks = {
 
 interface Props { }
 
+interface PageProps extends Props, RouteComponentProps<{
+  tab: string;
+  path: string;
+}> { }
+
 interface State {
   showUpdateAlert: boolean;
 }
 
-class App extends React.Component<Props, State> {
+class _App extends React.Component<PageProps, State> {
   constructor(props: any) {
     super(props);
     // ----- Initializing UI settings -----
@@ -88,6 +93,10 @@ class App extends React.Component<Props, State> {
 
     serviceWorkCallbacks.onUpdate = () => {
       this.setState({showUpdateAlert: true});
+    };
+
+    serviceWorkCallbacks.onSuccess = () => {
+      this.routeByQueryString();
     };
 
     // Preload speechSynthesis.
@@ -112,6 +121,23 @@ class App extends React.Component<Props, State> {
     }
   }
 
+  routeByQueryString() {
+    // This app uses client side routing. 
+    // Without the first loading of this app,
+    // any client side route becomes a server side route!
+    // These invalid server side routings cause 404 errors.
+    // To workaround these errors, we can use GitHub 404.html redirection
+    // to pass the client side routes to this app by using query string.
+    // After this app loads, it can use the query string to correctly redirect to
+    // a client side route!
+    const routeMatches = /\?route=(.*)/.exec(window.location.search);
+    if (routeMatches !== null) {
+      return <Redirect to={routeMatches[1]} />;
+    } else if(window.location.pathname === '/') {
+      return <Redirect to="/bookmarks" />;
+    }
+  }
+
   render() {
     return (
       <Provider store={store}>
@@ -127,7 +153,7 @@ class App extends React.Component<Props, State> {
                 <Route path="/:tab(bookmarks)" component={BookmarkPage} exact={true} />
                 <Route path={`/:tab(bookmarks)/search/:keyword`} render={props => <SearchPage {...props} />} exact={true} />
                 <Route path="/settings" component={SettingsPage} />
-                <Route path="/" render={() => <Redirect to="/bookmarks" />} exact={true} />
+                <Route path="/" render={() => {return this.routeByQueryString();}} exact={true} />
               </IonRouterOutlet>
               <IonTabBar slot="bottom">
                 <IonTabButton tab="bookmarks" href="/bookmarks">
@@ -164,5 +190,7 @@ class App extends React.Component<Props, State> {
     );
   }
 }
+
+const App = withRouter(_App);
 
 export default App;
