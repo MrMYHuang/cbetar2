@@ -8,7 +8,7 @@
 
 CBETA電子佛典閱讀器2(非官方)，使用CBETA API存取電子佛經，支援以下功能
 
-* <a href='#搜尋'>搜尋</a>
+* <a id='search'>搜尋</a>
   1. 在目錄頁，按下右上角放大鏡圖示。在對話框輸入經文部分標題，確認後會列出相關經文。
   ![Search](https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/Search.png)
 * 書籤
