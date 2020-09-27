@@ -28,7 +28,7 @@ CBETA電子佛典閱讀器2(非官方)，使用CBETA API存取電子佛經，支
 * 佛學字典(線上查詢)
   1. 整合"DILA 佛學術語字辭典"，可在"佛學字典"分頁查詢佛學字詞。
   <img src='./docs/images/LookupDictionary.png' width='50%' />
-  
+
   2. 整合"DILA 佛學術語字辭典"，可在"佛學字典"分頁查詢佛學字詞。
 
 * 經文分頁
@@ -91,16 +91,30 @@ Please refer to https://ionicframework.com/ for building Ionic development envir
 ```
 git clone https://github.com/MrMYHuang/cbetar2.git
 cd cbetar2
+npm i
 npm run start
 ```
 
+## Build for Production
+### Build on Windows
+```
+npm run build
+```
+### Build on macOS or Linux
+```
+npm run build_linux
+```
+Then, upload files under build folder to your github.io.
+
 ## 未來功能
 1. 重新編排目錄。
+2. 分享app連結。
+3. 佛學詞典記錄歷史查詢。
 
 ## 已知問題
 1. iOS Safari在單頁模式下，捲軸無法顯示。
 2. 經文註腳、版權無法隱藏(因為會影響跳頁功能正確性)。
-3. 目前多數Chrome無法暫停合成語音播放，因此此app目前有聲書功能不支援暫停，只支援停止。
+3. 目前多數Chrome無法暫停合成語音播放，因此此app目前經文語音播放功能不支援暫停，只支援停止。
 4. 語音播放速度受限不同引擎、語音限制，可能無法達到指定速度。
 5. "避免螢幕自動鎖定"功能僅限部分較新Chrome瀏覽器才支援。
 
