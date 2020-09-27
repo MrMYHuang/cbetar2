@@ -192,9 +192,6 @@ class _App extends React.Component<PageProps, State> {
                 text: '顯示版本歷史',
                 cssClass: 'secondary uiFont',
                 handler: (value) => {
-                  this.setState({
-                    showUpdateAlert: false,
-                  });
                   window.open('https://github.com/MrMYHuang/cbetar2#%E7%89%88%E6%9C%AC%E6%AD%B7%E5%8F%B2');
                 },
               }
