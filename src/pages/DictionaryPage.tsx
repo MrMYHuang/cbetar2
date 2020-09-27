@@ -99,9 +99,10 @@ class _DictionaryPage extends React.Component<PageProps, State> {
                     this.lookupDict(this.state.keyword);
                   }
                 }} />
+                {/*
               <IonButton slot='end' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={e => {
                 this.lookupDict(this.state.keyword);
-              }}>搜尋</IonButton>
+              }}>搜尋</IonButton>*/}
             </IonItem>
             {this.getRows()}
           </IonList>
