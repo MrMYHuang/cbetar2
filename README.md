@@ -26,7 +26,8 @@ CBETA電子佛典閱讀器2(非官方)，使用CBETA API存取電子佛經，支
   <img src='./docs/images/PlaySpeech.png' width='70%' />
 
 * 佛學字典(線上查詢)
-  1. 整合"DILA 佛學術語字辭典"，可在"佛學字典"分頁查詢佛學字詞。<img src='./docs/images/LookupDictionary.png' width='50%' />
+  1. 整合"DILA 佛學術語字辭典"，可在"佛學字典"分頁查詢佛學字詞。
+  <img src='./docs/images/LookupDictionary.png' width='50%' />
   2. 整合"DILA 佛學術語字辭典"，可在"佛學字典"分頁查詢佛學字詞。
 
 * 經文分頁
