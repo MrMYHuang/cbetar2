@@ -119,7 +119,7 @@ Then, upload files under build folder to your github.io.
 5. "避免螢幕自動鎖定"功能僅限部分較新Chrome瀏覽器才支援。
 
 ## 版本歷史
-* Unreleased:
+* 2.7.1:
   * 調整UI改善使用體驗。
 * 2.7.0:
   * 新增佛學詞典分頁，整合"DILA 佛學術語字辭典"。
