@@ -159,7 +159,8 @@ body.dark {
     font-size: calc(var(--ui-font-size) * 0.8) !important;
 }
 
-.uiFont {
+.uiFont, .searchbar-input {
+    font-family: var(--ion-font-family) !important;
     font-size: var(--ui-font-size) !important;
 }
 

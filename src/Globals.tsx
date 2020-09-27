@@ -4,6 +4,7 @@ import React from 'react';
 
 const apiVersion = 'v1.2';
 const cbetaApiUrl = `https://cbdata.dila.edu.tw/${apiVersion}`;
+const dilaDictApiUrl = `https://glossaries.dila.edu.tw/search.json`;
 
 const axiosInstance = axios.create({
   baseURL: cbetaApiUrl,
@@ -67,6 +68,7 @@ export default {
   fontSizeLarge: 48,
   apiVersion,
   cbetaApiUrl,
+  dilaDictApiUrl,
   axiosInstance,
   topCatalogs: {
     "CBETA": "CBETA 部類",

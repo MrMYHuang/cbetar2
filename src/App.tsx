@@ -13,7 +13,7 @@ import {
 import { IonReactRouter } from '@ionic/react-router';
 import { Provider } from 'react-redux';
 import getSavedStore from './redux/store';
-import { bookmark, book, settings } from 'ionicons/icons';
+import { bookmark, settings, library, book } from 'ionicons/icons';
 import CatalogPage from './pages/CatalogPage';
 import WorkPage from './pages/WorkPage';
 import EPubViewPage from './pages/EPubViewPage';
@@ -40,6 +40,7 @@ import SettingsPage from './pages/SettingsPage';
 import BookmarkPage from './pages/BookmarkPage';
 import SearchPage from './pages/SearchPage';
 import Globals from './Globals';
+import DictionaryPage from './pages/DictionaryPage';
 
 let store = getSavedStore();
 /*
@@ -151,6 +152,8 @@ class _App extends React.Component<PageProps, State> {
                 <Route path="/:tab(catalog)" component={(props: any) => <CatalogPage {...props} />} exact={true} />
                 <Route path="/:tab(bookmarks)" component={BookmarkPage} exact={true} />
                 <Route path={`/:tab(bookmarks)/search/:keyword`} render={props => <SearchPage {...props} />} exact={true} />
+                <Route path={`/:tab(dictionary)`} render={props => <DictionaryPage {...props} />} exact={true} />
+                <Route path={`/:tab(dictionary)/search/:keyword`} render={props => <DictionaryPage {...props} />} exact={true} />
                 <Route path="/settings" component={SettingsPage} />
                 <Route path="/" render={() => {return this.routeByQueryString();}} exact={true} />
               </IonRouterOutlet>
@@ -159,6 +162,9 @@ class _App extends React.Component<PageProps, State> {
                   <IonIcon icon={bookmark} />
                 </IonTabButton>
                 <IonTabButton tab="catalog" href="/catalog">
+                  <IonIcon icon={library} />
+                </IonTabButton>
+                <IonTabButton tab="dictionay" href="/dictionary">
                   <IonIcon icon={book} />
                 </IonTabButton>
                 <IonTabButton tab="settings" href="/settings">

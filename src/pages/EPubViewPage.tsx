@@ -7,7 +7,7 @@ import * as uuid from 'uuid';
 import queryString from 'query-string';
 import './EPubViewPage.css';
 import Globals from '../Globals';
-import { bookmark, arrowBack, home, search, ellipsisHorizontal, ellipsisVertical, arrowForward, text, playCircle, stopCircle } from 'ionicons/icons';
+import { bookmark, arrowBack, home, search, ellipsisHorizontal, ellipsisVertical, arrowForward, text, playCircle, stopCircle, book } from 'ionicons/icons';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
 import { Work } from '../models/Work';
 import SearchAlert from '../components/SearchAlert';
@@ -45,10 +45,11 @@ interface State {
   isLoading: boolean;
   fetchError: boolean;
   htmlStr: string | null;
-  showBookmarkingAlert: boolean;
+  showNoSelectedTextAlert: boolean;
   showAddBookmarkSuccess: boolean;
   showSearchAlert: boolean;
   popover: any;
+  lookupDictPopover: any;
   speechState: SpeechState;
 }
 
@@ -67,12 +68,16 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       isLoading: true,
       fetchError: false,
       htmlStr: null,
-      showBookmarkingAlert: false,
+      showNoSelectedTextAlert: false,
       showAddBookmarkSuccess: false,
       showSearchAlert: false,
       popover: {
         show: false,
         event: null,
+      },
+      lookupDictPopover: {
+        show: false,
+        data: [],
       },
       speechState: SpeechState.UNINITIAL,
     }
@@ -185,7 +190,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       sel?.removeAllRanges();
       this.setState({ showAddBookmarkSuccess: true });
     } else {
-      this.setState({ showBookmarkingAlert: true });
+      this.setState({ showNoSelectedTextAlert: true });
     }
 
     return;
@@ -341,6 +346,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
         let epubcfi = this.hasBookmark ? this.bookmark!.epubcfi : 'epubcfi(/6/6[s1]!/4/4/2/6[body]/6,/1:0,/1:1)';
         await this.rendition.display(this.props.paginated ? epubcfi : undefined);
+        // Navigate to the first work page.
         if (!this.props.paginated) {
           // Skip cover page.
           await this.rendition?.next();
@@ -356,6 +362,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
             console.error(e);
           }
         }
+
         this.book?.locations.generate(150);
       }
     );
@@ -432,13 +439,11 @@ class _EPubViewPage extends React.Component<PageProps, State> {
           }}>
             <IonIcon icon={this.state.speechState === SpeechState.SPEAKING ? stopCircle : playCircle} slot='icon-only' />
           </IonButton>
-          <IonButton fill="clear" slot='end' onClick={e => this.addBookmarkHandler()}>
-            <IonIcon icon={bookmark} slot='icon-only' />
-          </IonButton>
 
           <IonButton fill="clear" slot='end' onClick={e => this.setState({ popover: { show: true, event: e.nativeEvent } })}>
             <IonIcon ios={ellipsisHorizontal} md={ellipsisVertical} slot='icon-only' />
           </IonButton>
+
           <IonPopover
             isOpen={this.state.popover.show}
             event={this.state.popover.event}
@@ -454,8 +459,8 @@ class _EPubViewPage extends React.Component<PageProps, State> {
                 <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>回首頁</IonLabel>
               </IonItem>
               <IonItem button onClick={e => {
-                this.setState({ showSearchAlert: true });
                 this.setState({ popover: { show: false, event: null } });
+                this.setState({ showSearchAlert: true });
               }}>
                 <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
                 <IonIcon icon={search} slot='start' />
@@ -473,6 +478,34 @@ class _EPubViewPage extends React.Component<PageProps, State> {
                     this.rendition?.display(ratio);
                   }} />
                 </div>
+              </IonItem>
+
+              <IonItem button onClick={e => {
+                this.setState({ popover: { show: false, event: null } });
+                this.addBookmarkHandler();
+              }}>
+                <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
+                <IonIcon icon={bookmark} slot='start' />
+                <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>新增書籤</IonLabel>
+              </IonItem>
+
+              <IonItem button onClick={e => {
+                this.setState({ popover: { show: false, event: null } });
+                const ePubIframe = document.getElementsByTagName('iframe')[0];
+                const sel = ePubIframe.contentDocument?.getSelection();
+                if (!((sel?.rangeCount || 0) > 0 && sel!.getRangeAt(0).toString().length > 0)) {
+                  this.setState({showNoSelectedTextAlert: true});
+                  return;
+                }
+                const selectedText = sel!.getRangeAt(0).toString();
+
+                this.props.history.push({
+                  pathname: `/dictionary/search/${selectedText}`,
+                });
+              }}>
+                <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
+                <IonIcon icon={book} slot='start' />
+                <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>查字典</IonLabel>
               </IonItem>
             </IonList>
           </IonPopover>
@@ -569,17 +602,17 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
           <IonAlert
             cssClass='uiFont'
-            isOpen={this.state.showBookmarkingAlert}
+            isOpen={this.state.showNoSelectedTextAlert}
             backdropDismiss={false}
-            header='書籤新增失敗'
-            message='請確認是否已選擇一段文字，再新增書籤!'
+            header='失敗'
+            message='請確認是否已選擇一段文字，然後再執行所選的功能!'
             buttons={[
               {
                 text: '確定',
                 cssClass: 'primary uiFont',
                 handler: (value) => {
                   this.setState({
-                    showBookmarkingAlert: false,
+                    showNoSelectedTextAlert: false,
                   });
                 },
               }
