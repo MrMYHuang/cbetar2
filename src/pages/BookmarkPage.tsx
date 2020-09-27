@@ -76,7 +76,7 @@ class _BookmarkPage extends React.Component<PageProps> {
           </IonItem>
 
           <IonItemOptions side="end">
-            <IonItemOption style={{fontSize: 'var(--ui-font-size)'}} color='danger' onClick={(e) => {
+            <IonItemOption style={{ fontSize: 'var(--ui-font-size)' }} color='danger' onClick={(e) => {
               this.delBookmarkHandler(bookmark.uuid);
               this.bookmarkListRef.current?.closeSlidingItems();
             }}>刪除</IonItemOption>
@@ -101,7 +101,8 @@ class _BookmarkPage extends React.Component<PageProps> {
               </div>
             </IonLabel>
           }
-           <div style={{ fontSize: 'var(--ui-font-size)', textAlign: 'center' }}>可離線瀏覽圖示 <IonIcon icon={download}/></div>
+          <div style={{ fontSize: 'var(--ui-font-size)', textAlign: 'center' }}>可離線瀏覽圖示 <IonIcon icon={download} /></div>
+          <div style={{ fontSize: 'var(--ui-font-size)', textAlign: 'center' }}><a href="https://github.com/MrMYHuang/cbetar2#web-app" target="_new">程式安裝說明</a></div>
         </IonContent>
       </IonPage>
     );
