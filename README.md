@@ -25,7 +25,7 @@ CBETA電子佛典閱讀器2(非官方)，使用CBETA API存取電子佛經，支
   2. 播放步驟：開啟經文 / 按下右上方播放鍵（如擷圖所示）
   <img src='./docs/images/PlaySpeech.png' width='70%' />
 
-* 佛學詞典(線上查詢)
+* <a id='dictionary'>佛學詞典(線上查詢)</a>
   1. 整合"DILA 佛學術語字辭典"，可在"佛學詞典"分頁查詢佛學字詞。
   <img src='./docs/images/LookupDictionary.png' width='50%' />
 

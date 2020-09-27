@@ -106,6 +106,7 @@ class _DictionaryPage extends React.Component<PageProps, State> {
             </IonItem>
             {this.getRows()}
           </IonList>
+          <div style={{ fontSize: 'var(--ui-font-size)', textAlign: 'center' }}><a href="https://github.com/MrMYHuang/cbetar2#dictionary" target="_new">佛學詞典說明</a></div>
         </IonContent>
       </IonPage>
     );
