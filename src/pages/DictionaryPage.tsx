@@ -87,7 +87,7 @@ class _DictionaryPage extends React.Component<PageProps, State> {
         <IonContent>
           <IonList>
             <IonItem>
-              <IonSearchbar ref={this.searchBarRef} placeholder='請輸入字詞' value={this.state.keyword}
+              <IonSearchbar ref={this.searchBarRef} placeholder='請輸入字詞，再按鍵盤Enter鍵' value={this.state.keyword}
                 onIonChange={ev => {
                   this.setState({ keyword: ev.detail.value! })
                 }}
