@@ -70,13 +70,15 @@ export default {
   cbetaApiUrl,
   dilaDictApiUrl,
   axiosInstance,
-  topCatalogs: {
+  topCatalogsByCat: {
     "CBETA": "CBETA 部類",
-    "Cat-T": "T 大正藏",
-    "Cat-X": "X 卍續藏",
+    "Cat-T": "大正藏",
+    "Cat-X": "卍續藏",
     "Cat-N": "南傳大藏經",
     "others": "歷代藏經補輯",
     "modern": "近代新編文獻",
+  } as Record<string, string>,
+  topCatalogsByVol: {
     "Vol-T": "T 大正藏",
     "Vol-X": "X 卍續藏",
     "Vol-A": "A 趙城金藏",

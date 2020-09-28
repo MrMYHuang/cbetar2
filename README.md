@@ -107,9 +107,8 @@ npm run build_linux
 Then, upload files under build folder to your github.io.
 
 ## 未來功能
-1. 重新編排目錄。
-2. 分享app連結。
-3. 佛學詞典記錄歷史查詢。
+1. 分享app連結。
+2. 佛學詞典記錄歷史查詢。
 
 ## 已知問題
 1. iOS Safari在單頁模式下，捲軸無法顯示。
@@ -119,6 +118,8 @@ Then, upload files under build folder to your github.io.
 5. "避免螢幕自動鎖定"功能僅限部分較新Chrome瀏覽器才支援。
 
 ## 版本歷史
+* 2.8.0:
+  * 修正目錄結構、使用CBETA Online相同冊分類順序。
 * 2.7.1:
   * 調整UI改善使用體驗。
 * 2.7.0:

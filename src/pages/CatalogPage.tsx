@@ -1,7 +1,6 @@
 import React from 'react';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonLabel, IonButton, IonIcon, withIonLifeCycle } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
-import queryString from 'query-string';
 import { connect } from 'react-redux';
 import './CatalogPage.css';
 import { Catalog } from '../models/Catalog';
@@ -10,7 +9,13 @@ import { Bookmark, BookmarkType } from '../models/Bookmark';
 import { bookmark, arrowBack, home, search } from 'ionicons/icons';
 import SearchAlert from '../components/SearchAlert';
 
-interface PageProps extends RouteComponentProps<{
+interface Props {
+  dispatch: Function;
+  bookmarks: [Bookmark];
+  topCatalogsType: number;
+}
+
+interface PageProps extends Props, RouteComponentProps<{
   tab: string;
   path: string;
   label: string;
@@ -54,7 +59,7 @@ class _CatalogPage extends React.Component<PageProps, State> {
     let catalogs = new Array<Catalog>();
 
     if (this.props.match.params.path == null) {
-      catalogs = this.getTopCatalogs();
+      return this.fetchTopCatalogs(this.props.topCatalogsType);
     } else {
       try {
         const res = await Globals.axiosInstance.get(`/catalog_entry?q=${path}`, {
@@ -73,19 +78,23 @@ class _CatalogPage extends React.Component<PageProps, State> {
     return true;
   }
 
-  getTopCatalogs() {
+  fetchTopCatalogs(topCatalogsType: number) {
     let catalogs = Array<Catalog>();
-    Object.keys(Globals.topCatalogs).forEach((key) => {
+
+    const topCatalogs = topCatalogsType ? Globals.topCatalogsByVol : Globals.topCatalogsByCat;
+
+    Object.keys(topCatalogs).forEach((key) => {
       const catalog: Catalog = {
         n: key,
         nodeType: null,
         work: null,
-        label: Globals.topCatalogs[key],
+        label: topCatalogs[key],
         file: null,
       };
       catalogs.push(catalog);
     });
-    return catalogs;
+    this.setState({ catalogs: catalogs });
+    return true;
   }
 
   get isTopCatalog() {
@@ -135,7 +144,6 @@ class _CatalogPage extends React.Component<PageProps, State> {
           event.preventDefault();
           this.props.history.push({
             pathname: routeLink,
-            search: queryString.stringify({ file: catalog.file! }),
           });
         }}>
           <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
@@ -147,14 +155,14 @@ class _CatalogPage extends React.Component<PageProps, State> {
     });
     return rows;
   }
-  
+
   render() {
     //console.log(`${this.props.match.url} render`)
 
     let list = <IonList>
       {this.getRows()}
     </IonList>
-    
+
     return (
       <IonPage>
         <IonHeader>
@@ -162,6 +170,17 @@ class _CatalogPage extends React.Component<PageProps, State> {
             <IonTitle style={{ fontSize: 'var(--ui-font-size)' }}>目錄</IonTitle>
             <IonButton hidden={this.isTopCatalog} fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
               <IonIcon icon={arrowBack} slot='icon-only' />
+            </IonButton>
+            <IonButton hidden={!this.isTopCatalog} slot='end' onClick={ev => {
+              const newTopCatalogsType = (this.props.topCatalogsType + 1) % 2
+              this.fetchTopCatalogs(newTopCatalogsType);
+              this.props.dispatch({
+                type: "SET_KEY_VAL",
+                key: 'topCatalogsType',
+                val: newTopCatalogsType
+              });
+            }}>
+              {this.props.topCatalogsType ? '冊分類' : '部分類'}
             </IonButton>
             <IonButton hidden={this.isTopCatalog} fill="clear" color={this.hasBookmark ? 'warning' : 'primary'} slot='end' onClick={e => this.hasBookmark ? this.delBookmarkHandler() : this.addBookmarkHandler()}>
               <IonIcon icon={bookmark} slot='icon-only' />
@@ -175,7 +194,7 @@ class _CatalogPage extends React.Component<PageProps, State> {
           </IonToolbar>
         </IonHeader>
         <IonContent>
-          {this.state.fetchError ? Globals.fetchErrorContent : list }
+          {this.state.fetchError ? Globals.fetchErrorContent : list}
 
           <SearchAlert
             {...{
@@ -197,6 +216,7 @@ class _CatalogPage extends React.Component<PageProps, State> {
 const mapStateToProps = (state: any /*, ownProps*/) => {
   return {
     bookmarks: state.settings.bookmarks,
+    topCatalogsType: state.settings.topCatalogsType,
   }
 };
 
