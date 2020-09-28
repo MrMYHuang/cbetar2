@@ -20,7 +20,6 @@ interface Props {
   fontSize: number;
   scrollbarSize: number;
   settings: any;
-  darkMode: boolean;
   showComments: boolean;
   paginated: Boolean;
   rtlVerticalLayout: boolean;

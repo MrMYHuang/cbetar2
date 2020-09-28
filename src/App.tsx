@@ -84,8 +84,9 @@ class _App extends React.Component<PageProps, State> {
   constructor(props: any) {
     super(props);
     // ----- Initializing UI settings -----
-    // Apply the dark mode setting.
-    document.body.classList.toggle('dark', state.settings.darkMode);
+    // Apply the theme setting.
+    document.body.classList.forEach((val) => document.body.classList.remove(val));
+    document.body.classList.toggle(`theme${state.settings.theme}`, true);
     Globals.updateCssVars(state.settings);
 
     this.state = {

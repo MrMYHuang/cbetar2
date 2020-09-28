@@ -3,7 +3,7 @@ import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem,
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import Globals from '../Globals';
-import { helpCircle, text, moon, documentText, refreshCircle, musicalNotes, colorPalette } from 'ionicons/icons';
+import { helpCircle, text, documentText, refreshCircle, musicalNotes, colorPalette } from 'ionicons/icons';
 import './SettingsPage.css';
 import PackageInfos from '../../package.json';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
@@ -20,7 +20,6 @@ interface Props {
   uiFontSize: number;
   scrollbarSize: number;
   settings: any;
-  darkMode: boolean;
   showComments: boolean;
   paginated: boolean;
   rtlVerticalLayout: boolean;
@@ -140,26 +139,15 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
                     key: 'theme',
                     val: value,
                   });
-                  //Globals.updateCssVars(this.props.settings);
+                  document.body.classList.forEach((val) => document.body.classList.remove(val));
+                  document.body.classList.toggle(`theme${value}`, true);
                 }}>
                 <IonSelectOption className='cbeta' value={0}>CBETA</IonSelectOption>
-                <IonSelectOption value={1}>暗色</IonSelectOption>
-                <IonSelectOption value={2}>亮色</IonSelectOption>
+                <IonSelectOption className='dark' value={1}>暗色</IonSelectOption>
+                <IonSelectOption className='light' value={2}>亮色</IonSelectOption>
+                <IonSelectOption className='oldPaper' value={3}>舊書</IonSelectOption>
+                <IonSelectOption className='marble' value={4}>大理石</IonSelectOption>
               </IonSelect>
-            </IonItem>
-            <IonItem>
-              <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
-              <IonIcon icon={moon} slot='start' />
-              <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>暗色模式</IonLabel>
-              <IonToggle slot='end' checked={(this.props as any).darkMode} onIonChange={e => {
-                const isChecked = e.detail.checked;
-                document.body.classList.toggle('dark', isChecked);
-                (this.props as any).dispatch({
-                  type: "SET_KEY_VAL",
-                  key: 'darkMode',
-                  val: isChecked
-                });
-              }} />
             </IonItem>
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
@@ -342,7 +330,6 @@ const mapStateToProps = (state: any /*, ownProps*/) => {
   return {
     settings: state.settings,
     theme: state.settings.theme,
-    darkMode: state.settings.darkMode,
     showComments: state.settings.showComments,
     paginated: state.settings.paginated,
     rtlVerticalLayout: state.settings.rtlVerticalLayout,
