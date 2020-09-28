@@ -3,7 +3,7 @@ import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem,
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import Globals from '../Globals';
-import { helpCircle, text, moon, documentText, refreshCircle, musicalNotes } from 'ionicons/icons';
+import { helpCircle, text, moon, documentText, refreshCircle, musicalNotes, colorPalette } from 'ionicons/icons';
 import './SettingsPage.css';
 import PackageInfos from '../../package.json';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
@@ -16,6 +16,7 @@ interface StateProps {
 
 interface Props {
   dispatch: Function;
+  theme: number;
   uiFontSize: number;
   scrollbarSize: number;
   settings: any;
@@ -100,7 +101,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={refreshCircle} slot='start' />
               <div style={{ width: '100%' }}>
-              <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>電子佛典app版本: {PackageInfos.version}</IonLabel>
+                <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>電子佛典app版本: {PackageInfos.version}</IonLabel>
                 <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>檢查app更新 (若無更新則無回應)</IonLabel>
               </div>
               <IonButton slot='end' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={e => {
@@ -122,6 +123,29 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
                 message={`離線經文檔更新完畢！`}
                 duration={2000}
               />
+            </IonItem>
+            <IonItem>
+              <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
+              <IonIcon icon={colorPalette} slot='start' />
+              <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>佈景主題</IonLabel>
+              <IonSelect slot='end'
+                value={this.props.theme}
+                style={{ fontSize: 'var(--ui-font-size)' }}
+                interface='popover'
+                interfaceOptions={{ cssClass: 'cbetar2themes' }}
+                onIonChange={e => {
+                  const value = e.detail.value;
+                  this.props.dispatch({
+                    type: "SET_KEY_VAL",
+                    key: 'theme',
+                    val: value,
+                  });
+                  //Globals.updateCssVars(this.props.settings);
+                }}>
+                <IonSelectOption className='cbeta' value={0}>CBETA</IonSelectOption>
+                <IonSelectOption value={1}>暗色</IonSelectOption>
+                <IonSelectOption value={2}>亮色</IonSelectOption>
+              </IonSelect>
             </IonItem>
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
@@ -317,6 +341,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
 const mapStateToProps = (state: any /*, ownProps*/) => {
   return {
     settings: state.settings,
+    theme: state.settings.theme,
     darkMode: state.settings.darkMode,
     showComments: state.settings.showComments,
     paginated: state.settings.paginated,
