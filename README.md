@@ -109,6 +109,7 @@ Then, upload files under build folder to your github.io.
 ## 未來功能
 1. 分享app連結。
 2. 佛學詞典記錄歷史查詢。
+3. 全文檢索。
 
 ## 已知問題
 1. iOS Safari在單頁模式下，捲軸無法顯示。
