@@ -118,6 +118,8 @@ Then, upload files under build folder to your github.io.
 5. "避免螢幕自動鎖定"功能僅限部分較新Chrome瀏覽器才支援。
 
 ## 版本歷史
+* 2.8.1:
+  * 修正目錄頁"部/冊分類"切換鈕文字顏色。
 * 2.8.0:
   * 修正目錄結構、使用CBETA Online相同冊分類順序。
 * 2.7.1:
