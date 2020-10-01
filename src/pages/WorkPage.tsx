@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import './WorkPage.css';
 import { Work } from '../models/Work';
 import Globals from '../Globals';
-import { bookmark, arrowBack, home, search } from 'ionicons/icons';
+import { bookmark, arrowBack, home, search, shareSocial } from 'ionicons/icons';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
 import SearchAlert from '../components/SearchAlert';
 
@@ -24,6 +24,7 @@ interface State {
   work: Work | null;
   showSearchAlert: boolean;
   showAddBookmarkDone: boolean;
+  showCopyAppLinkSuccess: boolean;
 }
 
 class _WorkPage extends React.Component<PageProps, State> {
@@ -33,6 +34,7 @@ class _WorkPage extends React.Component<PageProps, State> {
       work: null,
       showSearchAlert: false,
       showAddBookmarkDone: false,
+      showCopyAppLinkSuccess: false,
     }
   }
 
@@ -154,12 +156,22 @@ class _WorkPage extends React.Component<PageProps, State> {
             <IonButton hidden={this.isTopPage} fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
               <IonIcon icon={arrowBack} slot='icon-only' />
             </IonButton>
+            
             <IonButton fill="clear" color={this.hasBookmark ? 'warning' : 'primary'} slot='end' onClick={e => this.hasBookmark ? this.delBookmarkHandler() : this.addBookmarkHandler()}>
               <IonIcon icon={bookmark} slot='icon-only' />
             </IonButton>
+
             <IonButton fill="clear" slot='end' onClick={e => this.props.history.push(`/${this.props.match.params.tab}`)}>
               <IonIcon icon={home} slot='icon-only' />
             </IonButton>
+
+            <IonButton fill="clear" slot='end' onClick={e => {
+              navigator.clipboard.writeText(window.location.href);
+              this.setState({ showCopyAppLinkSuccess: true });
+            }}>
+              <IonIcon icon={shareSocial} slot='icon-only' />
+            </IonButton>
+
             <IonButton fill="clear" slot='end' onClick={e => this.setState({ showSearchAlert: true })}>
               <IonIcon icon={search} slot='icon-only' />
             </IonButton>
@@ -186,6 +198,14 @@ class _WorkPage extends React.Component<PageProps, State> {
             isOpen={this.state.showAddBookmarkDone}
             onDidDismiss={() => this.setState({ showAddBookmarkDone: false })}
             message={`書籤新增成功！`}
+            duration={2000}
+          />
+
+          <IonToast
+            cssClass='uiFont'
+            isOpen={this.state.showCopyAppLinkSuccess}
+            onDidDismiss={() => this.setState({ showCopyAppLinkSuccess: false })}
+            message="此頁app連結已複製至剪貼簿！"
             duration={2000}
           />
         </IonContent>

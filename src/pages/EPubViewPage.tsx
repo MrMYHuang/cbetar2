@@ -7,7 +7,7 @@ import * as uuid from 'uuid';
 import queryString from 'query-string';
 import './EPubViewPage.css';
 import Globals from '../Globals';
-import { bookmark, arrowBack, home, search, ellipsisHorizontal, ellipsisVertical, arrowForward, text, playCircle, stopCircle, book } from 'ionicons/icons';
+import { bookmark, arrowBack, home, search, ellipsisHorizontal, ellipsisVertical, arrowForward, text, playCircle, stopCircle, book, shareSocial } from 'ionicons/icons';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
 import { Work } from '../models/Work';
 import SearchAlert from '../components/SearchAlert';
@@ -46,6 +46,7 @@ interface State {
   htmlStr: string | null;
   showNoSelectedTextAlert: boolean;
   showAddBookmarkSuccess: boolean;
+  showCopyAppLinkSuccess: boolean;
   showSearchAlert: boolean;
   popover: any;
   lookupDictPopover: any;
@@ -69,6 +70,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       htmlStr: null,
       showNoSelectedTextAlert: false,
       showAddBookmarkSuccess: false,
+      showCopyAppLinkSuccess: false,
       showSearchAlert: false,
       popover: {
         show: false,
@@ -506,6 +508,15 @@ class _EPubViewPage extends React.Component<PageProps, State> {
                 <IonIcon icon={book} slot='start' />
                 <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>查詞典</IonLabel>
               </IonItem>
+
+              <IonItem button onClick={ev => {
+                navigator.clipboard.writeText(window.location.href);
+                this.setState({ showCopyAppLinkSuccess: true });
+              }}>
+                <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
+                <IonIcon icon={shareSocial} slot='start' />
+                <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>分享此頁</IonLabel>
+              </IonItem>
             </IonList>
           </IonPopover>
         </IonToolbar>
@@ -623,6 +634,14 @@ class _EPubViewPage extends React.Component<PageProps, State> {
             isOpen={this.state.showAddBookmarkSuccess}
             onDidDismiss={() => this.setState({ showAddBookmarkSuccess: false })}
             message="書籤新增成功！"
+            duration={2000}
+          />
+
+          <IonToast
+            cssClass='uiFont'
+            isOpen={this.state.showCopyAppLinkSuccess}
+            onDidDismiss={() => this.setState({ showCopyAppLinkSuccess: false })}
+            message="此頁app連結已複製至剪貼簿！"
             duration={2000}
           />
         </IonContent>

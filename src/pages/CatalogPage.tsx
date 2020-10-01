@@ -1,12 +1,12 @@
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonLabel, IonButton, IonIcon, withIonLifeCycle } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonLabel, IonButton, IonIcon, withIonLifeCycle, IonToast } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import './CatalogPage.css';
 import { Catalog } from '../models/Catalog';
 import Globals from '../Globals';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
-import { bookmark, arrowBack, home, search } from 'ionicons/icons';
+import { bookmark, arrowBack, home, search, shareSocial } from 'ionicons/icons';
 import SearchAlert from '../components/SearchAlert';
 import queryString from 'query-string';
 
@@ -24,6 +24,7 @@ interface PageProps extends Props, RouteComponentProps<{
 
 interface State {
   showSearchAlert: boolean;
+  showCopyAppLinkSuccess: boolean;
   fetchError: boolean;
   catalogs: Array<Catalog>;
 }
@@ -35,6 +36,7 @@ class _CatalogPage extends React.Component<PageProps, State> {
       fetchError: false,
       catalogs: [],
       showSearchAlert: false,
+      showCopyAppLinkSuccess: false,
     };
   }
 
@@ -170,9 +172,11 @@ class _CatalogPage extends React.Component<PageProps, State> {
         <IonHeader>
           <IonToolbar>
             <IonTitle style={{ fontSize: 'var(--ui-font-size)' }}>目錄</IonTitle>
+
             <IonButton hidden={this.isTopCatalog} fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
               <IonIcon icon={arrowBack} slot='icon-only' />
             </IonButton>
+
             <IonButton hidden={!this.isTopCatalog} slot='end' onClick={ev => {
               const newTopCatalogsType = (this.props.topCatalogsType + 1) % 2
               this.fetchTopCatalogs(newTopCatalogsType);
@@ -182,14 +186,24 @@ class _CatalogPage extends React.Component<PageProps, State> {
                 val: newTopCatalogsType
               });
             }}>
-              <span style={{color: 'var(--color)'}}>{this.props.topCatalogsType ? '冊分類' : '部分類'}</span>
+              <span style={{ color: 'var(--color)' }}>{this.props.topCatalogsType ? '冊分類' : '部分類'}</span>
             </IonButton>
+
             <IonButton hidden={this.isTopCatalog} fill="clear" color={this.hasBookmark ? 'warning' : 'primary'} slot='end' onClick={e => this.hasBookmark ? this.delBookmarkHandler() : this.addBookmarkHandler()}>
               <IonIcon icon={bookmark} slot='icon-only' />
             </IonButton>
+
             <IonButton hidden={this.isTopCatalog} fill="clear" slot='end' onClick={e => this.props.history.push(`/${this.props.match.params.tab}`)}>
               <IonIcon icon={home} slot='icon-only' />
             </IonButton>
+
+            <IonButton fill="clear" slot='end' onClick={e => {
+              navigator.clipboard.writeText(window.location.href);
+              this.setState({ showCopyAppLinkSuccess: true });
+            }}>
+              <IonIcon icon={shareSocial} slot='icon-only' />
+            </IonButton>
+
             <IonButton fill="clear" slot='end' onClick={e => this.setState({ showSearchAlert: true })}>
               <IonIcon icon={search} slot='icon-only' />
             </IonButton>
@@ -209,6 +223,14 @@ class _CatalogPage extends React.Component<PageProps, State> {
             }}
           />
           <div style={{ fontSize: 'var(--ui-font-size)', textAlign: 'center' }}><a href="https://github.com/MrMYHuang/cbetar2#search" target="_new">搜尋經文教學</a></div>
+
+          <IonToast
+            cssClass='uiFont'
+            isOpen={this.state.showCopyAppLinkSuccess}
+            onDidDismiss={() => this.setState({ showCopyAppLinkSuccess: false })}
+            message="此頁app連結已複製至剪貼簿！"
+            duration={2000}
+          />
         </IonContent>
       </IonPage>
     );
