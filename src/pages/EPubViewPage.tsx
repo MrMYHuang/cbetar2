@@ -43,6 +43,7 @@ enum SpeechState {
 interface State {
   isLoading: boolean;
   fetchError: boolean;
+  workInfo: Work;
   htmlStr: string | null;
   showNoSelectedTextAlert: boolean;
   showAddBookmarkSuccess: boolean;
@@ -67,6 +68,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     this.state = {
       isLoading: true,
       fetchError: false,
+      workInfo: new Work({}),
       htmlStr: null,
       showNoSelectedTextAlert: false,
       showAddBookmarkSuccess: false,
@@ -144,24 +146,20 @@ class _EPubViewPage extends React.Component<PageProps, State> {
   }
 
   async fetchData() {
-    let htmlStr = '';
-
     try {
-      htmlStr = await Globals.fetchJuan(
+      const res = await Globals.fetchJuan(
         this.props.match.params.work,
         this.props.match.params.path,
         this.htmlFile,
       );
+
+      await this.loadEpubCoverToMemFs();
+
+      this.setState({ workInfo: res.workInfo, htmlStr: res.htmlStr });
     } catch (e) {
       console.error(e);
       this.setState({ isLoading: false, fetchError: true });
-      return false;
     }
-
-    await this.loadEpubCoverToMemFs();
-
-    this.setState({ htmlStr: htmlStr });
-    return true;
   }
 
   epubcfi = '';
@@ -183,7 +181,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
           fileName: `${this.props.match.params.work}_juan${this.props.match.params.path}.html`,
           work: new Work({
             juan: this.props.match.params.path,
-            title: '',
+            title: this.state.workInfo.title,
             work: this.props.match.params.work,
           }),
         }),
@@ -263,7 +261,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       published: '',
       language: 'en',
       description: 'A temp book.',
-      contents: '',
+      contents: this.state.workInfo.title,
       source: '',
       images: ['logo.png'],
     }, 'logo.png');

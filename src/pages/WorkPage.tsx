@@ -72,8 +72,8 @@ class _WorkPage extends React.Component<PageProps, State> {
     for (let i = 0; i < juans.length; i++) {
       this.fetchJuan = juans[i];
       try {
-        const htmlStr = await Globals.fetchJuan(work.work, this.fetchJuan, null);
-        localStorage.setItem(Globals.getFileName(work.work, this.fetchJuan), htmlStr);
+        const res = await Globals.fetchJuan(work.work, this.fetchJuan, null);
+        localStorage.setItem(Globals.getFileName(work.work, this.fetchJuan), res.htmlStr);
       } catch {
         console.error(`Fetching juan ${i} failed!`);
       }

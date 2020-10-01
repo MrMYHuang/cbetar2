@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { isPlatform, IonLabel } from '@ionic/react';
 import React from 'react';
+import { Work } from './models/Work';
 
 const apiVersion = 'v1.2';
 const cbetaApiUrl = `https://cbdata.dila.edu.tw/${apiVersion}`;
@@ -28,6 +29,7 @@ function getFileName(work: string, juan: string) {
 async function fetchJuan(work: string, juan: string, htmlFile: string | null, update: boolean = false) {
   const fileName = getFileName(work, juan);
   let htmlStr = localStorage.getItem(fileName);
+  let workInfo = new Work({});
   if (htmlStr != null && !update) {
     // Do nothing.
   } else {
@@ -43,11 +45,12 @@ async function fetchJuan(work: string, juan: string, htmlFile: string | null, up
         htmlStr = tryDecodeHtmlStr;
       }
     } else {
-      const res = await axiosInstance.get(`/juans?edition=CBETA&work=${work}&juan=${juan}`, {
+      const res = await axiosInstance.get(`/juans?edition=CBETA&work_info=1&work=${work}&juan=${juan}`, {
         responseType: 'arraybuffer',
       });
       let data = JSON.parse(new TextDecoder().decode(res.data));
       htmlStr = data.results[0];
+      workInfo = data.work_info;
     }
 
     // Convert HTML to XML, because ePub requires XHTML.
@@ -59,7 +62,7 @@ async function fetchJuan(work: string, juan: string, htmlFile: string | null, up
     htmlStr = htmlStr.replace('<body', '<div');
     htmlStr = htmlStr.replace('/body>', '/div>');
   }
-  return htmlStr;
+  return {htmlStr, workInfo};
 }
 
 export default {

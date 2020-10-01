@@ -41,19 +41,20 @@ class _CatalogPage extends React.Component<PageProps, State> {
   }
 
   ionViewWillEnter() {
-    //console.log( `view will enter: ${this.props.match.url}` );
-    this.fetchData(this.props.match.params.path);
+    console.log( `view will enter: ${this.props.match.url}` );
   }
 
   /*
   componentWillReceiveProps(nextProps){
     console.log(`route changed: ${nextProps.match.url}`)
- }
+ }*/
 
   componentDidMount() {
-    console.log(`did mount: ${this.props.match.url}`)
+    console.log(`did mount: ${this.props.match.url}`);
+    this.fetchData(this.props.match.params.path);
   }
 
+  /*
   componentWillUnmount() {
   }*/
 
@@ -110,7 +111,7 @@ class _CatalogPage extends React.Component<PageProps, State> {
       bookmark: new Bookmark({
         type: BookmarkType.CATALOG,
         uuid: this.props.match.params.path,
-        selectedText: this.props.match.params.label,
+        selectedText: this.props.match.params.path,
         epubcfi: '',
         fileName: '',
         work: null,

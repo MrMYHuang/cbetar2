@@ -127,6 +127,9 @@ Then, upload files under build folder to your github.io.
 6. iOS Safari 13.4以上才支援"分享此頁"功能。
 
 ## 版本歷史
+* 3.1.1:
+  * 修正多餘的API calls，改善目錄頁效能。
+  * 修正新增的經文書籤標題。
 * 3.1.0:
   * 支援"分享此頁"功能，請見<a href='#shareAppLink'>說明</a>。
 * 3.0.0:

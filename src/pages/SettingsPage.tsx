@@ -67,9 +67,9 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
         const fetchJuan = juans[j];
         juansDownloaded += 1;
         this.setState({ juansDownloadedRatio: juansDownloaded / juansToDownload });
-        const htmlStr = await Globals.fetchJuan(work.work, fetchJuan, null, true);
+        const res = await Globals.fetchJuan(work.work, fetchJuan, null, true);
         const fileName = Globals.getFileName(work.work, fetchJuan);
-        localStorage.setItem(fileName, htmlStr);
+        localStorage.setItem(fileName, res.htmlStr);
         console.log(`File saved: ${fileName}`);
       }
     }
@@ -78,9 +78,9 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
       this.setState({ juansDownloadedRatio: juansDownloaded / juansToDownload });
       const bookmarkWithHtml = juanBookmarksNotInWorkBookmarksWithHtml[i];
       const work = bookmarkWithHtml.work!;
-      const htmlStr = await Globals.fetchJuan(work.work, `${work.juan}`, null, true);
+      const res = await Globals.fetchJuan(work.work, `${work.juan}`, null, true);
       const fileName = Globals.getFileName(work.work, `${work.juan}`);
-      localStorage.setItem(fileName, htmlStr);
+      localStorage.setItem(fileName, res.htmlStr);
       console.log(`File saved: ${fileName}`);
     }
     this.setState({ showUpdateAllJuansDone: true });
