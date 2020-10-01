@@ -86,7 +86,7 @@ class _WorkPage extends React.Component<PageProps, State> {
       bookmark: new Bookmark({
         type: BookmarkType.WORK,
         uuid: this.props.match.params.path,
-        selectedText: this.props.match.params.label,
+        selectedText: this.state.work!.title,
         epubcfi: '',
         fileName: '',
         work: this.state.work!,
@@ -120,7 +120,7 @@ class _WorkPage extends React.Component<PageProps, State> {
     let juans = work.juan_list.split(',');
     for (let i = 0; i < juans.length; i++) {
       //if (work.nodeType == 'html')
-      let routeLink = `/catalog/webview/${work.work}/${juans[i]}/${work.title}`;
+      let routeLink = `/catalog/juan/${work.work}/${juans[i]}`;
       rows.push(
         <IonItem key={`juanItem` + i} button={true} onClick={async event => {
           event.preventDefault();
@@ -150,7 +150,7 @@ class _WorkPage extends React.Component<PageProps, State> {
       <IonPage>
         <IonHeader>
           <IonToolbar>
-            <IonTitle style={{ fontSize: 'var(--ui-font-size)' }}>{(this.state as any).work.title}</IonTitle>
+            <IonTitle style={{ fontSize: 'var(--ui-font-size)' }}>{this.state.work?.title}</IonTitle>
             <IonButton hidden={this.isTopPage} fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
               <IonIcon icon={arrowBack} slot='icon-only' />
             </IonButton>

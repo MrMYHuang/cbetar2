@@ -126,6 +126,9 @@ Then, upload files under build folder to your github.io.
 5. "避免螢幕自動鎖定"功能僅限部分較新Chrome瀏覽器才支援。
 
 ## 版本歷史
+* 3.0.0:
+  * 修改/簡化app連結。(向下相容1.x.y, 2.x.y連結。)
+  * 修正部分文章無法開啟。
 * 2.9.0:
   * 支援佈景主題切換。
 * 2.8.1:

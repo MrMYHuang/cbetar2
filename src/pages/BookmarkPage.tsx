@@ -50,11 +50,11 @@ class _BookmarkPage extends React.Component<PageProps> {
       let label = `${bookmark.selectedText}`;
       switch (bookmark.type) {
         case BookmarkType.CATALOG:
-          routeLink = `/catalog/catalog/${bookmark.uuid}/${label}`; break;
+          routeLink = `/catalog/catalog/${bookmark.uuid}`; break;
         case BookmarkType.WORK:
-          routeLink = `/catalog/work/${bookmark.uuid}/${label}`; break;
+          routeLink = `/catalog/work/${bookmark.uuid}`; break;
         case BookmarkType.JUAN:
-          routeLink = `/catalog/webview/${bookmark.work?.work}/${bookmark.work?.juan}/${bookmark.work?.title}`;
+          routeLink = `/catalog/juan/${bookmark.work?.work}/${bookmark.work?.juan}`;
           label = `${bookmark.work?.title}第${bookmark.work?.juan}卷 - ${label}`; break;
       }
       rows.push(

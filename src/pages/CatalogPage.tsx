@@ -8,6 +8,7 @@ import Globals from '../Globals';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
 import { bookmark, arrowBack, home, search } from 'ionicons/icons';
 import SearchAlert from '../components/SearchAlert';
+import queryString from 'query-string';
 
 interface Props {
   dispatch: Function;
@@ -130,20 +131,21 @@ class _CatalogPage extends React.Component<PageProps, State> {
   getRows() {
     let rows = Array<object>();
     (this.state as any).catalogs.forEach((catalog: Catalog, index: number) => {
-      //if (catalog.nodeType == 'html')
       let routeLink = '';
-      if (catalog.nodeType === 'html') {
-        routeLink = `/catalog/webview/${catalog.n}/1/${catalog.label}`;
+      const isHtmlNode = catalog.nodeType === 'html';
+      if (isHtmlNode) {
+        routeLink = `/catalog/juan/${catalog.n}/1`;
       } else if (catalog.work == null) {
-        routeLink = `/catalog/catalog/${catalog.n}/${catalog.label}`;
+        routeLink = `/catalog/catalog/${catalog.n}`;
       } else {
-        routeLink = `/catalog/work/${catalog.work}/${catalog.label}`;
+        routeLink = `/catalog/work/${catalog.work}`;
       }
       rows.push(
         <IonItem key={`${catalog.n}item` + index} button={true} onClick={async event => {
           event.preventDefault();
           this.props.history.push({
             pathname: routeLink,
+            search: queryString.stringify(isHtmlNode ? { file: catalog.file! } : {}),
           });
         }}>
           <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}

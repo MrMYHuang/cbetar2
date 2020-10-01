@@ -181,7 +181,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
           fileName: `${this.props.match.params.work}_juan${this.props.match.params.path}.html`,
           work: new Work({
             juan: this.props.match.params.path,
-            title: this.props.match.params.label,
+            title: '',
             work: this.props.match.params.work,
           }),
         }),
@@ -261,7 +261,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       published: '',
       language: 'en',
       description: 'A temp book.',
-      contents: this.props.match.params.label,
+      contents: '',
       source: '',
       images: ['logo.png'],
     }, 'logo.png');
@@ -385,7 +385,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     let header = (
       <IonHeader>
         <IonToolbar>
-          <IonTitle style={{ fontSize: 'var(--ui-font-size)' }}>{this.props.match.params.label}</IonTitle>
+          <IonTitle style={{ fontSize: 'var(--ui-font-size)' }}>卷{this.props.match.params.path}</IonTitle>
           <IonButton hidden={this.isTopPage} fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
             <IonIcon icon={arrowBack} slot='icon-only' />
           </IonButton>
@@ -493,7 +493,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
                 const ePubIframe = document.getElementsByTagName('iframe')[0];
                 const sel = ePubIframe.contentDocument?.getSelection();
                 if (!((sel?.rangeCount || 0) > 0 && sel!.getRangeAt(0).toString().length > 0)) {
-                  this.setState({showNoSelectedTextAlert: true});
+                  this.setState({ showNoSelectedTextAlert: true });
                   return;
                 }
                 const selectedText = sel!.getRangeAt(0).toString();
