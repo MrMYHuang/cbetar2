@@ -11,7 +11,7 @@ import { bookmark, arrowBack, home, search, ellipsisHorizontal, ellipsisVertical
 import { Bookmark, BookmarkType } from '../models/Bookmark';
 import { Work } from '../models/Work';
 import SearchAlert from '../components/SearchAlert';
-import ePub, { Book, Rendition } from 'epubjs-myh';
+import ePub, { Book, Rendition, EVENTS } from 'epubjs-myh';
 import * as nodepub from 'nodepub';
 
 interface Props {
@@ -45,6 +45,9 @@ interface State {
   fetchError: boolean;
   workInfo: Work;
   htmlStr: string | null;
+  currentPage: number;
+  pageCount: number;
+  showJumpPageAlert: boolean;
   showNoSelectedTextAlert: boolean;
   showAddBookmarkSuccess: boolean;
   showCopyAppLinkSuccess: boolean;
@@ -70,6 +73,9 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       fetchError: false,
       workInfo: new Work({}),
       htmlStr: null,
+      currentPage: 1,
+      pageCount: 1,
+      showJumpPageAlert: false,
       showNoSelectedTextAlert: false,
       showAddBookmarkSuccess: false,
       showCopyAppLinkSuccess: false,
@@ -210,21 +216,39 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
   ionViewWillLeave() {
     speechSynthesis.cancel();
-    this.setState({ htmlStr: null, speechState: SpeechState.UNINITIAL });
+    this.setState({ htmlStr: null, currentPage: 1, speechState: SpeechState.UNINITIAL });
     this.book?.destroy();
     this.book = null;
     this.bookCreated = false;
   }
 
   pagePrev() {
-    if (this.props.paginated) {
+    if (this.props.paginated && this.state.currentPage > 1) {
       this.rendition?.prev();
+      this.setState({ currentPage: this.state.currentPage - 1 });
     }
   }
 
   pageNext() {
-    if (this.props.paginated) {
+    if (this.props.paginated && this.state.currentPage < this.state.pageCount) {
       this.rendition?.next();
+      this.setState({ currentPage: this.state.currentPage + 1 });
+    }
+  }
+
+  jumpToPage(page: number) {
+    if (page === 0) {
+      return;
+    }
+    page = isNaN(page) ? 1 : Math.max(Math.min(this.state.pageCount, page), 1);
+    const currentPage = this.state.currentPage;
+    let step = currentPage < page ? 1 : -1;
+    for (let i = currentPage; i !== page; i += step) {
+      if (step === 1) {
+        this.pageNext();
+      } else {
+        this.pagePrev();
+      }
     }
   }
 
@@ -343,6 +367,11 @@ class _EPubViewPage extends React.Component<PageProps, State> {
           //contents.window.getSelection().removeAllRanges();
         });
 
+        this.rendition.on(EVENTS.RENDITION.DISPLAYED, () => {
+          const displayed = (this.rendition?.currentLocation() as any).start.displayed;
+          this.setState({ currentPage: displayed.page, pageCount: displayed.total });
+        });
+
         let epubcfi = this.hasBookmark ? this.bookmark!.epubcfi : 'epubcfi(/6/6[s1]!/4/4/2/6[body]/6,/1:0,/1:1)';
         await this.rendition.display(this.props.paginated ? epubcfi : undefined);
         // Navigate to the first work page.
@@ -363,6 +392,9 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         }
 
         this.book?.locations.generate(150);
+
+        const ePubIframe = document.getElementsByTagName('iframe')[0];
+        ePubIframe.contentDocument?.addEventListener("keyup", this.keyListener.bind(this), false);
       }
     );
     //});
@@ -385,10 +417,18 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     let header = (
       <IonHeader>
         <IonToolbar>
-          <IonTitle style={{ fontSize: 'var(--ui-font-size)' }}>卷{this.props.match.params.path}</IonTitle>
+          <IonTitle style={{ fontSize: 'var(--ui-font-size)' }}></IonTitle>
+
           <IonButton hidden={this.isTopPage} fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
             <IonIcon icon={arrowBack} slot='icon-only' />
           </IonButton>
+
+          <IonButton slot='end' onClick={ev => {
+            this.setState({ showJumpPageAlert: true });
+          }}>
+            <span style={{ color: 'var(--color)' }}>頁{this.state.currentPage}/{this.state.pageCount}</span>
+          </IonButton>
+
           <IonButton fill="clear" slot='end' onClick={e => {
             const voices = speechSynthesis.getVoices();
             if (voices.length === 0) {
@@ -596,6 +636,36 @@ class _EPubViewPage extends React.Component<PageProps, State> {
             `
           }}>
           </div>
+
+          <IonAlert
+            cssClass='uiFont'
+            isOpen={this.state.showJumpPageAlert}
+            header={'跳頁'}
+            subHeader='輸入頁碼'
+            inputs={[
+              {
+                name: 'name0',
+                type: 'search',
+                placeholder: `目前：${this.state.currentPage}`
+              },
+            ]}
+            buttons={[
+              {
+                text: '取消',
+                role: 'cancel',
+                cssClass: 'secondary uiFont',
+                handler: () => this.setState({ showJumpPageAlert: false }),
+              },
+              {
+                text: '確定',
+                cssClass: 'primary uiFont',
+                handler: (value) => {
+                  this.setState({ showJumpPageAlert: false });
+                  this.jumpToPage(+value.name0);
+                },
+              }
+            ]}
+          />
 
           <SearchAlert
             {...{
