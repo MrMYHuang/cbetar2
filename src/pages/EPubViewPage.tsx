@@ -675,11 +675,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
           <SearchAlert
             {...{
               showSearchAlert: (this.state as any).showSearchAlert,
-              searchCancel: () => { this.setState({ showSearchAlert: false }) },
-              searchOk: (keyword: string) => {
-                this.props.history.push(`/catalog/search/${keyword}`);
-                this.setState({ showSearchAlert: false });
-              }, ...this.props
+              finish: () => { this.setState({ showSearchAlert: false }) }, ...this.props
             }}
           />
 

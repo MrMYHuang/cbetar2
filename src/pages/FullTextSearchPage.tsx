@@ -3,9 +3,9 @@ import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem,
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Globals from '../Globals';
-import { Search } from '../models/Search';
 import SearchAlert from '../components/SearchAlert';
 import { home, search, arrowBack } from 'ionicons/icons';
+import { FullTextSearch } from '../models/FullTextSearch';
 
 interface PageProps extends RouteComponentProps<{
   tab: string;
@@ -14,10 +14,16 @@ interface PageProps extends RouteComponentProps<{
   keyword: string;
 }> { }
 
-class _SearchPage extends React.Component<PageProps> {
+interface State {
+  showSearchAlert: boolean;
+  searches: Array<FullTextSearch>;
+}
+
+class _SearchPage extends React.Component<PageProps, State> {
   constructor(props: any) {
     super(props);
     this.state = {
+      showSearchAlert: false,
       searches: [],
     }
   }
@@ -29,11 +35,11 @@ class _SearchPage extends React.Component<PageProps> {
 
   async search(keyword: string) {
     try {
-      const res = await Globals.axiosInstance.get(`/toc?q=${keyword}`, {
+      const res = await Globals.axiosInstance.get(`/sphinx?q=${keyword}`, {
         responseType: 'arraybuffer',
       });
       const data = JSON.parse(new TextDecoder().decode(res.data)).results as [any];
-      const searches = data.map((json) => new Search(json));
+      const searches = data.map((json) => new FullTextSearch(json));
 
       this.setState({ searches: searches });
       return true;
@@ -48,11 +54,10 @@ class _SearchPage extends React.Component<PageProps> {
 
   getRows() {
     let rows = Array<object>();
-    const searches = (this.state as any).searches as [Search];
+    const searches = (this.state as any).searches as [FullTextSearch];
     searches.forEach((search, i) => {
-      const isCatalog = search.type === 'catalog';
-      let label = isCatalog ? search.label : `${search.title}\n作者:${search.creators}`;
-      let routeLink = `/${this.props.match.params.tab}` + (isCatalog ? `/catalog/${search.n}` : `/work/${search.work}`);
+      let label = `${search.title}\n作者:${search.creators}`;
+      let routeLink = `/catalog/work/${search.work}`;
       rows.push(
         <IonItem key={`searchItem_` + i} button={true} onClick={async event => {
           event.preventDefault();
@@ -76,7 +81,7 @@ class _SearchPage extends React.Component<PageProps> {
       <IonPage>
         <IonHeader>
           <IonToolbar>
-            <IonTitle style={{ fontSize: 'var(--ui-font-size)' }}>搜尋 - {this.props.match.params.keyword}</IonTitle>
+            <IonTitle style={{ fontSize: 'var(--ui-font-size)' }}>全文檢索 - {this.props.match.params.keyword}</IonTitle>
             <IonButton hidden={this.isTopPage} fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
               <IonIcon icon={arrowBack} slot='icon-only' />
             </IonButton>

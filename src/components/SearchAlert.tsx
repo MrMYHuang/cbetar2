@@ -4,6 +4,7 @@ import { RouteComponentProps } from 'react-router-dom';
 
 interface Props {
   showSearchAlert: boolean;
+  finish: Function;
 }
 
 interface PageProps extends Props, RouteComponentProps<{
@@ -36,13 +37,22 @@ class SearchAlert extends React.Component<PageProps> {
             text: '取消',
             role: 'cancel',
             cssClass: 'secondary uiFont',
-            handler: () => (this.props as any).searchCancel(),
+            handler: () => this.props.finish(),
           },
           {
-            text: '確定',
+            text: '搜尋目錄',
             cssClass: 'primary uiFont',
             handler: (value) => {
-              (this.props as any).searchOk(value.name0);
+              this.props.finish();
+              this.props.history.push(`/catalog/search/${value.name0}`);
+            },
+          },
+          {
+            text: '全文檢索',
+            cssClass: 'primary uiFont',
+            handler: (value) => {
+              this.props.finish();
+              this.props.history.push(`/catalog/fulltextsearch/${value.name0}`);
             },
           }
         ]}

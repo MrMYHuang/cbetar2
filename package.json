@@ -1,13 +1,13 @@
 {
   "name": "cbetar2",
-  "version": "3.2.2",
+  "version": "3.3.0",
   "private": true,
   "dependencies": {
     "@capacitor-community/electron": "^1.2.3",
     "@capacitor/android": "^2.4.0",
     "@capacitor/core": "2.4.0",
-    "@ionic/react": "^5.3.3",
-    "@ionic/react-router": "^5.3.3",
+    "@ionic/react": "^5.3.4",
+    "@ionic/react-router": "^5.3.4",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.4.0",
     "@testing-library/user-event": "^8.0.3",

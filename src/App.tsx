@@ -41,6 +41,7 @@ import BookmarkPage from './pages/BookmarkPage';
 import SearchPage from './pages/SearchPage';
 import Globals from './Globals';
 import DictionaryPage from './pages/DictionaryPage';
+import FullTextSearchPage from './pages/FullTextSearchPage';
 
 let store = getSavedStore();
 /*
@@ -153,6 +154,7 @@ class _App extends React.Component<PageProps, State> {
                 <Route path="/:tab(catalog)/work/:path/:label" component={(props: any) => <WorkPage {...props} />} exact={true} />
                 <Route path="/:tab(catalog)/work/:path" component={(props: any) => <WorkPage {...props} />} exact={true} />
                 <Route path="/:tab(catalog)/search/:keyword" render={props => <SearchPage {...props} />} exact={true} />
+                <Route path="/:tab(catalog)/fulltextsearch/:keyword" render={props => <FullTextSearchPage {...props} />} exact={true} />
                 {/* The following route is for backward compatibility. */}
                 <Route path="/:tab(catalog)/catalog/:path/:label" component={(props: any) => <CatalogPage {...props} />} exact={true} />
                 <Route path="/:tab(catalog)/catalog/:path" component={(props: any) => <CatalogPage key={props.match.url} {...props} />} exact={true} />

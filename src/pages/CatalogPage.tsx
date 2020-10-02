@@ -216,13 +216,10 @@ class _CatalogPage extends React.Component<PageProps, State> {
           <SearchAlert
             {...{
               showSearchAlert: (this.state as any).showSearchAlert,
-              searchCancel: () => { this.setState({ showSearchAlert: false }) },
-              searchOk: (keyword: string) => {
-                this.props.history.push(`/catalog/search/${keyword}`);
-                this.setState({ showSearchAlert: false });
-              }, ...this.props
+              finish: () => { this.setState({ showSearchAlert: false }) }, ...this.props
             }}
           />
+
           <div style={{ fontSize: 'var(--ui-font-size)', textAlign: 'center' }}><a href="https://github.com/MrMYHuang/cbetar2#search" target="_new">搜尋經文教學</a></div>
 
           <IonToast
