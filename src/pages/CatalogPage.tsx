@@ -187,7 +187,7 @@ class _CatalogPage extends React.Component<PageProps, State> {
                 val: newTopCatalogsType
               });
             }}>
-              <span style={{ color: 'var(--color)' }}>{this.props.topCatalogsType ? '冊分類' : '部分類'}</span>
+              <span className='uiFont' style={{ color: 'var(--color)' }}>{this.props.topCatalogsType ? '冊分類' : '部分類'}</span>
             </IonButton>
 
             <IonButton hidden={this.isTopCatalog} fill="clear" color={this.hasBookmark ? 'warning' : 'primary'} slot='end' onClick={e => this.hasBookmark ? this.delBookmarkHandler() : this.addBookmarkHandler()}>

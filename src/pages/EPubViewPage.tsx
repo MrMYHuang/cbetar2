@@ -7,7 +7,7 @@ import * as uuid from 'uuid';
 import queryString from 'query-string';
 import './EPubViewPage.css';
 import Globals from '../Globals';
-import { bookmark, arrowBack, home, search, ellipsisHorizontal, ellipsisVertical, arrowForward, text, playCircle, stopCircle, book, shareSocial } from 'ionicons/icons';
+import { bookmark, arrowBack, home, search, ellipsisHorizontal, ellipsisVertical, arrowForward, musicalNotes, stopCircle, book, shareSocial } from 'ionicons/icons';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
 import { Work } from '../models/Work';
 import SearchAlert from '../components/SearchAlert';
@@ -426,7 +426,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
           <IonButton slot='end' onClick={ev => {
             this.setState({ showJumpPageAlert: true });
           }}>
-            <span style={{ color: 'var(--color)' }}>頁{this.state.currentPage}/{this.state.pageCount}</span>
+            <span className='uiFont' style={{ color: 'var(--color)' }}>頁{this.state.currentPage}/{this.state.pageCount}</span>
           </IonButton>
 
           <IonButton fill="clear" slot='end' onClick={e => {
@@ -476,7 +476,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
                 break;
             }
           }}>
-            <IonIcon icon={this.state.speechState === SpeechState.SPEAKING ? stopCircle : playCircle} slot='icon-only' />
+            <IonIcon icon={this.state.speechState === SpeechState.SPEAKING ? stopCircle : musicalNotes} slot='icon-only' />
           </IonButton>
 
           <IonButton fill="clear" slot='end' onClick={e => this.setState({ popover: { show: true, event: e.nativeEvent } })}>
@@ -507,7 +507,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
               </IonItem>
               <IonItem>
                 <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
-                <IonIcon icon={text} slot='start' />
+                <IonIcon icon={book} slot='start' />
                 <div style={{ width: '100%' }}>
                   <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>跳頁(%)</IonLabel>
                   <IonRange min={0} max={100} step={10} snaps pin onIonChange={e => {
