@@ -323,6 +323,15 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     .lb {
       display: none
     }
+
+    /* In-HTML anchor jumps don't update this.state.currentPage.
+    Thus, we disable thems. */
+    .noteAnchor {
+      pointer-events: none;
+      text-decoration: inherit;
+      color: inherit;
+      cursor: auto;
+    }
   
     ${this.props.rtlVerticalLayout ? rtlVerticalStyles : ''}
 
