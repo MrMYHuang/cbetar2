@@ -129,6 +129,8 @@ Then, upload files under build folder to your github.io.
 7. 經文頁使用單選式UI選擇跳頁頁碼。因為如果使用鍵盤輸入式UI，在Android會發生鍵盤跳出後，經文頁面變小、頁數重新計算，導致難以跳至指定頁面。
 
 ## 版本歷史
+* 3.3.1:
+  * 修正直式模式，總頁數計算有誤。
 * 3.3.0:
   * 支援全文檢索，見<a href='#search'>說明</a>。
   * 綁定部分文字大小至UI字型設定。
