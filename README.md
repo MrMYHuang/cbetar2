@@ -74,12 +74,12 @@ CBETA電子佛典閱讀器2(非官方)，使用CBETA API存取電子佛經，支
 https://MrMYHuang.github.io
 
 ### 安裝
-#### Chrome (Windows, macOS, Linux, Android)
+#### Windows, macOS, Linux, Android - Chrome
 請參考Chrome官方文件： 
 
 https://support.google.com/chrome/answer/9658361?hl=zh-Hant&co=GENIE.Platform%3DDesktop
 
-#### Safari (iOS)
+#### iOS - Safari
 1. 使用Safari開啟web app網址，再點擊下方中間的"分享"圖示：
 
 <img src='./docs/images/Safari/OpenAppUrl.png' width='50%' height='50%' />
