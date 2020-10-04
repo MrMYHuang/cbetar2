@@ -377,8 +377,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         });
 
         this.rendition.on(EVENTS.RENDITION.DISPLAYED, () => {
-          const displayed = (this.rendition?.currentLocation() as any).start.displayed;
-          this.setState({ currentPage: displayed.page, pageCount: displayed.total });
+          this.updatePageInfos();
         });
 
         let epubcfi = this.hasBookmark ? this.bookmark!.epubcfi : 'epubcfi(/6/6[s1]!/4/4/2/6[body]/6,/1:0,/1:1)';
@@ -407,6 +406,11 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       }
     );
     //});
+  }
+
+  updatePageInfos() {
+    const displayed = (this.rendition?.currentLocation() as any).start.displayed;
+    this.setState({ currentPage: displayed.page, pageCount: displayed.total });
   }
 
   // There is a max characters per utterance limit on Android Chrome.
