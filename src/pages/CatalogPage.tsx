@@ -27,6 +27,7 @@ interface State {
   showCopyAppLinkSuccess: boolean;
   fetchError: boolean;
   catalogs: Array<Catalog>;
+  parentLabel: string;
 }
 
 class _CatalogPage extends React.Component<PageProps, State> {
@@ -35,6 +36,7 @@ class _CatalogPage extends React.Component<PageProps, State> {
     this.state = {
       fetchError: false,
       catalogs: [],
+      parentLabel: '',
       showSearchAlert: false,
       showCopyAppLinkSuccess: false,
     };
@@ -61,16 +63,23 @@ class _CatalogPage extends React.Component<PageProps, State> {
   async fetchData(path: string) {
     //console.log('fetch');
     let catalogs = new Array<Catalog>();
+    let parentLabel = '';
 
-    if (this.props.match.params.path == null) {
+    if (path == null) {
       return this.fetchTopCatalogs(this.props.topCatalogsType);
     } else {
       try {
-        const res = await Globals.axiosInstance.get(`/catalog_entry?q=${path}`, {
-          responseType: 'arraybuffer',
-        });
-        const data = JSON.parse(new TextDecoder().decode(res.data)).results as [any];
-        catalogs = data.map((json) => new Catalog(json));
+        // Fetch catalog infos.
+        catalogs = await this.fetchCatalogs(path);
+        // Fetch parent catalog infos.
+        const parentPath = this.parentPath(path);
+        if (parentPath !== '') {
+          const parentCatalogs = await this.fetchCatalogs(parentPath);
+          parentLabel = parentCatalogs.find((c) => c.n === path)!.label;
+        } else {
+          const topCatalogsByCatLabel = Globals.topCatalogsByCat[path];
+          parentLabel = (topCatalogsByCatLabel !== undefined) ? topCatalogsByCatLabel : Globals.topCatalogsByVol[path];
+        }
       } catch (e) {
         console.error(e);
         this.setState({ fetchError: true });
@@ -78,8 +87,16 @@ class _CatalogPage extends React.Component<PageProps, State> {
       }
     }
 
-    this.setState({ catalogs: catalogs });
+    this.setState({ catalogs, parentLabel });
     return true;
+  }
+
+  async fetchCatalogs(path: string) {
+    const res = await Globals.axiosInstance.get(`/catalog_entry?q=${path}`, {
+      responseType: 'arraybuffer',
+    });
+    const data = JSON.parse(new TextDecoder().decode(res.data)).results as [any];
+    return data.map((json) => new Catalog(json));
   }
 
   fetchTopCatalogs(topCatalogsType: number) {
@@ -105,13 +122,19 @@ class _CatalogPage extends React.Component<PageProps, State> {
     return this.props.match.url === '/catalog';
   }
 
+  parentPath(path: string) {
+    let paths = path.split('.');
+    paths.pop();
+    return paths.join('.');
+  }
+
   addBookmarkHandler() {
-    (this.props as any).dispatch({
+    this.props.dispatch({
       type: "ADD_BOOKMARK",
       bookmark: new Bookmark({
         type: BookmarkType.CATALOG,
         uuid: this.props.match.params.path,
-        selectedText: this.props.match.params.path,
+        selectedText: this.state.parentLabel,
         epubcfi: '',
         fileName: '',
         work: null,
@@ -120,20 +143,20 @@ class _CatalogPage extends React.Component<PageProps, State> {
   }
 
   delBookmarkHandler() {
-    (this.props as any).dispatch({
+    this.props.dispatch({
       type: "DEL_BOOKMARK",
       uuid: this.props.match.params.path,
     });
   }
 
   get hasBookmark() {
-    return ((this.props as any).bookmarks as [Bookmark])?.find(
+    return this.props.bookmarks.find(
       (e) => e.type === BookmarkType.CATALOG && e.uuid === this.props.match.params.path) != null;
   }
 
   getRows() {
     let rows = Array<object>();
-    (this.state as any).catalogs.forEach((catalog: Catalog, index: number) => {
+    this.state.catalogs.forEach((catalog: Catalog, index: number) => {
       let routeLink = '';
       const isHtmlNode = catalog.nodeType === 'html';
       if (isHtmlNode) {

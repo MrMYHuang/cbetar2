@@ -137,6 +137,8 @@ If a developer wants to migrate this app to other web servers, please use a simi
 7. 經文頁使用單選式UI選擇跳頁頁碼。因為如果使用鍵盤輸入式UI，在Android會發生鍵盤跳出後，經文頁面變小、頁數重新計算，導致難以跳至指定頁面。
 
 ## 版本歷史
+* 3.3.5:
+  * 修正目錄書籤標題。
 * 3.3.4:
   * 修正點開書籤跳頁後，目前頁碼不正確的問題。
 * 3.3.3:
