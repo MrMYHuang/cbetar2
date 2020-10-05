@@ -125,6 +125,7 @@ If a developer wants to migrate this app to other web servers, please use a simi
 
 ## 未來功能
 1. 佛學詞典記錄歷史查詢。
+2. App連結支援經文選取字書籤功能，即開啟連結後，自動跳至選取文字頁面並標示選取字。
 
 ## 已知問題
 1. iOS Safari在單頁模式下，捲軸無法顯示。
