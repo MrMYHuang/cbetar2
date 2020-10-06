@@ -27,7 +27,7 @@ interface State {
   showCopyAppLinkSuccess: boolean;
   fetchError: boolean;
   catalogs: Array<Catalog>;
-  parentLabel: string;
+  pathLabel: string;
 }
 
 class _CatalogPage extends React.Component<PageProps, State> {
@@ -36,7 +36,7 @@ class _CatalogPage extends React.Component<PageProps, State> {
     this.state = {
       fetchError: false,
       catalogs: [],
-      parentLabel: '',
+      pathLabel: '',
       showSearchAlert: false,
       showCopyAppLinkSuccess: false,
     };
@@ -63,7 +63,7 @@ class _CatalogPage extends React.Component<PageProps, State> {
   async fetchData(path: string) {
     //console.log('fetch');
     let catalogs = new Array<Catalog>();
-    let parentLabel = '';
+    let pathLabel = '';
 
     if (path == null) {
       return this.fetchTopCatalogs(this.props.topCatalogsType);
@@ -77,14 +77,15 @@ class _CatalogPage extends React.Component<PageProps, State> {
         catalogs = data.map((json) => new Catalog(json));
 
         const parentPath = this.parentPath(path);
+        // path is not a top catalog.
         if (parentPath !== '') {
-          parentLabel = obj.label;
+          pathLabel = obj.label;
         } else {
           const topCatalogsByCatLabel = Globals.topCatalogsByCat[path];
-          parentLabel = (topCatalogsByCatLabel !== undefined) ? topCatalogsByCatLabel : Globals.topCatalogsByVol[path];
+          pathLabel = (topCatalogsByCatLabel !== undefined) ? topCatalogsByCatLabel : Globals.topCatalogsByVol[path];
         }
 
-        this.setState({ catalogs: catalogs, parentLabel });
+        this.setState({ catalogs: catalogs, pathLabel });
         return true;
       } catch (e) {
         console.error(e);
@@ -129,7 +130,7 @@ class _CatalogPage extends React.Component<PageProps, State> {
       bookmark: new Bookmark({
         type: BookmarkType.CATALOG,
         uuid: this.props.match.params.path,
-        selectedText: this.state.parentLabel,
+        selectedText: this.state.pathLabel,
         epubcfi: '',
         fileName: '',
         work: null,
