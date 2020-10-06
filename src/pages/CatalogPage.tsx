@@ -69,34 +69,29 @@ class _CatalogPage extends React.Component<PageProps, State> {
       return this.fetchTopCatalogs(this.props.topCatalogsType);
     } else {
       try {
-        // Fetch catalog infos.
-        catalogs = await this.fetchCatalogs(path);
-        // Fetch parent catalog infos.
+        const res = await Globals.axiosInstance.get(`/catalog_entry?q=${path}`, {
+          responseType: 'arraybuffer',
+        });
+        const obj = JSON.parse(new TextDecoder().decode(res.data)) as any;
+        const data = obj.results as [any];
+        catalogs = data.map((json) => new Catalog(json));
+
         const parentPath = this.parentPath(path);
         if (parentPath !== '') {
-          const parentCatalogs = await this.fetchCatalogs(parentPath);
-          parentLabel = parentCatalogs.find((c) => c.n === path)!.label;
+          parentLabel = obj.label;
         } else {
           const topCatalogsByCatLabel = Globals.topCatalogsByCat[path];
           parentLabel = (topCatalogsByCatLabel !== undefined) ? topCatalogsByCatLabel : Globals.topCatalogsByVol[path];
         }
+
+        this.setState({ catalogs: catalogs, parentLabel });
+        return true;
       } catch (e) {
         console.error(e);
         this.setState({ fetchError: true });
         return false;
       }
     }
-
-    this.setState({ catalogs, parentLabel });
-    return true;
-  }
-
-  async fetchCatalogs(path: string) {
-    const res = await Globals.axiosInstance.get(`/catalog_entry?q=${path}`, {
-      responseType: 'arraybuffer',
-    });
-    const data = JSON.parse(new TextDecoder().decode(res.data)).results as [any];
-    return data.map((json) => new Catalog(json));
   }
 
   fetchTopCatalogs(topCatalogsType: number) {
