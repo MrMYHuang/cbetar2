@@ -43,7 +43,7 @@ class _CatalogPage extends React.Component<PageProps, State> {
   }
 
   ionViewWillEnter() {
-    console.log( `view will enter: ${this.props.match.url}` );
+    console.log(`view will enter: ${this.props.match.url}`);
   }
 
   /*
@@ -217,15 +217,15 @@ class _CatalogPage extends React.Component<PageProps, State> {
               <IonIcon icon={home} slot='icon-only' />
             </IonButton>
 
+            <IonButton fill="clear" slot='end' onClick={e => this.setState({ showSearchAlert: true })}>
+              <IonIcon icon={search} slot='icon-only' />
+            </IonButton>
+
             <IonButton fill="clear" slot='end' onClick={e => {
               navigator.clipboard.writeText(window.location.href);
               this.setState({ showCopyAppLinkSuccess: true });
             }}>
               <IonIcon icon={shareSocial} slot='icon-only' />
-            </IonButton>
-
-            <IonButton fill="clear" slot='end' onClick={e => this.setState({ showSearchAlert: true })}>
-              <IonIcon icon={search} slot='icon-only' />
             </IonButton>
           </IonToolbar>
         </IonHeader>
