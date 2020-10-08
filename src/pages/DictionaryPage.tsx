@@ -1,9 +1,9 @@
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, withIonLifeCycle, IonButton, IonIcon, IonSearchbar } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, withIonLifeCycle, IonButton, IonIcon, IonSearchbar, IonToast } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Globals from '../Globals';
-import { home, arrowBack } from 'ionicons/icons';
+import { home, arrowBack, shareSocial } from 'ionicons/icons';
 import { DictItem } from '../models/DictItem';
 
 interface PageProps extends RouteComponentProps<{
@@ -15,6 +15,7 @@ interface PageProps extends RouteComponentProps<{
 interface State {
   keyword: string;
   searches: Array<DictItem>;
+  showCopyAppLinkSuccess: boolean;
 }
 
 class _DictionaryPage extends React.Component<PageProps, State> {
@@ -24,6 +25,7 @@ class _DictionaryPage extends React.Component<PageProps, State> {
     this.state = {
       keyword: '',
       searches: [],
+      showCopyAppLinkSuccess: false,
     }
     this.searchBarRef = React.createRef<HTMLIonSearchbarElement>();
   }
@@ -40,7 +42,7 @@ class _DictionaryPage extends React.Component<PageProps, State> {
   }
 
   get isTopPage() {
-    return this.props.match.url === '/catalog';
+    return this.props.match.url === `/${this.props.match.params.tab}`;
   }
 
   async lookupDict(keyword: string) {
@@ -79,8 +81,16 @@ class _DictionaryPage extends React.Component<PageProps, State> {
             <IonButton hidden={this.isTopPage} fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
               <IonIcon icon={arrowBack} slot='icon-only' />
             </IonButton>
+
             <IonButton fill="clear" slot='end' onClick={e => this.props.history.push(`/${this.props.match.params.tab}`)}>
               <IonIcon icon={home} slot='icon-only' />
+            </IonButton>
+
+            <IonButton fill="clear" slot='end' onClick={e => {
+              navigator.clipboard.writeText(decodeURIComponent(window.location.href));
+              this.setState({ showCopyAppLinkSuccess: true });
+            }}>
+              <IonIcon icon={shareSocial} slot='icon-only' />
             </IonButton>
           </IonToolbar>
         </IonHeader>
@@ -96,10 +106,12 @@ class _DictionaryPage extends React.Component<PageProps, State> {
                 }}
                 onKeyUp={ev => {
                   if (ev.key === 'Enter') {
-                    this.lookupDict(this.state.keyword);
+                    this.props.history.push({
+                      pathname: `/dictionary/search/${this.state.keyword}`,
+                    });
                   }
                 }} />
-                {/*
+              {/*
               <IonButton slot='end' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={e => {
                 this.lookupDict(this.state.keyword);
               }}>搜尋</IonButton>*/}
@@ -107,6 +119,14 @@ class _DictionaryPage extends React.Component<PageProps, State> {
             {this.getRows()}
           </IonList>
           <div style={{ fontSize: 'var(--ui-font-size)', textAlign: 'center' }}><a href="https://github.com/MrMYHuang/cbetar2#dictionary" target="_new">佛學詞典說明</a></div>
+          
+          <IonToast
+            cssClass='uiFont'
+            isOpen={this.state.showCopyAppLinkSuccess}
+            onDidDismiss={() => this.setState({ showCopyAppLinkSuccess: false })}
+            message="此頁app連結已複製至剪貼簿！"
+            duration={2000}
+          />
         </IonContent>
       </IonPage>
     );

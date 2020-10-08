@@ -1,10 +1,10 @@
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonLabel, withIonLifeCycle, IonButton, IonIcon } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonLabel, withIonLifeCycle, IonButton, IonIcon, IonToast } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Globals from '../Globals';
 import SearchAlert from '../components/SearchAlert';
-import { home, search, arrowBack } from 'ionicons/icons';
+import { home, search, arrowBack, shareSocial } from 'ionicons/icons';
 import { FullTextSearch } from '../models/FullTextSearch';
 
 interface PageProps extends RouteComponentProps<{
@@ -16,6 +16,7 @@ interface PageProps extends RouteComponentProps<{
 
 interface State {
   showSearchAlert: boolean;
+  showCopyAppLinkSuccess: boolean;
   searches: Array<FullTextSearch>;
 }
 
@@ -24,6 +25,7 @@ class _SearchPage extends React.Component<PageProps, State> {
     super(props);
     this.state = {
       showSearchAlert: false,
+      showCopyAppLinkSuccess: false,
       searches: [],
     }
   }
@@ -91,6 +93,13 @@ class _SearchPage extends React.Component<PageProps, State> {
             <IonButton fill="clear" slot='end' onClick={e => this.setState({ showSearchAlert: true })}>
               <IonIcon icon={search} slot='icon-only' />
             </IonButton>
+
+            <IonButton fill="clear" slot='end' onClick={e => {
+              navigator.clipboard.writeText(decodeURIComponent(window.location.href));
+              this.setState({ showCopyAppLinkSuccess: true });
+            }}>
+              <IonIcon icon={shareSocial} slot='icon-only' />
+            </IonButton>
           </IonToolbar>
         </IonHeader>
         <IonContent>
@@ -105,6 +114,14 @@ class _SearchPage extends React.Component<PageProps, State> {
             }}
           />
         </IonContent>
+
+        <IonToast
+          cssClass='uiFont'
+          isOpen={this.state.showCopyAppLinkSuccess}
+          onDidDismiss={() => this.setState({ showCopyAppLinkSuccess: false })}
+          message="此頁app連結已複製至剪貼簿！"
+          duration={2000}
+        />
       </IonPage>
     );
   }

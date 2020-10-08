@@ -19,7 +19,7 @@ CBETA電子佛典閱讀器2(非官方)，使用CBETA API存取電子佛經，支
 * <a id='shareAppLink'>網址分享</a>
   1. 用瀏覽器開啟此app並開啟某卷經文後，可複製其網址分享給別人開啟。
   2. 也可以使用瀏覽器內建書籤功能儲存經文網址。與app書籤功能相比，可以依個人使習慣作選擇。
-  3. App內建"分享此頁"功能，可複製目錄、經、卷的連結至作業系統剪貼簿，可分享給其他人。
+  3. App內建"分享此頁"功能，可複製目錄、經、卷、目錄搜尋、全文檢索搜尋、詞典搜尋的連結至作業系統剪貼簿，可分享給其他人。
 * 離線瀏覽
   1. 書籤頁包含的"經"或"卷"書籤都具有離線瀏覽的功能，並用圖示標示。
   2. 設定頁的"更新離線經文檔"按鈕用途為：當CBETA每季更新經文後，離線經文檔不會自動更新，必須手動執行此功能更新所有離線檔。
@@ -96,33 +96,6 @@ https://support.google.com/chrome/answer/9658361?hl=zh-Hant&co=GENIE.Platform%3D
 
 <img src='./docs/images/Safari/AppIcon.png' width='50%' height='50%' />
 
-## Run Locally
-Please refer to https://ionicframework.com/ for building Ionic development environment.
-```
-git clone https://github.com/MrMYHuang/cbetar2.git
-cd cbetar2
-npm i
-npm run start
-```
-
-## Build for Production
-### Build on Windows
-```
-npm run build
-```
-### Build on macOS or Linux
-```
-npm run build_linux
-```
-Then, upload files under build folder to your github.io.
-
-### Client Side Routing
-Notice! This app uses client side routing for page navigation. Without loading this app (and its client side router) once, a client side route is resolved as a server side route by browser! Generally, the web server serving this app can't resolve this route and thus responses a 404 error. To solve this problem, this repo provides a 404.html for GitHub.io web server. When the GitHub.io server can't resolve a client side route, it redirects to 404.html, which further redirect to URL of this app with path info of the route. For example, if a user on a new PC opens this URL
-https://mrmyhuang.github.io/bookmarks
-, the GitHub.io server can't find bookmarks/index.html and thus redirects the resource to 404.html. Our 404.html extracts the app path "/bookmarks" and redirects the browser to the app URL https://mrmyhuang.github.io/ with query parameter `?route=/bookmarks`. After the app and its client side router loaded, the app redirects itself by using the original URL https://mrmyhuang.github.io/bookmarks by its router!
-
-If a developer wants to migrate this app to other web servers, please use a similar server side redirection technique to correctly do the client side routing.
-
 ## 未來功能
 1. 佛學詞典記錄歷史查詢。
 2. App連結支援經文選取字書籤功能，即開啟連結後，自動跳至選取文字頁面並標示選取字。
@@ -137,8 +110,10 @@ If a developer wants to migrate this app to other web servers, please use a simi
 7. 經文頁使用單選式UI選擇跳頁頁碼。因為如果使用鍵盤輸入式UI，在Android會發生鍵盤跳出後，經文頁面變小、頁數重新計算，導致難以跳至指定頁面。
 
 ## 版本歷史
+* 3.4.0:
+  * 目錄搜尋頁、全文檢索搜尋頁、詞典頁支援"分享此頁"功能。
 * 3.3.7:
-  * 修正第一次開啟此app的下層連結，楷書字型無法正確載入的問題。
+  * 修正第一次開啟此app且為下層連結，楷書字型無法正確載入的問題。
 * 3.3.6:
   * 改善app效能。
 * 3.3.5:
@@ -240,6 +215,33 @@ If a developer wants to migrate this app to other web servers, please use a simi
 * 1.0.0:
   * 第1版。
 
+## Run Locally
+Please refer to https://ionicframework.com/ for building Ionic development environment.
+```
+git clone https://github.com/MrMYHuang/cbetar2.git
+cd cbetar2
+npm i
+npm run start
+```
+
+## Build for Production
+### Build on Windows
+```
+npm run build
+```
+### Build on macOS or Linux
+```
+npm run build_linux
+```
+Then, upload files under build folder to your github.io.
+
+### Client Side Routing
+Notice! This app uses client side routing for page navigation. Without loading this app (and its client side router) once, a client side route is resolved as a server side route by browser! Generally, the web server serving this app can't resolve this route and thus responses a 404 error. To solve this problem, this repo provides a 404.html for GitHub.io web server. When the GitHub.io server can't resolve a client side route, it redirects to 404.html, which further redirect to URL of this app with path info of the route. For example, if a user on a new PC opens this URL
+https://mrmyhuang.github.io/bookmarks
+, the GitHub.io server can't find bookmarks/index.html and thus redirects the resource to 404.html. Our 404.html extracts the app path "/bookmarks" and redirects the browser to the app URL https://mrmyhuang.github.io/ with query parameter `?route=/bookmarks`. After the app and its client side router loaded, the app redirects itself by using the original URL https://mrmyhuang.github.io/bookmarks by its router!
+
+If a developer wants to migrate this app to other web servers, please use a similar server side redirection technique to correctly do the client side routing.
+
 ## 隱私政策聲明
 
 此app無收集使用者個人資訊，也無收集匿名資訊。
@@ -251,3 +253,4 @@ If a developer wants to migrate this app to other web servers, please use a simi
 3. 全字庫字型 ( https://data.gov.tw/dataset/5961 )
 
     此app使用的全字庫字型(2020-08-18版)由國家發展委員會提供。此開放資料依政府資料開放授權條款 (Open Government Data License) 進行公眾釋出，使用者於遵守本條款各項規定之前提下，得利用之。政府資料開放授權條款：https://data.gov.tw/license
+    

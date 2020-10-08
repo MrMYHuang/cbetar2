@@ -1,11 +1,11 @@
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonLabel, withIonLifeCycle, IonButton, IonIcon } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonLabel, withIonLifeCycle, IonButton, IonIcon, IonToast } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Globals from '../Globals';
 import { Search } from '../models/Search';
 import SearchAlert from '../components/SearchAlert';
-import { home, search, arrowBack } from 'ionicons/icons';
+import { home, search, arrowBack, shareSocial } from 'ionicons/icons';
 
 interface PageProps extends RouteComponentProps<{
   tab: string;
@@ -14,10 +14,18 @@ interface PageProps extends RouteComponentProps<{
   keyword: string;
 }> { }
 
-class _SearchPage extends React.Component<PageProps> {
+interface State {
+  showSearchAlert: boolean;
+  showCopyAppLinkSuccess: boolean;
+  searches: Array<Search>;
+}
+
+class _SearchPage extends React.Component<PageProps, State> {
   constructor(props: any) {
     super(props);
     this.state = {
+      showSearchAlert: false,
+      showCopyAppLinkSuccess: false,
       searches: [],
     }
   }
@@ -48,7 +56,7 @@ class _SearchPage extends React.Component<PageProps> {
 
   getRows() {
     let rows = Array<object>();
-    const searches = (this.state as any).searches as [Search];
+    const searches = this.state.searches;
     searches.forEach((search, i) => {
       const isCatalog = search.type === 'catalog';
       let label = isCatalog ? search.label : `${search.title}\n作者:${search.creators}`;
@@ -86,6 +94,13 @@ class _SearchPage extends React.Component<PageProps> {
             <IonButton fill="clear" slot='end' onClick={e => this.setState({ showSearchAlert: true })}>
               <IonIcon icon={search} slot='icon-only' />
             </IonButton>
+
+            <IonButton fill="clear" slot='end' onClick={e => {
+              navigator.clipboard.writeText(decodeURIComponent(window.location.href));
+              this.setState({ showCopyAppLinkSuccess: true });
+            }}>
+              <IonIcon icon={shareSocial} slot='icon-only' />
+            </IonButton>
           </IonToolbar>
         </IonHeader>
         <IonContent>
@@ -95,11 +110,19 @@ class _SearchPage extends React.Component<PageProps> {
 
           <SearchAlert
             {...{
-              showSearchAlert: (this.state as any).showSearchAlert,
+              showSearchAlert: this.state.showSearchAlert,
               finish: () => { this.setState({ showSearchAlert: false }) }, ...this.props
             }}
           />
         </IonContent>
+
+        <IonToast
+          cssClass='uiFont'
+          isOpen={this.state.showCopyAppLinkSuccess}
+          onDidDismiss={() => this.setState({ showCopyAppLinkSuccess: false })}
+          message="此頁app連結已複製至剪貼簿！"
+          duration={2000}
+        />
       </IonPage>
     );
   }
