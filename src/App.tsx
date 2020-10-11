@@ -11,7 +11,7 @@ import {
   IonAlert,
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import { Provider } from 'react-redux';
+import { connect, Provider } from 'react-redux';
 import getSavedStore from './redux/store';
 import { bookmark, settings, library, book } from 'ionicons/icons';
 import CatalogPage from './pages/CatalogPage';
@@ -42,6 +42,7 @@ import SearchPage from './pages/SearchPage';
 import Globals from './Globals';
 import DictionaryPage from './pages/DictionaryPage';
 import FullTextSearchPage from './pages/FullTextSearchPage';
+import ShareTextModal from './components/ShareTextModal';
 
 let store = getSavedStore();
 /*
@@ -70,9 +71,16 @@ export var serviceWorkCallbacks = {
   onUpdate: function () {},
 };
 
-interface Props { }
+interface Props {
+  shareTextModal: any;
+ }
 
-interface PageProps extends Props, RouteComponentProps<{
+interface PageProps extends RouteComponentProps<{
+  tab: string;
+  path: string;
+}> { }
+
+interface AppOrigProps extends Props, RouteComponentProps<{
   tab: string;
   path: string;
 }> { }
@@ -82,6 +90,16 @@ interface State {
 }
 
 class _App extends React.Component<PageProps, State> {
+  render() {
+    return (
+      <Provider store={store}>
+        <AppOrig {...this.props} />
+      </Provider>
+    );
+  }
+}
+
+class _AppOrig extends React.Component<AppOrigProps, State> {
   constructor(props: any) {
     super(props);
     // ----- Initializing UI settings -----
@@ -142,7 +160,6 @@ class _App extends React.Component<PageProps, State> {
 
   render() {
     return (
-      <Provider store={store}>
         <IonApp>
           <IonReactRouter>
             <IonTabs>
@@ -206,11 +223,35 @@ class _App extends React.Component<PageProps, State> {
               }
             ]}
           />
+
+          <ShareTextModal
+            {...{
+              text: this.props.shareTextModal?.text,
+              showModal: this.props.shareTextModal?.show || false,
+              finish: () => { 
+                store.dispatch({
+                  type: "TMP_SET_KEY_VAL",
+                  key: 'shareTextModal',
+                  val: {show: false},
+                });
+               }, ...this.props
+            }}
+          />
         </IonApp>
-      </Provider>
     );
   }
 }
+
+const mapStateToProps = (state: any /*, ownProps*/) => {
+  return {
+    shareTextModal: state.tmpSettings.shareTextModal,
+  }
+};
+
+const AppOrig = connect(
+  mapStateToProps,
+)(_AppOrig);
+
 
 const App = withRouter(_App);
 

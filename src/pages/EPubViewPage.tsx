@@ -50,7 +50,6 @@ interface State {
   showJumpPageAlert: boolean;
   showNoSelectedTextAlert: boolean;
   showAddBookmarkSuccess: boolean;
-  showCopyAppLinkSuccess: boolean;
   showSearchAlert: boolean;
   popover: any;
   lookupDictPopover: any;
@@ -78,7 +77,6 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       showJumpPageAlert: false,
       showNoSelectedTextAlert: false,
       showAddBookmarkSuccess: false,
-      showCopyAppLinkSuccess: false,
       showSearchAlert: false,
       popover: {
         show: false,
@@ -561,8 +559,14 @@ class _EPubViewPage extends React.Component<PageProps, State> {
               </IonItem>
 
               <IonItem button onClick={ev => {
-                navigator.clipboard.writeText(window.location.href);
-                this.setState({ showCopyAppLinkSuccess: true });
+                this.props.dispatch({
+                  type: "TMP_SET_KEY_VAL",
+                  key: 'shareTextModal',
+                  val: {
+                    show: true,
+                    text: decodeURIComponent(window.location.href),
+                  },
+                });
               }}>
                 <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
                 <IonIcon icon={shareSocial} slot='start' />
@@ -716,14 +720,6 @@ class _EPubViewPage extends React.Component<PageProps, State> {
             isOpen={this.state.showAddBookmarkSuccess}
             onDidDismiss={() => this.setState({ showAddBookmarkSuccess: false })}
             message="書籤新增成功！"
-            duration={2000}
-          />
-
-          <IonToast
-            cssClass='uiFont'
-            isOpen={this.state.showCopyAppLinkSuccess}
-            onDidDismiss={() => this.setState({ showCopyAppLinkSuccess: false })}
-            message="此頁app連結已複製至剪貼簿！"
             duration={2000}
           />
         </IonContent>

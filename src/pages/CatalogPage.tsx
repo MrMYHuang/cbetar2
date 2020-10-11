@@ -1,5 +1,5 @@
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonLabel, IonButton, IonIcon, withIonLifeCycle, IonToast } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonLabel, IonButton, IonIcon, withIonLifeCycle } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import './CatalogPage.css';
@@ -8,7 +8,6 @@ import Globals from '../Globals';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
 import { bookmark, arrowBack, home, search, shareSocial } from 'ionicons/icons';
 import SearchAlert from '../components/SearchAlert';
-import ShareTextModal from '../components/ShareTextModal';
 import queryString from 'query-string';
 
 interface Props {
@@ -25,7 +24,6 @@ interface PageProps extends Props, RouteComponentProps<{
 
 interface State {
   showSearchAlert: boolean;
-  showCopyAppLinkSuccess: boolean;
   fetchError: boolean;
   catalogs: Array<Catalog>;
   pathLabel: string;
@@ -39,7 +37,6 @@ class _CatalogPage extends React.Component<PageProps, State> {
       catalogs: [],
       pathLabel: '',
       showSearchAlert: false,
-      showCopyAppLinkSuccess: false,
     };
   }
 
@@ -223,8 +220,14 @@ class _CatalogPage extends React.Component<PageProps, State> {
             </IonButton>
 
             <IonButton fill="clear" slot='end' onClick={e => {
-              navigator.clipboard.writeText(window.location.href);
-              this.setState({ showCopyAppLinkSuccess: true });
+              this.props.dispatch({
+                type: "TMP_SET_KEY_VAL",
+                key: 'shareTextModal',
+                val: {
+                  show: true,
+                  text: decodeURIComponent(window.location.href),
+                },
+              });
             }}>
               <IonIcon icon={shareSocial} slot='icon-only' />
             </IonButton>
@@ -241,22 +244,6 @@ class _CatalogPage extends React.Component<PageProps, State> {
           />
 
           <div style={{ fontSize: 'var(--ui-font-size)', textAlign: 'center' }}><a href="https://github.com/MrMYHuang/cbetar2#search" target="_new">搜尋經文教學</a></div>
-
-          <ShareTextModal
-            {...{
-              text: window.location.href,
-              showModal: this.state.showCopyAppLinkSuccess,
-              finish: () => { this.setState({ showCopyAppLinkSuccess: false }) }, ...this.props
-            }}
-          />
-
-          <IonToast
-            cssClass='uiFont'
-            isOpen={this.state.showCopyAppLinkSuccess}
-            onDidDismiss={() => this.setState({ showCopyAppLinkSuccess: false })}
-            message="此頁app連結已複製至剪貼簿！"
-            //duration={2000}
-          />
         </IonContent>
       </IonPage>
     );
@@ -267,6 +254,7 @@ const mapStateToProps = (state: any /*, ownProps*/) => {
   return {
     bookmarks: state.settings.bookmarks,
     topCatalogsType: state.settings.topCatalogsType,
+    state: state,
   }
 };
 

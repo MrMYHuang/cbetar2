@@ -24,7 +24,6 @@ interface State {
   work: Work | null;
   showSearchAlert: boolean;
   showAddBookmarkDone: boolean;
-  showCopyAppLinkSuccess: boolean;
 }
 
 class _WorkPage extends React.Component<PageProps, State> {
@@ -34,7 +33,6 @@ class _WorkPage extends React.Component<PageProps, State> {
       work: null,
       showSearchAlert: false,
       showAddBookmarkDone: false,
-      showCopyAppLinkSuccess: false,
     }
   }
 
@@ -156,7 +154,7 @@ class _WorkPage extends React.Component<PageProps, State> {
             <IonButton hidden={this.isTopPage} fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
               <IonIcon icon={arrowBack} slot='icon-only' />
             </IonButton>
-            
+
             <IonButton fill="clear" color={this.hasBookmark ? 'warning' : 'primary'} slot='end' onClick={e => this.hasBookmark ? this.delBookmarkHandler() : this.addBookmarkHandler()}>
               <IonIcon icon={bookmark} slot='icon-only' />
             </IonButton>
@@ -166,8 +164,14 @@ class _WorkPage extends React.Component<PageProps, State> {
             </IonButton>
 
             <IonButton fill="clear" slot='end' onClick={e => {
-              navigator.clipboard.writeText(window.location.href);
-              this.setState({ showCopyAppLinkSuccess: true });
+              this.props.dispatch({
+                type: "TMP_SET_KEY_VAL",
+                key: 'shareTextModal',
+                val: {
+                  show: true,
+                  text: decodeURIComponent(window.location.href),
+                },
+              });
             }}>
               <IonIcon icon={shareSocial} slot='icon-only' />
             </IonButton>
@@ -194,14 +198,6 @@ class _WorkPage extends React.Component<PageProps, State> {
             isOpen={this.state.showAddBookmarkDone}
             onDidDismiss={() => this.setState({ showAddBookmarkDone: false })}
             message={`書籤新增成功！`}
-            duration={2000}
-          />
-
-          <IonToast
-            cssClass='uiFont'
-            isOpen={this.state.showCopyAppLinkSuccess}
-            onDidDismiss={() => this.setState({ showCopyAppLinkSuccess: false })}
-            message="此頁app連結已複製至剪貼簿！"
             duration={2000}
           />
         </IonContent>

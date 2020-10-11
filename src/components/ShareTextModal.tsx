@@ -1,5 +1,5 @@
 import React from 'react';
-import { IonButton, IonCol, IonContent, IonLabel, IonModal, IonRow, withIonLifeCycle } from '@ionic/react';
+import { IonButton, IonContent, IonLabel, IonModal } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
 import * as qrcode from 'qrcode';
 
@@ -12,7 +12,6 @@ interface Props {
 interface PageProps extends Props, RouteComponentProps<{
   tab: string;
   path: string;
-  label: string;
 }> { }
 
 class _ShareTextModal extends React.Component<PageProps> {
@@ -21,6 +20,7 @@ class _ShareTextModal extends React.Component<PageProps> {
   }*/
 
   updateQrCode() {
+    navigator.clipboard && navigator.clipboard.writeText(this.props.text);
     const qrcCanvas = document.getElementById('qrcCanvas');
     qrcode.toCanvas(qrcCanvas, this.props.text, { version: 6, errorCorrectionLevel: 'L', margin: 1 });
     return qrcCanvas;
@@ -36,26 +36,20 @@ class _ShareTextModal extends React.Component<PageProps> {
         onWillPresent={() => this.updateQrCode()}
         onDidDismiss={() => this.props.finish()}>
         <IonContent>
-          <IonRow>
-            <IonCol>
+          <div style={{display: 'flex', flexDirection: 'column', height: '100%', alignItems: 'center'}}>
+            <div>
               <IonLabel className='uiFont'>此頁app連結已複製至剪貼簿！</IonLabel>
-            </IonCol>
-          </IonRow>
-          <IonRow>
-            <IonCol>
+            </div>
+            <div>
               <IonLabel className='uiFont'>也可以使用QR Code分享:</IonLabel>
-            </IonCol>
-          </IonRow>
-          <IonRow>
-            <IonCol>
-              <canvas id='qrcCanvas' width='500' height='500' />
-            </IonCol>
-          </IonRow>
-          <IonRow>
-            <IonCol>
+            </div>
+            <div style={{flexGrow: 1, display: 'flex', alignItems: 'center'}}>
+              <canvas id='qrcCanvas' width='500' height='500' style={{margin: '0px auto'}} />
+            </div>
+            <div>
               <IonButton size='large' onClick={() => this.props.finish()}>關閉</IonButton>
-            </IonCol>
-          </IonRow>
+            </div>
+          </div>
         </IonContent>
       </IonModal>
     );

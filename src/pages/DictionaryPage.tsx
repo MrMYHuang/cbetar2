@@ -1,12 +1,16 @@
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, withIonLifeCycle, IonButton, IonIcon, IonSearchbar, IonToast } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, withIonLifeCycle, IonButton, IonIcon, IonSearchbar } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Globals from '../Globals';
 import { home, arrowBack, shareSocial } from 'ionicons/icons';
 import { DictItem } from '../models/DictItem';
 
-interface PageProps extends RouteComponentProps<{
+interface Props {
+  dispatch: Function;
+}
+
+interface PageProps extends Props, RouteComponentProps<{
   tab: string;
   path: string;
   keyword: string;
@@ -15,7 +19,6 @@ interface PageProps extends RouteComponentProps<{
 interface State {
   keyword: string;
   searches: Array<DictItem>;
-  showCopyAppLinkSuccess: boolean;
 }
 
 class _DictionaryPage extends React.Component<PageProps, State> {
@@ -25,7 +28,6 @@ class _DictionaryPage extends React.Component<PageProps, State> {
     this.state = {
       keyword: '',
       searches: [],
-      showCopyAppLinkSuccess: false,
     }
     this.searchBarRef = React.createRef<HTMLIonSearchbarElement>();
   }
@@ -87,8 +89,14 @@ class _DictionaryPage extends React.Component<PageProps, State> {
             </IonButton>
 
             <IonButton fill="clear" slot='end' onClick={e => {
-              navigator.clipboard.writeText(decodeURIComponent(window.location.href));
-              this.setState({ showCopyAppLinkSuccess: true });
+              this.props.dispatch({
+                type: "TMP_SET_KEY_VAL",
+                key: 'shareTextModal',
+                val: {
+                  show: true,
+                  text: decodeURIComponent(window.location.href),
+                },
+              });
             }}>
               <IonIcon icon={shareSocial} slot='icon-only' />
             </IonButton>
@@ -119,14 +127,6 @@ class _DictionaryPage extends React.Component<PageProps, State> {
             {this.getRows()}
           </IonList>
           <div style={{ fontSize: 'var(--ui-font-size)', textAlign: 'center' }}><a href="https://github.com/MrMYHuang/cbetar2#dictionary" target="_new">佛學詞典說明</a></div>
-          
-          <IonToast
-            cssClass='uiFont'
-            isOpen={this.state.showCopyAppLinkSuccess}
-            onDidDismiss={() => this.setState({ showCopyAppLinkSuccess: false })}
-            message="此頁app連結已複製至剪貼簿！"
-            duration={2000}
-          />
         </IonContent>
       </IonPage>
     );
