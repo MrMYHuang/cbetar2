@@ -8,6 +8,7 @@ import Globals from '../Globals';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
 import { bookmark, arrowBack, home, search, shareSocial } from 'ionicons/icons';
 import SearchAlert from '../components/SearchAlert';
+import ShareTextModal from '../components/ShareTextModal';
 import queryString from 'query-string';
 
 interface Props {
@@ -234,19 +235,27 @@ class _CatalogPage extends React.Component<PageProps, State> {
 
           <SearchAlert
             {...{
-              showSearchAlert: (this.state as any).showSearchAlert,
+              showSearchAlert: this.state.showSearchAlert,
               finish: () => { this.setState({ showSearchAlert: false }) }, ...this.props
             }}
           />
 
           <div style={{ fontSize: 'var(--ui-font-size)', textAlign: 'center' }}><a href="https://github.com/MrMYHuang/cbetar2#search" target="_new">搜尋經文教學</a></div>
 
+          <ShareTextModal
+            {...{
+              text: window.location.href,
+              showModal: this.state.showCopyAppLinkSuccess,
+              finish: () => { this.setState({ showCopyAppLinkSuccess: false }) }, ...this.props
+            }}
+          />
+
           <IonToast
             cssClass='uiFont'
             isOpen={this.state.showCopyAppLinkSuccess}
             onDidDismiss={() => this.setState({ showCopyAppLinkSuccess: false })}
             message="此頁app連結已複製至剪貼簿！"
-            duration={2000}
+            //duration={2000}
           />
         </IonContent>
       </IonPage>
