@@ -330,6 +330,18 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       color: inherit;
       cursor: auto;
     }
+
+    .doube-line-note, .doube-line-note .t {
+      font-size: ${this.props.fontSize * 0.8}px;
+    }
+
+    .doube-line-note::before {
+      content: "（";
+    }
+
+    .doube-line-note::after {
+      content: "）";
+    }
   
     ${this.props.rtlVerticalLayout ? rtlVerticalStyles : ''}
 

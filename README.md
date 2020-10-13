@@ -110,6 +110,8 @@ https://support.google.com/chrome/answer/9658361?hl=zh-Hant&co=GENIE.Platform%3D
 7. 經文頁使用單選式UI選擇跳頁頁碼。因為如果使用鍵盤輸入式UI，在Android會發生鍵盤跳出後，經文頁面變小、頁數重新計算，導致難以跳至指定頁面。
 
 ## 版本歷史
+* 3.5.2:
+  * 修正CBETA HTML檔經文內註解未使用括號作區別的問題。(感謝Godfery Wang指正)
 * 3.5.1:
   * 修正經文單頁橫式模式，捲軸擋到經文的問題。
 * 3.5.0:
@@ -259,4 +261,7 @@ If a developer wants to migrate this app to other web servers, please use a simi
 3. 全字庫字型 ( https://data.gov.tw/dataset/5961 )
 
     此app使用的全字庫字型(2020-08-18版)由國家發展委員會提供。此開放資料依政府資料開放授權條款 (Open Government Data License) 進行公眾釋出，使用者於遵守本條款各項規定之前提下，得利用之。政府資料開放授權條款：https://data.gov.tw/license
-    
+
+## App開發貢獻者 (依姓名英、中排序)
+* Godfery Wang
+* Meng-Yuan Huang (myh@live.com)
