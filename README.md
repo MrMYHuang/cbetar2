@@ -110,6 +110,8 @@ https://support.google.com/chrome/answer/9658361?hl=zh-Hant&co=GENIE.Platform%3D
 7. 經文頁使用單選式UI選擇跳頁頁碼。因為如果使用鍵盤輸入式UI，在Android會發生鍵盤跳出後，經文頁面變小、頁數重新計算，導致難以跳至指定頁面。
 
 ## 版本歷史
+* 3.5.1:
+  * 修正經文單頁橫式模式，捲軸擋到經文的問題。
 * 3.5.0:
   * 支援QR code分享app連結。
 * 3.4.1:
