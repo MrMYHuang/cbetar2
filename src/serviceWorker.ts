@@ -79,8 +79,8 @@ function registerValidSW(swUrl: string, config?: Config) {
         if (installingWorker == null) {
           return;
         }
-        installingWorker.postMessage({ type: 'SKIP_WAITING' });
         installingWorker.onstatechange = () => {
+          console.log(`installingWorker stage changed: ${installingWorker.state}`);
           if (installingWorker.state === 'installed') {
             if (navigator.serviceWorker.controller) {
               // At this point, the updated precached content has been fetched,

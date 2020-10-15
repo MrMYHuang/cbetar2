@@ -67,8 +67,8 @@ setupConfig({
 });
 
 export var serviceWorkCallbacks = {
-  onSuccess: function () {},
-  onUpdate: function () {},
+  onSuccess: function (registration: ServiceWorkerRegistration) {},
+  onUpdate: function (registration: ServiceWorkerRegistration) {},
 };
 
 interface Props {
@@ -100,8 +100,11 @@ class _App extends React.Component<PageProps, State> {
 }
 
 class _AppOrig extends React.Component<AppOrigProps, State> {
+  registrationNew: ServiceWorkerRegistration | null;
+
   constructor(props: any) {
     super(props);
+    this.registrationNew = null;
     // ----- Initializing UI settings -----
     // Apply the theme setting.
     document.body.classList.forEach((val) => document.body.classList.remove(val));
@@ -112,11 +115,12 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
       showUpdateAlert: false,
     };
 
-    serviceWorkCallbacks.onUpdate = () => {
+    serviceWorkCallbacks.onUpdate = (registration: ServiceWorkerRegistration) => {
+      this.registrationNew = registration;
       this.setState({showUpdateAlert: true});
     };
 
-    serviceWorkCallbacks.onSuccess = () => {
+    serviceWorkCallbacks.onSuccess = (registration: ServiceWorkerRegistration) => {
     };
 
     // Preload speechSynthesis.
@@ -203,6 +207,10 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
             cssClass='uiFont'
             isOpen={this.state.showUpdateAlert}
             backdropDismiss={false}
+            onDidPresent={(ev) => {
+              this.registrationNew?.installing?.postMessage({ type: 'SKIP_WAITING' });
+              this.registrationNew?.waiting?.postMessage({ type: 'SKIP_WAITING' });
+            }}
             header={'發現app更新，請重啟app!重啟後可至設定頁檢查版本號。'}
             buttons={[
               {

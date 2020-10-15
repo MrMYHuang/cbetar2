@@ -10,6 +10,6 @@ ReactDOM.render(<BrowserRouter><App /></BrowserRouter>, document.getElementById(
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.register({
-    onSuccess: () => { console.log('Precache app loaded!'); serviceWorkCallbacks.onSuccess(); },
-    onUpdate: () => { console.log('Found app updated!'); serviceWorkCallbacks.onUpdate(); },
+    onSuccess: (registration: ServiceWorkerRegistration) => { console.log('Precache app loaded!'); serviceWorkCallbacks.onSuccess(registration); },
+    onUpdate: (registration: ServiceWorkerRegistration) => { console.log('Found app updated!'); serviceWorkCallbacks.onUpdate(registration); },
 });
