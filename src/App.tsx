@@ -208,10 +208,12 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
             isOpen={this.state.showUpdateAlert}
             backdropDismiss={false}
             onDidPresent={(ev) => {
+              // Run SKIP_WAITING at onDidPresent event to avoid a race condition of
+              // an old page fetching old JS chunks with a new service worker!
               this.registrationNew?.installing?.postMessage({ type: 'SKIP_WAITING' });
               this.registrationNew?.waiting?.postMessage({ type: 'SKIP_WAITING' });
             }}
-            header={'發現app更新，請重啟app!重啟後可至設定頁檢查版本號。'}
+            header={'發現app更新，避免app運作異常，請重啟app或關閉所有app分頁!然後可至設定頁檢查app版本號。'}
             buttons={[
               {
                 text: '關閉',
