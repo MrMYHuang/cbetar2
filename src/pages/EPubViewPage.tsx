@@ -13,7 +13,6 @@ import { Work } from '../models/Work';
 import SearchAlert from '../components/SearchAlert';
 import ePub, { Book, Rendition, EVENTS } from 'epubjs-myh';
 import * as nodepub from 'nodepub';
-const TwKaiFont = require('../assets/TW-Kai-98_1.woff');
 
 interface Props {
   dispatch: Function;
@@ -302,7 +301,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         font-style: normal;
         font-weight: 500;
         /* Font source: https://data.gov.tw/dataset/5961 */
-        src: url('${window.location.origin}${TwKaiFont}');
+        src: url('${window.location.origin}/assets/TW-Kai-98_1.woff');
         font-display: swap;
     }
 

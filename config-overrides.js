@@ -9,4 +9,18 @@ module.exports = customizeCra.override(
   customizeCra.addWebpackAlias({
     ["fs"]: 'memfs'
   }),
+
+  customizeCra.adjustWorkbox(wb =>
+    Object.assign(wb, {
+      runtimeCaching: [
+        {
+          urlPattern: /.*\.woff/,
+          handler: 'CacheFirst',
+          options: {
+            cacheName: 'webfonts'
+          }
+        }
+      ]
+    })
+  )
 );

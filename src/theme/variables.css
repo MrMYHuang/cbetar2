@@ -3,21 +3,6 @@
  * -------------------------------------------
  */
 
- @font-face {
-    font-family: 'Kai';
-    font-style: normal;
-    font-weight: 500;
-    /* Font source: https://data.gov.tw/dataset/5961 */
-    src: url('../assets/TW-Kai-98_1.woff');
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'Times';
-    src: local('Times New Roman');
-    unicode-range: U+0-007F;
-}
-
 :root {
     --scrollbar-size: 20px;
     --ui-font-size: 16px;
