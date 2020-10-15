@@ -302,7 +302,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         font-style: normal;
         font-weight: 500;
         /* Font source: https://data.gov.tw/dataset/5961 */
-        src: url('${TwKaiFont}');
+        src: url('${window.location.origin}${TwKaiFont}');
         font-display: swap;
     }
 
