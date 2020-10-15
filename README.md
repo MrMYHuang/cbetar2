@@ -109,8 +109,10 @@ https://support.google.com/chrome/answer/9658361?hl=zh-Hant&co=GENIE.Platform%3D
 7. 經文頁使用單選式UI選擇跳頁頁碼。因為如果使用鍵盤輸入式UI，在Android會發生鍵盤跳出後，經文頁面變小、頁數重新計算，導致難以跳至指定頁面。
 
 ## 版本歷史
+* 3.5.8:
+  * 修正"app發佈更新後，字型檔會重新下載"的問題。
 * 3.5.6:
-  * 修正app發佈更新後，舊app有時未正確顯示app更新提示訊息。
+  * 修正"app發佈更新後，舊app有時未正確顯示app更新提示訊息"。
 * 3.5.2:
   * 修正CBETA HTML檔經文內註解未使用括號作區別的問題。(感謝Godfery Wang指正)
 * 3.5.1:

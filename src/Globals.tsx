@@ -110,7 +110,7 @@ export default {
     <IonLabel className='contentCenter'>
       <div>
         <div>連線失敗!</div>
-        <div style={{ fontSize: 'var(--ui-font-size)', paddingTop: 24 }}>若其它app能上網，可能是CBETA API異常，請靜待修復。</div>
+        <div style={{ fontSize: 'var(--ui-font-size)', paddingTop: 24 }}>若用其它app能上網，可能是CBETA API異常，請靜待修復。</div>
       </div>
     </IonLabel>),
   updateApp: () => {
