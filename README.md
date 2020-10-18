@@ -120,7 +120,7 @@ https://support.google.com/chrome/answer/9658361?hl=zh-Hant&co=GENIE.Platform%3D
 * 3.5.6:
   * 修正"app發佈更新後，舊app有時未正確顯示app更新提示訊息"。
 * 3.5.2:
-  * 修正CBETA HTML檔經文內註解未使用括號作區別的問題。(感謝Godfery Wang指正)
+  * 修正"CBETA HTML檔經文內註解app未使用括號作區別的問題"。(感謝Godfery Wang指正)
 * 3.5.1:
   * 修正經文單頁橫式模式，捲軸擋到經文的問題。
 * 3.5.0:
