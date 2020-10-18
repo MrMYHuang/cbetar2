@@ -443,6 +443,34 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     }
   }
 
+  getRemainingWorkTextFromSelectedRange() {
+    let selection = this.ePubIframe!.contentWindow!.getSelection();
+    let remainingWorkText;
+
+    if (selection!.type === 'Range') {
+      const back = this.ePubIframe!.contentDocument!.getElementById('back')!;
+      let s = selection!.getRangeAt(0);
+      // Get a range from selected texts to end of id='body' (start of id='back').
+      s.setEnd(back, 0);
+      // Get document fragment containing the range.
+      let docFragment = s.cloneContents();
+      selection?.removeAllRanges();
+
+      // For manipulate content of docFragment laterly.
+      let doc = new Document();
+      let docHtml = doc.createElement('html')
+      doc.appendChild(docHtml);
+      docHtml.appendChild(docFragment);
+
+      // Remove texts being not part of speech including line number and note texts in work texts.
+      Globals.removeElementsByClassName(doc, 'lb');
+      Globals.removeElementsByClassName(doc, 'doube-line-note');
+      remainingWorkText = doc.getElementById('body')!.innerText;
+    }
+
+    return remainingWorkText;
+  }
+
   // There is a max characters per utterance limit on Android Chrome.
   // This max value is obtained by try and error.
   maxCharsPerUtterance = 1000;
@@ -486,7 +514,9 @@ class _EPubViewPage extends React.Component<PageProps, State> {
                 if (zhTwVoice !== undefined) {
                   this.speechSynthesisUtterance.voice = zhTwVoice;
                 }
-                const workText = this.ePubIframe?.contentDocument?.getElementById('body')?.innerText || '無法取得經文內容';
+
+                const remainingWorkText = this.getRemainingWorkTextFromSelectedRange();
+                const workText = remainingWorkText || this.ePubIframe?.contentDocument?.getElementById('body')?.innerText || '無法取得經文內容';
 
                 this.workTexts = [];
                 for (let i = 0; i < Math.ceil(workText.length / this.maxCharsPerUtterance); i++) {

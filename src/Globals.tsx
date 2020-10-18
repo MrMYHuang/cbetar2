@@ -62,7 +62,14 @@ async function fetchJuan(work: string, juan: string, htmlFile: string | null, up
     htmlStr = htmlStr.replace('<body', '<div');
     htmlStr = htmlStr.replace('/body>', '/div>');
   }
-  return {htmlStr, workInfo};
+  return { htmlStr, workInfo };
+}
+
+function removeElementsByClassName(doc: Document, className: string) {
+  let elements = doc.getElementsByClassName(className);
+  while (elements.length > 0) {
+    elements[0].parentNode?.removeChild(elements[0]);
+  }
 }
 
 export default {
@@ -129,4 +136,5 @@ export default {
   },
   fetchJuan,
   getFileName,
+  removeElementsByClassName,
 };
