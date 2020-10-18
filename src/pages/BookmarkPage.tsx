@@ -97,7 +97,7 @@ class _BookmarkPage extends React.Component<PageProps> {
             <IonLabel className='contentCenter'>
               <div>
                 <div>無書籤</div>
-                <div style={{ fontSize: 'var(--ui-font-size)', paddingTop: 24 }}>請切換至目錄頁新增</div>
+                <div style={{ fontSize: 'var(--ui-font-size)', paddingTop: 24 }}>請切換至<a href="/catalog" target="_self">目錄頁</a>新增</div>
               </div>
             </IonLabel>
           }
