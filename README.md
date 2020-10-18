@@ -268,6 +268,6 @@ If a developer wants to migrate this app to other web servers, please use a simi
 
     此app使用的全字庫字型(2020-08-18版)由國家發展委員會提供。此開放資料依政府資料開放授權條款 (Open Government Data License) 進行公眾釋出，使用者於遵守本條款各項規定之前提下，得利用之。政府資料開放授權條款：https://data.gov.tw/license
 
-## App開發貢獻者 (依姓名英、中排序)
+## <a id='contributors'>App相關貢獻者 (依姓名英、中排序)</a>
 * Godfery Wang
 * Meng-Yuan Huang (myh@live.com)

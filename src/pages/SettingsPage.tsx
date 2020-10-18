@@ -99,7 +99,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={shareSocial} slot='start' />
-                <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>電子佛典app版本: {PackageInfos.version}</IonLabel>
+              <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>電子佛典app版本: {PackageInfos.version}</IonLabel>
               <IonButton slot='end' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={e => {
                 this.props.dispatch({
                   type: "TMP_SET_KEY_VAL",
@@ -298,6 +298,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
                 <div><a href="http://glossaries.dila.edu.tw/?locale=zh-TW" target="_new">DILA 佛學術語字辭典</a></div>
                 <div>作者: Meng-Yuan Huang</div>
                 <div><a href="mailto:myh@live.com" target="_new">myh@live.com</a></div>
+                <div><a href="https://github.com/MrMYHuang/cbetar2#contributors" target="_new">App相關貢獻者</a></div>
                 <div><a href='/' onClick={e => {
                   e.preventDefault();
                   this.setState({ showFontLicense: true });
