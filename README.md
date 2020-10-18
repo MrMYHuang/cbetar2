@@ -110,7 +110,7 @@ https://support.google.com/chrome/answer/9658361?hl=zh-Hant&co=GENIE.Platform%3D
 7. 經文頁使用單選式UI選擇跳頁頁碼。因為如果使用鍵盤輸入式UI，在Android會發生鍵盤跳出後，經文頁面變小、頁數重新計算，導致難以跳至指定頁面。
 8. 經文顯示頁面離線後，無法使用楷書字體。這是由於目前瀏覧器對動態產生的iframe無法使用service worker提供離線字型。
 
-## 版本歷史
+## <a id='history'>版本歷史</a>
 * 3.7.0:
   * <a href='#text2speech'>"語音播放"</a>支援指定選取經文位置開始播放。
 * 3.6.0:
