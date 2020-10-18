@@ -129,10 +129,12 @@ class _EPubViewPage extends React.Component<PageProps, State> {
   }
 
   uuidStr = '';
+  epubcfiFromUrl = '';
   ionViewWillEnter() {
     this.setState({ isLoading: true });
     let queryParams = queryString.parse(this.props.location.search) as any;
     this.htmlFile = queryParams.file;
+    this.epubcfiFromUrl = queryParams.bookmark || '';
     let state = this.props.location.state as any;
     this.uuidStr = state ? state.uuid : '';
     //console.log( 'view will enter' );
@@ -166,9 +168,9 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     }
   }
 
-  epubcfi = '';
+  epubcfiFromSelectedString = '';
   addBookmarkHandler() {
-    let iframeWin = document.getElementsByTagName('iframe')[0].contentWindow;
+    let iframeWin = this.ePubIframe?.contentWindow;
     let sel = iframeWin?.getSelection();
     if (sel?.rangeCount) {
       let uuidStr = uuid.v4();
@@ -181,7 +183,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
           type: BookmarkType.JUAN,
           uuid: uuidStr,
           selectedText: sel.toString(),
-          epubcfi: this.epubcfi,
+          epubcfi: this.epubcfiFromSelectedString,
           fileName: `${this.props.match.params.work}_juan${this.props.match.params.path}.html`,
           work: new Work({
             juan: this.props.match.params.path,
@@ -209,7 +211,11 @@ class _EPubViewPage extends React.Component<PageProps, State> {
   }
 
   get hasBookmark() {
-    return this.bookmark != null;
+    return this.epubcfiFromUrl !== '' || this.bookmark != null;
+  }
+
+  get epubcfi() {
+    return this.epubcfiFromUrl !== '' ? this.epubcfiFromUrl : this.bookmark != null ? this.bookmark!.epubcfi : 'epubcfi(/6/6[s1]!/4/4/2/6[body]/6,/1:0,/1:1)';
   }
 
   ionViewWillLeave() {
@@ -267,6 +273,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
   };
 
   bookCreated = false;
+  ePubIframe: HTMLIFrameElement | null = null;
   async html2Epub() {
     this.bookCreated = true;
     this.epub = nodepub.document({
@@ -378,7 +385,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         //this.rendition.on("keyup", this.keyListener.bind(this));
 
         this.rendition.on("selected", (cfiRange: any, contents: any) => {
-          this.epubcfi = cfiRange;
+          this.epubcfiFromSelectedString = cfiRange;
           /*
           this.rendition?.annotations.highlight(cfiRange, {}, (e: any) => {
             console.log("highlight clicked", e.target);
@@ -390,8 +397,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
           this.updatePageInfos();
         });
 
-        let epubcfi = this.hasBookmark ? this.bookmark!.epubcfi : 'epubcfi(/6/6[s1]!/4/4/2/6[body]/6,/1:0,/1:1)';
-        await this.rendition.display(this.props.paginated ? epubcfi : undefined);
+        await this.rendition.display(this.props.paginated ? this.epubcfi : undefined);
         // Navigate to the first work page.
         if (!this.props.paginated) {
           // Skip cover page.
@@ -403,7 +409,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
         if (this.hasBookmark) {
           try {
-            this.rendition?.annotations.highlight(epubcfi);
+            this.rendition?.annotations.highlight(this.epubcfi);
           } catch (e) {
             console.error(e);
           }
@@ -411,8 +417,13 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
         this.book?.locations.generate(150);
 
-        const ePubIframe = document.getElementsByTagName('iframe')[0];
-        ePubIframe.contentDocument?.addEventListener("keyup", this.keyListener.bind(this), false);
+        const iframes = document.getElementsByTagName('iframe');
+        if (iframes.length === 1) {
+          this.ePubIframe = iframes[0];
+          this.ePubIframe.contentDocument?.addEventListener("keyup", this.keyListener.bind(this), false);
+        } else {
+          alert('Error! This component locates ePub iframe by the only iframe.');
+        }
       }
     );
     //});
@@ -421,6 +432,15 @@ class _EPubViewPage extends React.Component<PageProps, State> {
   updatePageInfos() {
     const displayed = (this.rendition?.currentLocation() as any).start.displayed;
     this.setState({ currentPage: displayed.page, pageCount: displayed.total });
+  }
+
+  getSelectedString() {
+    const sel = this.ePubIframe?.contentDocument?.getSelection();
+    if ((sel?.rangeCount || 0) > 0 && sel!.getRangeAt(0).toString().length > 0) {
+      return sel!.getRangeAt(0).toString();
+    } else {
+      return '';
+    }
   }
 
   // There is a max characters per utterance limit on Android Chrome.
@@ -466,9 +486,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
                 if (zhTwVoice !== undefined) {
                   this.speechSynthesisUtterance.voice = zhTwVoice;
                 }
-
-                const ePubIframe = document.getElementsByTagName('iframe')[0];
-                const workText = ePubIframe.contentDocument?.getElementById('body')?.innerText || '無法取得經文內容';
+                const workText = this.ePubIframe?.contentDocument?.getElementById('body')?.innerText || '無法取得經文內容';
 
                 this.workTexts = [];
                 for (let i = 0; i < Math.ceil(workText.length / this.maxCharsPerUtterance); i++) {
@@ -553,13 +571,11 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
               <IonItem button onClick={e => {
                 this.setState({ popover: { show: false, event: null } });
-                const ePubIframe = document.getElementsByTagName('iframe')[0];
-                const sel = ePubIframe.contentDocument?.getSelection();
-                if (!((sel?.rangeCount || 0) > 0 && sel!.getRangeAt(0).toString().length > 0)) {
+                const selectedText = this.getSelectedString();
+                if (selectedText !== '') {
                   this.setState({ showNoSelectedTextAlert: true });
                   return;
                 }
-                const selectedText = sel!.getRangeAt(0).toString();
 
                 this.props.history.push({
                   pathname: `/dictionary/search/${selectedText}`,
@@ -571,12 +587,18 @@ class _EPubViewPage extends React.Component<PageProps, State> {
               </IonItem>
 
               <IonItem button onClick={ev => {
+                let sharedUrl = window.location.href.split('?')[0];
+                const selectedText = this.getSelectedString();
+                if (selectedText !== '') {
+                  sharedUrl += `?bookmark=${this.epubcfiFromSelectedString}`;
+                }
+
                 this.props.dispatch({
                   type: "TMP_SET_KEY_VAL",
                   key: 'shareTextModal',
                   val: {
                     show: true,
-                    text: decodeURIComponent(window.location.href),
+                    text: decodeURIComponent(sharedUrl),
                   },
                 });
               }}>

@@ -22,7 +22,7 @@ class _ShareTextModal extends React.Component<PageProps> {
   updateQrCode() {
     navigator.clipboard && navigator.clipboard.writeText(this.props.text);
     const qrcCanvas = document.getElementById('qrcCanvas');
-    qrcode.toCanvas(qrcCanvas, this.props.text, { version: 6, errorCorrectionLevel: 'L', margin: 1 });
+    qrcode.toCanvas(qrcCanvas, this.props.text);
     return qrcCanvas;
   }
 
