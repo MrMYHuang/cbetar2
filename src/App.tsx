@@ -63,6 +63,7 @@ class DebugRouter extends IonReactRouter {
 const state = store.getState();
 
 setupConfig({
+  mode: 'md',
   swipeBackEnabled: false,
 });
 
