@@ -3,7 +3,7 @@ import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem,
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import './WorkPage.css';
-import { Work } from '../models/Work';
+import { Work,  WorkChapter,  WorkListType } from '../models/Work';
 import Globals from '../Globals';
 import { bookmark, arrowBack, home, search, shareSocial } from 'ionicons/icons';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
@@ -12,6 +12,7 @@ import SearchAlert from '../components/SearchAlert';
 interface Props {
   dispatch: Function;
   bookmarks: [Bookmark];
+  workListType: WorkListType;
 }
 
 interface PageProps extends Props, RouteComponentProps<{
@@ -53,6 +54,9 @@ class _WorkPage extends React.Component<PageProps, State> {
       const data = JSON.parse(new TextDecoder().decode(res.data));
       const works = data.results as [Work];
       work = works[0];
+      
+      const resToc = await Globals.axiosInstance.get(`/toc?work=${path}`) as any;
+      work.mulu = (resToc.data.results[0].mulu as WorkChapter[]).map((wc) => new WorkChapter(wc));
       /*
     } catch (e) {
       fetchFail = true;
@@ -114,7 +118,30 @@ class _WorkPage extends React.Component<PageProps, State> {
     return this.bookmark != null;
   }
 
-  getRows() {
+  getRowsByChapter() {
+    let work = this.state.work!;
+    const mulu = work.mulu;
+    let rows = Array<object>();
+    for (let i = 0; i < mulu.length; i++) {
+      let routeLink = `/catalog/juan/${work.work}/${mulu[i].juan}`;
+      rows.push(
+        <IonItem key={`chapterItem` + i} button={true} onClick={async event => {
+          event.preventDefault();
+          this.props.history.push({
+            pathname: routeLink,
+          });
+        }}>
+          <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
+          <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }} key={`chapterLabel` + i}>
+            {mulu[i].title}
+          </IonLabel>
+        </IonItem>
+      );
+    }
+    return rows;
+  }
+
+  getRowsByJuan() {
     let work = this.state.work!;
     let rows = Array<object>();
     let juans = work.juan_list.split(',');
@@ -145,7 +172,7 @@ class _WorkPage extends React.Component<PageProps, State> {
       return <IonPage></IonPage>
     }
 
-    let rows = this.getRows();
+    let rows = this.props.workListType === WorkListType.BY_CHAPTER ? this.getRowsByChapter() : this.getRowsByJuan();
     return (
       <IonPage>
         <IonHeader>
@@ -153,6 +180,17 @@ class _WorkPage extends React.Component<PageProps, State> {
             <IonTitle style={{ fontSize: 'var(--ui-font-size)' }}>{this.state.work?.title}</IonTitle>
             <IonButton hidden={this.isTopPage} fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
               <IonIcon icon={arrowBack} slot='icon-only' />
+            </IonButton>
+
+            <IonButton slot='end' onClick={ev => {
+              const newWorkListType = this.props.workListType === WorkListType.BY_CHAPTER ? WorkListType.BY_JUAN : WorkListType.BY_CHAPTER;
+              this.props.dispatch({
+                type: "SET_KEY_VAL",
+                key: 'workListType',
+                val: newWorkListType
+              });
+            }}>
+              <span className='uiFont' style={{ color: 'var(--color)' }}>{this.props.workListType === WorkListType.BY_CHAPTER ? '分品' : '分卷'}</span>
             </IonButton>
 
             <IonButton fill="clear" color={this.hasBookmark ? 'warning' : 'primary'} slot='end' onClick={e => this.hasBookmark ? this.delBookmarkHandler() : this.addBookmarkHandler()}>
@@ -211,6 +249,7 @@ const WorkPage = withIonLifeCycle(_WorkPage);
 const mapStateToProps = (state: any /*, ownProps*/) => {
   return {
     bookmarks: state.settings.bookmarks,
+    workListType: state.settings.workListType,
   }
 };
 

@@ -12,7 +12,6 @@ const axiosInstance = axios.create({
   timeout: 3000,
 });
 
-
 function scrollbarSizeIdToValue(id: number) {
   switch (id) {
     case 0: return 0;
