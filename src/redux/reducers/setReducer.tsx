@@ -1,6 +1,5 @@
 import Globals from '../../Globals';
 import { Bookmark, BookmarkType } from '../../models/Bookmark';
-import { WorkListType } from '../../models/Work';
 
 // Used to store settings. They will be saved to file.
 export default function reducer(state = {
@@ -69,8 +68,8 @@ export default function reducer(state = {
         newSettings = {};
       }
       // Setting default values.
-      var keys = ['topCatalogsType', 'workListType', 'theme', 'paginated', 'rtlVerticalLayout', 'scrollbarSize', 'useFontKai', 'fontSize', 'uiFontSize', 'showComments', 'speechRate', 'bookmarks'];
-      var vals = [0, WorkListType.BY_CHAPTER, 0, 1, 1, 2, 1, 32, 24, 0, 0.8, []];
+      var keys = ['topCatalogsType', 'theme', 'paginated', 'rtlVerticalLayout', 'scrollbarSize', 'useFontKai', 'fontSize', 'uiFontSize', 'showComments', 'speechRate', 'bookmarks'];
+      var vals = [0, 0, 1, 1, 2, 1, 32, 24, 0, 0.8, []];
       for (let k = 0; k < keys.length; k++) {
         if (newSettings[keys[k]] === undefined) {
           newSettings[keys[k]] = vals[k];

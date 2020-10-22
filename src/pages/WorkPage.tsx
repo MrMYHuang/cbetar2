@@ -3,7 +3,7 @@ import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem,
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import './WorkPage.css';
-import { Work,  WorkChapter,  WorkListType } from '../models/Work';
+import { Work, WorkChapter, WorkListType } from '../models/Work';
 import Globals from '../Globals';
 import { bookmark, arrowBack, home, search, shareSocial } from 'ionicons/icons';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
@@ -54,7 +54,7 @@ class _WorkPage extends React.Component<PageProps, State> {
       const data = JSON.parse(new TextDecoder().decode(res.data));
       const works = data.results as [Work];
       work = works[0];
-      
+
       const resToc = await Globals.axiosInstance.get(`/toc?work=${path}`) as any;
       work.mulu = (resToc.data.results[0].mulu as WorkChapter[]).map((wc) => new WorkChapter(wc));
       /*
@@ -185,7 +185,7 @@ class _WorkPage extends React.Component<PageProps, State> {
             <IonButton slot='end' onClick={ev => {
               const newWorkListType = this.props.workListType === WorkListType.BY_CHAPTER ? WorkListType.BY_JUAN : WorkListType.BY_CHAPTER;
               this.props.dispatch({
-                type: "SET_KEY_VAL",
+                type: "TMP_SET_KEY_VAL",
                 key: 'workListType',
                 val: newWorkListType
               });
@@ -249,7 +249,8 @@ const WorkPage = withIonLifeCycle(_WorkPage);
 const mapStateToProps = (state: any /*, ownProps*/) => {
   return {
     bookmarks: state.settings.bookmarks,
-    workListType: state.settings.workListType,
+    // Default to WorkListType.BY_JUAN, because work list by chapter might be empty.
+    workListType: state.tmpSettings.workListType !== undefined ? state.tmpSettings.workListType : WorkListType.BY_JUAN,
   }
 };
 
