@@ -294,7 +294,15 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       source: '',
       images: ['logo.png'],
     }, 'logo.png');
-    this.epub.addSection('', this.state.htmlStr, true, false);
+
+    let htmlStrModifiedStyles = this.state.htmlStr!;
+    if (this.props.rtlVerticalLayout) {
+      htmlStrModifiedStyles = htmlStrModifiedStyles.replace(/margin-left/g, 'margin-top');
+    }
+    /* else {
+      htmlStrModifiedStyles = htmlStrModifiedStyles.replace(/margin-top/g, 'margin-left');
+    }*/
+    this.epub.addSection('', htmlStrModifiedStyles, true, false);
 
     let rtlVerticalStyles = `
     html {
@@ -348,6 +356,20 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
     .doube-line-note::after {
       content: "）";
+    }
+
+    .bip-table {
+      display: table;
+    }
+
+    .bip-table-row {
+      display: table-row;
+    }
+
+    .bip-table-cell {
+      display: table-cell;
+      border: 1px solid ${getComputedStyle(document.body).getPropertyValue('--ion-text-color')};
+      text-align: center;
     }
   
     ${this.props.rtlVerticalLayout ? rtlVerticalStyles : ''}

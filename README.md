@@ -111,7 +111,8 @@ https://support.google.com/chrome/answer/9658361?hl=zh-Hant&co=GENIE.Platform%3D
 8. 經文顯示頁面離線後，無法使用楷書字體。這是由於目前瀏覧器對動態產生的iframe無法使用service worker提供離線字型。
 
 ## <a id='history'>版本歷史</a>
-* 3.?.?:
+* 3.7.2:
+  * 修正"太虛大師年譜CBETA HTML檔經文表格樣式與縮排問題"。
   * 統一所有平台UI樣式。
 * 3.7.0:
   * <a href='#text2speech'>"語音播放"</a>支援指定選取經文位置開始播放。
