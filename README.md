@@ -111,7 +111,9 @@ https://support.google.com/chrome/answer/9658361?hl=zh-Hant&co=GENIE.Platform%3D
 8. 經文顯示頁面離線後，無法使用楷書字體。這是由於目前瀏覧器對動態產生的iframe無法使用service worker提供離線字型。
 
 ## <a id='history'>版本歷史</a>
-* 3.8.0:
+* 3.8.3:
+  * 修正分頁模式下，頁面隨頁數增加而跑掉版面的問題。
+* 3.8.1:
   * 經目錄新支援"分品/分卷"切換按鈕。
 * 3.7.2:
   * 修正"太虛大師年譜CBETA HTML檔經文表格樣式與縮排問題"。
