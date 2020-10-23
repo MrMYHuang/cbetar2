@@ -6,6 +6,10 @@ import { Work } from './models/Work';
 const apiVersion = 'v1.2';
 const cbetaApiUrl = `https://cbdata.dila.edu.tw/${apiVersion}`;
 const dilaDictApiUrl = `https://glossaries.dila.edu.tw/search.json`;
+const cbetardb = 'cbetardb';
+const twKaiFontKey = 'twKaoFont';
+/* Font source: https://data.gov.tw/dataset/5961 */
+const twKaiFontPath = '/assets/TW-Kai-98_1.woff';
 
 const axiosInstance = axios.create({
   baseURL: cbetaApiUrl,
@@ -75,9 +79,12 @@ export default {
   storeFile: 'Settings.json',
   fontSizeNorm: 24,
   fontSizeLarge: 48,
+  cbetardb,
   apiVersion,
   cbetaApiUrl,
   dilaDictApiUrl,
+  twKaiFontKey,
+  twKaiFontPath,
   axiosInstance,
   topCatalogsByCat: {
     "CBETA": "CBETA 部類",

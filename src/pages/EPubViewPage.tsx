@@ -302,7 +302,43 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     /* else {
       htmlStrModifiedStyles = htmlStrModifiedStyles.replace(/margin-top/g, 'margin-left');
     }*/
-    this.epub.addSection('', htmlStrModifiedStyles, true, false);
+
+    const htmlStrWithCssJs = htmlStrModifiedStyles + `
+    <script>
+    async function loadTwKaiFont() {
+      const dbOpenReq = indexedDB.open('${Globals.cbetardb}');
+      dbOpenReq.onupgradeneeded = function (event) {
+        var db = event.target.result;
+        db.createObjectStore('store');
+      };
+  
+      let fontData;
+      await new Promise(function(ok, fail) {
+        dbOpenReq.onsuccess = async function (ev) {
+          const db = dbOpenReq.result;
+  
+          const trans = db.transaction(["store"], 'readwrite');
+          let req = trans.objectStore('store').get('${Globals.twKaiFontKey}');
+          req.onsuccess = async function (_ev) {
+            fontData = req.result;
+            if (!fontData) {
+              console.error('[iframe] TW-Kai font loading failed!');
+              return ok();
+            }
+            console.log('[iframe] TW-Kai font loading success!');
+            return ok();
+          };
+        };
+      });
+      const fontFace = new window.FontFace('Kai', fontData);
+      await fontFace.load();
+      document.fonts.add(fontFace);
+    }
+    loadTwKaiFont();
+    </script>
+    `;
+
+    this.epub.addSection('', htmlStrWithCssJs, true, false);
 
     let rtlVerticalStyles = `
     html {
@@ -311,15 +347,6 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     }
     `;
     this.epub.addCSS(`
-    @font-face {
-        font-family: 'Kai';
-        font-style: normal;
-        font-weight: 500;
-        /* Font source: https://data.gov.tw/dataset/5961 */
-        src: url('${window.location.origin}/assets/TW-Kai-98_1.woff');
-        font-display: swap;
-    }
-
     @font-face {
         font-family: 'Times';
         src: local('Times New Roman');
