@@ -111,7 +111,7 @@ https://support.google.com/chrome/answer/9658361?hl=zh-Hant&co=GENIE.Platform%3D
 
 ## <a id='history'>版本歷史</a>
 * 3.8.4:
-  * 使用IndexDB達成iframe離線使用楷數字體。
+  * 使用IndexedDB達成iframe離線使用楷數字體。
 * 3.8.3:
   * 修正分頁模式下，頁面隨頁數增加而跑掉版面的問題。
 * 3.8.1:
