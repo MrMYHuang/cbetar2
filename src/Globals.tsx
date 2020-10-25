@@ -10,6 +10,7 @@ const cbetardb = 'cbetardb';
 const twKaiFontKey = 'twKaoFont';
 /* Font source: https://data.gov.tw/dataset/5961 */
 const twKaiFontPath = '/assets/TW-Kai-98_1.woff';
+let log = '';
 
 const axiosInstance = axios.create({
   baseURL: cbetaApiUrl,
@@ -75,10 +76,40 @@ function removeElementsByClassName(doc: Document, className: string) {
   }
 }
 
+const consoleLog = console.log.bind(console);
+const consoleError = console.error.bind(console);
+
+function getLog() {
+  return log;
+}
+
+function enableAppLog() {
+  console.log = function () {
+    log += '----- Info ----\n';
+    log += (Array.from(arguments)) + '\n';
+    consoleLog.apply(console, arguments as any);
+  };
+
+  console.error = function () {
+    log += '----- Error ----\n';
+    log += (Array.from(arguments)) + '\n';
+    consoleError.apply(console, arguments as any);
+  };
+}
+
+function disableAppLog() {
+  log = '';
+  console.log = consoleLog;
+  console.error = consoleError;
+}
+
 export default {
   storeFile: 'Settings.json',
   fontSizeNorm: 24,
   fontSizeLarge: 48,
+  getLog,
+  enableAppLog,
+  disableAppLog,
   cbetardb,
   apiVersion,
   cbetaApiUrl,

@@ -62,6 +62,10 @@ class DebugRouter extends IonReactRouter {
 
 const state = store.getState();
 
+if (!state.settings.hasAppLog) {
+  Globals.disableAppLog();
+}
+
 setupConfig({
   mode: 'md',
   swipeBackEnabled: false,

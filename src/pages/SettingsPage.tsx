@@ -3,7 +3,7 @@ import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem,
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import Globals from '../Globals';
-import { helpCircle, text, documentText, refreshCircle, musicalNotes, colorPalette, shareSocial } from 'ionicons/icons';
+import { helpCircle, text, documentText, refreshCircle, musicalNotes, colorPalette, shareSocial, bug } from 'ionicons/icons';
 import './SettingsPage.css';
 import PackageInfos from '../../package.json';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
@@ -16,6 +16,7 @@ interface StateProps {
 
 interface Props {
   dispatch: Function;
+  hasAppLog: boolean;
   theme: number;
   uiFontSize: number;
   scrollbarSize: number;
@@ -118,6 +119,28 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
               <IonButton slot='end' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={e => {
                 Globals.updateApp();
               }}>檢查</IonButton>
+            </IonItem>
+            <IonItem>
+              <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
+              <IonIcon icon={bug} slot='start' />
+              <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>啟用app異常記錄</IonLabel>              
+              <IonToggle slot='end' checked={this.props.hasAppLog} onIonChange={e => {
+                const isChecked = e.detail.checked;
+                isChecked ? Globals.enableAppLog() : Globals.disableAppLog();
+                this.props.dispatch({
+                  type: "SET_KEY_VAL",
+                  key: 'hasAppLog',
+                  val: isChecked
+                });
+              }} />
+            </IonItem>
+            <IonItem hidden={!this.props.hasAppLog}>
+              <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
+              <IonIcon icon={bug} slot='start' />
+              <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>回報app異常記錄</IonLabel>
+              <IonButton slot='end' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={e => {
+                window.open(`mailto:myh@live.com?subject=電子佛典異常記錄回報&body=${encodeURIComponent("App版本: " + PackageInfos.version + "\n" + Globals.getLog())}`);
+              }}>回報</IonButton>
             </IonItem>
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
@@ -342,6 +365,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
 const mapStateToProps = (state: any /*, ownProps*/) => {
   return {
     settings: state.settings,
+    hasAppLog: state.settings.hasAppLog,
     theme: state.settings.theme,
     showComments: state.settings.showComments,
     paginated: state.settings.paginated,
