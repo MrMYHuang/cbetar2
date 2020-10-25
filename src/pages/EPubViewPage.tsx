@@ -13,6 +13,7 @@ import { Work } from '../models/Work';
 import SearchAlert from '../components/SearchAlert';
 import ePub, { Book, Rendition, EVENTS } from 'epubjs-myh';
 import * as nodepub from 'nodepub';
+import { AnyMxRecord } from 'dns';
 
 interface Props {
   dispatch: Function;
@@ -335,6 +336,52 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       document.fonts.add(fontFace);
     }
     loadTwKaiFont();
+
+    function getAllTextNodes(root) {
+      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+      return walker;
+    }
+  
+    function setTextNodesObserver() {
+      const container = document.getElementsByClassName('body')[0];
+      const options = {
+        root: container,
+        rootMargin: '0px',
+        threshold: 1
+      }
+      
+      const cbetaHtmlBody = document.getElementById('body');
+      const textNodesWalker = this.getAllTextNodes(cbetaHtmlBody);
+      let textNodeParents = [];
+
+      let observer = new IntersectionObserver(function (entries, observer) {
+        let textInView = '';
+        let textNodeParentsInView = [];
+        for(let i = 0; i != entries.length; i++) {
+          const entry = entries[i];
+          if (entry.isIntersecting) {
+            textNodeParentsInView.push(entry.target);
+          }
+        }
+        for(let i = 0; i != textNodeParents.length; i++) {
+          const textNodeParent = textNodeParents[i];
+          if (textNodeParentsInView.includes(textNodeParent)) {
+            textInView += textNodeParent.textContent;
+          }
+        }
+        console.log(textInView);
+      }, options);
+  
+      let n;
+      while(n = textNodesWalker.nextNode()) {
+        const textNodeParent = n.parentElement;
+        if (!textNodeParents.includes(textNodeParent)) {
+          textNodeParents.push(textNodeParent);
+          observer.observe(textNodeParent);
+        }
+      }
+    }
+    setTextNodesObserver();
     </script>
     `;
 
@@ -470,6 +517,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         if (iframes.length === 1) {
           this.ePubIframe = iframes[0];
           this.ePubIframe.contentDocument?.addEventListener("keyup", this.keyListener.bind(this), false);
+          //this.setTextNodesObserver();
         } else {
           alert('Error! This component locates ePub iframe by the only iframe.');
         }
