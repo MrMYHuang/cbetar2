@@ -1,9 +1,9 @@
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, withIonLifeCycle, IonButton, IonIcon, IonSearchbar } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, withIonLifeCycle, IonButton, IonIcon, IonSearchbar, IonAlert } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Globals from '../Globals';
-import { home, arrowBack, shareSocial } from 'ionicons/icons';
+import { home, arrowBack, shareSocial, book } from 'ionicons/icons';
 import { DictItem } from '../models/DictItem';
 
 interface Props {
@@ -19,6 +19,7 @@ interface PageProps extends Props, RouteComponentProps<{
 interface State {
   keyword: string;
   searches: Array<DictItem>;
+  showNoSelectedTextAlert: boolean;
 }
 
 class _DictionaryPage extends React.Component<PageProps, State> {
@@ -28,6 +29,7 @@ class _DictionaryPage extends React.Component<PageProps, State> {
     this.state = {
       keyword: '',
       searches: [],
+      showNoSelectedTextAlert: false,
     }
     this.searchBarRef = React.createRef<HTMLIonSearchbarElement>();
   }
@@ -56,19 +58,27 @@ class _DictionaryPage extends React.Component<PageProps, State> {
     this.setState({ searches: res.data });
   }
 
+  getSelectedString() {
+    const sel = document.getSelection();
+    if ((sel?.rangeCount || 0) > 0 && sel!.getRangeAt(0).toString().length > 0) {
+      return sel!.getRangeAt(0).toString();
+    } else {
+      return '';
+    }
+  }
+
   getRows() {
     const data = this.state.searches as [DictItem];
     let rows = Array<object>();
     data.forEach((item: DictItem, index: number) => {
       rows.push(
-        <IonItem key={`dictItem` + index}>
-          <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
-          <div>
-            <div className='ion-text-wrap uiFont' style={{ color: 'var(--ion-color-primary)' }} dangerouslySetInnerHTML={{ __html: item.dict_name_zh }}></div>
-            <div className='ion-text-wrap uiFont' key={`dictItemLabel` + index} dangerouslySetInnerHTML={{ __html: item.desc }}>
+        <div style={{display: 'table-row'}} key={`dictItem` + index}>
+          <div className='tableCell'>
+            <div className='ion-text-wrap uiFont' style={{ color: 'var(--ion-color-primary)', paddingBottom: '18pt' }} dangerouslySetInnerHTML={{ __html: item.dict_name_zh }}></div>
+            <div className='ion-text-wrap uiFont textSelectable' key={`dictItemLabel` + index} dangerouslySetInnerHTML={{ __html: item.desc }}>
             </div>
           </div>
-        </IonItem>
+        </div>
       );
     });
     return rows;
@@ -100,33 +110,64 @@ class _DictionaryPage extends React.Component<PageProps, State> {
             }}>
               <IonIcon icon={shareSocial} slot='icon-only' />
             </IonButton>
+
+            <IonButton fill="clear" slot='end' onClick={e => {
+                const selectedText = this.getSelectedString();
+                if (selectedText === '') {
+                  this.setState({ showNoSelectedTextAlert: true });
+                  return;
+                }
+
+                this.props.history.push({
+                  pathname: `/dictionary/search/${selectedText}`,
+                });
+              }}>
+                <IonIcon icon={book} slot='icon-only' />
+              </IonButton>
           </IonToolbar>
         </IonHeader>
         <IonContent>
-          <IonList>
-            <IonItem>
-              <IonSearchbar ref={this.searchBarRef} placeholder='請輸入字詞，再按鍵盤Enter鍵' value={this.state.keyword}
-                onIonChange={ev => {
-                  this.setState({ keyword: ev.detail.value! })
-                }}
-                onIonClear={ev => {
-                  this.setState({ searches: [] });
-                }}
-                onKeyUp={ev => {
-                  if (ev.key === 'Enter') {
-                    this.props.history.push({
-                      pathname: `/dictionary/search/${this.state.keyword}`,
-                    });
-                  }
-                }} />
-              {/*
+          <IonSearchbar ref={this.searchBarRef} placeholder='請輸入字詞，再按鍵盤Enter鍵' value={this.state.keyword}
+            onIonChange={ev => {
+              this.setState({ keyword: ev.detail.value! })
+            }}
+            onIonClear={ev => {
+              this.setState({ searches: [] });
+            }}
+            onKeyUp={ev => {
+              if (ev.key === 'Enter') {
+                this.props.history.push({
+                  pathname: `/dictionary/search/${this.state.keyword}`,
+                });
+              }
+            }} />
+          {/*
               <IonButton slot='end' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={e => {
                 this.lookupDict(this.state.keyword);
               }}>搜尋</IonButton>*/}
-            </IonItem>
+          <div style={{display: 'table'}}>
             {this.getRows()}
-          </IonList>
+          </div>
           <div style={{ fontSize: 'var(--ui-font-size)', textAlign: 'center' }}><a href="https://github.com/MrMYHuang/cbetar2#dictionary" target="_new">佛學詞典說明</a></div>
+
+          <IonAlert
+            cssClass='uiFont'
+            isOpen={this.state.showNoSelectedTextAlert}
+            backdropDismiss={false}
+            header='失敗'
+            message='請確認是否已選擇一段文字，然後再執行所選的功能!'
+            buttons={[
+              {
+                text: '確定',
+                cssClass: 'primary uiFont',
+                handler: (value) => {
+                  this.setState({
+                    showNoSelectedTextAlert: false,
+                  });
+                },
+              }
+            ]}
+          />
         </IonContent>
       </IonPage>
     );

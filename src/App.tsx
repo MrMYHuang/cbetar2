@@ -222,7 +222,7 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
               <Route path="/:tab(bookmarks)" component={BookmarkPage} exact={true} />
               <Route path={`/:tab(bookmarks)/search/:keyword`} render={props => <SearchPage {...props} />} exact={true} />
               <Route path={`/:tab(dictionary)`} render={props => <DictionaryPage {...props} />} exact={true} />
-              <Route path={`/:tab(dictionary)/search/:keyword`} render={props => <DictionaryPage {...props} />} exact={true} />
+              <Route path={`/:tab(dictionary)/search/:keyword`} render={props => <DictionaryPage key={props.match.url} {...props} />} exact={true} />
               <Route path="/settings" component={SettingsPage} />
               <Route path="/" render={() => { return this.routeByQueryString(); }} exact={true} />
             </IonRouterOutlet>

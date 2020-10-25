@@ -651,7 +651,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
               <IonItem button onClick={e => {
                 this.setState({ popover: { show: false, event: null } });
                 const selectedText = this.getSelectedString();
-                if (selectedText !== '') {
+                if (selectedText === '') {
                   this.setState({ showNoSelectedTextAlert: true });
                   return;
                 }

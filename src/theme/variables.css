@@ -171,3 +171,10 @@ body.dark {
 ion-col {
     text-align: center;
 }
+
+.tableCell {
+    display: table-cell;
+    border-bottom: 1px solid var(--color);
+    user-select: text;
+    -webkit-user-select: text;
+}

@@ -110,6 +110,9 @@ https://support.google.com/chrome/answer/9658361?hl=zh-Hant&co=GENIE.Platform%3D
 7. 經文頁使用單選式UI選擇跳頁頁碼。因為如果使用鍵盤輸入式UI，在Android會發生鍵盤跳出後，經文頁面變小、頁數重新計算，導致難以跳至指定頁面。
 
 ## <a id='history'>版本歷史</a>
+* 3.8.5:
+  * 佛學詞典頁可選擇已查詢文字，再執行查詞典功能。
+  * 修正經文頁"查詞典"功能無法使用的問題。
 * 3.8.4:
   * 使用IndexedDB達成iframe離線使用楷數字體。
 * 3.8.3:
