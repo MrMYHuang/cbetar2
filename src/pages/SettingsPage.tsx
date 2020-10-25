@@ -139,7 +139,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
               <IonIcon icon={bug} slot='start' />
               <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>回報app異常記錄</IonLabel>
               <IonButton slot='end' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={e => {
-                window.open(`mailto:myh@live.com?subject=電子佛典異常記錄回報&body=${encodeURIComponent("App版本: " + PackageInfos.version + "\n" + Globals.getLog())}`);
+                window.open(`mailto:myh@live.com?subject=電子佛典異常記錄回報&body=${encodeURIComponent("App版本：" + PackageInfos.version + "\n瀏覽器：" + navigator.userAgent + "\n" + Globals.getLog())}`);
               }}>回報</IonButton>
             </IonItem>
             <IonItem>
