@@ -17,6 +17,12 @@ interface PageProps extends Props, RouteComponentProps<{
   path: string;
 }> { }
 
+const helpDoc = <>
+  <div style={{ fontSize: 'var(--ui-font-size)', textAlign: 'center' }}>可離線瀏覽圖示 <IonIcon icon={download} /></div>
+  <div style={{ fontSize: 'var(--ui-font-size)', textAlign: 'center' }}><a href="https://github.com/MrMYHuang/cbetar2#bookmark" target="_new">書籤新增說明</a></div>
+  <div style={{ fontSize: 'var(--ui-font-size)', textAlign: 'center' }}><a href="https://github.com/MrMYHuang/cbetar2#web-app" target="_new">程式安裝說明</a></div>
+</>;
+
 class _BookmarkPage extends React.Component<PageProps> {
   bookmarkListRef: React.RefObject<HTMLIonListElement>;
   constructor(props: any) {
@@ -93,17 +99,18 @@ class _BookmarkPage extends React.Component<PageProps> {
         </IonHeader>
         <IonContent>
           {this.hasBookmark ?
-            <IonList ref={this.bookmarkListRef}>{rows}</IonList> :
+            <>
+              <IonList ref={this.bookmarkListRef}>{rows}</IonList>
+              {helpDoc}
+            </> :
             <IonLabel className='contentCenter'>
               <div>
                 <div>無書籤</div>
-                <div style={{ fontSize: 'var(--ui-font-size)', paddingTop: 24 }}>請切換至<a href="/catalog" target="_self">目錄頁</a>新增</div>
+                <div style={{ fontSize: 'var(--ui-font-size)', paddingTop: 24, paddingBottom: 24 }}>請切換至<a href="/catalog" target="_self">目錄頁</a>新增</div>
+                {helpDoc}
               </div>
             </IonLabel>
           }
-          <div style={{ fontSize: 'var(--ui-font-size)', textAlign: 'center' }}>可離線瀏覽圖示 <IonIcon icon={download} /></div>
-          <div style={{ fontSize: 'var(--ui-font-size)', textAlign: 'center' }}><a href="https://github.com/MrMYHuang/cbetar2#bookmark" target="_new">書籤新增說明</a></div>
-          <div style={{ fontSize: 'var(--ui-font-size)', textAlign: 'center' }}><a href="https://github.com/MrMYHuang/cbetar2#web-app" target="_new">程式安裝說明</a></div>
         </IonContent>
       </IonPage>
     );
