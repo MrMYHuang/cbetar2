@@ -2,6 +2,7 @@ import axios from 'axios';
 import { isPlatform, IonLabel } from '@ionic/react';
 import React from 'react';
 import { Work } from './models/Work';
+import { Bookmark } from './models/Bookmark';
 
 const apiVersion = 'v1.2';
 const cbetaApiUrl = `https://cbdata.dila.edu.tw/${apiVersion}`;
@@ -31,11 +32,12 @@ function getFileName(work: string, juan: string) {
 
 // Fetch juan or HTML file.
 async function fetchJuan(work: string, juan: string, htmlFile: string | null, update: boolean = false) {
-  const fileName = getFileName(work, juan);
+  const fileName = htmlFile || getFileName(work, juan);
   let htmlStr = localStorage.getItem(fileName);
   let workInfo = new Work({});
   if (htmlStr != null && !update) {
-    // Do nothing.
+    const bookmarks = (JSON.parse(localStorage.getItem('Settings.json')!) as any).settings.bookmarks as Bookmark[];
+    workInfo.title = bookmarks.find((b) => b.fileName === fileName)!.work!.title;
   } else {
     if (htmlFile) {
       const res = await axiosInstance.get(`/${htmlFile}`, {

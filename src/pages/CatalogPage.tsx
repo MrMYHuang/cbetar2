@@ -165,7 +165,7 @@ class _CatalogPage extends React.Component<PageProps, State> {
           event.preventDefault();
           this.props.history.push({
             pathname: routeLink,
-            search: queryString.stringify(isHtmlNode ? { file: catalog.file! } : {}),
+            search: queryString.stringify(isHtmlNode ? { file: catalog.file!, title: catalog.label } : {}),
           });
         }}>
           <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}

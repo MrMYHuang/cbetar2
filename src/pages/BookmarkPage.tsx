@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import './WorkPage.css';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
 import { download } from 'ionicons/icons';
+import queryString from 'query-string';
 
 interface Props {
   dispatch: Function;
@@ -54,6 +55,7 @@ class _BookmarkPage extends React.Component<PageProps> {
     bookmarks.forEach((bookmark, i) => {
       let routeLink = ``;
       let label = `${bookmark.selectedText}`;
+      let isHtmlNode = false;
       switch (bookmark.type) {
         case BookmarkType.CATALOG:
           routeLink = `/catalog/catalog/${bookmark.uuid}`; break;
@@ -62,6 +64,10 @@ class _BookmarkPage extends React.Component<PageProps> {
         case BookmarkType.JUAN:
           routeLink = `/catalog/juan/${bookmark.work?.work}/${bookmark.work?.juan}`;
           label = `${bookmark.work?.title}第${bookmark.work?.juan}卷 - ${label}`; break;
+        case BookmarkType.HTML:
+          isHtmlNode = true;
+          routeLink = `/catalog/juan/${bookmark.work?.work}/1`;
+          label = `${bookmark.work?.title} - ${label}`; break;
       }
       rows.push(
         <IonItemSliding key={`bookmarkItemSliding_` + i}>
@@ -72,6 +78,7 @@ class _BookmarkPage extends React.Component<PageProps> {
               state: {
                 uuid: bookmark.uuid,
               },
+              search: queryString.stringify(isHtmlNode ? { file: bookmark.fileName, title: bookmark.work?.title } : {}),
             });
           }}>
             <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}

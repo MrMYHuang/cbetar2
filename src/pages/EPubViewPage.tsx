@@ -58,6 +58,7 @@ interface State {
 
 class _EPubViewPage extends React.Component<PageProps, State> {
   htmlFile: string;
+  htmlTitle: string;
   book: Book | null;
   rendition: Rendition | null;
   epub: any;
@@ -89,6 +90,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       speechState: SpeechState.UNINITIAL,
     }
     this.htmlFile = '';
+    this.htmlTitle = '';
     this.book = null;
     this.rendition = null;
     this.cfiRange = '';
@@ -134,6 +136,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     this.setState({ isLoading: true });
     let queryParams = queryString.parse(this.props.location.search) as any;
     this.htmlFile = queryParams.file;
+    this.htmlTitle = queryParams.title;
     this.epubcfiFromUrl = queryParams.bookmark || '';
     let state = this.props.location.state as any;
     this.uuidStr = state ? state.uuid : '';
@@ -180,14 +183,14 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         // Otherwise, saved epubcfi bookmarks will become invalid!
         htmlStr: this.state.htmlStr,
         bookmark: new Bookmark({
-          type: BookmarkType.JUAN,
+          type: this.htmlFile ? BookmarkType.HTML : BookmarkType.JUAN,
           uuid: uuidStr,
           selectedText: sel.toString(),
           epubcfi: this.epubcfiFromSelectedString,
-          fileName: `${this.props.match.params.work}_juan${this.props.match.params.path}.html`,
+          fileName: this.htmlFile || `${this.props.match.params.work}_juan${this.props.match.params.path}.html`,
           work: new Work({
             juan: this.props.match.params.path,
-            title: this.state.workInfo.title,
+            title: this.htmlFile ? this.htmlTitle : this.state.workInfo.title,
             work: this.props.match.params.work,
           }),
         }),

@@ -5,6 +5,7 @@ export enum BookmarkType {
     CATALOG,
     WORK,
     JUAN,
+    HTML,
 }
 
 export class Bookmark {
