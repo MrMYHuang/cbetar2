@@ -48,7 +48,7 @@ class _SearchPage extends React.Component<PageProps, State> {
       this.setState({ searches: searches });
       return true;
     } catch (err) {
-
+      console.error(err);
     }
   }
 

@@ -184,7 +184,7 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
       }
     } catch (err) {
       // the wake lock request fails - usually system related, such low as battery
-      console.log(`${err.name}, ${err.message}`);
+      console.error(`${err.name}, ${err.message}`);
     }
   }
 

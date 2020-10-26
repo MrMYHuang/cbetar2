@@ -47,20 +47,21 @@ class _WorkPage extends React.Component<PageProps, State> {
     if (this.hasBookmark) {
       work = this.bookmark!.work!;
     } else {
-      //try {
-      const res = await Globals.axiosInstance.get(`/works?work=${path}`, {
-        responseType: 'arraybuffer',
-      });
-      const data = JSON.parse(new TextDecoder().decode(res.data));
-      const works = data.results as [Work];
-      work = works[0];
+      try {
+        const res = await Globals.axiosInstance.get(`/works?work=${path}`, {
+          responseType: 'arraybuffer',
+        });
+        const data = JSON.parse(new TextDecoder().decode(res.data));
+        const works = data.results as [Work];
+        work = works[0];
 
-      const resToc = await Globals.axiosInstance.get(`/toc?work=${path}`) as any;
-      work.mulu = (resToc.data.results[0].mulu as WorkChapter[]).map((wc) => new WorkChapter(wc));
-      /*
-    } catch (e) {
-      fetchFail = true;
-    }*/
+        const resToc = await Globals.axiosInstance.get(`/toc?work=${path}`) as any;
+        work.mulu = (resToc.data.results[0].mulu as WorkChapter[]).map((wc) => new WorkChapter(wc));
+
+      } catch (err) {
+        console.error(err);
+        return false;
+      }
     }
 
     this.setState({ work: work });
@@ -76,8 +77,8 @@ class _WorkPage extends React.Component<PageProps, State> {
       try {
         const res = await Globals.fetchJuan(work.work, this.fetchJuan, null);
         localStorage.setItem(Globals.getFileName(work.work, this.fetchJuan), res.htmlStr);
-      } catch {
-        console.error(`Fetching juan ${i} failed!`);
+      } catch(err) {
+        console.error(`Fetching juan ${i} failed! ${err}`);
       }
     }
     this.setState({ showAddBookmarkDone: true });
