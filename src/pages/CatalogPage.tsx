@@ -87,6 +87,7 @@ class _CatalogPage extends React.Component<PageProps, State> {
         return true;
       } catch (e) {
         console.error(e);
+        console.error(new Error().stack);
         this.setState({ fetchError: true });
         return false;
       }
