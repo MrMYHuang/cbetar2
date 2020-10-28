@@ -271,7 +271,7 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
               text: '顯示版本歷史',
               cssClass: 'secondary uiFont',
               handler: (value) => {
-                window.open('https://github.com/MrMYHuang/cbetar2#%E7%89%88%E6%9C%AC%E6%AD%B7%E5%8F%B2');
+                window.open('https://github.com/MrMYHuang/cbetar2#history');
               },
             }
           ]}
