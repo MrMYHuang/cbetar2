@@ -110,6 +110,8 @@ https://support.google.com/chrome/answer/9658361?hl=zh-Hant&co=GENIE.Platform%3D
 7. 經文頁使用單選式UI選擇跳頁頁碼。因為如果使用鍵盤輸入式UI，在Android會發生鍵盤跳出後，經文頁面變小、頁數重新計算，導致難以跳至指定頁面。
 
 ## <a id='history'>版本歷史</a>
+* 3.9.4:
+  * "回報app異常記錄"功能加入更多診斷訊息。
 * 3.9.3:
   * "回報app異常記錄"功能加入更多診斷訊息。
 * 3.9.2:
@@ -290,5 +292,7 @@ If a developer wants to migrate this app to other web servers, please use a simi
     此app使用的全字庫字型(2020-08-18版)由國家發展委員會提供。此開放資料依政府資料開放授權條款 (Open Government Data License) 進行公眾釋出，使用者於遵守本條款各項規定之前提下，得利用之。政府資料開放授權條款：https://data.gov.tw/license
 
 ## <a id='contributors'>App相關貢獻者 (依姓名英、中排序)</a>
+* CBETA (https://cbeta.org)
+* DILA (https://www.dila.edu.tw/)
 * Godfery Wang
 * Meng-Yuan Huang (myh@live.com)
