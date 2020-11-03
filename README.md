@@ -34,7 +34,13 @@ CBETA電子佛典閱讀器2(非官方)，使用CBETA API存取電子佛經，支
   1. 整合"DILA 佛學術語字辭典"，可在"佛學詞典"分頁查詢佛學字詞。
   <img src='./docs/images/LookupDictionary.png' width='50%' />
 
-  2. 整合"DILA 佛學術語字辭典"，可在"佛學詞典"分頁查詢佛學字詞。
+  2. 也可以從查詢的結果選取文字，再執行查詢詞典功能。
+  3. 也可以在經文頁選取文字後，執行查詢詞典功能。
+
+* <a>萌典字典(線上查詢)</a>
+  1. 整合"萌典"字典，可在"佛學詞典"分頁切換至"萌典字典"，可查詢單字，包括注音、解釋。
+  2. 也可以從查詢的結果選取文字，再執行查詢字典功能。
+  3. 也可以在經文頁選取文字後，執行查詢字典功能。
 
 * 佈景主題切換
   1. 支援多種佈景主題。
@@ -110,6 +116,8 @@ https://support.google.com/chrome/answer/9658361?hl=zh-Hant&co=GENIE.Platform%3D
 7. 經文頁使用單選式UI選擇跳頁頁碼。因為如果使用鍵盤輸入式UI，在Android會發生鍵盤跳出後，經文頁面變小、頁數重新計算，導致難以跳至指定頁面。
 
 ## <a id='history'>版本歷史</a>
+* 3.10.0:
+  * 整合"萌典字典"，可至詞典頁切換至字典。
 * 3.9.4:
   * "回報app異常記錄"功能加入更多診斷訊息。
 * 3.9.3:
@@ -290,6 +298,7 @@ If a developer wants to migrate this app to other web servers, please use a simi
 3. 全字庫字型 ( https://data.gov.tw/dataset/5961 )
 
     此app使用的全字庫字型(2020-08-18版)由國家發展委員會提供。此開放資料依政府資料開放授權條款 (Open Government Data License) 進行公眾釋出，使用者於遵守本條款各項規定之前提下，得利用之。政府資料開放授權條款：https://data.gov.tw/license
+4. <a href="https://github.com/g0v/moedict-webkit" target="_new">萌典字典</a>
 
 ## <a id='contributors'>App相關貢獻者 (依姓名英、中排序)</a>
 * CBETA (https://cbeta.org)

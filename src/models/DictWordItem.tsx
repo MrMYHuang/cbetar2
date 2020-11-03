@@ -8,7 +8,7 @@ export class DictWordDefItem {
     quote: Array<string> | null;
     example: Array<string> | null;
     link: Array<string> | null;
-    type: WordType;
+    type: WordType | undefined;
 
     constructor(json: DictWordDefItem) {
         this.def = json.def;

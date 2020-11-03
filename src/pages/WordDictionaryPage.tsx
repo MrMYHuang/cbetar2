@@ -1,9 +1,9 @@
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, withIonLifeCycle, IonButton, IonIcon, IonSearchbar, IonAlert } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonToolbar, withIonLifeCycle, IonButton, IonIcon, IonSearchbar, IonAlert, IonPopover, IonList, IonItem, IonLabel } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Globals from '../Globals';
-import { home, arrowBack, shareSocial, book } from 'ionicons/icons';
+import { home, arrowBack, shareSocial, book, ellipsisHorizontal, ellipsisVertical } from 'ionicons/icons';
 import { DictWordDefItem, DictWordItem, WordType } from '../models/DictWordItem';
 
 interface Props {
@@ -18,8 +18,9 @@ interface PageProps extends Props, RouteComponentProps<{
 
 interface State {
   keyword: string;
-  search: DictWordItem | null;
+  search: [DictWordItem] | null;
   showNoSelectedTextAlert: boolean;
+  popover: any;
 }
 
 class _WordDictionaryPage extends React.Component<PageProps, State> {
@@ -30,6 +31,10 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
       keyword: '',
       search: null,
       showNoSelectedTextAlert: false,
+      popover: {
+        show: false,
+        event: null,
+      },
     }
     this.searchBarRef = React.createRef<HTMLIonSearchbarElement>();
   }
@@ -55,7 +60,7 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
       {
         responseType: 'json',
       });
-    this.setState({ search: res.data.heteronyms[0] });
+    this.setState({ search: res.data.heteronyms });
   }
 
   getSelectedString() {
@@ -67,36 +72,60 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
     }
   }
 
-  defToView(defs: Array<DictWordDefItem> | undefined) {
-    return defs?.map((d) =>
-      <li>
-        <div>{d.def}</div>
-        {d.quote?.map((q) => <div>{q}</div>)}
-        {d.example?.map((e) => <div>{e}</div>)}
-        {d.link?.map((l) => <div>{l}</div>)}
-      </li>
-    );
+  defToView(defs: Array<DictWordDefItem> | undefined, title: string) {
+    return defs !== undefined && defs.length > 0 ? <>
+      <div style={{ color: 'var(--ion-color-primary)' }}>{title}</div>
+      <ol>{
+        defs?.map((d) =>
+          <li>
+            <div>{d.def}</div>
+            {d.quote?.map((q) => <div>{q}</div>)}
+            {d.example?.map((e) => <div>{e}</div>)}
+            {d.link?.map((l) => <div>{l}</div>)}
+          </li>
+        )}
+      </ol>
+    </> : <></>;
   }
 
   render() {
-    const data = this.state.search;
-    const nouns = data?.definitions.filter((d) => d.type === WordType.NOUN);
-    const verbs = data?.definitions.filter((d) => d.type === WordType.VERB);
+    let dictView: any = [];
+    if (this.props.match.params.keyword) {
+      this.state.search?.forEach((data) => {
+        const nouns = data?.definitions.filter((d) => d.type === WordType.NOUN);
+        const verbs = data?.definitions.filter((d) => d.type === WordType.VERB);
+        const others = data?.definitions.filter((d) => d.type === undefined);
 
-    const nounsView = this.defToView(nouns);
-    const verbsView = this.defToView(verbs);
+        const nounsView = this.defToView(nouns, '名詞');
+        const verbsView = this.defToView(verbs, '動詞');
+        const othersView = this.defToView(others, '');
+
+        dictView.push(
+          <div className='uiFont textSelectable'>
+            <div className='uiFontX3'>{this.props.match.params.keyword.substring(0, 1)}</div>
+            {data?.bopomofo ? <div>注音：{data?.bopomofo}</div> : null}
+            {data?.pinyin ? <div>拼音：{data?.pinyin}</div> : null}
+            {nounsView}
+            {verbsView}
+            {othersView}
+          </div>);
+      });
+    }
 
     return (
       <IonPage>
         <IonHeader>
           <IonToolbar>
-            <IonTitle style={{ fontSize: 'var(--ui-font-size)' }}>萌典字典</IonTitle>
             <IonButton hidden={this.isTopPage} fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
               <IonIcon icon={arrowBack} slot='icon-only' />
             </IonButton>
 
-            <IonButton fill="clear" slot='end' onClick={e => this.props.history.push(`/${this.props.match.params.tab}`)}>
-              <IonIcon icon={home} slot='icon-only' />
+            <IonButton slot='start' onClick={ev => {
+              this.props.history.push({
+                pathname: `/dictionary/`,
+              });
+            }}>
+              <span className='uiFont' style={{ color: 'var(--color)' }}>萌典字典</span>
             </IonButton>
 
             <IonButton fill="clear" slot='end' onClick={e => {
@@ -112,23 +141,64 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
               <IonIcon icon={shareSocial} slot='icon-only' />
             </IonButton>
 
-            <IonButton fill="clear" slot='end' onClick={e => {
-              const selectedText = this.getSelectedString();
-              if (selectedText === '') {
-                this.setState({ showNoSelectedTextAlert: true });
-                return;
-              }
-
-              this.props.history.push({
-                pathname: `/WordDictionary/search/${selectedText}`,
-              });
-            }}>
-              <IonIcon icon={book} slot='icon-only' />
+            <IonButton fill="clear" slot='end' onClick={e => this.setState({ popover: { show: true, event: e.nativeEvent } })}>
+              <IonIcon ios={ellipsisHorizontal} md={ellipsisVertical} slot='icon-only' />
             </IonButton>
+
+            <IonPopover
+              isOpen={this.state.popover.show}
+              event={this.state.popover.event}
+              onDidDismiss={e => { this.setState({ popover: { show: false, event: null } }) }}
+            >
+              <IonList>
+                <IonItem button onClick={e => {
+                  this.props.history.push(`/${this.props.match.params.tab}`);
+                  this.setState({ popover: { show: false, event: null } });
+                }}>
+                  <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
+                  <IonIcon icon={home} slot='start' />
+                  <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>回首頁</IonLabel>
+                </IonItem>
+
+                <IonItem button onClick={e => {
+                  this.setState({ popover: { show: false, event: null } });
+                  const selectedText = this.getSelectedString();
+                  if (selectedText === '') {
+                    this.setState({ showNoSelectedTextAlert: true });
+                    return;
+                  }
+
+                  this.props.history.push({
+                    pathname: `/dictionary/search/${selectedText}`,
+                  });
+                }}>
+                  <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
+                  <IonIcon icon={book} slot='start' />
+                  <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>查詞典</IonLabel>
+                </IonItem>
+
+                <IonItem button onClick={e => {
+                  this.setState({ popover: { show: false, event: null } });
+                  const selectedText = this.getSelectedString();
+                  if (selectedText === '') {
+                    this.setState({ showNoSelectedTextAlert: true });
+                    return;
+                  }
+
+                  this.props.history.push({
+                    pathname: `/dictionary/searchWord/${selectedText}`,
+                  });
+                }}>
+                  <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
+                  <IonIcon icon={book} slot='start' />
+                  <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>查字典</IonLabel>
+                </IonItem>
+              </IonList>
+            </IonPopover>
           </IonToolbar>
         </IonHeader>
         <IonContent>
-          <IonSearchbar ref={this.searchBarRef} placeholder='請輸入字詞，再按鍵盤Enter鍵' value={this.state.keyword}
+          <IonSearchbar ref={this.searchBarRef} placeholder='請輸入字，再按鍵盤Enter鍵' value={this.state.keyword}
             onIonChange={ev => {
               this.setState({ keyword: ev.detail.value! })
             }}
@@ -138,7 +208,7 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
             onKeyUp={ev => {
               if (ev.key === 'Enter') {
                 this.props.history.push({
-                  pathname: `/WordDictionary/search/${this.state.keyword}`,
+                  pathname: `/dictionary/searchWord/${this.state.keyword}`,
                 });
               }
             }} />
@@ -146,19 +216,9 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
               <IonButton slot='end' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={e => {
                 this.lookupDict(this.state.keyword);
               }}>搜尋</IonButton>*/}
-          <div className='uiFont' style={{ display: 'table' }}>
-            <div className='uiFontLarge'>{this.props.match.params.keyword.substring(0, 1)}</div>
-            
-            {data?.bopomofo}
-            <div style={{color: 'var(--ion-color-primary)'}}>名詞</div>
-            <ol>
-              {nounsView}
-            </ol>
-            <div style={{color: 'var(--ion-color-primary)'}}>動詞</div>
-            <ol>
-              {verbsView}
-            </ol>
-          </div>
+
+          {dictView}
+
           {/*
           <div style={{ fontSize: 'var(--ui-font-size)', textAlign: 'center' }}><a href="https://github.com/MrMYHuang/cbetar2#WordDictionary" target="_new">佛學詞典說明</a></div>
           */}

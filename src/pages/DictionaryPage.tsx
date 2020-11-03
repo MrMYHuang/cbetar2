@@ -1,9 +1,9 @@
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, withIonLifeCycle, IonButton, IonIcon, IonSearchbar, IonAlert } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonToolbar, withIonLifeCycle, IonButton, IonIcon, IonSearchbar, IonAlert, IonPopover, IonList, IonItem, IonLabel } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Globals from '../Globals';
-import { home, arrowBack, shareSocial, book } from 'ionicons/icons';
+import { home, arrowBack, shareSocial, book, ellipsisHorizontal, ellipsisVertical } from 'ionicons/icons';
 import { DictItem } from '../models/DictItem';
 
 interface Props {
@@ -20,6 +20,7 @@ interface State {
   keyword: string;
   searches: Array<DictItem>;
   showNoSelectedTextAlert: boolean;
+  popover: any;
 }
 
 class _DictionaryPage extends React.Component<PageProps, State> {
@@ -30,6 +31,10 @@ class _DictionaryPage extends React.Component<PageProps, State> {
       keyword: '',
       searches: [],
       showNoSelectedTextAlert: false,
+      popover: {
+        show: false,
+        event: null,
+      },
     }
     this.searchBarRef = React.createRef<HTMLIonSearchbarElement>();
   }
@@ -75,7 +80,7 @@ class _DictionaryPage extends React.Component<PageProps, State> {
         <div style={{ display: 'table-row' }} key={`dictItem` + index}>
           <div className='tableCell'>
             <div className='ion-text-wrap uiFont' style={{ color: 'var(--ion-color-primary)', paddingBottom: '18pt' }} dangerouslySetInnerHTML={{ __html: item.dict_name_zh }}></div>
-            <div className='ion-text-wrap uiFont textSelectable' key={`dictItemLabel` + index} dangerouslySetInnerHTML={{ __html: item.desc }}>
+            <div className='ion-text-wrap uiFont' key={`dictItemLabel` + index} dangerouslySetInnerHTML={{ __html: item.desc }}>
             </div>
           </div>
         </div>
@@ -89,13 +94,16 @@ class _DictionaryPage extends React.Component<PageProps, State> {
       <IonPage>
         <IonHeader>
           <IonToolbar>
-            <IonTitle style={{ fontSize: 'var(--ui-font-size)' }}>佛學詞典</IonTitle>
             <IonButton hidden={this.isTopPage} fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
               <IonIcon icon={arrowBack} slot='icon-only' />
             </IonButton>
 
-            <IonButton fill="clear" slot='end' onClick={e => this.props.history.push(`/${this.props.match.params.tab}`)}>
-              <IonIcon icon={home} slot='icon-only' />
+            <IonButton slot='start' onClick={ev => {
+              this.props.history.push({
+                pathname: `/dictionary/searchWord/`,
+              });
+            }}>
+              <span className='uiFont' style={{ color: 'var(--color)' }}>佛學詞典</span>
             </IonButton>
 
             <IonButton fill="clear" slot='end' onClick={e => {
@@ -111,19 +119,60 @@ class _DictionaryPage extends React.Component<PageProps, State> {
               <IonIcon icon={shareSocial} slot='icon-only' />
             </IonButton>
 
-            <IonButton fill="clear" slot='end' onClick={e => {
-              const selectedText = this.getSelectedString();
-              if (selectedText === '') {
-                this.setState({ showNoSelectedTextAlert: true });
-                return;
-              }
-
-              this.props.history.push({
-                pathname: `/dictionary/search/${selectedText}`,
-              });
-            }}>
-              <IonIcon icon={book} slot='icon-only' />
+            <IonButton fill="clear" slot='end' onClick={e => this.setState({ popover: { show: true, event: e.nativeEvent } })}>
+              <IonIcon ios={ellipsisHorizontal} md={ellipsisVertical} slot='icon-only' />
             </IonButton>
+
+            <IonPopover
+              isOpen={this.state.popover.show}
+              event={this.state.popover.event}
+              onDidDismiss={e => { this.setState({ popover: { show: false, event: null } }) }}
+            >
+              <IonList>
+                <IonItem button onClick={e => {
+                  this.props.history.push(`/${this.props.match.params.tab}`);
+                  this.setState({ popover: { show: false, event: null } });
+                }}>
+                  <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
+                  <IonIcon icon={home} slot='start' />
+                  <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>回首頁</IonLabel>
+                </IonItem>
+
+                <IonItem button onClick={e => {
+                  this.setState({ popover: { show: false, event: null } });
+                  const selectedText = this.getSelectedString();
+                  if (selectedText === '') {
+                    this.setState({ showNoSelectedTextAlert: true });
+                    return;
+                  }
+
+                  this.props.history.push({
+                    pathname: `/dictionary/search/${selectedText}`,
+                  });
+                }}>
+                  <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
+                  <IonIcon icon={book} slot='start' />
+                  <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>查詞典</IonLabel>
+                </IonItem>
+
+                <IonItem button onClick={e => {
+                  this.setState({ popover: { show: false, event: null } });
+                  const selectedText = this.getSelectedString();
+                  if (selectedText === '') {
+                    this.setState({ showNoSelectedTextAlert: true });
+                    return;
+                  }
+
+                  this.props.history.push({
+                    pathname: `/dictionary/searchWord/${selectedText}`,
+                  });
+                }}>
+                  <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
+                  <IonIcon icon={book} slot='start' />
+                  <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>查字典</IonLabel>
+                </IonItem>
+              </IonList>
+            </IonPopover>
           </IonToolbar>
         </IonHeader>
         <IonContent>

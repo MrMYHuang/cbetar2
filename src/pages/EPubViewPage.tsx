@@ -668,6 +668,23 @@ class _EPubViewPage extends React.Component<PageProps, State> {
                 <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>查詞典</IonLabel>
               </IonItem>
 
+              <IonItem button onClick={e => {
+                this.setState({ popover: { show: false, event: null } });
+                const selectedText = this.getSelectedString();
+                if (selectedText === '') {
+                  this.setState({ showNoSelectedTextAlert: true });
+                  return;
+                }
+
+                this.props.history.push({
+                  pathname: `/dictionary/searchWord/${selectedText}`,
+                });
+              }}>
+                <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
+                <IonIcon icon={book} slot='start' />
+                <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>查字典</IonLabel>
+              </IonItem>
+
               <IonItem button onClick={ev => {
                 let sharedUrl = window.location.href.split('?')[0];
                 const selectedText = this.getSelectedString();
