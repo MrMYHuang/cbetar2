@@ -168,6 +168,10 @@ body.dark {
     font-size: var(--ui-font-size) !important;
 }
 
+.uiFontLarge {
+    font-size: calc(var(--ui-font-size) * 2) !important;
+}
+
 ion-col {
     text-align: center;
 }

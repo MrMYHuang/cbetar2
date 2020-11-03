@@ -4,7 +4,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Globals from '../Globals';
 import { home, arrowBack, shareSocial, book } from 'ionicons/icons';
-import { DictItem } from '../models/DictItem';
+import { DictWordDefItem, DictWordItem, WordType } from '../models/DictWordItem';
 
 interface Props {
   dispatch: Function;
@@ -18,17 +18,17 @@ interface PageProps extends Props, RouteComponentProps<{
 
 interface State {
   keyword: string;
-  searches: Array<DictItem>;
+  search: DictWordItem | null;
   showNoSelectedTextAlert: boolean;
 }
 
-class _DictionaryPage extends React.Component<PageProps, State> {
+class _WordDictionaryPage extends React.Component<PageProps, State> {
   searchBarRef: React.RefObject<HTMLIonSearchbarElement>;
   constructor(props: any) {
     super(props);
     this.state = {
       keyword: '',
-      searches: [],
+      search: null,
       showNoSelectedTextAlert: false,
     }
     this.searchBarRef = React.createRef<HTMLIonSearchbarElement>();
@@ -51,11 +51,11 @@ class _DictionaryPage extends React.Component<PageProps, State> {
 
   async lookupDict(keyword: string) {
     const res = await Globals.axiosInstance.get(
-      `${Globals.dilaDictApiUrl}/?type=match&dicts=dila&term=${keyword}`,
+      `https://www.moedict.tw/uni/${keyword.substring(0, 1)}`,
       {
         responseType: 'json',
       });
-    this.setState({ searches: res.data });
+    this.setState({ search: res.data.heteronyms[0] });
   }
 
   getSelectedString() {
@@ -67,29 +67,30 @@ class _DictionaryPage extends React.Component<PageProps, State> {
     }
   }
 
-  getRows() {
-    const data = this.state.searches as [DictItem];
-    let rows = Array<object>();
-    data.forEach((item: DictItem, index: number) => {
-      rows.push(
-        <div style={{ display: 'table-row' }} key={`dictItem` + index}>
-          <div className='tableCell'>
-            <div className='ion-text-wrap uiFont' style={{ color: 'var(--ion-color-primary)', paddingBottom: '18pt' }} dangerouslySetInnerHTML={{ __html: item.dict_name_zh }}></div>
-            <div className='ion-text-wrap uiFont textSelectable' key={`dictItemLabel` + index} dangerouslySetInnerHTML={{ __html: item.desc }}>
-            </div>
-          </div>
-        </div>
-      );
-    });
-    return rows;
+  defToView(defs: Array<DictWordDefItem> | undefined) {
+    return defs?.map((d) =>
+      <li>
+        <div>{d.def}</div>
+        {d.quote?.map((q) => <div>{q}</div>)}
+        {d.example?.map((e) => <div>{e}</div>)}
+        {d.link?.map((l) => <div>{l}</div>)}
+      </li>
+    );
   }
 
   render() {
+    const data = this.state.search;
+    const nouns = data?.definitions.filter((d) => d.type === WordType.NOUN);
+    const verbs = data?.definitions.filter((d) => d.type === WordType.VERB);
+
+    const nounsView = this.defToView(nouns);
+    const verbsView = this.defToView(verbs);
+
     return (
       <IonPage>
         <IonHeader>
           <IonToolbar>
-            <IonTitle style={{ fontSize: 'var(--ui-font-size)' }}>佛學詞典</IonTitle>
+            <IonTitle style={{ fontSize: 'var(--ui-font-size)' }}>萌典字典</IonTitle>
             <IonButton hidden={this.isTopPage} fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
               <IonIcon icon={arrowBack} slot='icon-only' />
             </IonButton>
@@ -119,7 +120,7 @@ class _DictionaryPage extends React.Component<PageProps, State> {
               }
 
               this.props.history.push({
-                pathname: `/dictionary/search/${selectedText}`,
+                pathname: `/WordDictionary/search/${selectedText}`,
               });
             }}>
               <IonIcon icon={book} slot='icon-only' />
@@ -132,12 +133,12 @@ class _DictionaryPage extends React.Component<PageProps, State> {
               this.setState({ keyword: ev.detail.value! })
             }}
             onIonClear={ev => {
-              this.setState({ searches: [] });
+              this.setState({ search: null });
             }}
             onKeyUp={ev => {
               if (ev.key === 'Enter') {
                 this.props.history.push({
-                  pathname: `/dictionary/search/${this.state.keyword}`,
+                  pathname: `/WordDictionary/search/${this.state.keyword}`,
                 });
               }
             }} />
@@ -145,10 +146,22 @@ class _DictionaryPage extends React.Component<PageProps, State> {
               <IonButton slot='end' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={e => {
                 this.lookupDict(this.state.keyword);
               }}>搜尋</IonButton>*/}
-          <div style={{ display: 'table' }}>
-            {this.getRows()}
+          <div className='uiFont' style={{ display: 'table' }}>
+            <div className='uiFontLarge'>{this.props.match.params.keyword.substring(0, 1)}</div>
+            
+            {data?.bopomofo}
+            <div style={{color: 'var(--ion-color-primary)'}}>名詞</div>
+            <ol>
+              {nounsView}
+            </ol>
+            <div style={{color: 'var(--ion-color-primary)'}}>動詞</div>
+            <ol>
+              {verbsView}
+            </ol>
           </div>
-          <div style={{ fontSize: 'var(--ui-font-size)', textAlign: 'center' }}><a href="https://github.com/MrMYHuang/cbetar2#dictionary" target="_new">佛學詞典說明</a></div>
+          {/*
+          <div style={{ fontSize: 'var(--ui-font-size)', textAlign: 'center' }}><a href="https://github.com/MrMYHuang/cbetar2#WordDictionary" target="_new">佛學詞典說明</a></div>
+          */}
 
           <IonAlert
             cssClass='uiFont'
@@ -174,7 +187,7 @@ class _DictionaryPage extends React.Component<PageProps, State> {
   }
 };
 
-const DictionaryPage = withIonLifeCycle(_DictionaryPage);
+const WordDictionaryPage = withIonLifeCycle(_WordDictionaryPage);
 
 const mapStateToProps = (state: any /*, ownProps*/) => {
   return {
@@ -185,4 +198,4 @@ const mapStateToProps = (state: any /*, ownProps*/) => {
 
 export default connect(
   mapStateToProps,
-)(DictionaryPage);
+)(WordDictionaryPage);

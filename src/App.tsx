@@ -43,6 +43,7 @@ import Globals from './Globals';
 import DictionaryPage from './pages/DictionaryPage';
 import FullTextSearchPage from './pages/FullTextSearchPage';
 import ShareTextModal from './components/ShareTextModal';
+import WordDictionaryPage from './pages/WordDictionaryPage';
 
 let store = getSavedStore();
 /*
@@ -227,6 +228,7 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
               <Route path={`/:tab(bookmarks)/search/:keyword`} render={props => <SearchPage {...props} />} exact={true} />
               <Route path={`/:tab(dictionary)`} render={props => <DictionaryPage {...props} />} exact={true} />
               <Route path={`/:tab(dictionary)/search/:keyword`} render={props => <DictionaryPage key={props.match.url} {...props} />} exact={true} />
+              <Route path={`/:tab(dictionary)/searchWord/:keyword`} render={props => <WordDictionaryPage key={props.match.url} {...props} />} exact={true} />
               <Route path="/settings" component={SettingsPage} />
               <Route path="/" render={() => { return this.routeByQueryString(); }} exact={true} />
             </IonRouterOutlet>
