@@ -79,8 +79,8 @@ class _DictionaryPage extends React.Component<PageProps, State> {
       rows.push(
         <div style={{ display: 'table-row' }} key={`dictItem` + index}>
           <div className='tableCell'>
-            <div className='ion-text-wrap uiFont' style={{ color: 'var(--ion-color-primary)', paddingBottom: '18pt' }} dangerouslySetInnerHTML={{ __html: item.dict_name_zh }}></div>
-            <div className='ion-text-wrap uiFont' key={`dictItemLabel` + index} dangerouslySetInnerHTML={{ __html: item.desc }}>
+            <div className='ion-text-wrap textFont' style={{ color: 'var(--ion-color-primary)', paddingBottom: '18pt' }} dangerouslySetInnerHTML={{ __html: item.dict_name_zh }}></div>
+            <div className='ion-text-wrap textFont' key={`dictItemLabel` + index} dangerouslySetInnerHTML={{ __html: item.desc }}>
             </div>
           </div>
         </div>

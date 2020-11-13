@@ -37,7 +37,7 @@ async function fetchJuan(work: string, juan: string, htmlFile: string | null, up
   let workInfo = new Work({});
   if (htmlStr != null && !update) {
     const bookmarks = (JSON.parse(localStorage.getItem('Settings.json')!) as any).settings.bookmarks as Bookmark[];
-    workInfo.title = bookmarks.find((b) => b.fileName === fileName)!.work!.title;
+    workInfo = bookmarks.find((b) => b.fileName === fileName)!.work!;
   } else {
     if (htmlFile) {
       const res = await axiosInstance.get(`/${htmlFile}`, {
@@ -168,7 +168,7 @@ export default {
   updateCssVars: (settings: any) => {
     let scrollbarSize = scrollbarSizeIdToValue(settings.scrollbarSize);
     document.documentElement.style.cssText = `--ion-font-family: ${settings.useFontKai ? 'Heiti, Times, Kai' : 'Times, Heiti'};
-        --scrollbar-size: ${scrollbarSize}px; --ui-font-size: ${settings.uiFontSize}px`
+        --scrollbar-size: ${scrollbarSize}px; --ui-font-size: ${settings.uiFontSize}px; --text-font-size: ${settings.fontSize}px`
   },
   isTouchDevice: () => {
     return isPlatform('ios') || isPlatform('android');

@@ -101,8 +101,8 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
         const othersView = this.defToView(others, '');
 
         dictView.push(
-          <div className='uiFont textSelectable'>
-            <div className='uiFontX3'>{this.props.match.params.keyword.substring(0, 1)}</div>
+          <div className='textFont textSelectable'>
+            <div className='textFontX3'>{this.props.match.params.keyword.substring(0, 1)}</div>
             {data?.bopomofo ? <div>注音：{data?.bopomofo}</div> : null}
             {data?.pinyin ? <div>拼音：{data?.pinyin}</div> : null}
             {nounsView}
