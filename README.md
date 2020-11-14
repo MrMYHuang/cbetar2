@@ -140,7 +140,7 @@ https://support.google.com/chrome/answer/9658361?hl=zh-Hant&co=GENIE.Platform%3D
   * 佛學詞典頁可選擇已查詢文字，再執行查詞典功能。
   * 修正經文頁"查詞典"功能無法使用的問題。
 * 3.8.4:
-  * 使用IndexedDB達成iframe離線使用楷數字體。
+  * 使用IndexedDB達成iframe離線使用楷書字體。
 * 3.8.3:
   * 修正分頁模式下，頁面隨頁數增加而跑掉版面的問題。
 * 3.8.1:
