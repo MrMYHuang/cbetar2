@@ -37,7 +37,7 @@ async function fetchJuan(work: string, juan: string, htmlFile: string | null, up
   let workInfo = new Work({});
   if (htmlStr != null && !update) {
     const bookmarks = (JSON.parse(localStorage.getItem('Settings.json')!) as any).settings.bookmarks as Bookmark[];
-    workInfo = bookmarks.find((b) => b.fileName === fileName)!.work!;
+    workInfo = bookmarks.find((b) => b.fileName === fileName || b.uuid === work)!.work!;
   } else {
     if (htmlFile) {
       const res = await axiosInstance.get(`/${htmlFile}`, {
