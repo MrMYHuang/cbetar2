@@ -53,7 +53,7 @@ export default function reducer(state = {
                 }
                 break;
               case BookmarkType.JUAN:
-                if (noJuanBookmarkUseTheFile) 
+                if (noJuanBookmarkUseTheFile)
                   localStorage.removeItem(fileName);
                 break;
             }
@@ -63,6 +63,11 @@ export default function reducer(state = {
       newSettings.bookmarks = [...bookmarksTemp];
       localStorage.setItem(Globals.storeFile, JSON.stringify({ settings: newSettings }));
       break;
+    case "UPDATE_BOOKMARKS": {
+      newSettings.bookmarks = action.bookmarks;
+      localStorage.setItem(Globals.storeFile, JSON.stringify({ settings: newSettings }));
+      break;
+    }
     default:
       if (Object.keys(newSettings).length === 0) {
         newSettings = {};
