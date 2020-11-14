@@ -30,12 +30,69 @@ function getFileName(work: string, juan: string) {
   return `${work}_juan${juan}.html`;
 }
 
+async function getFileFromIndexedDB(fileName: string) {
+  const dbOpenReq = indexedDB.open(cbetardb);
+
+  return new Promise(function (ok, fail) {
+    dbOpenReq.onsuccess = async function (ev) {
+      const db = dbOpenReq.result;
+
+      const trans = db.transaction(["store"], 'readwrite');
+      let req = trans.objectStore('store').get(fileName);
+      req.onsuccess = async function (_ev) {
+        const data = req.result;
+        if (!data) {
+          console.error(`${fileName} loading failed!`);
+          return fail();
+        }
+        return ok(data);
+      };
+    };
+  });
+}
+
+async function saveFileToIndexedDB(fileName: string, data: any) {
+  const dbOpenReq = indexedDB.open(cbetardb);
+  return new Promise((ok, fail) => {
+    dbOpenReq.onsuccess = async (ev: Event) => {
+      const db = dbOpenReq.result;
+
+      const transWrite = db.transaction(["store"], 'readwrite')
+      const reqWrite = transWrite.objectStore('store').put(data, fileName);
+      reqWrite.onsuccess = (_ev: any) => {
+        return ok();
+      };
+    };
+  });
+}
+
+async function removeFileFromIndexedDB(fileName: string) {
+  const dbOpenReq = indexedDB.open(cbetardb);
+  return new Promise((ok, fail) => {
+    dbOpenReq.onsuccess = async (ev: Event) => {
+      const db = dbOpenReq.result;
+
+      const transWrite = db.transaction(["store"], 'readwrite')
+      const reqWrite = transWrite.objectStore('store').delete(fileName);
+      reqWrite.onsuccess = (_ev: any) => {
+        return ok();
+      };
+    };
+  });
+}
+
 // Fetch juan or HTML file.
 async function fetchJuan(work: string, juan: string, htmlFile: string | null, update: boolean = false) {
   const fileName = htmlFile || getFileName(work, juan);
-  let htmlStr = localStorage.getItem(fileName);
+  let htmlStr: string | null = null;
+  try {
+    htmlStr = await getFileFromIndexedDB(fileName) as string;
+  } catch {
+    // Ignore file not found.
+  }
+
   let workInfo = new Work({});
-  if (htmlStr != null && !update) {
+  if (htmlStr !== null && !update) {
     const bookmarks = (JSON.parse(localStorage.getItem('Settings.json')!) as any).settings.bookmarks as Bookmark[];
     workInfo.title = bookmarks.find((b) => b.fileName === fileName)!.work!.title;
   } else {
@@ -175,5 +232,8 @@ export default {
   },
   fetchJuan,
   getFileName,
+  getFileFromIndexedDB,
+  saveFileToIndexedDB,
+  removeFileFromIndexedDB,
   removeElementsByClassName,
 };

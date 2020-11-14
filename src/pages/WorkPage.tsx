@@ -76,7 +76,7 @@ class _WorkPage extends React.Component<PageProps, State> {
       this.fetchJuan = juans[i];
       try {
         const res = await Globals.fetchJuan(work.work, this.fetchJuan, null);
-        localStorage.setItem(Globals.getFileName(work.work, this.fetchJuan), res.htmlStr);
+        Globals.saveFileToIndexedDB(Globals.getFileName(work.work, this.fetchJuan), res.htmlStr);
       } catch(err) {
         console.error(`Fetching juan ${i} failed! ${err}`);
       }

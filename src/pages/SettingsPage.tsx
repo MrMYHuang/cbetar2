@@ -70,7 +70,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
         this.setState({ juansDownloadedRatio: juansDownloaded / juansToDownload });
         const res = await Globals.fetchJuan(work.work, fetchJuan, null, true);
         const fileName = Globals.getFileName(work.work, fetchJuan);
-        localStorage.setItem(fileName, res.htmlStr);
+        Globals.saveFileToIndexedDB(fileName, res.htmlStr);
         console.log(`File saved: ${fileName}`);
       }
     }
@@ -81,7 +81,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
       const work = bookmarkWithHtml.work!;
       const res = await Globals.fetchJuan(work.work, `${work.juan}`, null, true);
       const fileName = Globals.getFileName(work.work, `${work.juan}`);
-      localStorage.setItem(fileName, res.htmlStr);
+      Globals.saveFileToIndexedDB(fileName, res.htmlStr);
       console.log(`File saved: ${fileName}`);
     }
     this.setState({ showUpdateAllJuansDone: true });

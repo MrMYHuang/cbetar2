@@ -18,7 +18,7 @@ export default function reducer(state = {
       if (fileName !== null && fileName !== '' &&
         !oldBookmarks.some((bookmark: Bookmark) => bookmark.fileName === fileName)
       ) {
-        localStorage.setItem(fileName, action.htmlStr);
+        Globals.saveFileToIndexedDB(fileName, action.htmlStr);
       }
       newSettings.bookmarks = [...newSettings.bookmarks, action.bookmark];
       localStorage.setItem(Globals.storeFile, JSON.stringify({ settings: newSettings }));
@@ -48,13 +48,13 @@ export default function reducer(state = {
                   const fileName = Globals.getFileName(work.work, juans[i]);
                   noJuanBookmarkUseTheFile = bookmarksTemp.find((b) => b.type === BookmarkType.JUAN && b.fileName === fileName) == null;
                   if (noJuanBookmarkUseTheFile) {
-                    localStorage.removeItem(fileName);
+                    Globals.removeFileFromIndexedDB(fileName);
                   }
                 }
                 break;
               case BookmarkType.JUAN:
                 if (noJuanBookmarkUseTheFile) 
-                  localStorage.removeItem(fileName);
+                Globals.removeFileFromIndexedDB(fileName);
                 break;
             }
           }
