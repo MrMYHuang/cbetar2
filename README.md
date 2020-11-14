@@ -82,6 +82,12 @@ CBETA電子佛典閱讀器2(非官方)，使用CBETA API存取電子佛經，支
 https://MrMYHuang.github.io
 
 ### 安裝
+
+#### Android - Chrome
+可從Google Play Store下載此PWA：
+
+https://play.google.com/store/apps/details?id=io.github.mrmyhuang.cbetar2
+
 #### Windows, macOS, Linux, Android - Chrome
 請參考Chrome官方文件： 
 
