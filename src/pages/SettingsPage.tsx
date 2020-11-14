@@ -46,6 +46,16 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
     }
   }
 
+  updateBookmark(newBookmarks: Array<Bookmark>, newBookmark: Bookmark) {
+    const updateIndex = newBookmarks.findIndex((b: Bookmark) => b.uuid === newBookmark.uuid);
+    if (updateIndex === -1) {
+      console.error(`Update bookmark fails! Can't find the original bookmark with UUID: ${newBookmark.uuid}`);
+    } else {
+      newBookmarks[updateIndex] = newBookmark;
+    }
+    return;
+  }
+
   async updateAllJuans() {
     this.setState({ juansDownloadedRatio: 0 });
     const workBookmarksWithHtml = this.props.bookmarks.filter((b) => b.type === BookmarkType.WORK);
@@ -70,7 +80,12 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
         this.setState({ juansDownloadedRatio: juansDownloaded / juansToDownload });
         const res = await Globals.fetchJuan(work.work, fetchJuan, null, true);
         const fileName = Globals.getFileName(work.work, fetchJuan);
+        // Update HTML.
         Globals.saveFileToIndexedDB(fileName, res.htmlStr);
+        if (j === 0) {
+          // Update bookmarks for once.
+          this.updateBookmark(this.props.bookmarks, Object.assign(bookmarkWithHtml, { work: res.workInfo }));
+        }
         console.log(`File saved: ${fileName}`);
       }
     }
@@ -81,9 +96,17 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
       const work = bookmarkWithHtml.work!;
       const res = await Globals.fetchJuan(work.work, `${work.juan}`, null, true);
       const fileName = Globals.getFileName(work.work, `${work.juan}`);
+      // Update HTML.
       Globals.saveFileToIndexedDB(fileName, res.htmlStr);
+      // Update bookmarks
+      this.updateBookmark(this.props.bookmarks, Object.assign(bookmarkWithHtml, { work: res.workInfo }));
       console.log(`File saved: ${fileName}`);
     }
+
+    this.props.dispatch({
+      type: "UPDATE_BOOKMARKS",
+      bookmarks: this.props.bookmarks,
+    });
     this.setState({ showUpdateAllJuansDone: true });
   }
 
@@ -123,7 +146,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={bug} slot='start' />
-              <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>啟用app異常記錄</IonLabel>              
+              <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>啟用app異常記錄</IonLabel>
               <IonToggle slot='end' checked={this.props.hasAppLog} onIonChange={e => {
                 const isChecked = e.detail.checked;
                 isChecked ? Globals.enableAppLog() : Globals.disableAppLog();

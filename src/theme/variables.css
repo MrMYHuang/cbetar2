@@ -5,7 +5,8 @@
 
 :root {
     --scrollbar-size: 20px;
-    --ui-font-size: 16px;
+    --ui-font-size: 24px;
+    --text-font-size: 32px;
 }
 
 body {
@@ -157,6 +158,16 @@ body.dark {
 
 .alert-sub-title, .alert-message {
     font-size: calc(var(--ui-font-size) * 0.8) !important;
+}
+
+.textFont {
+    font-family: var(--ion-font-family) !important;
+    font-size: var(--text-font-size) !important;
+}
+
+.textFontX3 {
+    font-family: var(--ion-font-family) !important;
+    font-size: calc(var(--text-font-size) * 3) !important;
 }
 
 .uiFont, .searchbar-input, .alert-radio-label {

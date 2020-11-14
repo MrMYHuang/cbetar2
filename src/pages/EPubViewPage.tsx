@@ -50,6 +50,8 @@ interface State {
   showJumpPageAlert: boolean;
   showNoSelectedTextAlert: boolean;
   showAddBookmarkSuccess: boolean;
+  showsCopyToClipboardSuccess: boolean;
+  showsCitationFail: boolean;
   showSearchAlert: boolean;
   popover: any;
   lookupDictPopover: any;
@@ -78,6 +80,8 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       showJumpPageAlert: false,
       showNoSelectedTextAlert: false,
       showAddBookmarkSuccess: false,
+      showsCopyToClipboardSuccess: false,
+      showsCitationFail: false,
       showSearchAlert: false,
       popover: {
         show: false,
@@ -173,34 +177,31 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
   epubcfiFromSelectedString = '';
   addBookmarkHandler() {
-    let iframeWin = this.ePubIframe?.contentWindow;
-    let sel = iframeWin?.getSelection();
-    if (sel?.rangeCount) {
-      let uuidStr = uuid.v4();
-      this.props.dispatch({
-        type: "ADD_BOOKMARK",
-        // IMPORTANT!!! Don't arbitrarily change the HTML structure of htmlStr.
-        // Otherwise, saved epubcfi bookmarks will become invalid!
-        htmlStr: this.state.htmlStr,
-        bookmark: new Bookmark({
-          type: this.htmlFile ? BookmarkType.HTML : BookmarkType.JUAN,
-          uuid: uuidStr,
-          selectedText: sel.toString(),
-          epubcfi: this.epubcfiFromSelectedString,
-          fileName: this.htmlFile || `${this.props.match.params.work}_juan${this.props.match.params.path}.html`,
-          work: new Work({
-            juan: this.props.match.params.path,
-            title: this.htmlFile ? this.htmlTitle : this.state.workInfo.title,
-            work: this.props.match.params.work,
-          }),
-        }),
-      });
-      sel?.removeAllRanges();
-      this.setState({ showAddBookmarkSuccess: true });
-    } else {
+    const selectedText = this.getSelectedString();
+    if (selectedText === '') {
       this.setState({ showNoSelectedTextAlert: true });
+      return;
     }
 
+    let uuidStr = uuid.v4();
+    this.props.dispatch({
+      type: "ADD_BOOKMARK",
+      // IMPORTANT!!! Don't arbitrarily change the HTML structure of htmlStr.
+      // Otherwise, saved epubcfi bookmarks will become invalid!
+      htmlStr: this.state.htmlStr,
+      bookmark: new Bookmark({
+        type: this.htmlFile ? BookmarkType.HTML : BookmarkType.JUAN,
+        uuid: uuidStr,
+        selectedText: selectedText,
+        epubcfi: this.epubcfiFromSelectedString,
+        fileName: this.htmlFile || `${this.props.match.params.work}_juan${this.props.match.params.path}.html`,
+        work: Object.assign(this.state.workInfo, {
+          title: this.htmlFile ? this.htmlTitle : this.state.workInfo.title,
+          juan: this.props.match.params.path,}
+          ),
+      }),
+    });
+    this.setState({ showAddBookmarkSuccess: true });
     return;
   }
 
@@ -487,12 +488,13 @@ class _EPubViewPage extends React.Component<PageProps, State> {
   }
 
   getSelectedString() {
+    let selectedText = '';
     const sel = this.ePubIframe?.contentDocument?.getSelection();
     if ((sel?.rangeCount || 0) > 0 && sel!.getRangeAt(0).toString().length > 0) {
-      return sel!.getRangeAt(0).toString();
-    } else {
-      return '';
+      selectedText = sel!.toString();
+      sel?.removeAllRanges();
     }
+    return selectedText;
   }
 
   getRemainingWorkTextFromSelectedRange() {
@@ -705,6 +707,38 @@ class _EPubViewPage extends React.Component<PageProps, State> {
                 <IonIcon icon={shareSocial} slot='start' />
                 <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>分享此頁</IonLabel>
               </IonItem>
+
+              <IonItem button onClick={ev => {
+                this.setState({ popover: { show: false, event: null } });
+                const sel = this.ePubIframe?.contentDocument?.getSelection()!;
+                if ((sel.rangeCount || 0) > 0 && sel.getRangeAt(0).toString().length > 0) {
+                  const selectedText = sel!.toString();
+                  const range = sel.getRangeAt(0);
+                  let startLine = range.startContainer.parentElement?.getAttribute('l');
+                  let endLine = range.endContainer.parentElement?.getAttribute('l');
+                  sel?.removeAllRanges();
+                  if (startLine == null || endLine == null) {
+                    this.setState({ showsCitationFail: true });
+                    return;
+                  }
+                  startLine = /0*(.*)/.exec(startLine!)![1];
+                  endLine = /0*(.*)/.exec(endLine!)![1];
+
+                  let lineInfo = `${startLine}`;
+                  if (startLine !== endLine) {
+                    lineInfo += `-${/.*a(.*)/.exec(endLine)![1]}`;
+                  }
+                  const citation =`《${this.state.workInfo.title}》卷${this.props.match.params.path}：「${selectedText}」(CBETA, ${this.state.workInfo.vol}, no. ${/[^0-9]*(.*)/.exec(this.state.workInfo.work)![1]}, p. ${lineInfo})`;
+                  navigator.clipboard && navigator.clipboard.writeText(citation);
+                  this.setState({ showsCopyToClipboardSuccess: true });
+                } else {
+                  this.setState({ showNoSelectedTextAlert: true });
+                }
+              }}>
+                <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
+                <IonIcon icon={shareSocial} slot='start' />
+                <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>引用文章</IonLabel>
+              </IonItem>
             </IonList>
           </IonPopover>
         </IonToolbar>
@@ -853,6 +887,22 @@ class _EPubViewPage extends React.Component<PageProps, State> {
             isOpen={this.state.showAddBookmarkSuccess}
             onDidDismiss={() => this.setState({ showAddBookmarkSuccess: false })}
             message="書籤新增成功！"
+            duration={2000}
+          />
+
+          <IonToast
+            cssClass='uiFont'
+            isOpen={this.state.showsCopyToClipboardSuccess}
+            onDidDismiss={() => this.setState({ showsCopyToClipboardSuccess: false })}
+            message="已複製到剪貼簿！"
+            duration={2000}
+          />
+
+          <IonToast
+            cssClass='uiFont'
+            isOpen={this.state.showsCitationFail}
+            onDidDismiss={() => this.setState({ showsCitationFail: false })}
+            message="所選文字無法引用！"
             duration={2000}
           />
         </IonContent>
