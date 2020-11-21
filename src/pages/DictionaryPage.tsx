@@ -18,6 +18,7 @@ interface PageProps extends Props, RouteComponentProps<{
 
 interface State {
   keyword: string;
+  fetchError: boolean;
   searches: Array<DictItem>;
   showNoSelectedTextAlert: boolean;
   popover: any;
@@ -29,6 +30,7 @@ class _DictionaryPage extends React.Component<PageProps, State> {
     super(props);
     this.state = {
       keyword: '',
+      fetchError: false,
       searches: [],
       showNoSelectedTextAlert: false,
       popover: {
@@ -55,12 +57,19 @@ class _DictionaryPage extends React.Component<PageProps, State> {
   }
 
   async lookupDict(keyword: string) {
-    const res = await Globals.axiosInstance.get(
-      `${Globals.dilaDictApiUrl}/?type=match&dicts=dila&term=${keyword}`,
-      {
-        responseType: 'json',
-      });
-    this.setState({ searches: res.data });
+    try {
+      const res = await Globals.axiosInstance.get(
+        `${Globals.dilaDictApiUrl}/?type=match&dicts=dila&term=${keyword}`,
+        {
+          responseType: 'json',
+        });
+      this.setState({ searches: res.data });
+    } catch (e) {
+      console.error(e);
+      console.error(new Error().stack);
+      this.setState({ fetchError: true });
+      return false;
+    }
   }
 
   getSelectedString() {
@@ -194,9 +203,14 @@ class _DictionaryPage extends React.Component<PageProps, State> {
               <IonButton slot='end' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={e => {
                 this.lookupDict(this.state.keyword);
               }}>搜尋</IonButton>*/}
-          <div style={{ display: 'table' }}>
-            {this.getRows()}
-          </div>
+
+          {this.state.fetchError ?
+            Globals.fetchErrorContent :
+            <div style={{ display: 'table' }}>
+              {this.getRows()}
+            </div>
+          }
+
           <div style={{ fontSize: 'var(--ui-font-size)', textAlign: 'center' }}><a href="https://github.com/MrMYHuang/cbetar2#dictionary" target="_new">佛學詞典說明</a></div>
 
           <IonAlert

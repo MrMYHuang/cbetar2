@@ -2,6 +2,7 @@ import React from 'react';
 import { IonContent, IonHeader, IonPage, IonToolbar, withIonLifeCycle, IonButton, IonIcon, IonSearchbar, IonAlert, IonPopover, IonList, IonItem, IonLabel } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
+import * as uuid from 'uuid';
 import Globals from '../Globals';
 import { home, arrowBack, shareSocial, book, ellipsisHorizontal, ellipsisVertical } from 'ionicons/icons';
 import { DictWordDefItem, DictWordItem, WordType } from '../models/DictWordItem';
@@ -19,6 +20,7 @@ interface PageProps extends Props, RouteComponentProps<{
 interface State {
   keyword: string;
   search: [DictWordItem] | null;
+  fetchError: boolean;
   showNoSelectedTextAlert: boolean;
   popover: any;
 }
@@ -30,6 +32,7 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
     this.state = {
       keyword: '',
       search: null,
+      fetchError: false,
       showNoSelectedTextAlert: false,
       popover: {
         show: false,
@@ -55,12 +58,19 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
   }
 
   async lookupDict(keyword: string) {
-    const res = await Globals.axiosInstance.get(
-      `https://www.moedict.tw/uni/${keyword.substring(0, 1)}`,
-      {
-        responseType: 'json',
-      });
-    this.setState({ search: res.data.heteronyms });
+    try {
+      const res = await Globals.axiosInstance.get(
+        `https://www.moedict.tw/uni/${keyword.substring(0, 1)}`,
+        {
+          responseType: 'json',
+        });
+      this.setState({ search: res.data.heteronyms });
+    } catch (e) {
+      console.error(e);
+      console.error(new Error().stack);
+      this.setState({ fetchError: true });
+      return false;
+    }
   }
 
   getSelectedString() {
@@ -74,14 +84,14 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
 
   defToView(defs: Array<DictWordDefItem> | undefined, title: string) {
     return defs !== undefined && defs.length > 0 ? <>
-      <div style={{ color: 'var(--ion-color-primary)' }}>{title}</div>
-      <ol>{
+      <div key={uuid.v4()} style={{ color: 'var(--ion-color-primary)' }}>{title}</div>
+      <ol key={uuid.v4()}>{
         defs?.map((d) =>
-          <li>
-            <div>{d.def}</div>
-            {d.quote?.map((q) => <div>{q}</div>)}
-            {d.example?.map((e) => <div>{e}</div>)}
-            {d.link?.map((l) => <div>{l}</div>)}
+          <li key={uuid.v4()}>
+            <div key={uuid.v4()}>{d.def}</div>
+            {d.quote?.map((q) => <div key={uuid.v4()}>{q}</div>)}
+            {d.example?.map((e) => <div key={uuid.v4()}>{e}</div>)}
+            {d.link?.map((l) => <div key={uuid.v4()}>{l}</div>)}
           </li>
         )}
       </ol>
@@ -101,8 +111,8 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
         const othersView = this.defToView(others, '');
 
         dictView.push(
-          <div className='textFont textSelectable'>
-            <div className='textFontX3'>{this.props.match.params.keyword.substring(0, 1)}</div>
+          <div key={uuid.v4()} className='textFont textSelectable'>
+            <div key={uuid.v4()} className='textFontX3'>{this.props.match.params.keyword.substring(0, 1)}</div>
             {data?.bopomofo ? <div>注音：{data?.bopomofo}</div> : null}
             {data?.pinyin ? <div>拼音：{data?.pinyin}</div> : null}
             {nounsView}
@@ -217,7 +227,7 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
                 this.lookupDict(this.state.keyword);
               }}>搜尋</IonButton>*/}
 
-          {dictView}
+          {this.state.fetchError ? Globals.fetchErrorContent : dictView}
 
           {/*
           <div style={{ fontSize: 'var(--ui-font-size)', textAlign: 'center' }}><a href="https://github.com/MrMYHuang/cbetar2#WordDictionary" target="_new">佛學詞典說明</a></div>

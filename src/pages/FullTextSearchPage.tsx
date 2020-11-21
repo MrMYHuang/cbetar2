@@ -19,6 +19,7 @@ interface PageProps extends Props, RouteComponentProps<{
 }> { }
 
 interface State {
+  fetchError: boolean;
   showSearchAlert: boolean;
   searches: Array<FullTextSearch>;
 }
@@ -27,6 +28,7 @@ class _SearchPage extends React.Component<PageProps, State> {
   constructor(props: any) {
     super(props);
     this.state = {
+      fetchError: false,
       showSearchAlert: false,
       searches: [],
     }
@@ -47,8 +49,11 @@ class _SearchPage extends React.Component<PageProps, State> {
 
       this.setState({ searches: searches });
       return true;
-    } catch (err) {
-      console.error(err);
+    } catch (e) {
+      console.error(e);
+      console.error(new Error().stack);
+      this.setState({ fetchError: true });
+      return false;
     }
   }
 
@@ -111,9 +116,13 @@ class _SearchPage extends React.Component<PageProps, State> {
           </IonToolbar>
         </IonHeader>
         <IonContent>
-          <IonList>
-            {rows}
-          </IonList>
+          {
+            this.state.fetchError ?
+              Globals.fetchErrorContent :
+              <IonList>
+                {rows}
+              </IonList>
+          }
 
           <SearchAlert
             {...{

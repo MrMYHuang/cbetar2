@@ -213,7 +213,7 @@ export default {
     <IonLabel className='contentCenter'>
       <div>
         <div>連線失敗!</div>
-        <div style={{ fontSize: 'var(--ui-font-size)', paddingTop: 24 }}>若用其它app能上網，可能是CBETA API異常，請靜待修復。</div>
+        <div style={{ fontSize: 'var(--ui-font-size)', paddingTop: 24 }}>如果問題持續發生，請執行<a href="/settings" target="_self">設定頁</a>的app異常回報功能。</div>
       </div>
     </IonLabel>),
   updateApp: () => {
