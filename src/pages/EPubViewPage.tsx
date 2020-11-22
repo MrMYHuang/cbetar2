@@ -230,17 +230,17 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     this.bookCreated = false;
   }
 
-  pagePrev() {
+  pagePrev(n: number = 1) {
     if (this.props.paginated && this.state.currentPage > 1) {
-      this.rendition?.prev();
-      this.setState({ currentPage: this.state.currentPage - 1 });
+      this.rendition?.prev(n);
+      this.setState({ currentPage: this.state.currentPage - n });
     }
   }
 
-  pageNext() {
+  pageNext(n: number = 1) {
     if (this.props.paginated && this.state.currentPage < this.state.pageCount) {
-      this.rendition?.next();
-      this.setState({ currentPage: this.state.currentPage + 1 });
+      this.rendition?.next(n);
+      this.setState({ currentPage: this.state.currentPage + n });
     }
   }
 
@@ -251,12 +251,11 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     page = isNaN(page) ? 1 : Math.max(Math.min(this.state.pageCount, page), 1);
     const currentPage = this.state.currentPage;
     let step = currentPage < page ? 1 : -1;
-    for (let i = currentPage; i !== page; i += step) {
-      if (step === 1) {
-        this.pageNext();
-      } else {
-        this.pagePrev();
-      }
+    let diff = Math.abs(page - currentPage);
+    if (step === 1) {
+      this.pageNext(diff);
+    } else {
+      this.pagePrev(diff);
     }
   }
 
