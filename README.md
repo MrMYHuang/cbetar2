@@ -124,6 +124,7 @@ https://support.google.com/chrome/answer/9658361?hl=zh-Hant&co=GENIE.Platform%3D
 
 ## <a id='history'>版本歷史</a>
 * 4.0.2:
+  * [修正] 經文頁讀取完楷書字體後，導致版面位移、書籤標記與總頁數異常的問題。
   * [修正] 經文頁底色在Chrome 87顯示不正確的問題。
 * 4.0.1:
   * [增強] 搜尋頁面當連線失敗，會顯示訊息。

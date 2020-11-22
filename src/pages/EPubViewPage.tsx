@@ -353,7 +353,15 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
     this.epub.addCSS(`
     html {
-      background: ${getComputedStyle(document.body).getPropertyValue('--ion-background-color')}
+      background: ${getComputedStyle(document.body).getPropertyValue('--ion-background-color')};
+      /*
+      Because different fonts have different line heights with 'line-height: normal,'
+      the content size of epubjs iframe changes after the fallback font is swapped with the web font.
+      Unfortunately, epubjs can't detect the size change and update the iframe.
+      This problem causes the total page count is incorrect.
+      Fortunately, we can set the line height based on the same font size as below.
+      */
+      line-height: 1.2;
     }
 
     @font-face {
