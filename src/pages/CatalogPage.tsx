@@ -244,7 +244,7 @@ class _CatalogPage extends React.Component<PageProps, State> {
             }}
           />
 
-          <div style={{ fontSize: 'var(--ui-font-size)', textAlign: 'center' }}><a href="https://github.com/MrMYHuang/cbetar2#search" target="_new">搜尋經文教學</a></div>
+          <div style={{ fontSize: 'var(--ui-font-size)', textAlign: 'center' }}><a href="https://github.com/MrMYHuang/cbetar2#search" target="_new">搜尋經書教學</a></div>
         </IonContent>
       </IonPage>
     );

@@ -23,7 +23,7 @@ class SearchAlert extends React.Component<PageProps> {
       <IonAlert
         cssClass='uiFont'
         isOpen={this.props.showSearchAlert}
-        header={'搜尋經文'}
+        header={'搜尋經書'}
         subHeader='輸入搜尋'
         inputs={[
           {

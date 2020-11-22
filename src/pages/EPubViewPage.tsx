@@ -49,9 +49,14 @@ interface State {
   pageCount: number;
   showJumpPageAlert: boolean;
   showNoSelectedTextAlert: boolean;
+  searchText: string;
+  showSearchTextToast: boolean;
   showAddBookmarkSuccess: boolean;
   showsCopyToClipboardSuccess: boolean;
   showsCitationFail: boolean;
+  showSearchTextAlert: boolean;
+  showToast: boolean;
+  toastMessage: string;
   showSearchAlert: boolean;
   popover: any;
   lookupDictPopover: any;
@@ -82,6 +87,11 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       showAddBookmarkSuccess: false,
       showsCopyToClipboardSuccess: false,
       showsCitationFail: false,
+      showSearchTextAlert: false,
+      searchText: '',
+      showSearchTextToast: false,
+      showToast: false,
+      toastMessage: '',
       showSearchAlert: false,
       popover: {
         show: false,
@@ -197,8 +207,9 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         fileName: this.htmlFile || `${this.props.match.params.work}_juan${this.props.match.params.path}.html`,
         work: Object.assign(this.state.workInfo, {
           title: this.htmlFile ? this.htmlTitle : this.state.workInfo.title,
-          juan: this.props.match.params.path,}
-          ),
+          juan: this.props.match.params.path,
+        }
+        ),
       }),
     });
     this.setState({ showAddBookmarkSuccess: true });
@@ -536,6 +547,130 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     return remainingWorkText;
   }
 
+  getAllTextNodes(root: any) {
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    return walker;
+  }
+
+  searchTextRanges: Array<Range> = [];
+
+  findSearchTextRanges(searchText: string) {
+    this.searchTextRanges = [];
+    this.showedSearchTextIndex = 0;
+    const cbetaHtmlBody = this.ePubIframe!.contentDocument!.getElementById('body');
+    const sel = this.ePubIframe!.contentWindow!.getSelection()!;
+    const textNodesWalker = this.getAllTextNodes(cbetaHtmlBody);
+    let visibleTextNodes: Array<Node> = [];
+
+    let node;
+    while (node = textNodesWalker.nextNode()) {
+      if (node.parentElement?.className === 'lb' || (node.textContent as any).replaceAll(/[\s]*/g, '') === '') {
+        continue;
+      }
+
+      visibleTextNodes.push(node);
+    }
+
+    const r = new Range();
+    r.setStart(visibleTextNodes[0], 0);
+    const lastVisiableTextNode = visibleTextNodes[visibleTextNodes.length - 1] as any;
+    r.setEnd(lastVisiableTextNode, lastVisiableTextNode.length);
+    sel.removeAllRanges();
+    sel.addRange(r);
+    const allTexts = (sel.toString() as any).replaceAll('\n', '');
+    sel.removeAllRanges();
+
+    let searchTextIndexes: Array<number> = []
+
+    let startIndex = 0;
+    let searchTextIndex = 1;
+    do {
+      searchTextIndex = allTexts.indexOf(searchText, startIndex);
+      if (searchTextIndex === -1) {
+        break;
+      }
+      startIndex = searchTextIndex + searchText.length;
+      searchTextIndexes.push(searchTextIndex);
+      searchTextIndexes.push(searchTextIndex + searchText.length);
+    } while (searchTextIndex < allTexts.length - 1);
+
+    if (searchTextIndexes.length === 0) {
+      return;
+    }
+
+    let searchTextNodes: Array<any> = [];
+    let i = 0;
+    searchTextIndex = searchTextIndexes.shift()!;
+    for (let n = 0; n < visibleTextNodes.length; n++) {
+      const visibleTextNode = visibleTextNodes[n];
+      for (let c = 0; c < (visibleTextNode as any).length; c++) {
+        if (i === searchTextIndex) {
+          searchTextNodes.push({ node: visibleTextNode, offset: c });
+          searchTextIndex = searchTextIndexes.shift() || -1;
+
+          if (searchTextIndex === -1) {
+            break;
+          }
+        }
+        i++;
+      }
+
+      if (searchTextIndex === -1) {
+        break;
+      }
+    }
+
+    for (let i = 0; i < searchTextNodes.length / 2; i += 1) {
+      const r = new Range();
+      let start = searchTextNodes[i * 2];
+      let end = searchTextNodes[i * 2 + 1];
+      r.setStart(start.node, start.offset);
+      r.setEnd(end.node, end.offset);
+      this.searchTextRanges.push(r);
+    }
+  }
+
+  showedSearchTextIndex = 0;
+  searchTextPrev() {
+    if (this.showedSearchTextIndex > 0) {
+      this.showedSearchTextIndex--;
+    }
+    this.moveToSearchText(this.showedSearchTextIndex);
+  }
+
+  searchTextNext() {
+    if (this.showedSearchTextIndex < this.searchTextRanges.length - 1) {
+      this.showedSearchTextIndex++;
+    }
+    this.moveToSearchText(this.showedSearchTextIndex);
+  }
+
+  moveToSearchText(index: number) {
+    const range = this.searchTextRanges[index];
+    const sel = this.ePubIframe!.contentWindow!.getSelection()!;
+    sel.removeAllRanges();
+    sel.addRange(range);
+    setTimeout(() => {
+      this.rendition?.display(this.epubcfiFromSelectedString);
+    }, 500);
+  }
+
+  buttonPrev() {
+    if (this.state.showSearchTextToast) {
+      this.searchTextPrev();
+    } else {
+      this.pagePrev();
+    }
+  }
+
+  buttonNext() {
+    if (this.state.showSearchTextToast) {
+      this.searchTextNext();
+    } else {
+      this.pageNext();
+    }
+  }
+
   // There is a max characters per utterance limit on Android Chrome.
   // This max value is obtained by try and error.
   maxCharsPerUtterance = 1000;
@@ -635,11 +770,19 @@ class _EPubViewPage extends React.Component<PageProps, State> {
               </IonItem>
               <IonItem button onClick={e => {
                 this.setState({ popover: { show: false, event: null } });
+                this.setState({ showSearchTextToast: false, showSearchTextAlert: true });
+              }}>
+                <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
+                <IonIcon icon={search} slot='start' />
+                <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>搜尋文字</IonLabel>
+              </IonItem>
+              <IonItem button onClick={e => {
+                this.setState({ popover: { show: false, event: null } });
                 this.setState({ showSearchAlert: true });
               }}>
                 <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
                 <IonIcon icon={search} slot='start' />
-                <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>搜尋經文</IonLabel>
+                <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>搜尋經書</IonLabel>
               </IonItem>
               <IonItem>
                 <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
@@ -739,7 +882,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
                   if (startLine !== endLine) {
                     lineInfo += `-${/.*a(.*)/.exec(endLine)![1]}`;
                   }
-                  const citation =`《${this.state.workInfo.title}》卷${this.props.match.params.path}：「${selectedText}」(CBETA, ${this.state.workInfo.vol}, no. ${/[^0-9]*(.*)/.exec(this.state.workInfo.work)![1]}, p. ${lineInfo})`;
+                  const citation = `《${this.state.workInfo.title}》卷${this.props.match.params.path}：「${selectedText}」(CBETA, ${this.state.workInfo.vol}, no. ${/[^0-9]*(.*)/.exec(this.state.workInfo.work)![1]}, p. ${lineInfo})`;
                   navigator.clipboard && navigator.clipboard.writeText(citation);
                   this.setState({ showsCopyToClipboardSuccess: true });
                 } else {
@@ -759,7 +902,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     const fabButtonOpacity = 0.2;
     let navButtons = (<>
       <IonFab vertical='center' horizontal='start' slot='fixed'>
-        <IonFabButton style={{ opacity: fabButtonOpacity }} onClick={e => this.props.rtlVerticalLayout ? this.pageNext() : this.pagePrev()}
+        <IonFabButton style={{ opacity: fabButtonOpacity }} onClick={e => this.props.rtlVerticalLayout ? this.buttonNext() : this.buttonPrev()}
           onTouchStart={e => {
             e.currentTarget.style.setProperty('opacity', '1');
           }}
@@ -783,7 +926,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         </IonFabButton>
       </IonFab>
       <IonFab vertical='center' horizontal='end' slot='fixed'>
-        <IonFabButton style={{ opacity: fabButtonOpacity }} onClick={e => this.props.rtlVerticalLayout ? this.pagePrev() : this.pageNext()} onTouchStart={e => {
+        <IonFabButton style={{ opacity: fabButtonOpacity }} onClick={e => this.props.rtlVerticalLayout ? this.buttonPrev() : this.buttonNext()} onTouchStart={e => {
           e.currentTarget.style.setProperty('opacity', '1');
         }}
           onMouseOver={e => {
@@ -914,6 +1057,68 @@ class _EPubViewPage extends React.Component<PageProps, State> {
             isOpen={this.state.showsCitationFail}
             onDidDismiss={() => this.setState({ showsCitationFail: false })}
             message="所選文字無法引用！"
+            duration={2000}
+          />
+
+          <IonAlert
+            cssClass='uiFont'
+            isOpen={this.state.showSearchTextAlert}
+            header={'搜尋文字'}
+            subHeader='按下搜尋後，左右方向鈕變為搜尋文字方向鈕。按下方通知UI關閉鈕，離開搜尋文字模式。'
+            inputs={[
+              {
+                name: 'name0',
+                type: 'search',
+                placeholder: '例:如是我聞'
+              },
+            ]}
+            buttons={[
+              {
+                text: '取消',
+                role: 'cancel',
+                cssClass: 'secondary uiFont',
+                handler: () => this.setState({ showSearchTextAlert: false }),
+              },
+              {
+                text: '搜尋',
+                cssClass: 'primary uiFont',
+                handler: (value) => {
+                  if (value.name0 === '') {
+                    this.setState({ showSearchTextAlert: false });
+                    return;
+                  }
+
+                  this.findSearchTextRanges(value.name0);
+                  if (this.searchTextRanges.length === 0) {
+                    this.setState({ showSearchTextAlert: false, showToast: true, toastMessage: `找不到文字：${value.name0}` });
+                  } else {
+                    this.setState({ showSearchTextAlert: false, showSearchTextToast: true, searchText: value.name0 });
+                    this.buttonPrev();
+                  }
+                },
+              },
+            ]}
+          />
+
+          <IonToast
+            cssClass='uiFont'
+            isOpen={this.state.showSearchTextToast}
+            onDidDismiss={() => this.setState({ showSearchTextToast: false })}
+            message={`搜尋：${this.state.searchText}`}
+            buttons={[
+              {
+                text: '關閉',
+                role: 'cancel',
+                handler: () => this.setState({ showSearchTextToast: false })
+              }
+            ]}
+          />
+
+          <IonToast
+            cssClass='uiFont'
+            isOpen={this.state.showToast}
+            onDidDismiss={() => this.setState({ showToast: false })}
+            message={this.state.toastMessage}
             duration={2000}
           />
         </IonContent>
