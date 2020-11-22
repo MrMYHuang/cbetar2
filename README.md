@@ -123,6 +123,8 @@ https://support.google.com/chrome/answer/9658361?hl=zh-Hant&co=GENIE.Platform%3D
 7. 經文頁使用單選式UI選擇跳頁頁碼。因為如果使用鍵盤輸入式UI，在Android會發生鍵盤跳出後，經文頁面變小、頁數重新計算，導致難以跳至指定頁面。
 
 ## <a id='history'>版本歷史</a>
+* 4.0.2:
+  * [修正] 經文頁底色在Chrome 87顯示不正確的問題。
 * 4.0.1:
   * [增強] 搜尋頁面當連線失敗，會顯示訊息。
   * [增強] 記錄更多連線失敗的異常回報訊息。

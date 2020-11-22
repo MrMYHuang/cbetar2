@@ -350,7 +350,12 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       direction: ltr;
     }
     `;
+
     this.epub.addCSS(`
+    html {
+      background: ${getComputedStyle(document.body).getPropertyValue('--ion-background-color')}
+    }
+
     @font-face {
         font-family: 'Times';
         src: local('Times New Roman');
@@ -479,7 +484,6 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         }
       }
     );
-    //});
   }
 
   updatePageInfos() {
