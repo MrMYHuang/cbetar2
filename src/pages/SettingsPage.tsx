@@ -96,10 +96,12 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
       const work = bookmarkWithHtml.work!;
       const res = await Globals.fetchJuan(work.work, `${work.juan}`, null, true);
       const fileName = Globals.getFileName(work.work, `${work.juan}`);
+      let newWork = res.workInfo;
+      newWork.juan = work.juan;
       // Update HTML.
       Globals.saveFileToIndexedDB(fileName, res.htmlStr);
       // Update bookmarks
-      this.updateBookmark(this.props.bookmarks, Object.assign(bookmarkWithHtml, { work: res.workInfo }));
+      this.updateBookmark(this.props.bookmarks, Object.assign(bookmarkWithHtml, { work: newWork }));
       console.log(`File saved: ${fileName}`);
     }
 
