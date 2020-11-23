@@ -277,12 +277,12 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
     // Left/down Key
     if (key === (this.props.rtlVerticalLayout ? 37 : 40)) {
-      this.pageNext()
+      this.buttonNext()
     }
 
     // Right/top Key
     if (key === (this.props.rtlVerticalLayout ? 39 : 38)) {
-      this.pagePrev();
+      this.buttonPrev();
     }
   };
 
@@ -649,13 +649,23 @@ class _EPubViewPage extends React.Component<PageProps, State> {
   }
 
   moveToSearchText(index: number) {
-    const range = this.searchTextRanges[index];
+    this.epubcfiFromSelectedString = '';
     const sel = this.ePubIframe!.contentWindow!.getSelection()!;
     sel.removeAllRanges();
-    sel.addRange(range);
+
     setTimeout(() => {
-      this.rendition?.display(this.epubcfiFromSelectedString);
-    }, 500);
+      const range = this.searchTextRanges[index];
+      this.ePubIframe!.contentWindow!.focus();
+      sel.addRange(range);
+      let timer: any;
+      timer = setInterval(() => {
+        if (this.epubcfiFromSelectedString !== '') {
+          this.rendition?.display(this.epubcfiFromSelectedString).then(() => {
+            clearInterval(timer);
+          });
+        }
+      }, 100);
+    }, 100);
   }
 
   buttonPrev() {
@@ -1093,7 +1103,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
                     this.setState({ showSearchTextAlert: false, showToast: true, toastMessage: `找不到文字：${value.name0}` });
                   } else {
                     this.setState({ showSearchTextAlert: false, showSearchTextToast: true, searchText: value.name0 });
-                    this.buttonPrev();
+                    this.searchTextPrev();
                   }
                 },
               },
