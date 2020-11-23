@@ -471,6 +471,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
         this.rendition.on(EVENTS.RENDITION.DISPLAYED, () => {
           this.updatePageInfos();
+          this.updateEPubIframe();
         });
 
         await this.rendition.display(this.props.paginated ? this.epubcfi : undefined);
@@ -492,16 +493,18 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         }
 
         this.book?.locations.generate(150);
-
-        const iframes = document.getElementsByTagName('iframe');
-        if (iframes.length === 1) {
-          this.ePubIframe = iframes[0];
-          this.ePubIframe.contentDocument?.addEventListener("keyup", this.keyListener.bind(this), false);
-        } else {
-          alert('Error! This component locates ePub iframe by the only iframe.');
-        }
       }
     );
+  }
+
+  updateEPubIframe() {
+    const iframes = document.getElementsByTagName('iframe');
+    if (iframes.length === 1) {
+      this.ePubIframe = iframes[0];
+      this.ePubIframe.contentDocument?.addEventListener("keyup", this.keyListener.bind(this), false);
+    } else {
+      alert('Error! This component locates ePub iframe by the only iframe.');
+    }
   }
 
   updatePageInfos() {
@@ -563,7 +566,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     let visibleTextNodes: Array<Node> = [];
 
     let node;
-    while (node = textNodesWalker.nextNode()) {
+    while ((node = textNodesWalker.nextNode()) != null) {
       if (node.parentElement?.className === 'lb' || (node.textContent as any).replaceAll(/[\s]*/g, '') === '') {
         continue;
       }

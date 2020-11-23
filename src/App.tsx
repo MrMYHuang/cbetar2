@@ -9,6 +9,7 @@ import {
   IonTabButton,
   IonTabs,
   IonAlert,
+  isPlatform,
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { connect, Provider } from 'react-redux';
@@ -208,7 +209,10 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
 
   render() {
     return (
-      <IonApp>
+      <IonApp style={
+        // Without this, window height shrinks after Android soft keyboard poping up.
+        isPlatform('android') ? {height: `${window.innerHeight}px`} : {}
+        }>
         <IonReactRouter>
           <IonTabs>
             <IonRouterOutlet animated={false}>

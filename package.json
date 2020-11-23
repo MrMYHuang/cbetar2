@@ -1,6 +1,6 @@
 {
   "name": "cbetar2",
-  "version": "4.1.0",
+  "version": "4.1.1",
   "private": true,
   "dependencies": {
     "@ionic/react": "^5.3.4",
