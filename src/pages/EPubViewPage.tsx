@@ -982,19 +982,16 @@ class _EPubViewPage extends React.Component<PageProps, State> {
             cssClass='uiFont'
             isOpen={this.state.showJumpPageAlert}
             header={'跳頁'}
-            subHeader='請選擇頁碼'
-            inputs={
-              Array(this.state.pageCount).fill(0).map((v, i) => {
-                return {
-                  name: `radio${i + 1}`,
-                  type: 'radio',
-                  label: `${i + 1}`,
-                  value: `${i + 1}`,
-                  checked: this.state.currentPage === (i + 1)
-                };
-              }
-              )
-            }
+            subHeader={`請輸入頁碼(1 - ${this.state.pageCount})`}
+            inputs={[
+              {
+                name: 'name0',
+                type: 'number',
+                min: 1,
+                max: this.state.pageCount,
+                value: this.state.currentPage,
+              },
+            ]}
             buttons={[
               {
                 text: '取消',
@@ -1007,7 +1004,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
                 cssClass: 'primary uiFont',
                 handler: (value) => {
                   this.setState({ showJumpPageAlert: false });
-                  this.jumpToPage(+value);
+                  this.jumpToPage(value.name0);
                 },
               }
             ]}

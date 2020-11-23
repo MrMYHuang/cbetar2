@@ -65,8 +65,8 @@ class _SearchPage extends React.Component<PageProps, State> {
     let rows = Array<object>();
     const searches = (this.state as any).searches as [FullTextSearch];
     searches.forEach((search, i) => {
-      let label = `${search.title}\n作者:${search.creators}`;
-      let routeLink = `/catalog/work/${search.work}`;
+      let label = `${search.title}卷${search.juan}\n作者:${search.creators}`;
+      let routeLink = `/catalog/juan/${search.work}/${search.juan}`;
       rows.push(
         <IonItem key={`searchItem_` + i} button={true} onClick={async event => {
           event.preventDefault();
