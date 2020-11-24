@@ -120,6 +120,7 @@ https://support.google.com/chrome/answer/9658361?hl=zh-Hant&co=GENIE.Platform%3D
 4. 語音播放速度受限不同引擎、語音限制，可能無法達到指定速度。
 5. "避免螢幕自動鎖定"功能僅限部分較新Chrome瀏覽器才支援。
 6. iOS Safari 13.4以上才支援"分享此頁"功能。
+7. iOS上，經文頁"搜尋文字"視窗中，按下搜尋鈕後，要再點擊一次向前搜尋鈕，被搜尋文字才開始會上色。
 
 ## <a id='history'>版本歷史</a>
 * 4.1.8:
