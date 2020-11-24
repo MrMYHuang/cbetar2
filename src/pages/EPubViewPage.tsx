@@ -471,6 +471,9 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
         this.rendition.on(EVENTS.RENDITION.DISPLAYED, () => {
           this.updatePageInfos();
+        });
+
+        this.rendition.on(EVENTS.VIEWS.RENDERED, () => {
           this.updateEPubIframe();
         });
 
@@ -502,7 +505,12 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     const iframes = document.getElementsByTagName('iframe');
     if (iframes.length === 1) {
       this.ePubIframe = iframes[0];
-      //this.ePubIframe.contentDocument?.addEventListener("keyup", this.keyListener.bind(this), false);
+      this.ePubIframe.contentDocument?.addEventListener('keyup', this.keyListener.bind(this), false);
+      /*
+      this.ePubIframe.contentWindow?.addEventListener('unload', () => {
+        console.log('iframe unloaded!');
+        this.ePubIframe?.contentDocument?.removeEventListener('keyup', this.keyListener.bind(this), false);
+      });*/
     } else {
       alert('Error! This component locates ePub iframe by the only iframe.');
     }
@@ -663,8 +671,8 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         let timer: any;
         timer = setInterval(() => {
           if (this.epubcfiFromSelectedString !== '') {
+            clearInterval(timer);
             this.rendition?.display(this.epubcfiFromSelectedString).then(() => {
-              clearInterval(timer);
             });
           }
         }, 100);
