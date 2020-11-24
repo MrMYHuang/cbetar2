@@ -481,6 +481,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
           await this.rendition?.next();
           // Skip TOC page.
           await this.rendition?.next();
+          this.updateEPubIframe();
         }
         this.setState({ isLoading: false });
 
@@ -501,7 +502,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     const iframes = document.getElementsByTagName('iframe');
     if (iframes.length === 1) {
       this.ePubIframe = iframes[0];
-      this.ePubIframe.contentDocument?.addEventListener("keyup", this.keyListener.bind(this), false);
+      //this.ePubIframe.contentDocument?.addEventListener("keyup", this.keyListener.bind(this), false);
     } else {
       alert('Error! This component locates ePub iframe by the only iframe.');
     }
@@ -657,14 +658,19 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       const range = this.searchTextRanges[index];
       this.ePubIframe!.contentWindow!.focus();
       sel.addRange(range);
-      let timer: any;
-      timer = setInterval(() => {
-        if (this.epubcfiFromSelectedString !== '') {
-          this.rendition?.display(this.epubcfiFromSelectedString).then(() => {
-            clearInterval(timer);
-          });
-        }
-      }, 100);
+
+      if (this.props.paginated) {
+        let timer: any;
+        timer = setInterval(() => {
+          if (this.epubcfiFromSelectedString !== '') {
+            this.rendition?.display(this.epubcfiFromSelectedString).then(() => {
+              clearInterval(timer);
+            });
+          }
+        }, 100);
+      } else {
+        range.startContainer.parentElement?.scrollIntoView();
+      }
     }, 100);
   }
 
@@ -970,7 +976,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       <IonPage>
         {header}
         <IonContent>
-          {this.props.paginated ? navButtons : <></>}
+          {this.props.paginated || this.state.showSearchTextToast ? navButtons : <></>}
 
           <IonLoading
             cssClass='uiFont'
