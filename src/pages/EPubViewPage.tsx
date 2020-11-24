@@ -567,7 +567,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
     let node;
     while ((node = textNodesWalker.nextNode()) != null) {
-      if (node.parentElement?.className === 'lb' || (node.textContent as any).replaceAll(/[\s]*/g, '') === '') {
+      if (node.parentElement?.className === 'lb' || node.textContent?.replace(/[\r\n\t ]*/g, '') === '') {
         continue;
       }
 
@@ -580,7 +580,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     r.setEnd(lastVisiableTextNode, lastVisiableTextNode.length);
     sel.removeAllRanges();
     sel.addRange(r);
-    const allTexts = (sel.toString() as any).replaceAll('\n', '');
+    const allTexts = sel.toString().replace(/[\n]/g, '');
     sel.removeAllRanges();
 
     let searchTextIndexes: Array<number> = []

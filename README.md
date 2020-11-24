@@ -123,7 +123,9 @@ https://support.google.com/chrome/answer/9658361?hl=zh-Hant&co=GENIE.Platform%3D
 
 ## <a id='history'>版本歷史</a>
 * 4.1.6:
+  * [修正] 經文若有全形空白，"搜尋文字"功能會找錯文字的問題。
   * [修正] 經文頁作"搜尋文字"後，切至其它頁面，下方搜尋狀態列仍顯示的問題。
+  * [修正] Chrome Edge on Android，無法執行"搜尋文字"功能。
 * 4.1.5:
   * [修正] 使用Chrome，文字輸入選擇自動完成字串後，文字與背景都是白色，有看不清楚的問題。
   * [修正] 使用iOS，跳出鍵盤後，版面縮小的問題。
