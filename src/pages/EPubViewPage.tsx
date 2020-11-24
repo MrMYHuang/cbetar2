@@ -235,7 +235,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
   ionViewWillLeave() {
     speechSynthesis.cancel();
-    this.setState({ htmlStr: null, currentPage: 1, speechState: SpeechState.UNINITIAL });
+    this.setState({ htmlStr: null, currentPage: 1, speechState: SpeechState.UNINITIAL, showSearchTextToast: false });
     this.book?.destroy();
     this.book = null;
     this.bookCreated = false;
