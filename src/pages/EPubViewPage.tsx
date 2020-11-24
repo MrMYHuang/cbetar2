@@ -787,6 +787,16 @@ class _EPubViewPage extends React.Component<PageProps, State> {
                 <IonIcon icon={home} slot='start' />
                 <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>回首頁</IonLabel>
               </IonItem>
+
+              <IonItem button onClick={e => {
+                this.setState({ popover: { show: false, event: null } });
+                this.addBookmarkHandler();
+              }}>
+                <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
+                <IonIcon icon={bookmark} slot='start' />
+                <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>新增書籤</IonLabel>
+              </IonItem>
+
               <IonItem button onClick={e => {
                 this.setState({ popover: { show: false, event: null } });
                 this.setState({ showSearchTextToast: false, showSearchTextAlert: true });
@@ -803,8 +813,10 @@ class _EPubViewPage extends React.Component<PageProps, State> {
                 <IonIcon icon={search} slot='start' />
                 <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>搜尋經書</IonLabel>
               </IonItem>
+
+              {/*
               <IonItem>
-                <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
+                <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. * /}
                 <IonIcon icon={book} slot='start' />
                 <div style={{ width: '100%' }}>
                   <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>跳頁(%)</IonLabel>
@@ -816,15 +828,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
                   }} />
                 </div>
               </IonItem>
-
-              <IonItem button onClick={e => {
-                this.setState({ popover: { show: false, event: null } });
-                this.addBookmarkHandler();
-              }}>
-                <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
-                <IonIcon icon={bookmark} slot='start' />
-                <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>新增書籤</IonLabel>
-              </IonItem>
+              */}
 
               <IonItem button onClick={e => {
                 this.setState({ popover: { show: false, event: null } });
