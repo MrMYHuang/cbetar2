@@ -88,6 +88,11 @@ https://MrMYHuang.github.io
 
 https://play.google.com/store/apps/details?id=io.github.mrmyhuang.cbetar2
 
+#### Windows 10
+可從Microsoft Store下載此PWA：
+
+https://www.microsoft.com/store/apps/9P6TDQX46JJL
+
 #### Windows, macOS, Linux, Android - Chrome
 請參考Chrome官方文件： 
 
