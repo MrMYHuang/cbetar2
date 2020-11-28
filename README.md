@@ -71,16 +71,24 @@ CBETA電子佛典閱讀器2(非官方)，使用CBETA API存取電子佛經，支
   1. App啟動: app啟動後，會自動檢查一次有無新版。
   2. 手動: 至設定頁，按更新按鈕。
 
+* <a id='report'>App異常回報</a>
+
+  App設定頁的異常回報鈕使用方法為：執行會造成app異常的步驟後，再至設定頁按下異常回報鈕，即會自動產生一封E-mail，包含異常的記錄，發送此E-mail給我們即可。
+
 程式碼為開放(MIT License)，可自由下載修改、重新發佈。
 
 ## 支援平台
 已在這些環境作過安裝、測試:
 * Windows 10 + Edge Chrome
 * Android 9 + Chrome
-* macOS 10.15 + Edge Chrome
-* iPad 7 (模擬器) + Safari
+* macOS 11 + Edge Chrome
+* iPad 7 + Safari
 * iPhone 8 (模擬器) + Safari
 * Debian Linux 10 + Chrome
+
+非上述環境仍可嘗試使用此app。若有<a href='#knownIssues'>已知問題</a>未描述的問題，可用<a href='#report'>異常回報</a>功能。
+
+建議OS與Chrome、Safari保持在最新版，以取得最佳app體驗。
 
 ## Web App
 此progressive web app (PWA)，可不安裝直接在網頁瀏覽器執行，或安裝至手機、平板、筆電、桌機。建議安裝，以避免瀏覽器定期清除快取，導致書籤資料不見！
@@ -90,20 +98,24 @@ https://MrMYHuang.github.io
 
 ### 安裝
 
+#### Windows, macOS, Linux, Android - Chrome
+請參考Chrome官方文件： 
+
+https://support.google.com/chrome/answer/9658361?hl=zh-Hant&co=GENIE.Platform%3DDesktop
+
 #### Android
 可從Google Play Store下載此PWA：
 
 https://play.google.com/store/apps/details?id=io.github.mrmyhuang.cbetar2
+
+(註：此種安裝渠道尚不支援"App捷徑"功能！)
 
 #### Windows 10
 可從Microsoft Store下載此PWA：
 
 https://www.microsoft.com/store/apps/9P6TDQX46JJL
 
-#### Windows, macOS, Linux, Android - Chrome
-請參考Chrome官方文件： 
-
-https://support.google.com/chrome/answer/9658361?hl=zh-Hant&co=GENIE.Platform%3DDesktop
+(註：此種安裝渠道尚不支援"App捷徑"功能！)
 
 #### iOS - Safari
 1. 使用Safari開啟web app網址，再點擊下方中間的"分享"圖示：
@@ -125,7 +137,7 @@ https://support.google.com/chrome/answer/9658361?hl=zh-Hant&co=GENIE.Platform%3D
 ## 未來功能
 1. 佛學詞典記錄歷史查詢。
 
-## 已知問題
+## <a id='knownIssues'>已知問題</a>
 1. iOS Safari在單頁模式下，捲軸無法顯示。
 2. 經文註腳、版權無法隱藏(因為會影響跳頁功能正確性)。
 3. 目前多數Chrome無法暫停合成語音播放，因此此app目前經文語音播放功能不支援暫停，只支援停止。
