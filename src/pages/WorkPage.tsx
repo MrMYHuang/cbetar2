@@ -77,7 +77,7 @@ class _WorkPage extends React.Component<PageProps, State> {
       try {
         const res = await Globals.fetchJuan(work.work, this.fetchJuan, null);
         Globals.saveFileToIndexedDB(Globals.getFileName(work.work, this.fetchJuan), res.htmlStr);
-      } catch(err) {
+      } catch (err) {
         console.error(`Fetching juan ${i} failed! ${err}`);
       }
     }
@@ -178,7 +178,6 @@ class _WorkPage extends React.Component<PageProps, State> {
       <IonPage>
         <IonHeader>
           <IonToolbar>
-            <IonTitle style={{ fontSize: 'var(--ui-font-size)' }}>{this.state.work?.title}</IonTitle>
             <IonButton hidden={this.isTopPage} fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
               <IonIcon icon={arrowBack} slot='icon-only' />
             </IonButton>
@@ -221,6 +220,7 @@ class _WorkPage extends React.Component<PageProps, State> {
           </IonToolbar>
         </IonHeader>
         <IonContent>
+          <div className='uiFontX2' style={{ color: 'var(--ion-color-primary)' }}>{this.state.work?.title}</div>
           <IonList>
             {rows}
           </IonList>
