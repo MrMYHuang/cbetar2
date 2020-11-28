@@ -1,6 +1,6 @@
 //import * as fs from 'fs';
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton, withIonLifeCycle, IonIcon, IonAlert, IonPopover, IonList, IonItem, IonLabel, /*IonRange,*/ IonFab, IonFabButton, IonToast, IonLoading } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton, withIonLifeCycle, IonIcon, IonAlert, IonPopover, IonList, IonItem, IonLabel, IonFab, IonFabButton, IonToast, IonLoading } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as uuid from 'uuid';
@@ -788,6 +788,15 @@ class _EPubViewPage extends React.Component<PageProps, State> {
           >
             <IonList>
               <IonItem button onClick={e => {
+                this.setState({ popover: { show: false, event: null } });
+                this.props.history.push(`/catalog/work/${this.props.match.params.work}`);
+              }}>
+                <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
+                <IonIcon icon={home} slot='start' />
+                <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>回經目錄</IonLabel>
+              </IonItem>
+
+              <IonItem button onClick={e => {
                 this.props.history.push(`/${this.props.match.params.tab}`);
                 this.setState({ popover: { show: false, event: null } });
               }}>
@@ -821,22 +830,6 @@ class _EPubViewPage extends React.Component<PageProps, State> {
                 <IonIcon icon={search} slot='start' />
                 <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>搜尋經書</IonLabel>
               </IonItem>
-
-              {/*
-              <IonItem>
-                <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. * /}
-                <IonIcon icon={book} slot='start' />
-                <div style={{ width: '100%' }}>
-                  <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>跳頁(%)</IonLabel>
-                  <IonRange min={0} max={100} step={10} snaps pin onIonChange={e => {
-                    let percent = e.detail.value as number;
-                    let ratio = percent / 100 + '';
-                    ratio = (ratio === '0' || ratio === '1') ? `${ratio}.0` : ratio;
-                    this.rendition?.display(ratio);
-                  }} />
-                </div>
-              </IonItem>
-              */}
 
               <IonItem button onClick={e => {
                 this.setState({ popover: { show: false, event: null } });
