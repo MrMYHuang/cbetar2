@@ -198,9 +198,15 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
     // to pass the client side routes to this app by using query string.
     // After this app loads, it can use the query string to correctly redirect to
     // a client side route!
-    const routeMatches = /\?route=(.*)/.exec(window.location.search);
+    console.log(window.location.search);
+    const routeMatches = /route=([^&]*)/.exec(window.location.search);
+    const queryMatches = /query=([^&]*)/.exec(window.location.search);
     if (routeMatches !== null) {
-      return <Redirect to={routeMatches[1]} />;
+      let query = ''
+      if (queryMatches !== null) {
+        query = decodeURIComponent(queryMatches[1]);
+      }
+      return <Redirect to={routeMatches[1] + query } />;
     } else if (window.location.pathname === '/') {
       return <Redirect to="/bookmarks" />;
     }

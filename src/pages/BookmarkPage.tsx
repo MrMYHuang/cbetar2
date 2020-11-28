@@ -1,16 +1,21 @@
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonLabel, withIonLifeCycle, IonItemSliding, IonItemOptions, IonItemOption, IonIcon } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonReorderGroup, IonReorder, IonItem, IonLabel, withIonLifeCycle, IonItemSliding, IonItemOptions, IonItemOption, IonIcon, IonButton } from '@ionic/react';
+import { ItemReorderEventDetail } from '@ionic/core';
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import './WorkPage.css';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
-import { download } from 'ionicons/icons';
+import { download, swapVertical } from 'ionicons/icons';
 import queryString from 'query-string';
 
 interface Props {
   dispatch: Function;
   bookmarks: [Bookmark];
   fontSize: number;
+}
+
+interface State {
+  reorder: boolean;
 }
 
 interface PageProps extends Props, RouteComponentProps<{
@@ -24,28 +29,41 @@ const helpDoc = <>
   <div style={{ fontSize: 'var(--ui-font-size)', textAlign: 'center' }}><a href="https://github.com/MrMYHuang/cbetar2#web-app" target="_new">程式安裝說明</a></div>
 </>;
 
-class _BookmarkPage extends React.Component<PageProps> {
+class _BookmarkPage extends React.Component<PageProps, State> {
   bookmarkListRef: React.RefObject<HTMLIonListElement>;
   constructor(props: any) {
     super(props);
     this.state = {
-      work: null,
+      reorder: false,
     }
     this.bookmarkListRef = React.createRef<HTMLIonListElement>();
   }
 
   ionViewWillEnter() {
+    let queryParams = queryString.parse(this.props.location.search) as any;
+    if (queryParams.item && queryParams.item < this.props.bookmarks.length) {
+      const bookmark = this.props.bookmarks[queryParams.item];
+      this.props.history.push(`/catalog/juan/${bookmark.work?.work}/${bookmark.work?.juan}`);
+    }
     //console.log( 'view will enter' );
   }
 
   get hasBookmark() {
-    return ((this.props as any).bookmarks as [Bookmark]).length > 0;
+    return this.props.bookmarks.length > 0;
   }
 
   delBookmarkHandler(uuidStr: string) {
     this.props.dispatch({
       type: "DEL_BOOKMARK",
       uuid: uuidStr,
+    });
+  }
+
+  reorderBookmarks(event: CustomEvent<ItemReorderEventDetail>) {
+    const bookmarks = event.detail.complete(this.props.bookmarks);
+    this.props.dispatch({
+      type: "UPDATE_BOOKMARKS",
+      bookmarks: bookmarks,
     });
   }
 
@@ -72,6 +90,10 @@ class _BookmarkPage extends React.Component<PageProps> {
       rows.push(
         <IonItemSliding key={`bookmarkItemSliding_` + i}>
           <IonItem key={`bookmarkItem_` + i} button={true} onClick={async event => {
+            if (this.state.reorder) {
+              return;
+            }
+
             event.preventDefault();
             this.props.history.push({
               pathname: routeLink,
@@ -86,6 +108,7 @@ class _BookmarkPage extends React.Component<PageProps> {
               {label}
             </IonLabel>
             {bookmark.type === BookmarkType.CATALOG ? '' : <IonIcon icon={download} slot='end' />}
+            <IonReorder slot='end' />
           </IonItem>
 
           <IonItemOptions side="end">
@@ -102,12 +125,21 @@ class _BookmarkPage extends React.Component<PageProps> {
         <IonHeader>
           <IonToolbar>
             <IonTitle style={{ fontSize: 'var(--ui-font-size)' }}>書籤</IonTitle>
+
+            <IonButton fill={this.state.reorder ? 'solid' : 'clear'} slot='end'
+              onClick={ev => this.setState({ reorder: !this.state.reorder })}>
+              <IonIcon icon={swapVertical} slot='icon-only' />
+            </IonButton>
           </IonToolbar>
         </IonHeader>
         <IonContent>
           {this.hasBookmark ?
             <>
-              <IonList ref={this.bookmarkListRef}>{rows}</IonList>
+              <IonList ref={this.bookmarkListRef}>
+                <IonReorderGroup disabled={!this.state.reorder} onIonItemReorder={(event: CustomEvent<ItemReorderEventDetail>) => { this.reorderBookmarks(event); }}>
+                  {rows}
+                </IonReorderGroup>
+              </IonList>
               {helpDoc}
             </> :
             <IonLabel className='contentCenter'>

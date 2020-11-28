@@ -15,6 +15,23 @@
     }
   ],
   "start_url": "/",
+  "shortcuts": [
+    {
+      "name": "第1書籤",
+      "url": "/bookmarks?item=0",
+      "icons": [{ "src": "assets/icon/icon.png", "sizes": "512x512" }]
+    },
+    {
+      "name": "佛學詞典",
+      "url": "/dictionary",
+      "icons": [{ "src": "assets/icon/icon.png", "sizes": "512x512" }]
+    },
+    {
+      "name": "萌典字典",
+      "url": "/dictionary/searchWord/",
+      "icons": [{ "src": "assets/icon/icon.png", "sizes": "512x512" }]
+    }
+  ],
   "display": "standalone",
   "theme_color": "black",
   "background_color": "black"

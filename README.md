@@ -57,6 +57,13 @@ CBETA電子佛典閱讀器2(非官方)，使用CBETA API存取電子佛經，支
   2. 支援全字庫楷書字型。
 * 直式文字
   1. 傳統中文書的直式文字、由右至左排版。
+* <a id='shortcuts'>App捷徑</a>
+  1. Windows, Android的Chrome(建議最新版)使用者，滑鼠右鍵或長按app圖示，可存取app功能捷徑，目前有：(開啟)第1書籤、佛學詞典、萌典字典。
+  2. 不支援由Microsoft Store或Google Play Store下載的PWA!
+  3. 若由舊版app升級至 >= 4.3.0版，要作一次移除app(但可不刪app資料)，再重新安裝，此app捷徑選單才會出現。
+
+  <img src='./docs/images/AppShortcuts.png' width='50%' />
+
 * App更新
 
   此app不定期發佈更新，包含新功能或bug修正。注意!App檔案更新後，要關閉、重啟1次app或所有瀏覧器app分頁才會載入新版程式。目前支援2種更新方式:
@@ -83,7 +90,7 @@ https://MrMYHuang.github.io
 
 ### 安裝
 
-#### Android - Chrome
+#### Android
 可從Google Play Store下載此PWA：
 
 https://play.google.com/store/apps/details?id=io.github.mrmyhuang.cbetar2
@@ -126,9 +133,12 @@ https://support.google.com/chrome/answer/9658361?hl=zh-Hant&co=GENIE.Platform%3D
 5. "避免螢幕自動鎖定"功能僅限部分較新Chrome瀏覽器才支援。
 6. iOS Safari 13.4以上才支援"分享此頁"功能。
 7. iOS上，經文頁"搜尋文字"視窗中，按下搜尋鈕後，要再點擊一次向前搜尋鈕，被搜尋文字才開始會上色。
+8. iOS不支援app捷徑。
 
 ## <a id='history'>版本歷史</a>
-* 4.2.0:
+* 4.3.0:
+  * [新增] App捷徑，詳見<a href='#shortcuts'>說明</a>。
+  * [新增] 調整書籤頁項目順序功能。
   * [新增] 經文頁新增"回經目錄"功能。
   * [修正] 將經目錄標題移至內容區，以方便顯示長標題。
 * 4.1.8:
