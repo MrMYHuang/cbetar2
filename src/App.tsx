@@ -156,6 +156,7 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
           if (!fontData) {
             const res = await Globals.axiosInstance.get(`${window.location.origin}/${Globals.twKaiFontPath}`, {
               responseType: 'arraybuffer',
+              timeout: 0,
             });
             const transWrite = db.transaction(["store"], 'readwrite');
             fontData = res.data;

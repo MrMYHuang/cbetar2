@@ -372,6 +372,8 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         padding: 0 !important;
         width: 100% !important;
         height: 100% !important;
+        column-gap: unset !important;
+        column-width: unset !important;
       }
       #back {
         display: none;
@@ -527,8 +529,10 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         console.log('iframe unloaded!');
         this.ePubIframe?.contentDocument?.removeEventListener('keyup', this.keyListener.bind(this), false);
       });*/
-    } else {
+    } else if (iframes.length > 1) {
       alert('Error! This component locates ePub iframe by the only iframe.');
+    } else {
+      console.error('ePub iframes count is 0.');
     }
   }
 
