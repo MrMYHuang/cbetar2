@@ -7,7 +7,7 @@ import * as uuid from 'uuid';
 import queryString from 'query-string';
 import './EPubViewPage.css';
 import Globals from '../Globals';
-import { bookmark, arrowBack, home, search, ellipsisHorizontal, ellipsisVertical, arrowForward, musicalNotes, stopCircle, book, shareSocial } from 'ionicons/icons';
+import { bookmark, arrowBack, home, search, ellipsisHorizontal, ellipsisVertical, arrowForward, musicalNotes, stopCircle, book, shareSocial, print } from 'ionicons/icons';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
 import { Work } from '../models/Work';
 import SearchAlert from '../components/SearchAlert';
@@ -362,6 +362,22 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     `;
 
     this.epub.addCSS(`
+    @page {
+      size: A4;
+      margin: 0.5in;
+    }
+
+    @media print {
+      body {
+        padding: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+      }
+      #back {
+        display: none;
+      }
+    }
+
     html {
       background: ${getComputedStyle(document.body).getPropertyValue('--ion-background-color')};
       /*
@@ -865,25 +881,13 @@ class _EPubViewPage extends React.Component<PageProps, State> {
                 <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>查字典</IonLabel>
               </IonItem>
 
-              <IonItem button onClick={ev => {
-                let sharedUrl = window.location.href.split('?')[0];
-                const selectedText = this.getSelectedString();
-                if (selectedText !== '') {
-                  sharedUrl += `?bookmark=${this.epubcfiFromSelectedString}`;
-                }
-
-                this.props.dispatch({
-                  type: "TMP_SET_KEY_VAL",
-                  key: 'shareTextModal',
-                  val: {
-                    show: true,
-                    text: decodeURIComponent(sharedUrl),
-                  },
-                });
+              <IonItem button onClick={e => {
+                this.setState({ popover: { show: false, event: null } });
+                this.ePubIframe?.contentWindow?.print();
               }}>
                 <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
-                <IonIcon icon={shareSocial} slot='start' />
-                <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>分享此頁</IonLabel>
+                <IonIcon icon={print} slot='start' />
+                <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>列印</IonLabel>
               </IonItem>
 
               <IonItem button onClick={ev => {
@@ -916,6 +920,27 @@ class _EPubViewPage extends React.Component<PageProps, State> {
                 <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
                 <IonIcon icon={shareSocial} slot='start' />
                 <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>引用文章</IonLabel>
+              </IonItem>
+
+              <IonItem button onClick={ev => {
+                let sharedUrl = window.location.href.split('?')[0];
+                const selectedText = this.getSelectedString();
+                if (selectedText !== '') {
+                  sharedUrl += `?bookmark=${this.epubcfiFromSelectedString}`;
+                }
+
+                this.props.dispatch({
+                  type: "TMP_SET_KEY_VAL",
+                  key: 'shareTextModal',
+                  val: {
+                    show: true,
+                    text: decodeURIComponent(sharedUrl),
+                  },
+                });
+              }}>
+                <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
+                <IonIcon icon={shareSocial} slot='start' />
+                <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>分享此頁</IonLabel>
               </IonItem>
             </IonList>
           </IonPopover>
