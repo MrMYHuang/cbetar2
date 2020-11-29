@@ -67,7 +67,7 @@ CBETA電子佛典閱讀器2(非官方)，使用CBETA API存取電子佛經，支
   1. 經文頁右上三點按鈕點開，按下列印按鈕，即會跳出列印對話框。
   2. 應用：可選擇印紙本或PDF檔。
   3. 調整：可至設定頁調整字型大小、橫/直排文字、黑體/楷書體，再作列印。
-  4. 已在Chrome 87, Edge Chrome 87測過可用。
+  4. 已在Chrome 87, Edge Chrome 87測過可用。Safari不支援!
 
 * App更新
 
@@ -151,6 +151,7 @@ https://www.microsoft.com/store/apps/9P6TDQX46JJL
 6. iOS Safari 13.4以上才支援"分享此頁"功能。
 7. iOS上，經文頁"搜尋文字"視窗中，按下搜尋鈕後，要再點擊一次向前搜尋鈕，被搜尋文字才開始會上色。
 8. iOS不支援app捷徑。
+9. Safari不支援列印經文。
 
 ## <a id='history'>版本歷史</a>
 * 4.4.0:
