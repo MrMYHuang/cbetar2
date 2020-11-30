@@ -207,7 +207,7 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
       if (queryMatches !== null) {
         query = decodeURIComponent(queryMatches[1]);
       }
-      return <Redirect to={routeMatches[1] + query } />;
+      return <Redirect to={routeMatches[1] + query} />;
     } else if (window.location.pathname === '/') {
       return <Redirect to="/bookmarks" />;
     }
@@ -217,8 +217,8 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
     return (
       <IonApp style={
         // Without this, window height shrinks after Android soft keyboard poping up.
-        Globals.isTouchDevice() ? {height: `${window.innerHeight}px`} : {}
-        }>
+        Globals.isTouchDevice() ? { height: `${window.innerHeight}px` } : {}
+      }>
         <IonReactRouter>
           <IonTabs>
             <IonRouterOutlet animated={false}>

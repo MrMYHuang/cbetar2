@@ -1,5 +1,5 @@
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonReorderGroup, IonReorder, IonItem, IonLabel, withIonLifeCycle, IonItemSliding, IonItemOptions, IonItemOption, IonIcon, IonButton } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonReorderGroup, IonReorder, IonItem, IonLabel, withIonLifeCycle, IonItemSliding, IonItemOptions, IonItemOption, IonIcon, IonButton, IonToast } from '@ionic/react';
 import { ItemReorderEventDetail } from '@ionic/core';
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -16,6 +16,8 @@ interface Props {
 
 interface State {
   reorder: boolean;
+  showToast: boolean;
+  toastMessage: string;
 }
 
 interface PageProps extends Props, RouteComponentProps<{
@@ -35,6 +37,8 @@ class _BookmarkPage extends React.Component<PageProps, State> {
     super(props);
     this.state = {
       reorder: false,
+      showToast: false,
+      toastMessage: '',
     }
     this.bookmarkListRef = React.createRef<HTMLIonListElement>();
   }
@@ -91,6 +95,7 @@ class _BookmarkPage extends React.Component<PageProps, State> {
         <IonItemSliding key={`bookmarkItemSliding_` + i}>
           <IonItem key={`bookmarkItem_` + i} button={true} onClick={async event => {
             if (this.state.reorder) {
+              this.setState({showToast: true, toastMessage: '請先關閉排列功能，才可點擊書籤！'});
               return;
             }
 
@@ -150,6 +155,14 @@ class _BookmarkPage extends React.Component<PageProps, State> {
               </div>
             </IonLabel>
           }
+
+          <IonToast
+            cssClass='uiFont'
+            isOpen={this.state.showToast}
+            onDidDismiss={() => this.setState({ showToast: false })}
+            message={this.state.toastMessage}
+            duration={2000}
+          />
         </IonContent>
       </IonPage>
     );

@@ -98,6 +98,7 @@ class _DictionaryPage extends React.Component<PageProps, State> {
     return rows;
   }
 
+  selectedTextBeforeIonPopover = '';
   render() {
     return (
       <IonPage>
@@ -128,14 +129,22 @@ class _DictionaryPage extends React.Component<PageProps, State> {
               <IonIcon icon={shareSocial} slot='icon-only' />
             </IonButton>
 
-            <IonButton fill="clear" slot='end' onClick={e => this.setState({ popover: { show: true, event: e.nativeEvent } })}>
+            <IonButton fill="clear" slot='end' onClick={e => {
+              // Because after showing IonPopover, document.getSelection() changes.
+              // Thus, we must capture the selected text in advance.
+              this.selectedTextBeforeIonPopover = this.getSelectedString();
+              this.setState({ popover: { show: true, event: e.nativeEvent } });
+            }}>
               <IonIcon ios={ellipsisHorizontal} md={ellipsisVertical} slot='icon-only' />
             </IonButton>
 
             <IonPopover
               isOpen={this.state.popover.show}
               event={this.state.popover.event}
-              onDidDismiss={e => { this.setState({ popover: { show: false, event: null } }) }}
+              onDidDismiss={e => {
+                this.selectedTextBeforeIonPopover = '';
+                this.setState({ popover: { show: false, event: null } });
+               }}
             >
               <IonList>
                 <IonItem button onClick={e => {
@@ -149,14 +158,13 @@ class _DictionaryPage extends React.Component<PageProps, State> {
 
                 <IonItem button onClick={e => {
                   this.setState({ popover: { show: false, event: null } });
-                  const selectedText = this.getSelectedString();
-                  if (selectedText === '') {
+                  if (this.selectedTextBeforeIonPopover === '') {
                     this.setState({ showNoSelectedTextAlert: true });
                     return;
                   }
 
                   this.props.history.push({
-                    pathname: `/dictionary/search/${selectedText}`,
+                    pathname: `/dictionary/search/${this.selectedTextBeforeIonPopover}`,
                   });
                 }}>
                   <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
@@ -166,14 +174,13 @@ class _DictionaryPage extends React.Component<PageProps, State> {
 
                 <IonItem button onClick={e => {
                   this.setState({ popover: { show: false, event: null } });
-                  const selectedText = this.getSelectedString();
-                  if (selectedText === '') {
+                  if (this.selectedTextBeforeIonPopover === '') {
                     this.setState({ showNoSelectedTextAlert: true });
                     return;
                   }
 
                   this.props.history.push({
-                    pathname: `/dictionary/searchWord/${selectedText}`,
+                    pathname: `/dictionary/searchWord/${this.selectedTextBeforeIonPopover}`,
                   });
                 }}>
                   <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
