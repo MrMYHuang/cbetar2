@@ -6,6 +6,9 @@ export default function reducer(state = {
 }, action: any) {
   var newSettings = { ...state } as any;
   switch (action.type) {
+    case "LOAD_SETTINGS":
+      newSettings = JSON.parse(localStorage.getItem(Globals.storeFile)!).settings;
+      break;
     case "SET_KEY_VAL":
       var key = action.key;
       var val = action.val;
@@ -73,8 +76,9 @@ export default function reducer(state = {
         newSettings = {};
       }
       // Setting default values.
-      var keys = ['topCatalogsType', 'hasAppLog', 'theme', 'paginated', 'rtlVerticalLayout', 'scrollbarSize', 'useFontKai', 'fontSize', 'uiFontSize', 'showComments', 'speechRate', 'bookmarks'];
-      var vals = [0, 1, 0, 1, 1, 2, 1, 32, 24, 0, 0.8, []];
+      // version is the setting file version.
+      var keys = ['version', 'topCatalogsType', 'hasAppLog', 'theme', 'paginated', 'rtlVerticalLayout', 'scrollbarSize', 'useFontKai', 'fontSize', 'uiFontSize', 'showComments', 'speechRate', 'bookmarks'];
+      var vals = [1, 0, 1, 0, 1, 1, 2, 1, 32, 24, 0, 0.8, []];
       for (let k = 0; k < keys.length; k++) {
         if (newSettings[keys[k]] === undefined) {
           newSettings[keys[k]] = vals[k];

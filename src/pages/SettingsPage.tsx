@@ -1,5 +1,5 @@
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonRange, IonIcon, IonLabel, IonToggle, IonButton, IonAlert, IonSelect, IonSelectOption, IonProgressBar, IonToast, IonInput } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonRange, IonIcon, IonLabel, IonToggle, IonButton, IonAlert, IonSelect, IonSelectOption, IonProgressBar, IonToast } from '@ionic/react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import Globals from '../Globals';
@@ -170,8 +170,8 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={download} slot='start' />
-              <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>匯出設定</IonLabel>
-              <IonButton slot='end' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={async (e) => {
+              <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>App設定</IonLabel>
+              <IonButton size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={async (e) => {
                 const settingsJsonUri = `data:text/json;charset=utf-8,${encodeURIComponent(localStorage.getItem('Settings.json') || '')}`;
                 const a = document.createElement('a');
                 a.href = settingsJsonUri;
@@ -179,12 +179,24 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
                 a.click();
                 a.remove();
               }}>匯出</IonButton>
-            </IonItem>
-            <IonItem>
-              <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
-              <IonIcon icon={download} slot='start' />
-              <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>匯入設定</IonLabel>
-              <input type='file' />
+              <input id='importJsonInput' type='file' accept='.json' style={{ display: 'none' }} onChange={async (ev) => {
+                const file = ev.target.files?.item(0);
+                const fileText = await file?.text() || '';
+                try {
+                  // JSON text validation.
+                  JSON.parse(fileText);
+                  localStorage.setItem('Settings.json', fileText);
+                  this.props.dispatch({type: 'LOAD_SETTINGS'});
+                  this.updateAllJuans();
+                } catch (e) {
+                  console.error(e);
+                  console.error(new Error().stack);
+                }
+                (document.getElementById('importJsonInput') as HTMLInputElement).value = '';
+              }} />
+              <IonButton size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={(e) => {
+                (document.querySelector('#importJsonInput') as HTMLInputElement).click();
+              }}>匯入</IonButton>
             </IonItem>
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
