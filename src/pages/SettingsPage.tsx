@@ -324,7 +324,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
               <div className="contentBlock">
                 <div style={{ flexDirection: "column" }}>
                   <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>UI字型大小: {this.props.uiFontSize}</IonLabel>
-                  <IonRange min={10} max={64} pin={true} snaps={true} value={this.props.uiFontSize} onIonChange={e => {
+                  <IonRange min={10} max={128} pin={true} snaps={true} value={this.props.uiFontSize} onIonChange={e => {
                     this.props.dispatch({
                       type: "SET_KEY_VAL",
                       key: 'uiFontSize',
@@ -340,7 +340,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
               <IonIcon icon={text} slot='start' />
               <div className="contentBlock">
                 <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>經文字型大小: <span className='textFont'>{this.props.settings.fontSize}</span></IonLabel>
-                <IonRange min={10} max={64} pin={true} snaps={true} value={this.props.settings.fontSize} onIonChange={e => {
+                <IonRange min={10} max={128} pin={true} snaps={true} value={this.props.settings.fontSize} onIonChange={e => {
                   this.props.dispatch({
                     type: "SET_KEY_VAL",
                     key: 'fontSize',
