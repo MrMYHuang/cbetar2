@@ -14,6 +14,14 @@ import SearchAlert from '../components/SearchAlert';
 import ePub, { Book, Rendition, EVENTS } from 'epubjs-myh';
 import * as nodepub from 'nodepub';
 
+// Load TW-Kai font in iframe.
+async function loadTwKaiFont(this: any) {
+  const fontData = await Globals.getFileFromIndexedDB(Globals.twKaiFontKey);
+  const fontFace = new (window as any).FontFace('Kai', fontData);
+  await fontFace.load();
+  (this.document as any).fonts.add(fontFace);
+}
+
 interface Props {
   dispatch: Function;
   bookmarks: [Bookmark];
@@ -319,36 +327,6 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
     const htmlStrWithCssJs = htmlStrModifiedStyles + `
     <script>
-    async function loadTwKaiFont() {
-      const dbOpenReq = indexedDB.open('${Globals.cbetardb}');
-      dbOpenReq.onupgradeneeded = function (event) {
-        var db = event.target.result;
-        db.createObjectStore('store');
-      };
-  
-      let fontData;
-      await new Promise(function(ok, fail) {
-        dbOpenReq.onsuccess = async function (ev) {
-          const db = dbOpenReq.result;
-  
-          const trans = db.transaction(["store"], 'readwrite');
-          let req = trans.objectStore('store').get('${Globals.twKaiFontKey}');
-          req.onsuccess = async function (_ev) {
-            fontData = req.result;
-            if (!fontData) {
-              console.error('[iframe] TW-Kai font loading failed!');
-              return ok();
-            }
-            console.log('[iframe] TW-Kai font loading success!');
-            return ok();
-          };
-        };
-      });
-      const fontFace = new window.FontFace('Kai', fontData);
-      await fontFace.load();
-      document.fonts.add(fontFace);
-    }
-    loadTwKaiFont();
     </script>
     `;
 
@@ -524,6 +502,8 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     if (iframes.length === 1) {
       this.ePubIframe = iframes[0];
       this.ePubIframe.contentDocument?.addEventListener('keyup', this.keyListener.bind(this), false);
+      (this.ePubIframe!.contentWindow! as any).loadTwKaiFont = loadTwKaiFont;
+      (this.ePubIframe!.contentWindow! as any).loadTwKaiFont();
       /*
       this.ePubIframe.contentWindow?.addEventListener('unload', () => {
         console.log('iframe unloaded!');
