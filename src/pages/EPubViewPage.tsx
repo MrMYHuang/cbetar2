@@ -345,6 +345,14 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       margin: 0.5in;
     }
 
+    @page :left {
+      margin-right: 1in;
+    }
+
+    @page :right {
+      margin-left: 1in;
+    }
+
     @media print {
       body {
         padding: 0 !important;
