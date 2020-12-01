@@ -324,7 +324,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
               <div className="contentBlock">
                 <div style={{ flexDirection: "column" }}>
                   <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>UI字型大小: {this.props.uiFontSize}</IonLabel>
-                  <IonRange min={10} max={64} value={this.props.uiFontSize} onIonChange={e => {
+                  <IonRange min={10} max={64} pin={true} snaps={true} value={this.props.uiFontSize} onIonChange={e => {
                     this.props.dispatch({
                       type: "SET_KEY_VAL",
                       key: 'uiFontSize',
@@ -339,13 +339,14 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={text} slot='start' />
               <div className="contentBlock">
-                <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>經文字型大小: {this.props.settings.fontSize}</IonLabel>
-                <IonRange min={10} max={64} value={this.props.settings.fontSize} onIonChange={e => {
+                <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>經文字型大小: <span className='textFont'>{this.props.settings.fontSize}</span></IonLabel>
+                <IonRange min={10} max={64} pin={true} snaps={true} value={this.props.settings.fontSize} onIonChange={e => {
                   this.props.dispatch({
                     type: "SET_KEY_VAL",
                     key: 'fontSize',
                     val: e.detail.value,
-                  });
+                  });                  
+                  Globals.updateCssVars(this.props.settings);
                 }} />
               </div>
             </IonItem>
@@ -355,7 +356,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
               <div className="contentBlock">
                 <div style={{ flexDirection: "column" }}>
                   <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>合成語音語速: {this.props.speechRate}</IonLabel>
-                  <IonRange min={0.1} max={1.5} step={0.1} value={this.props.speechRate} onIonChange={e => {
+                  <IonRange min={0.1} max={1.5} step={0.1} snaps={true} value={this.props.speechRate} onIonChange={e => {
                     this.props.dispatch({
                       type: "SET_KEY_VAL",
                       key: 'speechRate',
