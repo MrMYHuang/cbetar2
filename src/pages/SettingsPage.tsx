@@ -1,9 +1,9 @@
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonRange, IonIcon, IonLabel, IonToggle, IonButton, IonAlert, IonSelect, IonSelectOption, IonProgressBar, IonToast } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonRange, IonIcon, IonLabel, IonToggle, IonButton, IonAlert, IonSelect, IonSelectOption, IonProgressBar, IonToast, IonInput } from '@ionic/react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import Globals from '../Globals';
-import { helpCircle, text, documentText, refreshCircle, musicalNotes, colorPalette, shareSocial, bug } from 'ionicons/icons';
+import { helpCircle, text, documentText, refreshCircle, musicalNotes, colorPalette, shareSocial, bug, download } from 'ionicons/icons';
 import './SettingsPage.css';
 import PackageInfos from '../../package.json';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
@@ -166,6 +166,25 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
               <IonButton slot='end' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={e => {
                 window.open(`mailto:myh@live.com?subject=電子佛典異常記錄回報&body=${encodeURIComponent("問題描述(建議填寫)：\n\n瀏覽器：" + navigator.userAgent + "\n\nApp版本：" + PackageInfos.version + "\n\nApp設定：" + JSON.stringify(this.props.settings) + "\n\nLog：\n" + Globals.getLog())}`);
               }}>回報</IonButton>
+            </IonItem>
+            <IonItem>
+              <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
+              <IonIcon icon={download} slot='start' />
+              <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>匯出設定</IonLabel>
+              <IonButton slot='end' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={async (e) => {
+                const settingsJsonUri = `data:text/json;charset=utf-8,${encodeURIComponent(localStorage.getItem('Settings.json') || '')}`;
+                const a = document.createElement('a');
+                a.href = settingsJsonUri;
+                a.download = 'Settings.json';
+                a.click();
+                a.remove();
+              }}>匯出</IonButton>
+            </IonItem>
+            <IonItem>
+              <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
+              <IonIcon icon={download} slot='start' />
+              <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>匯入設定</IonLabel>
+              <input type='file' />
             </IonItem>
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
