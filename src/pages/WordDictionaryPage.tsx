@@ -1,5 +1,5 @@
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonToolbar, withIonLifeCycle, IonButton, IonIcon, IonSearchbar, IonAlert, IonPopover, IonList, IonItem, IonLabel } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonToolbar, withIonLifeCycle, IonButton, IonIcon, IonSearchbar, IonAlert, IonPopover, IonList, IonItem, IonLabel, IonLoading } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as uuid from 'uuid';
@@ -23,6 +23,7 @@ interface State {
   fetchError: boolean;
   showNoSelectedTextAlert: boolean;
   popover: any;
+  isLoading: boolean;
 }
 
 class _WordDictionaryPage extends React.Component<PageProps, State> {
@@ -38,6 +39,7 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
         show: false,
         event: null,
       },
+      isLoading: false,
     }
     this.searchBarRef = React.createRef<HTMLIonSearchbarElement>();
   }
@@ -58,17 +60,18 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
   }
 
   async lookupDict(keyword: string) {
+    this.setState({isLoading: true});
     try {
       const res = await Globals.axiosInstance.get(
         `https://www.moedict.tw/uni/${keyword.substring(0, 1)}`,
         {
           responseType: 'json',
         });
-      this.setState({ search: res.data.heteronyms });
+      this.setState({ search: res.data.heteronyms, isLoading: false });
     } catch (e) {
       console.error(e);
       console.error(new Error().stack);
-      this.setState({ fetchError: true });
+      this.setState({ fetchError: true, isLoading: false });
       return false;
     }
   }
@@ -257,6 +260,13 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
                 },
               }
             ]}
+          />
+
+          <IonLoading
+            cssClass='uiFont'
+            isOpen={this.state.isLoading}
+            onDidDismiss={() => this.setState({ isLoading: false })}
+            message={'載入中...'}
           />
         </IonContent>
       </IonPage>

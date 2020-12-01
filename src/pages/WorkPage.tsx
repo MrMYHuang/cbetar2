@@ -1,5 +1,5 @@
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonToolbar, IonList, IonItem, IonLabel, withIonLifeCycle, IonButton, IonIcon, IonToast } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonToolbar, IonList, IonItem, IonLabel, withIonLifeCycle, IonButton, IonIcon, IonToast, IonLoading } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import './WorkPage.css';
@@ -25,6 +25,7 @@ interface State {
   work: Work | null;
   showSearchAlert: boolean;
   showAddBookmarkDone: boolean;
+  isLoading: boolean;
 }
 
 class _WorkPage extends React.Component<PageProps, State> {
@@ -34,6 +35,7 @@ class _WorkPage extends React.Component<PageProps, State> {
       work: null,
       showSearchAlert: false,
       showAddBookmarkDone: false,
+      isLoading: false,
     }
   }
 
@@ -43,6 +45,7 @@ class _WorkPage extends React.Component<PageProps, State> {
   }
 
   async fetchWork(path: string) {
+    this.setState({isLoading: true});
     let work: Work | null;
     if (this.hasBookmark) {
       work = this.bookmark!.work!;
@@ -64,7 +67,7 @@ class _WorkPage extends React.Component<PageProps, State> {
       }
     }
 
-    this.setState({ work: work });
+    this.setState({ work: work, isLoading: false });
     return true;
   }
 
@@ -238,6 +241,13 @@ class _WorkPage extends React.Component<PageProps, State> {
             onDidDismiss={() => this.setState({ showAddBookmarkDone: false })}
             message={`書籤新增成功！`}
             duration={2000}
+          />
+
+          <IonLoading
+            cssClass='uiFont'
+            isOpen={this.state.isLoading}
+            onDidDismiss={() => this.setState({ isLoading: false })}
+            message={'載入中...'}
           />
         </IonContent>
       </IonPage>

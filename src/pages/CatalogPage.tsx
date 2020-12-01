@@ -1,5 +1,5 @@
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonLabel, IonButton, IonIcon, withIonLifeCycle } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonLabel, IonButton, IonIcon, withIonLifeCycle, IonLoading } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import './CatalogPage.css';
@@ -27,6 +27,7 @@ interface State {
   fetchError: boolean;
   catalogs: Array<Catalog>;
   pathLabel: string;
+  isLoading: boolean;
 }
 
 class _CatalogPage extends React.Component<PageProps, State> {
@@ -37,6 +38,7 @@ class _CatalogPage extends React.Component<PageProps, State> {
       catalogs: [],
       pathLabel: '',
       showSearchAlert: false,
+      isLoading: false,
     };
   }
 
@@ -60,10 +62,12 @@ class _CatalogPage extends React.Component<PageProps, State> {
 
   async fetchData(path: string) {
     //console.log('fetch');
+    this.setState({ isLoading: true });
     let catalogs = new Array<Catalog>();
     let pathLabel = '';
 
     if (path == null) {
+      this.setState({ isLoading: false })
       return this.fetchTopCatalogs(this.props.topCatalogsType);
     } else {
       try {
@@ -83,12 +87,12 @@ class _CatalogPage extends React.Component<PageProps, State> {
           pathLabel = (topCatalogsByCatLabel !== undefined) ? topCatalogsByCatLabel : Globals.topCatalogsByVol[path];
         }
 
-        this.setState({ catalogs: catalogs, pathLabel });
+        this.setState({ catalogs: catalogs, pathLabel, isLoading: false });
         return true;
       } catch (e) {
         console.error(e);
         console.error(new Error().stack);
-        this.setState({ fetchError: true });
+        this.setState({ fetchError: true, isLoading: false });
         return false;
       }
     }
@@ -245,6 +249,13 @@ class _CatalogPage extends React.Component<PageProps, State> {
           />
 
           <div style={{ fontSize: 'var(--ui-font-size)', textAlign: 'center' }}><a href="https://github.com/MrMYHuang/cbetar2#search" target="_new">搜尋經書教學</a></div>
+
+          <IonLoading
+            cssClass='uiFont'
+            isOpen={this.state.isLoading}
+            onDidDismiss={() => this.setState({ isLoading: false })}
+            message={'載入中...'}
+          />
         </IonContent>
       </IonPage>
     );

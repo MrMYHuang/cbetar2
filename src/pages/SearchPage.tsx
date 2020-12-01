@@ -1,5 +1,5 @@
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonLabel, withIonLifeCycle, IonButton, IonIcon } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonLabel, withIonLifeCycle, IonButton, IonIcon, IonLoading } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Globals from '../Globals';
@@ -22,6 +22,7 @@ interface State {
   fetchError: boolean;
   showSearchAlert: boolean;
   searches: Array<Search>;
+  isLoading: boolean;
 }
 
 class _SearchPage extends React.Component<PageProps, State> {
@@ -31,6 +32,7 @@ class _SearchPage extends React.Component<PageProps, State> {
       fetchError: false,
       showSearchAlert: false,
       searches: [],
+      isLoading: false,
     }
   }
 
@@ -40,6 +42,7 @@ class _SearchPage extends React.Component<PageProps, State> {
   }
 
   async search(keyword: string) {
+    this.setState({isLoading: true});
     try {
       const res = await Globals.axiosInstance.get(`/toc?q=${keyword}`, {
         responseType: 'arraybuffer',
@@ -47,12 +50,12 @@ class _SearchPage extends React.Component<PageProps, State> {
       const data = JSON.parse(new TextDecoder().decode(res.data)).results as [any];
       const searches = data.map((json) => new Search(json));
 
-      this.setState({ searches: searches });
+      this.setState({ searches: searches, isLoading: false });
       return true;
     } catch (e) {
       console.error(e);
       console.error(new Error().stack);
-      this.setState({ fetchError: true });
+      this.setState({ fetchError: true, isLoading: false });
       return false;
     }
   }
@@ -124,6 +127,13 @@ class _SearchPage extends React.Component<PageProps, State> {
                 {rows}
               </IonList>
           }
+
+          <IonLoading
+            cssClass='uiFont'
+            isOpen={this.state.isLoading}
+            onDidDismiss={() => this.setState({ isLoading: false })}
+            message={'載入中...'}
+          />
 
           <SearchAlert
             {...{

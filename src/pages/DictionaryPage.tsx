@@ -1,5 +1,5 @@
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonToolbar, withIonLifeCycle, IonButton, IonIcon, IonSearchbar, IonAlert, IonPopover, IonList, IonItem, IonLabel } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonToolbar, withIonLifeCycle, IonButton, IonIcon, IonSearchbar, IonAlert, IonPopover, IonList, IonItem, IonLabel, IonLoading } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Globals from '../Globals';
@@ -22,6 +22,7 @@ interface State {
   searches: Array<DictItem>;
   showNoSelectedTextAlert: boolean;
   popover: any;
+  isLoading: boolean;
 }
 
 class _DictionaryPage extends React.Component<PageProps, State> {
@@ -37,6 +38,7 @@ class _DictionaryPage extends React.Component<PageProps, State> {
         show: false,
         event: null,
       },
+      isLoading: false,
     }
     this.searchBarRef = React.createRef<HTMLIonSearchbarElement>();
   }
@@ -57,17 +59,18 @@ class _DictionaryPage extends React.Component<PageProps, State> {
   }
 
   async lookupDict(keyword: string) {
+    this.setState({isLoading: true});
     try {
       const res = await Globals.axiosInstance.get(
         `${Globals.dilaDictApiUrl}/?type=match&dicts=dila&term=${keyword}`,
         {
           responseType: 'json',
         });
-      this.setState({ searches: res.data });
+      this.setState({ searches: res.data, isLoading: false });
     } catch (e) {
       console.error(e);
       console.error(new Error().stack);
-      this.setState({ fetchError: true });
+      this.setState({ fetchError: true, isLoading: false });
       return false;
     }
   }
@@ -237,6 +240,13 @@ class _DictionaryPage extends React.Component<PageProps, State> {
                 },
               }
             ]}
+          />
+
+          <IonLoading
+            cssClass='uiFont'
+            isOpen={this.state.isLoading}
+            onDidDismiss={() => this.setState({ isLoading: false })}
+            message={'載入中...'}
           />
         </IonContent>
       </IonPage>
