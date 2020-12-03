@@ -905,12 +905,13 @@ class _EPubViewPage extends React.Component<PageProps, State> {
                     this.setState({ showsCitationFail: true });
                     return;
                   }
-                  startLine = /0*(.*)/.exec(startLine!)![1];
-                  endLine = /0*(.*)/.exec(endLine!)![1];
+                  const startLineMatches = /0*([1-9]*)([a-z])0*([1-9]*)/.exec(startLine!)!;
+                  const startLineModified = `${startLineMatches[1]}${startLineMatches[2]}${startLineMatches[3]}`;
+                  const endLineModified = /0*([1-9]*)([a-z])0*([1-9]*)/.exec(endLine!)![3];
 
-                  let lineInfo = `${startLine}`;
+                  let lineInfo = `${startLineModified}`;
                   if (startLine !== endLine) {
-                    lineInfo += `-${/.*[a-zA-Z](.*)/.exec(endLine)![1]}`;
+                    lineInfo += `-${endLineModified}`;
                   }
                   const citation = `《${this.state.workInfo.title}》卷${this.props.match.params.path}：「${selectedText}」(CBETA, ${this.state.workInfo.vol}, no. ${/[^0-9]*(.*)/.exec(this.state.workInfo.work)![1]}, p. ${lineInfo})`;
                   navigator.clipboard && navigator.clipboard.writeText(citation);
