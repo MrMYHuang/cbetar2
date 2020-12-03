@@ -706,6 +706,16 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     }
   }
 
+  findCbetaHtmlLine(node: Node) {
+    let parent: HTMLElement | null | undefined = node.parentElement;
+    do {
+      if (parent?.getAttribute('l')) {
+        break;
+      }
+    } while((parent = parent?.parentElement));
+    return parent;
+  }
+
   // There is a max characters per utterance limit on Android Chrome.
   // This max value is obtained by try and error.
   maxCharsPerUtterance = 1000;
@@ -888,8 +898,8 @@ class _EPubViewPage extends React.Component<PageProps, State> {
                 if ((sel.rangeCount || 0) > 0 && sel.getRangeAt(0).toString().length > 0) {
                   const selectedText = sel!.toString();
                   const range = sel.getRangeAt(0);
-                  let startLine = range.startContainer.parentElement?.getAttribute('l');
-                  let endLine = range.endContainer.parentElement?.getAttribute('l');
+                  let startLine = this.findCbetaHtmlLine(range.startContainer)?.getAttribute('l');
+                  let endLine = this.findCbetaHtmlLine(range.endContainer)?.getAttribute('l');
                   sel?.removeAllRanges();
                   if (startLine == null || endLine == null) {
                     this.setState({ showsCitationFail: true });
@@ -900,7 +910,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
                   let lineInfo = `${startLine}`;
                   if (startLine !== endLine) {
-                    lineInfo += `-${/.*a(.*)/.exec(endLine)![1]}`;
+                    lineInfo += `-${/.*[a-zA-Z](.*)/.exec(endLine)![1]}`;
                   }
                   const citation = `《${this.state.workInfo.title}》卷${this.props.match.params.path}：「${selectedText}」(CBETA, ${this.state.workInfo.vol}, no. ${/[^0-9]*(.*)/.exec(this.state.workInfo.work)![1]}, p. ${lineInfo})`;
                   navigator.clipboard && navigator.clipboard.writeText(citation);

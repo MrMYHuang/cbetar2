@@ -117,7 +117,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
       <IonPage>
         <IonHeader>
           <IonToolbar>
-            <IonTitle style={{ fontSize: 'var(--ui-font-size)' }}>設定</IonTitle>
+            <IonTitle className='uiFont'>設定</IonTitle>
           </IonToolbar>
         </IonHeader>
         <IonContent>
@@ -125,7 +125,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={shareSocial} slot='start' />
-              <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>電子佛典app版本: <a href="https://github.com/MrMYHuang/cbetar2#history" target="_new">{PackageInfos.version}</a></IonLabel>
+              <IonLabel className='ion-text-wrap uiFont'>電子佛典app版本: <a href="https://github.com/MrMYHuang/cbetar2#history" target="_new">{PackageInfos.version}</a></IonLabel>
               <IonButton slot='end' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={e => {
                 this.props.dispatch({
                   type: "TMP_SET_KEY_VAL",
@@ -140,7 +140,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={refreshCircle} slot='start' />
-              <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>檢查app更新 (若無更新則無回應)</IonLabel>
+              <IonLabel className='ion-text-wrap uiFont'>檢查app更新 (若無更新則無回應)</IonLabel>
               <IonButton slot='end' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={e => {
                 Globals.updateApp();
               }}>檢查</IonButton>
@@ -148,7 +148,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={bug} slot='start' />
-              <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}><a href="https://github.com/MrMYHuang/cbetar2#report" target="_new">啟用app異常記錄</a></IonLabel>
+              <IonLabel className='ion-text-wrap uiFont'><a href="https://github.com/MrMYHuang/cbetar2#report" target="_new">啟用app異常記錄</a></IonLabel>
               <IonToggle slot='end' checked={this.props.hasAppLog} onIonChange={e => {
                 const isChecked = e.detail.checked;
                 isChecked ? Globals.enableAppLog() : Globals.disableAppLog();
@@ -162,7 +162,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
             <IonItem hidden={!this.props.hasAppLog}>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={bug} slot='start' />
-              <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>回報app異常記錄</IonLabel>
+              <IonLabel className='ion-text-wrap uiFont'>回報app異常記錄</IonLabel>
               <IonButton slot='end' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={e => {
                 window.open(`mailto:myh@live.com?subject=電子佛典異常記錄回報&body=${encodeURIComponent("問題描述(建議填寫)：\n\n瀏覽器：" + navigator.userAgent + "\n\nApp版本：" + PackageInfos.version + "\n\nApp設定：" + JSON.stringify(this.props.settings) + "\n\nLog：\n" + Globals.getLog())}`);
               }}>回報</IonButton>
@@ -170,7 +170,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={download} slot='start' />
-              <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>App設定</IonLabel>
+              <IonLabel className='ion-text-wrap uiFont'>App設定</IonLabel>
               <IonButton size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={async (e) => {
                 const settingsJsonUri = `data:text/json;charset=utf-8,${encodeURIComponent(localStorage.getItem('Settings.json') || '')}`;
                 const a = document.createElement('a');
@@ -202,7 +202,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={refreshCircle} slot='start' />
               <div style={{ width: '100%' }}>
-                <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>更新離線經文檔</IonLabel>
+                <IonLabel className='ion-text-wrap uiFont'>更新離線經文檔</IonLabel>
                 <IonProgressBar value={this.state.juansDownloadedRatio} />
               </div>
               <IonButton slot='end' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={async (e) => this.updateAllJuans()}>更新</IonButton>
@@ -217,7 +217,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={colorPalette} slot='start' />
-              <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>佈景主題</IonLabel>
+              <IonLabel className='ion-text-wrap uiFont'>佈景主題</IonLabel>
               <IonSelect slot='end'
                 value={this.props.theme}
                 style={{ fontSize: 'var(--ui-font-size)' }}
@@ -243,7 +243,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={documentText} slot='start' />
-              <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>經文直式、右至左書寫</IonLabel>
+              <IonLabel className='ion-text-wrap uiFont'>經文直式、右至左書寫</IonLabel>
               <IonToggle slot='end' checked={this.props.rtlVerticalLayout} onIonChange={e => {
                 const isChecked = e.detail.checked;
                 this.props.dispatch({
@@ -256,7 +256,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={documentText} slot='start' />
-              <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>單頁/分頁</IonLabel>
+              <IonLabel className='ion-text-wrap uiFont'>單頁/分頁</IonLabel>
               <IonToggle slot='end' checked={this.props.paginated} onIonChange={e => {
                 const isChecked = e.detail.checked;
                 this.props.dispatch({
@@ -269,7 +269,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={documentText} slot='start' />
-              <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>單頁經文捲軸大小</IonLabel>
+              <IonLabel className='ion-text-wrap uiFont'>單頁經文捲軸大小</IonLabel>
               <IonSelect slot='end'
                 value={this.props.scrollbarSize}
                 style={{ fontSize: 'var(--ui-font-size)' }}
@@ -293,7 +293,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. * /}
               <IonIcon icon={documentText} slot='start' />
-              <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>顯示經文註解、版權</IonLabel>
+              <IonLabel className='ion-text-wrap uiFont'>顯示經文註解、版權</IonLabel>
               <IonToggle slot='end' checked={this.props.showComments} onIonChange={e => {
                 const isChecked = e.detail.checked;
                 (this.props as any).dispatch({
@@ -307,7 +307,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={text} slot='start' />
-              <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>黑體/楷書字體(初次載入要等待)</IonLabel>
+              <IonLabel className='ion-text-wrap uiFont'>黑體/楷書字體(初次載入要等待)</IonLabel>
               <IonToggle slot='end' checked={this.props.useFontKai} onIonChange={e => {
                 const isChecked = e.detail.checked;
                 (this.props as any).dispatch({
@@ -323,7 +323,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
               <IonIcon icon={text} slot='start' />
               <div className="contentBlock">
                 <div style={{ flexDirection: "column" }}>
-                  <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>UI字型大小: {this.props.uiFontSize}</IonLabel>
+                  <IonLabel className='ion-text-wrap uiFont'>UI字型大小: {this.props.uiFontSize}</IonLabel>
                   <IonRange min={10} max={128} pin={true} snaps={true} value={this.props.uiFontSize} onIonChange={e => {
                     this.props.dispatch({
                       type: "SET_KEY_VAL",
@@ -339,7 +339,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={text} slot='start' />
               <div className="contentBlock">
-                <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>經文字型大小: <span className='textFont'>{this.props.settings.fontSize}</span></IonLabel>
+                <IonLabel className='ion-text-wrap uiFont'>經文字型大小: <span className='textFont'>{this.props.settings.fontSize}</span></IonLabel>
                 <IonRange min={10} max={128} pin={true} snaps={true} value={this.props.settings.fontSize} onIonChange={e => {
                   this.props.dispatch({
                     type: "SET_KEY_VAL",
@@ -355,7 +355,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
               <IonIcon icon={musicalNotes} slot='start' />
               <div className="contentBlock">
                 <div style={{ flexDirection: "column" }}>
-                  <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}><a href="https://github.com/MrMYHuang/cbetar2#text2speech" target="_new">合成語音語速</a>: {this.props.speechRate}</IonLabel>
+                  <IonLabel className='ion-text-wrap uiFont'><a href="https://github.com/MrMYHuang/cbetar2#text2speech" target="_new">合成語音語速</a>: {this.props.speechRate}</IonLabel>
                   <IonRange min={0.1} max={1.5} step={0.1} snaps={true} value={this.props.speechRate} onIonChange={e => {
                     this.props.dispatch({
                       type: "SET_KEY_VAL",
