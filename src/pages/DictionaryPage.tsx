@@ -3,7 +3,7 @@ import { IonContent, IonHeader, IonPage, IonToolbar, withIonLifeCycle, IonButton
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Globals from '../Globals';
-import { home, arrowBack, shareSocial, book, ellipsisHorizontal, ellipsisVertical } from 'ionicons/icons';
+import { home, arrowBack, shareSocial, book, ellipsisHorizontal, ellipsisVertical, refreshCircle } from 'ionicons/icons';
 import { DictItem } from '../models/DictItem';
 
 interface Props {
@@ -59,14 +59,14 @@ class _DictionaryPage extends React.Component<PageProps, State> {
   }
 
   async lookupDict(keyword: string) {
-    this.setState({isLoading: true});
+    this.setState({ isLoading: true });
     try {
       const res = await Globals.axiosInstance.get(
         `${Globals.dilaDictApiUrl}/?type=match&dicts=dila&term=${keyword}`,
         {
           responseType: 'json',
         });
-      this.setState({ searches: res.data, isLoading: false });
+      this.setState({ fetchError: false, isLoading: false, searches: res.data });
     } catch (e) {
       console.error(e);
       console.error(new Error().stack);
@@ -119,6 +119,10 @@ class _DictionaryPage extends React.Component<PageProps, State> {
               <span className='uiFont' style={{ color: 'var(--color)' }}>佛學詞典</span>
             </IonButton>
 
+            <IonButton hidden={!this.state.fetchError} fill="clear" slot='end' onClick={e => this.lookupDict(this.props.match.params.keyword)}>
+              <IonIcon icon={refreshCircle} slot='icon-only' />
+            </IonButton>
+
             <IonButton fill="clear" slot='end' onClick={e => {
               this.props.dispatch({
                 type: "TMP_SET_KEY_VAL",
@@ -147,7 +151,7 @@ class _DictionaryPage extends React.Component<PageProps, State> {
               onDidDismiss={e => {
                 this.selectedTextBeforeIonPopover = '';
                 this.setState({ popover: { show: false, event: null } });
-               }}
+              }}
             >
               <IonList>
                 <IonItem button onClick={e => {

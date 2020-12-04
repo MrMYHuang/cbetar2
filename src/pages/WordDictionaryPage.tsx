@@ -4,7 +4,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as uuid from 'uuid';
 import Globals from '../Globals';
-import { home, arrowBack, shareSocial, book, ellipsisHorizontal, ellipsisVertical } from 'ionicons/icons';
+import { home, arrowBack, shareSocial, book, ellipsisHorizontal, ellipsisVertical, refreshCircle } from 'ionicons/icons';
 import { DictWordDefItem, DictWordItem, WordType } from '../models/DictWordItem';
 
 interface Props {
@@ -20,10 +20,10 @@ interface PageProps extends Props, RouteComponentProps<{
 interface State {
   keyword: string;
   search: [DictWordItem] | null;
-  fetchError: boolean;
   showNoSelectedTextAlert: boolean;
   popover: any;
   isLoading: boolean;
+  fetchError: boolean;
 }
 
 class _WordDictionaryPage extends React.Component<PageProps, State> {
@@ -33,13 +33,13 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
     this.state = {
       keyword: '',
       search: null,
-      fetchError: false,
       showNoSelectedTextAlert: false,
       popover: {
         show: false,
         event: null,
       },
       isLoading: false,
+      fetchError: false,
     }
     this.searchBarRef = React.createRef<HTMLIonSearchbarElement>();
   }
@@ -60,14 +60,14 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
   }
 
   async lookupDict(keyword: string) {
-    this.setState({isLoading: true});
+    this.setState({ isLoading: true });
     try {
       const res = await Globals.axiosInstance.get(
         `https://www.moedict.tw/uni/${keyword.substring(0, 1)}`,
         {
           responseType: 'json',
         });
-      this.setState({ search: res.data.heteronyms, isLoading: false });
+      this.setState({ fetchError: false, isLoading: false, search: res.data.heteronyms });
     } catch (e) {
       console.error(e);
       console.error(new Error().stack);
@@ -140,6 +140,10 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
               });
             }}>
               <span className='uiFont' style={{ color: 'var(--color)' }}>萌典字典</span>
+            </IonButton>
+
+            <IonButton hidden={!this.state.fetchError} fill="clear" slot='end' onClick={e => this.lookupDict(this.props.match.params.keyword)}>
+              <IonIcon icon={refreshCircle} slot='icon-only' />
             </IonButton>
 
             <IonButton fill="clear" slot='end' onClick={e => {

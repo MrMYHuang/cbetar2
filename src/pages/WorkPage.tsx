@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import './WorkPage.css';
 import { Work, WorkChapter, WorkListType } from '../models/Work';
 import Globals from '../Globals';
-import { bookmark, arrowBack, home, search, shareSocial } from 'ionicons/icons';
+import { bookmark, arrowBack, home, search, shareSocial, refreshCircle } from 'ionicons/icons';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
 import SearchAlert from '../components/SearchAlert';
 
@@ -26,6 +26,7 @@ interface State {
   showSearchAlert: boolean;
   showAddBookmarkDone: boolean;
   isLoading: boolean;
+  fetchError: boolean;
 }
 
 class _WorkPage extends React.Component<PageProps, State> {
@@ -36,6 +37,7 @@ class _WorkPage extends React.Component<PageProps, State> {
       showSearchAlert: false,
       showAddBookmarkDone: false,
       isLoading: false,
+      fetchError: false,
     }
   }
 
@@ -45,7 +47,7 @@ class _WorkPage extends React.Component<PageProps, State> {
   }
 
   async fetchWork(path: string) {
-    this.setState({isLoading: true});
+    this.setState({ isLoading: true });
     let work: Work | null;
     if (this.hasBookmark) {
       work = this.bookmark!.work!;
@@ -63,11 +65,12 @@ class _WorkPage extends React.Component<PageProps, State> {
 
       } catch (err) {
         console.error(err);
+        this.setState({ fetchError: true, isLoading: false });
         return false;
       }
     }
 
-    this.setState({ work: work, isLoading: false });
+    this.setState({ fetchError: false, isLoading: false, work: work });
     return true;
   }
 
@@ -123,11 +126,11 @@ class _WorkPage extends React.Component<PageProps, State> {
   }
 
   getRowsByChapter() {
-    let work = this.state.work!;
-    const mulu = work.mulu;
+    let work = this.state.work;
+    const mulu = work?.mulu;
     let rows = Array<object>();
-    for (let i = 0; i < mulu.length; i++) {
-      let routeLink = `/catalog/juan/${work.work}/${mulu[i].juan}`;
+    for (let i = 0; i < (mulu?.length || -1); i++) {
+      let routeLink = `/catalog/juan/${work?.work}/${mulu![i].juan}`;
       rows.push(
         <IonItem key={`chapterItem` + i} button={true} onClick={async event => {
           event.preventDefault();
@@ -137,7 +140,7 @@ class _WorkPage extends React.Component<PageProps, State> {
         }}>
           <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
           <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }} key={`chapterLabel` + i}>
-            {mulu[i].title}
+            {mulu![i].title}
           </IonLabel>
         </IonItem>
       );
@@ -146,12 +149,12 @@ class _WorkPage extends React.Component<PageProps, State> {
   }
 
   getRowsByJuan() {
-    let work = this.state.work!;
+    let work = this.state.work;
     let rows = Array<object>();
-    let juans = work.juan_list.split(',');
-    for (let i = 0; i < juans.length; i++) {
+    let juans = work?.juan_list.split(',');
+    for (let i = 0; i < (juans?.length || -1); i++) {
       //if (work.nodeType == 'html')
-      let routeLink = `/catalog/juan/${work.work}/${juans[i]}`;
+      let routeLink = `/catalog/juan/${work?.work}/${juans![i]}`;
       rows.push(
         <IonItem key={`juanItem` + i} button={true} onClick={async event => {
           event.preventDefault();
@@ -161,7 +164,7 @@ class _WorkPage extends React.Component<PageProps, State> {
         }}>
           <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
           <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }} key={`juanLabel` + i}>
-            卷{juans[i]}
+            卷{juans![i]}
           </IonLabel>
         </IonItem>
       );
@@ -171,12 +174,6 @@ class _WorkPage extends React.Component<PageProps, State> {
 
   //work = this.works[0] as Work;
   render() {
-    let work = this.state.work;
-    if (work == null) {
-      return <IonPage></IonPage>
-    }
-
-    let rows = this.props.workListType === WorkListType.BY_CHAPTER ? this.getRowsByChapter() : this.getRowsByJuan();
     return (
       <IonPage>
         <IonHeader>
@@ -185,7 +182,7 @@ class _WorkPage extends React.Component<PageProps, State> {
               <IonIcon icon={arrowBack} slot='icon-only' />
             </IonButton>
 
-            <IonButton slot='end' onClick={ev => {
+            <IonButton slot='start' onClick={ev => {
               const newWorkListType = this.props.workListType === WorkListType.BY_CHAPTER ? WorkListType.BY_JUAN : WorkListType.BY_CHAPTER;
               this.props.dispatch({
                 type: "TMP_SET_KEY_VAL",
@@ -194,6 +191,10 @@ class _WorkPage extends React.Component<PageProps, State> {
               });
             }}>
               <span className='uiFont' style={{ color: 'var(--color)' }}>{this.props.workListType === WorkListType.BY_CHAPTER ? '分品' : '分卷'}</span>
+            </IonButton>
+
+            <IonButton hidden={!this.state.fetchError} fill="clear" slot='end' onClick={e => this.fetchWork(this.props.match.params.path)}>
+              <IonIcon icon={refreshCircle} slot='icon-only' />
             </IonButton>
 
             <IonButton fill="clear" color={this.hasBookmark ? 'warning' : 'primary'} slot='end' onClick={e => this.hasBookmark ? this.delBookmarkHandler() : this.addBookmarkHandler()}>
@@ -224,9 +225,12 @@ class _WorkPage extends React.Component<PageProps, State> {
         </IonHeader>
         <IonContent>
           <div className='uiFontX2' style={{ color: 'var(--ion-color-primary)' }}>{this.state.work?.title}</div>
-          <IonList>
-            {rows}
-          </IonList>
+          {
+            this.state.fetchError ? Globals.fetchErrorContent :
+              <IonList>
+                {this.props.workListType === WorkListType.BY_CHAPTER ? this.getRowsByChapter() : this.getRowsByJuan()}
+              </IonList>
+          }
 
           <SearchAlert
             {...{

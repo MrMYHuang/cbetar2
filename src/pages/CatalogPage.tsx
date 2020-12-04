@@ -1,12 +1,12 @@
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonLabel, IonButton, IonIcon, withIonLifeCycle, IonLoading } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonToolbar, IonList, IonItem, IonLabel, IonButton, IonIcon, withIonLifeCycle, IonLoading } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import './CatalogPage.css';
 import { Catalog } from '../models/Catalog';
 import Globals from '../Globals';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
-import { bookmark, arrowBack, home, search, shareSocial } from 'ionicons/icons';
+import { bookmark, arrowBack, home, search, shareSocial, refreshCircle } from 'ionicons/icons';
 import SearchAlert from '../components/SearchAlert';
 import queryString from 'query-string';
 
@@ -67,7 +67,6 @@ class _CatalogPage extends React.Component<PageProps, State> {
     let pathLabel = '';
 
     if (path == null) {
-      this.setState({ isLoading: false })
       return this.fetchTopCatalogs(this.props.topCatalogsType);
     } else {
       try {
@@ -87,7 +86,7 @@ class _CatalogPage extends React.Component<PageProps, State> {
           pathLabel = (topCatalogsByCatLabel !== undefined) ? topCatalogsByCatLabel : Globals.topCatalogsByVol[path];
         }
 
-        this.setState({ catalogs: catalogs, pathLabel, isLoading: false });
+        this.setState({ fetchError: false, isLoading: false, catalogs: catalogs, pathLabel });
         return true;
       } catch (e) {
         console.error(e);
@@ -113,7 +112,7 @@ class _CatalogPage extends React.Component<PageProps, State> {
       };
       catalogs.push(catalog);
     });
-    this.setState({ catalogs: catalogs });
+    this.setState({ fetchError: false, isLoading: false, catalogs: catalogs });
     return true;
   }
 
@@ -196,6 +195,10 @@ class _CatalogPage extends React.Component<PageProps, State> {
           <IonToolbar>
             <IonButton hidden={this.isTopCatalog} fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
               <IonIcon icon={arrowBack} slot='icon-only' />
+            </IonButton>
+
+            <IonButton hidden={!this.state.fetchError} fill="clear" slot='end' onClick={e => this.fetchData(this.props.match.params.path)}>
+              <IonIcon icon={refreshCircle} slot='icon-only' />
             </IonButton>
 
             <IonButton hidden={!this.isTopCatalog} slot='end' onClick={ev => {

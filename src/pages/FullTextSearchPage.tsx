@@ -4,7 +4,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Globals from '../Globals';
 import SearchAlert from '../components/SearchAlert';
-import { home, search, arrowBack, shareSocial } from 'ionicons/icons';
+import { home, search, arrowBack, shareSocial, refreshCircle } from 'ionicons/icons';
 import { FullTextSearch } from '../models/FullTextSearch';
 
 interface Props {
@@ -19,20 +19,20 @@ interface PageProps extends Props, RouteComponentProps<{
 }> { }
 
 interface State {
-  fetchError: boolean;
   showSearchAlert: boolean;
   searches: Array<FullTextSearch>;
   isLoading: boolean;
+  fetchError: boolean;
 }
 
 class _SearchPage extends React.Component<PageProps, State> {
   constructor(props: any) {
     super(props);
     this.state = {
-      fetchError: false,
       showSearchAlert: false,
       searches: [],
       isLoading: false,
+      fetchError: false,
     }
   }
 
@@ -42,7 +42,7 @@ class _SearchPage extends React.Component<PageProps, State> {
   }
 
   async search(keyword: string) {
-    this.setState({isLoading: true});
+    this.setState({ isLoading: true });
     try {
       const res = await Globals.axiosInstance.get(`/sphinx?q=${keyword}`, {
         responseType: 'arraybuffer',
@@ -50,7 +50,7 @@ class _SearchPage extends React.Component<PageProps, State> {
       const data = JSON.parse(new TextDecoder().decode(res.data)).results as [any];
       const searches = data.map((json) => new FullTextSearch(json));
 
-      this.setState({ searches: searches, isLoading: false });
+      this.setState({ fetchError: false, isLoading: false, searches: searches });
       return true;
     } catch (e) {
       console.error(e);
@@ -97,9 +97,15 @@ class _SearchPage extends React.Component<PageProps, State> {
             <IonButton hidden={this.isTopPage} fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
               <IonIcon icon={arrowBack} slot='icon-only' />
             </IonButton>
+
+            <IonButton hidden={!this.state.fetchError} fill="clear" slot='end' onClick={e => this.search(this.props.match.params.keyword)}>
+              <IonIcon icon={refreshCircle} slot='icon-only' />
+            </IonButton>
+
             <IonButton fill="clear" slot='end' onClick={e => this.props.history.push(`/${this.props.match.params.tab}`)}>
               <IonIcon icon={home} slot='icon-only' />
             </IonButton>
+            
             <IonButton fill="clear" slot='end' onClick={e => this.setState({ showSearchAlert: true })}>
               <IonIcon icon={search} slot='icon-only' />
             </IonButton>

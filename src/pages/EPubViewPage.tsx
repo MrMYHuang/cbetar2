@@ -7,7 +7,7 @@ import * as uuid from 'uuid';
 import queryString from 'query-string';
 import './EPubViewPage.css';
 import Globals from '../Globals';
-import { bookmark, arrowBack, home, search, ellipsisHorizontal, ellipsisVertical, arrowForward, musicalNotes, stopCircle, book, shareSocial, print } from 'ionicons/icons';
+import { bookmark, arrowBack, home, search, ellipsisHorizontal, ellipsisVertical, arrowForward, musicalNotes, stopCircle, book, shareSocial, print, refreshCircle } from 'ionicons/icons';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
 import { Work } from '../models/Work';
 import SearchAlert from '../components/SearchAlert';
@@ -155,7 +155,6 @@ class _EPubViewPage extends React.Component<PageProps, State> {
   uuidStr = '';
   epubcfiFromUrl = '';
   ionViewWillEnter() {
-    this.setState({ isLoading: true });
     let queryParams = queryString.parse(this.props.location.search) as any;
     this.htmlFile = queryParams.file;
     this.htmlTitle = queryParams.title;
@@ -177,6 +176,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
   }
 
   async fetchData() {
+    this.setState({ isLoading: true });
     try {
       const res = await Globals.fetchJuan(
         this.props.match.params.work,
@@ -186,7 +186,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
       await this.loadEpubCoverToMemFs();
 
-      this.setState({ workInfo: res.workInfo, htmlStr: res.htmlStr });
+      this.setState({ isLoading: false, fetchError: false, workInfo: res.workInfo, htmlStr: res.htmlStr });
     } catch (e) {
       console.error(e);
       this.setState({ isLoading: false, fetchError: true });
@@ -734,6 +734,10 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
           <IonButton hidden={this.isTopPage} fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
             <IonIcon icon={arrowBack} slot='icon-only' />
+          </IonButton>
+
+          <IonButton hidden={!this.state.fetchError} fill="clear" slot='end' onClick={e => this.fetchData()}>
+            <IonIcon icon={refreshCircle} slot='icon-only' />
           </IonButton>
 
           <IonButton hidden={!this.props.paginated} slot='end' onClick={ev => {
