@@ -22,6 +22,13 @@ async function loadTwKaiFont(this: any) {
   (this.document as any).fonts.add(fontFace);
 }
 
+function addCbetaLineBreaks(this: any) {
+  this.document.querySelectorAll('.pre .lb').forEach((el: HTMLElement) => {
+    const newBr = this.document.createElement('br');
+    el.before(newBr);
+  });
+}
+
 interface Props {
   dispatch: Function;
   bookmarks: [Bookmark];
@@ -515,6 +522,9 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       this.ePubIframe.contentDocument?.addEventListener('keyup', this.keyListener.bind(this), false);
       (this.ePubIframe!.contentWindow! as any).loadTwKaiFont = loadTwKaiFont;
       (this.ePubIframe!.contentWindow! as any).loadTwKaiFont();
+      (this.ePubIframe!.contentWindow! as any).addCbetaLineBreaks = addCbetaLineBreaks;
+      (this.ePubIframe!.contentWindow! as any).addCbetaLineBreaks();
+      
       /*
       this.ePubIframe.contentWindow?.addEventListener('unload', () => {
         console.log('iframe unloaded!');

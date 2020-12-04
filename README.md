@@ -158,6 +158,8 @@ https://www.microsoft.com/store/apps/9P6TDQX46JJL
 8. Safari不支援列印經文。
 
 ## <a id='history'>版本歷史</a>
+* 4.6.8:
+  * [修正] CBETA HTML .pre .lb的換行問題，如太虛大師年譜卷2的"絕對獨立之特德"該處的文字圖。
 * 4.6.7:
   * [修正] 第1次使用此app，無法開啟經文的問題。
   * [修正] 部/冊分類鈕位置。
