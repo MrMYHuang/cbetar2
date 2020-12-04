@@ -84,7 +84,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
   constructor(props: any) {
     super(props);
     this.state = {
-      isLoading: true,
+      isLoading: false,
       fetchError: false,
       workInfo: new Work({}),
       htmlStr: null,
@@ -186,7 +186,8 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
       await this.loadEpubCoverToMemFs();
 
-      this.setState({ isLoading: false, fetchError: false, workInfo: res.workInfo, htmlStr: res.htmlStr });
+      // isLoading shall consider the epub.js loading time, thus disable it here.
+      this.setState({ /*isLoading: false, */fetchError: false, workInfo: res.workInfo, htmlStr: res.htmlStr });
     } catch (e) {
       console.error(e);
       this.setState({ isLoading: false, fetchError: true });
