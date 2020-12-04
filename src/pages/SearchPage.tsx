@@ -79,7 +79,7 @@ class _SearchPage extends React.Component<PageProps, State> {
           });
         }}>
           <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
-          <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }} key={`searchLabel_` + i}>
+          <IonLabel className='ion-text-wrap uiFont' key={`searchLabel_` + i}>
             {label}
           </IonLabel>
         </IonItem>

@@ -243,7 +243,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={documentText} slot='start' />
-              <IonLabel className='ion-text-wrap uiFont'>經文直式、右至左書寫</IonLabel>
+              <IonLabel className='ion-text-wrap uiFont'>經文直排、右至左書寫</IonLabel>
               <IonToggle slot='end' checked={this.props.rtlVerticalLayout} onIonChange={e => {
                 const isChecked = e.detail.checked;
                 this.props.dispatch({

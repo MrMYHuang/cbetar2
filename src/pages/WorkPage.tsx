@@ -65,6 +65,7 @@ class _WorkPage extends React.Component<PageProps, State> {
 
       } catch (err) {
         console.error(err);
+        console.error(new Error().stack);
         this.setState({ fetchError: true, isLoading: false });
         return false;
       }
@@ -85,6 +86,7 @@ class _WorkPage extends React.Component<PageProps, State> {
         Globals.saveFileToIndexedDB(Globals.getFileName(work.work, this.fetchJuan), res.htmlStr);
       } catch (err) {
         console.error(`Fetching juan ${i} failed! ${err}`);
+        console.error(new Error().stack);
       }
     }
     this.setState({ showAddBookmarkDone: true });
@@ -139,7 +141,7 @@ class _WorkPage extends React.Component<PageProps, State> {
           });
         }}>
           <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
-          <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }} key={`chapterLabel` + i}>
+          <IonLabel className='ion-text-wrap uiFont' key={`chapterLabel` + i}>
             {mulu![i].title}
           </IonLabel>
         </IonItem>
@@ -163,7 +165,7 @@ class _WorkPage extends React.Component<PageProps, State> {
           });
         }}>
           <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
-          <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }} key={`juanLabel` + i}>
+          <IonLabel className='ion-text-wrap uiFont' key={`juanLabel` + i}>
             卷{juans![i]}
           </IonLabel>
         </IonItem>

@@ -183,7 +183,7 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
                 }}>
                   <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
                   <IonIcon icon={home} slot='start' />
-                  <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>回首頁</IonLabel>
+                  <IonLabel className='ion-text-wrap uiFont'>回首頁</IonLabel>
                 </IonItem>
 
                 <IonItem button onClick={e => {
@@ -199,7 +199,7 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
                 }}>
                   <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
                   <IonIcon icon={book} slot='start' />
-                  <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>查詞典</IonLabel>
+                  <IonLabel className='ion-text-wrap uiFont'>查詞典</IonLabel>
                 </IonItem>
 
                 <IonItem button onClick={e => {
@@ -215,7 +215,7 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
                 }}>
                   <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
                   <IonIcon icon={book} slot='start' />
-                  <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>查字典</IonLabel>
+                  <IonLabel className='ion-text-wrap uiFont'>查字典</IonLabel>
                 </IonItem>
               </IonList>
             </IonPopover>

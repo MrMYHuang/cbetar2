@@ -190,6 +190,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       this.setState({ /*isLoading: false, */fetchError: false, workInfo: res.workInfo, htmlStr: res.htmlStr });
     } catch (e) {
       console.error(e);
+      console.error(new Error().stack);
       this.setState({ isLoading: false, fetchError: true });
     }
   }
@@ -356,6 +357,8 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
     @media print {
       body {
+        color: black !important;
+        background: white !important;
         padding: 0 !important;
         width: 100% !important;
         height: 100% !important;
@@ -365,7 +368,6 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     }
 
     html {
-      background: ${getComputedStyle(document.body).getPropertyValue('--ion-background-color')};
       /*
       Because different fonts have different line heights with 'line-height: normal,'
       the content size of epubjs iframe changes after the fallback font is swapped with the web font.
@@ -374,6 +376,11 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       Fortunately, we can set the line height based on the same font size as below.
       */
       line-height: 1.2;
+    }
+
+    body {
+      color: ${getComputedStyle(document.body).getPropertyValue('--ion-text-color')};
+      background: ${getComputedStyle(document.body).getPropertyValue('--ion-background-color')};
     }
 
     @font-face {
@@ -394,7 +401,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     }
 
     /* In-HTML anchor jumps don't update this.state.currentPage.
-    Thus, we disable thems. */
+    Thus, we disable them. */
     .noteAnchor {
       pointer-events: none;
       text-decoration: inherit;
@@ -431,15 +438,13 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     ${this.props.rtlVerticalLayout ? rtlVerticalStyles : ''}
 
     .t, p, div {
-      color: ${getComputedStyle(document.body).getPropertyValue('--ion-text-color')};
       font-family: ${getComputedStyle(document.body).getPropertyValue('--ion-font-family')};
       font-size: ${this.props.fontSize}px;
     }
     
-    /* Disable this to workaround epubjs page counting problem.*/
     #back, #cbeta-copyright {
       display: ${this.props.showComments ? "block" : "none"};
-    }/**/
+    }
     `);
     //await new Promise((ok, fail) => {
     this.epub.writeEPUB(
@@ -720,14 +725,6 @@ class _EPubViewPage extends React.Component<PageProps, State> {
   workTexts: Array<string> = [];
   workTextsIndex = 0;
   render() {
-    let epubjsScrollRtlModeVerticalScrollbarBugWokaroundCss = `
-    <style>
-    .epub-view {
-      height: 100% !important;
-    }
-    </style>
-    `;
-
     let header = (
       <IonHeader>
         <IonToolbar>
@@ -813,7 +810,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
               }}>
                 <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
                 <IonIcon icon={home} slot='start' />
-                <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>回經目錄</IonLabel>
+                <IonLabel className='ion-text-wrap uiFont'>回經目錄</IonLabel>
               </IonItem>
 
               <IonItem button onClick={e => {
@@ -822,7 +819,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
               }}>
                 <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
                 <IonIcon icon={home} slot='start' />
-                <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>回首頁</IonLabel>
+                <IonLabel className='ion-text-wrap uiFont'>回首頁</IonLabel>
               </IonItem>
 
               <IonItem button onClick={e => {
@@ -831,7 +828,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
               }}>
                 <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
                 <IonIcon icon={bookmark} slot='start' />
-                <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>新增書籤</IonLabel>
+                <IonLabel className='ion-text-wrap uiFont'>新增書籤</IonLabel>
               </IonItem>
 
               <IonItem button onClick={e => {
@@ -840,7 +837,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
               }}>
                 <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
                 <IonIcon icon={search} slot='start' />
-                <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>搜尋文字</IonLabel>
+                <IonLabel className='ion-text-wrap uiFont'>搜尋文字</IonLabel>
               </IonItem>
               <IonItem button onClick={e => {
                 this.setState({ popover: { show: false, event: null } });
@@ -848,7 +845,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
               }}>
                 <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
                 <IonIcon icon={search} slot='start' />
-                <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>搜尋經書</IonLabel>
+                <IonLabel className='ion-text-wrap uiFont'>搜尋經書</IonLabel>
               </IonItem>
 
               <IonItem button onClick={e => {
@@ -865,7 +862,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
               }}>
                 <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
                 <IonIcon icon={book} slot='start' />
-                <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>查詞典</IonLabel>
+                <IonLabel className='ion-text-wrap uiFont'>查詞典</IonLabel>
               </IonItem>
 
               <IonItem button onClick={e => {
@@ -882,7 +879,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
               }}>
                 <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
                 <IonIcon icon={book} slot='start' />
-                <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>查字典</IonLabel>
+                <IonLabel className='ion-text-wrap uiFont'>查字典</IonLabel>
               </IonItem>
 
               <IonItem button onClick={e => {
@@ -891,7 +888,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
               }}>
                 <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
                 <IonIcon icon={print} slot='start' />
-                <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>列印</IonLabel>
+                <IonLabel className='ion-text-wrap uiFont'>列印</IonLabel>
               </IonItem>
 
               <IonItem button onClick={ev => {
@@ -924,7 +921,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
               }}>
                 <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
                 <IonIcon icon={shareSocial} slot='start' />
-                <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>引用文章</IonLabel>
+                <IonLabel className='ion-text-wrap uiFont'>引用文章</IonLabel>
               </IonItem>
 
               <IonItem button onClick={ev => {
@@ -945,7 +942,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
               }}>
                 <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
                 <IonIcon icon={shareSocial} slot='start' />
-                <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }}>分享此頁</IonLabel>
+                <IonLabel className='ion-text-wrap uiFont'>分享此頁</IonLabel>
               </IonItem>
             </IonList>
           </IonPopover>
@@ -1022,11 +1019,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
           {this.state.fetchError ? Globals.fetchErrorContent : <></>}
 
-          <div id='cbetarEPubView' style={{ width: '100%', height: '100%', userSelect: "text", WebkitUserSelect: "text" }} dangerouslySetInnerHTML={{
-            __html: `
-            ${this.props.rtlVerticalLayout && !this.props.paginated ? epubjsScrollRtlModeVerticalScrollbarBugWokaroundCss : ''}
-            `
-          }}>
+          <div id='cbetarEPubView' style={{ width: '100%', height: '100%', userSelect: "text", WebkitUserSelect: "text" }}>
           </div>
 
           <IonAlert

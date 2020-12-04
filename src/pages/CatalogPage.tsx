@@ -173,7 +173,7 @@ class _CatalogPage extends React.Component<PageProps, State> {
           });
         }}>
           <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
-          <IonLabel className='ion-text-wrap' style={{ fontSize: 'var(--ui-font-size)' }} key={`${catalog.n}label` + index}>
+          <IonLabel className='ion-text-wrap uiFont' key={`${catalog.n}label` + index}>
             {catalog.label}
           </IonLabel>
         </IonItem>

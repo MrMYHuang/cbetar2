@@ -43,6 +43,7 @@ async function getFileFromIndexedDB(fileName: string) {
         const data = req.result;
         if (!data) {
           console.error(`${fileName} loading failed!`);
+          console.error(new Error().stack);
           return fail();
         }
         return ok(data);
@@ -90,12 +91,17 @@ async function fetchJuan(work: string, juan: string, htmlFile: string | null, up
   } catch {
     // Ignore file not found.
   }
-  const bookmarks = (JSON.parse(localStorage.getItem('Settings.json')!) as any).settings.bookmarks as Bookmark[];
-  const bookmark = bookmarks.find((b) => b.fileName === fileName || b.uuid === work);
+  const settingsStr = localStorage.getItem('Settings.json')
 
   let workInfo = new Work({});
+  let bookmark: Bookmark | undefined;
+  if (settingsStr) {
+    const bookmarks: Array<Bookmark> = (JSON.parse(settingsStr) as any).settings.bookmarks;
+    bookmark = bookmarks.find((b) => b.fileName === fileName || b.uuid === work);
+  }
+
   if (htmlStr !== null && bookmark !== undefined && !update) {
-    workInfo = bookmarks.find((b) => b.fileName === fileName || b.uuid === work)!.work!;
+    workInfo = bookmark.work!;
   } else {
     if (htmlFile) {
       const res = await axiosInstance.get(`/${htmlFile}`, {
