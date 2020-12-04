@@ -197,11 +197,7 @@ class _CatalogPage extends React.Component<PageProps, State> {
               <IonIcon icon={arrowBack} slot='icon-only' />
             </IonButton>
 
-            <IonButton hidden={!this.state.fetchError} fill="clear" slot='end' onClick={e => this.fetchData(this.props.match.params.path)}>
-              <IonIcon icon={refreshCircle} slot='icon-only' />
-            </IonButton>
-
-            <IonButton hidden={!this.isTopCatalog} slot='end' onClick={ev => {
+            <IonButton hidden={!this.isTopCatalog} slot='start' onClick={ev => {
               const newTopCatalogsType = (this.props.topCatalogsType + 1) % 2
               this.fetchTopCatalogs(newTopCatalogsType);
               this.props.dispatch({
@@ -211,6 +207,10 @@ class _CatalogPage extends React.Component<PageProps, State> {
               });
             }}>
               <span className='uiFont' style={{ color: 'var(--color)' }}>{this.props.topCatalogsType ? '冊分類' : '部分類'}</span>
+            </IonButton>
+
+            <IonButton hidden={!this.state.fetchError} fill="clear" slot='end' onClick={e => this.fetchData(this.props.match.params.path)}>
+              <IonIcon icon={refreshCircle} slot='icon-only' />
             </IonButton>
 
             <IonButton hidden={this.isTopCatalog} fill="clear" color={this.hasBookmark ? 'warning' : 'primary'} slot='end' onClick={e => this.hasBookmark ? this.delBookmarkHandler() : this.addBookmarkHandler()}>
