@@ -29,7 +29,7 @@ interface Props {
   scrollbarSize: number;
   settings: any;
   showComments: boolean;
-  paginated: Boolean;
+  paginated: boolean;
   rtlVerticalLayout: boolean;
   useFontKai: boolean;
   speechRate: number;
@@ -709,7 +709,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       if (parent?.getAttribute('l')) {
         break;
       }
-    } while((parent = parent?.parentElement));
+    } while ((parent = parent?.parentElement));
     return parent;
   }
 
@@ -736,7 +736,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
             <IonIcon icon={arrowBack} slot='icon-only' />
           </IonButton>
 
-          <IonButton slot='end' onClick={ev => {
+          <IonButton hidden={!this.props.paginated} slot='end' onClick={ev => {
             this.setState({ showJumpPageAlert: true });
           }}>
             <span className='uiFont' style={{ color: 'var(--color)' }}>頁{this.state.currentPage}/{this.state.pageCount}</span>
