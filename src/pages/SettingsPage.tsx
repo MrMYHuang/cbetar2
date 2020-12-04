@@ -289,9 +289,8 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
                 <IonSelectOption value={2}>大</IonSelectOption>
               </IonSelect>
             </IonItem>
-            {/*
             <IonItem>
-              <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. * /}
+              <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={documentText} slot='start' />
               <IonLabel className='ion-text-wrap uiFont'>顯示經文註解、版權</IonLabel>
               <IonToggle slot='end' checked={this.props.showComments} onIonChange={e => {
@@ -303,7 +302,6 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
                 });
               }} />
             </IonItem>
-            */}
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={text} slot='start' />

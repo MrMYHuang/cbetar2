@@ -361,9 +361,6 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         column-gap: unset !important;
         column-width: unset !important;
       }
-      #back {
-        display: none;
-      }
     }
 
     html {
@@ -438,10 +435,10 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       font-size: ${this.props.fontSize}px;
     }
     
-    /* Disable this to workaround epubjs page counting problem.
+    /* Disable this to workaround epubjs page counting problem.*/
     #back, #cbeta-copyright {
       display: ${this.props.showComments ? "block" : "none"};
-    }*/
+    }/**/
     `);
     //await new Promise((ok, fail) => {
     this.epub.writeEPUB(
