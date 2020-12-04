@@ -194,8 +194,6 @@ class _CatalogPage extends React.Component<PageProps, State> {
       <IonPage>
         <IonHeader>
           <IonToolbar>
-            <IonTitle style={{ fontSize: 'var(--ui-font-size)' }}>目錄</IonTitle>
-
             <IonButton hidden={this.isTopCatalog} fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
               <IonIcon icon={arrowBack} slot='icon-only' />
             </IonButton>
@@ -239,7 +237,12 @@ class _CatalogPage extends React.Component<PageProps, State> {
           </IonToolbar>
         </IonHeader>
         <IonContent>
-          {this.state.fetchError ? Globals.fetchErrorContent : list}
+          {this.state.fetchError ? Globals.fetchErrorContent :
+            <>
+              <div className='uiFontX2' style={{ color: 'var(--ion-color-primary)' }}>{this.state.pathLabel}</div>
+              {list}
+            </>
+          }
 
           <SearchAlert
             {...{
