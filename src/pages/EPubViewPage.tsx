@@ -600,9 +600,10 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     const textNodesWalker = this.getAllTextNodes(cbetaHtmlBody);
     let visibleTextNodes: Array<Node> = [];
 
-    let node;
+    let node: Node | null;
     while ((node = textNodesWalker.nextNode()) != null) {
-      if (node.parentElement?.className === 'lb' || node.textContent?.replace(/[\r\n\t ]*/g, '') === '') {
+      if (['t', 'pc', 'gaijiAnchor'].reduce((prev, curr) => prev && curr !== node?.parentElement?.className, true)
+       || node.textContent?.replace(/[\r\n ]*/g, '') === '') {
         continue;
       }
 
@@ -615,7 +616,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     r.setEnd(lastVisiableTextNode, lastVisiableTextNode.length);
     sel.removeAllRanges();
     sel.addRange(r);
-    const allTexts = sel.toString().replace(/[\n]/g, '');
+    const allTexts = sel.toString().replace(/[\n\t]*/g, '');
     sel.removeAllRanges();
 
     let searchTextIndexes: Array<number> = []
