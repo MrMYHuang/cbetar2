@@ -140,7 +140,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         console.log(`Stop work text to speech.`);
       }
     };
-    document.addEventListener("keyup", this.keyListener.bind(this), false);
+    document.addEventListener("keydown", this.keyListener.bind(this), false);
   }
 
   async loadEpubCoverToMemFs() {
@@ -300,6 +300,11 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     // Right/top Key
     if (key === (this.props.rtlVerticalLayout ? 39 : 38)) {
       this.buttonPrev();
+    }
+
+    if (e.code === 'F3' || (e.ctrlKey && e.key.toLowerCase() === 'f')) {
+      e.preventDefault();
+      this.setState({ showSearchTextToast: false, showSearchTextAlert: true });
     }
   };
 
@@ -472,7 +477,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
           scrollbarWidth: Globals.scrollbarSizeIdToValue(this.props.scrollbarSize),
           defaultDirection: this.props.rtlVerticalLayout ? 'rtl' : 'ltr',
         });
-        //this.rendition.on("keyup", this.keyListener.bind(this));
+        //this.rendition.on("keydown", this.keyListener.bind(this));
 
         this.rendition.on("selected", (cfiRange: any, contents: any) => {
           this.epubcfiFromSelectedString = cfiRange;
@@ -519,7 +524,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     const iframes = document.getElementsByTagName('iframe');
     if (iframes.length === 1) {
       this.ePubIframe = iframes[0];
-      this.ePubIframe.contentDocument?.addEventListener('keyup', this.keyListener.bind(this), false);
+      this.ePubIframe.contentDocument?.addEventListener('keydown', this.keyListener.bind(this), false);
       (this.ePubIframe!.contentWindow! as any).loadTwKaiFont = loadTwKaiFont;
       (this.ePubIframe!.contentWindow! as any).loadTwKaiFont();
       (this.ePubIframe!.contentWindow! as any).addCbetaLineBreaks = addCbetaLineBreaks;
@@ -528,7 +533,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       /*
       this.ePubIframe.contentWindow?.addEventListener('unload', () => {
         console.log('iframe unloaded!');
-        this.ePubIframe?.contentDocument?.removeEventListener('keyup', this.keyListener.bind(this), false);
+        this.ePubIframe?.contentDocument?.removeEventListener('keydown', this.keyListener.bind(this), false);
       });*/
     } else if (iframes.length > 1) {
       alert('Error! This component locates ePub iframe by the only iframe.');
