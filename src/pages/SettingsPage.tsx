@@ -170,7 +170,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={download} slot='start' />
-              <IonLabel className='ion-text-wrap uiFont'>App設定</IonLabel>
+              <IonLabel className='ion-text-wrap uiFont'>App設定與書籤</IonLabel>
               <IonButton size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={async (e) => {
                 const settingsJsonUri = `data:text/json;charset=utf-8,${encodeURIComponent(localStorage.getItem('Settings.json') || '')}`;
                 const a = document.createElement('a');
