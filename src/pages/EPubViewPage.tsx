@@ -29,6 +29,10 @@ function addCbetaLineBreaks(this: any) {
   });
 }
 
+function addSwpiedEvents(this: Window) {
+  require('swiped-events-myh/src/add')(this.window, this.document);
+}
+
 interface Props {
   dispatch: Function;
   bookmarks: [Bookmark];
@@ -525,11 +529,39 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     if (iframes.length === 1) {
       this.ePubIframe = iframes[0];
       this.ePubIframe.contentDocument?.addEventListener('keydown', this.keyListener.bind(this), false);
-      (this.ePubIframe!.contentWindow! as any).loadTwKaiFont = loadTwKaiFont;
-      (this.ePubIframe!.contentWindow! as any).loadTwKaiFont();
-      (this.ePubIframe!.contentWindow! as any).addCbetaLineBreaks = addCbetaLineBreaks;
-      (this.ePubIframe!.contentWindow! as any).addCbetaLineBreaks();
-      
+      const ePubIframeWindow = this.ePubIframe!.contentWindow! as any;
+      ePubIframeWindow.loadTwKaiFont = loadTwKaiFont;
+      ePubIframeWindow.loadTwKaiFont();
+      ePubIframeWindow.addCbetaLineBreaks = addCbetaLineBreaks;
+      ePubIframeWindow.addCbetaLineBreaks();
+      ePubIframeWindow.addSwpiedEvents = addSwpiedEvents;
+      ePubIframeWindow.addSwpiedEvents();
+      ePubIframeWindow.document.addEventListener('swiped', (e: any) => {
+        if (!this.props.paginated) {
+          return;
+        }
+        
+        if (this.props.rtlVerticalLayout) {
+          switch (e.detail.dir) {
+            case 'left':
+              this.pagePrev();
+              break;
+            case 'right':
+              this.pageNext();
+              break;
+          }
+        } else {
+          switch (e.detail.dir) {
+            case 'down':
+              this.pagePrev();
+              break;
+            case 'up':
+              this.pageNext();
+              break;
+          }
+        }
+      });
+
       /*
       this.ePubIframe.contentWindow?.addEventListener('unload', () => {
         console.log('iframe unloaded!');
