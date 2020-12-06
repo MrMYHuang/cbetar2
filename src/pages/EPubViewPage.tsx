@@ -596,28 +596,20 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     this.searchTextRanges = [];
     this.showedSearchTextIndex = 0;
     const cbetaHtmlBody = this.ePubIframe!.contentDocument!.getElementById('body');
-    const sel = this.ePubIframe!.contentWindow!.getSelection()!;
     const textNodesWalker = this.getAllTextNodes(cbetaHtmlBody);
     let visibleTextNodes: Array<Node> = [];
 
     let node: Node | null;
     while ((node = textNodesWalker.nextNode()) != null) {
-      if (['t', 'pc', 'gaijiAnchor'].reduce((prev, curr) => prev && curr !== node?.parentElement?.className, true)
-       || node.textContent?.replace(/[\r\n ]*/g, '') === '') {
+      let node2 = node!;
+      if (['t', 'pc', 'gaijiAnchor'].reduce((prev, curr) => prev && curr !== node2.parentElement?.className, true)) {
         continue;
       }
 
       visibleTextNodes.push(node);
     }
 
-    const r = new Range();
-    r.setStart(visibleTextNodes[0], 0);
-    const lastVisiableTextNode = visibleTextNodes[visibleTextNodes.length - 1] as any;
-    r.setEnd(lastVisiableTextNode, lastVisiableTextNode.length);
-    sel.removeAllRanges();
-    sel.addRange(r);
-    const allTexts = sel.toString().replace(/[\n\t]*/g, '');
-    sel.removeAllRanges();
+    const allTexts = visibleTextNodes.map((n) => n.textContent).reduce((prev, curr) => `${prev}${curr}`, '')!;
 
     let searchTextIndexes: Array<number> = []
 
