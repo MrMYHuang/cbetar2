@@ -392,9 +392,12 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       Fortunately, we can set the line height based on the same font size as below.
       */
       line-height: 1.2;
+      // Disable browser's swipe to forward / backward page navigation.
+      overscroll-behavior-x: none;
     }
 
     body {
+      overscroll-behavior-x: none;
       color: ${getComputedStyle(document.body).getPropertyValue('--ion-text-color')};
       background: ${getComputedStyle(document.body).getPropertyValue('--ion-background-color')};
     }

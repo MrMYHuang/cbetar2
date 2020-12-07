@@ -9,6 +9,10 @@
     --text-font-size: 32px;
 }
 
+html, body {
+    overscroll-behavior-x: none;
+}
+
 body {
     --ion-color-primary: #428cff;
 }
