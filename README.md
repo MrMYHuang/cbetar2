@@ -158,6 +158,9 @@ https://www.microsoft.com/store/apps/9P6TDQX46JJL
 8. Safari不支援列印經文。
 
 ## <a id='history'>版本歷史</a>
+* 4.8.0:
+  * [改善] 經文頁選擇文字後，Android Chrome, iOS Safari的彈出式選單容易遮到一些按鈕的問題。
+  * [新增] 經文頁、佛學詞典頁、萌典字典頁複製文字功能(取代Android Chrome, iOS Safari彈出式選單複製文字功能)。
 * 4.7.1:
   * [改善] 滑動容易執行瀏覽器換頁，而非經文換頁的問題。
 * 4.7.0:

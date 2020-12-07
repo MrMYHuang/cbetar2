@@ -9,7 +9,7 @@
     --text-font-size: 32px;
 }
 
-html, body {
+body {
     overscroll-behavior-x: none;
 }
 

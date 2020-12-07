@@ -113,6 +113,7 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
     this.registrationNew = null;
     // ----- Initializing UI settings -----
     // Apply the theme setting.
+    window.oncontextmenu = Globals.disableAndroidChromeCallout;
     document.body.classList.forEach((val) => document.body.classList.remove(val));
     document.body.classList.toggle(`theme${state.settings.theme}`, true);
     Globals.updateCssVars(state.settings);

@@ -7,7 +7,7 @@ import * as uuid from 'uuid';
 import queryString from 'query-string';
 import './EPubViewPage.css';
 import Globals from '../Globals';
-import { bookmark, arrowBack, home, search, ellipsisHorizontal, ellipsisVertical, arrowForward, musicalNotes, stopCircle, book, shareSocial, print, refreshCircle } from 'ionicons/icons';
+import { bookmark, arrowBack, home, search, ellipsisHorizontal, ellipsisVertical, arrowForward, musicalNotes, stopCircle, book, shareSocial, print, refreshCircle, copy } from 'ionicons/icons';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
 import { Work } from '../models/Work';
 import SearchAlert from '../components/SearchAlert';
@@ -363,6 +363,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       margin: 0.5in;
     }
 
+    /* For double side printing for book bundling. */
     @page :left {
       margin-right: 1in;
     }
@@ -392,14 +393,13 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       Fortunately, we can set the line height based on the same font size as below.
       */
       line-height: 1.2;
-      // Disable browser's swipe to forward / backward page navigation.
-      overscroll-behavior-x: none;
     }
 
     body {
-      overscroll-behavior-x: none;
       color: ${getComputedStyle(document.body).getPropertyValue('--ion-text-color')};
       background: ${getComputedStyle(document.body).getPropertyValue('--ion-background-color')};
+      /* Disable browser's swipe to forward / backward page navigation. */
+      overscroll-behavior-x: none;
     }
 
     @font-face {
@@ -533,6 +533,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       this.ePubIframe = iframes[0];
       this.ePubIframe.contentDocument?.addEventListener('keydown', this.keyListener.bind(this), false);
       const ePubIframeWindow = this.ePubIframe!.contentWindow! as any;
+      ePubIframeWindow.window.oncontextmenu = Globals.disableAndroidChromeCallout;
       ePubIframeWindow.loadTwKaiFont = loadTwKaiFont;
       ePubIframeWindow.loadTwKaiFont();
       ePubIframeWindow.addCbetaLineBreaks = addCbetaLineBreaks;
@@ -543,7 +544,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         if (!this.props.paginated) {
           return;
         }
-        
+
         if (this.props.rtlVerticalLayout) {
           switch (e.detail.dir) {
             case 'left':
@@ -837,6 +838,13 @@ class _EPubViewPage extends React.Component<PageProps, State> {
             <IonIcon icon={this.state.speechState === SpeechState.SPEAKING ? stopCircle : musicalNotes} slot='icon-only' />
           </IonButton>
 
+          <IonButton fill="clear" slot='end' onClick={e => {
+            this.setState({ popover: { show: false, event: null } });
+            this.addBookmarkHandler();
+          }}>
+            <IonIcon icon={bookmark} slot='start' />
+          </IonButton>
+
           <IonButton fill="clear" slot='end' onClick={e => this.setState({ popover: { show: true, event: e.nativeEvent } })}>
             <IonIcon ios={ellipsisHorizontal} md={ellipsisVertical} slot='icon-only' />
           </IonButton>
@@ -867,11 +875,13 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
               <IonItem button onClick={e => {
                 this.setState({ popover: { show: false, event: null } });
-                this.addBookmarkHandler();
+                const selectedText = this.getSelectedString();
+                Globals.copyToClipboard(selectedText);
+                this.setState({ showToast: true, toastMessage: `複製文字成功` });
               }}>
                 <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
-                <IonIcon icon={bookmark} slot='start' />
-                <IonLabel className='ion-text-wrap uiFont'>新增書籤</IonLabel>
+                <IonIcon icon={copy} slot='start' />
+                <IonLabel className='ion-text-wrap uiFont'>複製文字</IonLabel>
               </IonItem>
 
               <IonItem button onClick={e => {
@@ -997,20 +1007,20 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     let navButtons = (<>
       <IonFab vertical='center' horizontal='start' slot='fixed'>
         <IonFabButton style={{ opacity: fabButtonOpacity }} onClick={e => this.props.rtlVerticalLayout ? this.buttonNext() : this.buttonPrev()}
-          onTouchStart={e => {
+          onPointerDown={e => {
             e.currentTarget.style.setProperty('opacity', '1');
           }}
-          onMouseOver={e => {
-            // Disable mouse events for iOS. Because a touch stat gesture can trigger onMouseOver, but a touch-end gesture can't trigger onMouseLeave.
+          onPointerEnter={e => {
+            // Disable mouse events for iOS. Because a touch start gesture can trigger onMouseOver, but a touch-end gesture can't trigger onMouseLeave.
             if (Globals.isTouchDevice()) {
               return;
             }
             e.currentTarget.style.setProperty('opacity', '1');
           }}
-          onTouchEnd={e => {
+          onPointerUp={e => {
             e.currentTarget.style.setProperty('opacity', `${fabButtonOpacity}`);
           }}
-          onMouseLeave={e => {
+          onPointerLeave={e => {
             if (Globals.isTouchDevice()) {
               return;
             }
@@ -1020,19 +1030,20 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         </IonFabButton>
       </IonFab>
       <IonFab vertical='center' horizontal='end' slot='fixed'>
-        <IonFabButton style={{ opacity: fabButtonOpacity }} onClick={e => this.props.rtlVerticalLayout ? this.buttonPrev() : this.buttonNext()} onTouchStart={e => {
-          e.currentTarget.style.setProperty('opacity', '1');
-        }}
-          onMouseOver={e => {
+        <IonFabButton style={{ opacity: fabButtonOpacity }} onClick={e => this.props.rtlVerticalLayout ? this.buttonPrev() : this.buttonNext()}
+          onPointerDown={e => {
+            e.currentTarget.style.setProperty('opacity', '1');
+          }}
+          onPointerEnter={e => {
             if (Globals.isTouchDevice()) {
               return;
             }
             e.currentTarget.style.setProperty('opacity', '1');
           }}
-          onTouchEnd={e => {
+          onPointerUp={e => {
             e.currentTarget.style.setProperty('opacity', `${fabButtonOpacity}`);
           }}
-          onMouseLeave={e => {
+          onPointerLeave={e => {
             if (Globals.isTouchDevice()) {
               return;
             }

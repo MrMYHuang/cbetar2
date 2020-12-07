@@ -169,6 +169,16 @@ function disableAppLog() {
   console.error = consoleError;
 }
 
+function disableAndroidChromeCallout(event: any) {
+  event.preventDefault();
+  event.stopPropagation();
+  return false;
+}
+
+function copyToClipboard(text: string) {
+  navigator.clipboard && navigator.clipboard.writeText(text);
+}
+
 export default {
   storeFile: 'Settings.json',
   fontSizeNorm: 24,
@@ -243,4 +253,6 @@ export default {
   saveFileToIndexedDB,
   removeFileFromIndexedDB,
   removeElementsByClassName,
+  disableAndroidChromeCallout,
+  copyToClipboard,
 };

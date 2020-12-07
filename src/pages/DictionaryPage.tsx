@@ -1,9 +1,9 @@
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonToolbar, withIonLifeCycle, IonButton, IonIcon, IonSearchbar, IonAlert, IonPopover, IonList, IonItem, IonLabel, IonLoading } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonToolbar, withIonLifeCycle, IonButton, IonIcon, IonSearchbar, IonAlert, IonPopover, IonList, IonItem, IonLabel, IonLoading, IonToast } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Globals from '../Globals';
-import { home, arrowBack, shareSocial, book, ellipsisHorizontal, ellipsisVertical, refreshCircle } from 'ionicons/icons';
+import { home, arrowBack, shareSocial, book, ellipsisHorizontal, ellipsisVertical, refreshCircle, copy } from 'ionicons/icons';
 import { DictItem } from '../models/DictItem';
 
 interface Props {
@@ -18,11 +18,13 @@ interface PageProps extends Props, RouteComponentProps<{
 
 interface State {
   keyword: string;
-  fetchError: boolean;
   searches: Array<DictItem>;
   showNoSelectedTextAlert: boolean;
   popover: any;
   isLoading: boolean;
+  fetchError: boolean;
+  showToast: boolean;
+  toastMessage: string;
 }
 
 class _DictionaryPage extends React.Component<PageProps, State> {
@@ -31,7 +33,6 @@ class _DictionaryPage extends React.Component<PageProps, State> {
     super(props);
     this.state = {
       keyword: '',
-      fetchError: false,
       searches: [],
       showNoSelectedTextAlert: false,
       popover: {
@@ -39,6 +40,9 @@ class _DictionaryPage extends React.Component<PageProps, State> {
         event: null,
       },
       isLoading: false,
+      fetchError: false,
+      showToast: false,
+      toastMessage: '',
     }
     this.searchBarRef = React.createRef<HTMLIonSearchbarElement>();
   }
@@ -165,6 +169,16 @@ class _DictionaryPage extends React.Component<PageProps, State> {
 
                 <IonItem button onClick={e => {
                   this.setState({ popover: { show: false, event: null } });
+                  Globals.copyToClipboard(this.selectedTextBeforeIonPopover);
+                  this.setState({ showToast: true, toastMessage: `複製文字成功` });
+                }}>
+                  <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
+                  <IonIcon icon={copy} slot='start' />
+                  <IonLabel className='ion-text-wrap uiFont'>複製文字</IonLabel>
+                </IonItem>
+
+                <IonItem button onClick={e => {
+                  this.setState({ popover: { show: false, event: null } });
                   if (this.selectedTextBeforeIonPopover === '') {
                     this.setState({ showNoSelectedTextAlert: true });
                     return;
@@ -251,6 +265,14 @@ class _DictionaryPage extends React.Component<PageProps, State> {
             isOpen={this.state.isLoading}
             onDidDismiss={() => this.setState({ isLoading: false })}
             message={'載入中...'}
+          />
+
+          <IonToast
+            cssClass='uiFont'
+            isOpen={this.state.showToast}
+            onDidDismiss={() => this.setState({ showToast: false })}
+            message={this.state.toastMessage}
+            duration={2000}
           />
         </IonContent>
       </IonPage>
