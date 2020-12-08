@@ -175,6 +175,18 @@ function disableAndroidChromeCallout(event: any) {
   return false;
 }
 
+// Workable but imperfect.
+function disableIosSafariCallout(this: Window, event: any) {
+  const s = this.getSelection();
+  if ((s?.rangeCount || 0) > 0) {
+    const r = s?.getRangeAt(0);
+    s?.removeAllRanges();
+    setTimeout(() => {
+      s?.addRange(r!);
+    }, 50);
+  }
+}
+
 function copyToClipboard(text: string) {
   navigator.clipboard && navigator.clipboard.writeText(text);
 }
@@ -254,5 +266,6 @@ export default {
   removeFileFromIndexedDB,
   removeElementsByClassName,
   disableAndroidChromeCallout,
+  disableIosSafariCallout,
   copyToClipboard,
 };

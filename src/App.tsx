@@ -9,6 +9,7 @@ import {
   IonTabButton,
   IonTabs,
   IonAlert,
+  isPlatform,
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { connect, Provider } from 'react-redux';
@@ -113,7 +114,11 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
     this.registrationNew = null;
     // ----- Initializing UI settings -----
     // Apply the theme setting.
-    window.oncontextmenu = Globals.disableAndroidChromeCallout;
+    if (isPlatform('android')) {
+      window.oncontextmenu = Globals.disableAndroidChromeCallout;
+    } else if (isPlatform('ios')) {
+      document.ontouchend = Globals.disableIosSafariCallout.bind(window);
+    }
     document.body.classList.forEach((val) => document.body.classList.remove(val));
     document.body.classList.toggle(`theme${state.settings.theme}`, true);
     Globals.updateCssVars(state.settings);

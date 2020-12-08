@@ -1,6 +1,6 @@
 //import * as fs from 'fs';
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton, withIonLifeCycle, IonIcon, IonAlert, IonPopover, IonList, IonItem, IonLabel, IonFab, IonFabButton, IonToast, IonLoading } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton, withIonLifeCycle, IonIcon, IonAlert, IonPopover, IonList, IonItem, IonLabel, IonFab, IonFabButton, IonToast, IonLoading, isPlatform } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as uuid from 'uuid';
@@ -533,25 +533,17 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       this.ePubIframe = iframes[0];
       this.ePubIframe.contentDocument?.addEventListener('keydown', this.keyListener.bind(this), false);
       const ePubIframeWindow = this.ePubIframe!.contentWindow! as any;
-      ePubIframeWindow.window.oncontextmenu = Globals.disableAndroidChromeCallout;
+      if (isPlatform('android')) {
+        ePubIframeWindow.window.oncontextmenu = Globals.disableAndroidChromeCallout;
+      } else if (isPlatform('ios')) {
+        (ePubIframeWindow as Window).document.ontouchend = Globals.disableIosSafariCallout.bind(ePubIframeWindow);
+      }
       ePubIframeWindow.loadTwKaiFont = loadTwKaiFont;
       ePubIframeWindow.loadTwKaiFont();
       ePubIframeWindow.addCbetaLineBreaks = addCbetaLineBreaks;
       ePubIframeWindow.addCbetaLineBreaks();
       ePubIframeWindow.addSwpiedEvents = addSwpiedEvents;
       ePubIframeWindow.addSwpiedEvents();
-      let lastRange: Range | undefined;
-      (ePubIframeWindow as Window).document.ontouchend = (e: any) => {
-        const s = (ePubIframeWindow as Window).getSelection();
-        const r = s?.getRangeAt(0);
-        if (r?.toString() !== lastRange?.toString()) {
-          s?.removeAllRanges();
-          lastRange = r;
-          setTimeout(() => {
-            s?.addRange(r!);
-          }, 50);
-        }
-      }
       ePubIframeWindow.document.addEventListener('swiped', (e: any) => {
         if (!this.props.paginated) {
           return;

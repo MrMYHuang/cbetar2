@@ -140,10 +140,12 @@ class _DictionaryPage extends React.Component<PageProps, State> {
               <IonIcon icon={shareSocial} slot='icon-only' />
             </IonButton>
 
-            <IonButton fill="clear" slot='end' onClick={e => {
+            <IonButton fill="clear" slot='end' onPointerDown={e => {
               // Because after showing IonPopover, document.getSelection() changes.
               // Thus, we must capture the selected text in advance.
               this.selectedTextBeforeIonPopover = this.getSelectedString();
+            }}
+            onClick={e => {
               this.setState({ popover: { show: true, event: e.nativeEvent } });
             }}>
               <IonIcon ios={ellipsisHorizontal} md={ellipsisVertical} slot='icon-only' />
