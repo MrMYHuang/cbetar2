@@ -1011,19 +1011,15 @@ class _EPubViewPage extends React.Component<PageProps, State> {
             e.currentTarget.style.setProperty('opacity', '1');
           }}
           onPointerEnter={e => {
-            // Disable mouse events for iOS. Because a touch start gesture can trigger onMouseOver, but a touch-end gesture can't trigger onMouseLeave.
-            if (Globals.isTouchDevice()) {
-              return;
-            }
             e.currentTarget.style.setProperty('opacity', '1');
           }}
           onPointerUp={e => {
-            e.currentTarget.style.setProperty('opacity', `${fabButtonOpacity}`);
+            // Hide button on pointer up for touch devices.
+            if (Globals.isTouchDevice()) {
+              e.currentTarget.style.setProperty('opacity', `${fabButtonOpacity}`);
+            }
           }}
           onPointerLeave={e => {
-            if (Globals.isTouchDevice()) {
-              return;
-            }
             e.currentTarget.style.setProperty('opacity', `${fabButtonOpacity}`);
           }}>
           <IonIcon icon={arrowBack} />
@@ -1035,18 +1031,14 @@ class _EPubViewPage extends React.Component<PageProps, State> {
             e.currentTarget.style.setProperty('opacity', '1');
           }}
           onPointerEnter={e => {
-            if (Globals.isTouchDevice()) {
-              return;
-            }
             e.currentTarget.style.setProperty('opacity', '1');
           }}
           onPointerUp={e => {
-            e.currentTarget.style.setProperty('opacity', `${fabButtonOpacity}`);
+            if (Globals.isTouchDevice()) {
+              e.currentTarget.style.setProperty('opacity', `${fabButtonOpacity}`);
+            }
           }}
           onPointerLeave={e => {
-            if (Globals.isTouchDevice()) {
-              return;
-            }
             e.currentTarget.style.setProperty('opacity', `${fabButtonOpacity}`);
           }}>
           <IonIcon icon={arrowForward} />
