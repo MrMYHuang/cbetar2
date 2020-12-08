@@ -540,6 +540,18 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       ePubIframeWindow.addCbetaLineBreaks();
       ePubIframeWindow.addSwpiedEvents = addSwpiedEvents;
       ePubIframeWindow.addSwpiedEvents();
+      let lastRange: Range | undefined;
+      (ePubIframeWindow as Window).document.ontouchend = (e: any) => {
+        const s = (ePubIframeWindow as Window).getSelection();
+        const r = s?.getRangeAt(0);
+        if (r?.toString() !== lastRange?.toString()) {
+          s?.removeAllRanges();
+          lastRange = r;
+          setTimeout(() => {
+            s?.addRange(r!);
+          }, 50);
+        }
+      }
       ePubIframeWindow.document.addEventListener('swiped', (e: any) => {
         if (!this.props.paginated) {
           return;
