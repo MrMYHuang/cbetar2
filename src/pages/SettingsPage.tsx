@@ -3,7 +3,7 @@ import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem,
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import Globals from '../Globals';
-import { helpCircle, text, documentText, refreshCircle, musicalNotes, colorPalette, shareSocial, bug, download } from 'ionicons/icons';
+import { helpCircle, text, documentText, refreshCircle, musicalNotes, colorPalette, shareSocial, bug, download, print } from 'ionicons/icons';
 import './SettingsPage.css';
 import PackageInfos from '../../package.json';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
@@ -25,6 +25,7 @@ interface Props {
   paginated: boolean;
   rtlVerticalLayout: boolean;
   useFontKai: boolean;
+  printStyle: number;
   speechRate: number;
   bookmarks: [Bookmark];
 }
@@ -350,6 +351,33 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
             </IonItem>
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
+              <IonIcon icon={print} slot='start' />
+              <IonLabel className='ion-text-wrap uiFont'>經文列印樣式</IonLabel>
+              <IonSelect slot='end'
+                value={this.props.printStyle}
+                style={{ fontSize: 'var(--ui-font-size)' }}
+                interface='popover'
+                interfaceOptions={{ cssClass: 'cbetar2themes' }}
+                onIonChange={e => {
+                  const value = e.detail.value;
+                  this.props.dispatch({
+                    type: "SET_KEY_VAL",
+                    key: 'printStyle',
+                    val: value,
+                  });
+                  document.body.classList.forEach((val) => {
+                    if (/print/.test(val)) {
+                      document.body.classList.remove(val);
+                    }
+                  });
+                  document.body.classList.toggle(`print${value}`, true);
+                }}>
+                <IonSelectOption className='blackWhite printVar' value={0}>白底黑字</IonSelectOption>
+                <IonSelectOption className='manuscript printVar' value={1}>抄經本</IonSelectOption>
+              </IonSelect>
+            </IonItem>
+            <IonItem>
+              <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={musicalNotes} slot='start' />
               <div className="contentBlock">
                 <div style={{ flexDirection: "column" }}>
@@ -428,6 +456,7 @@ const mapStateToProps = (state: any /*, ownProps*/) => {
     scrollbarSize: state.settings.scrollbarSize,
     useFontKai: state.settings.useFontKai,
     uiFontSize: state.settings.uiFontSize,
+    printStyle: state.settings.printStyle,
     speechRate: state.settings.speechRate,
     bookmarks: state.settings.bookmarks,
   }

@@ -57,3 +57,19 @@
     --background: #b7b2af;
     --ion-background-color: #b7b2af;
 }
+
+.printVar {    
+    --color: var(--print-text-color);
+    --background-color: var(--print-background);
+    --ion-background-color: var(--print-background);
+}
+
+.print0, .blackWhite {
+    --print-text-color: black;
+    --print-background: white;
+}
+
+.print1, .manuscript {
+    --print-text-color: #C0C0C0;
+    --print-background: white;
+}

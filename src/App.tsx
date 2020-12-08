@@ -121,6 +121,7 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
     }
     document.body.classList.forEach((val) => document.body.classList.remove(val));
     document.body.classList.toggle(`theme${state.settings.theme}`, true);
+    document.body.classList.toggle(`print${state.settings.printStyle}`, true);
     Globals.updateCssVars(state.settings);
 
     this.state = {

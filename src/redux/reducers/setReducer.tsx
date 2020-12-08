@@ -77,8 +77,8 @@ export default function reducer(state = {
       }
       // Setting default values.
       // version is the setting file version.
-      var keys = ['version', 'topCatalogsType', 'hasAppLog', 'theme', 'paginated', 'rtlVerticalLayout', 'scrollbarSize', 'useFontKai', 'fontSize', 'uiFontSize', 'showComments', 'speechRate', 'bookmarks'];
-      var vals = [1, 0, 1, 0, 1, 1, 2, 1, 32, 24, 0, 0.8, []];
+      var keys = ['version', 'topCatalogsType', 'hasAppLog', 'theme', 'paginated', 'rtlVerticalLayout', 'scrollbarSize', 'useFontKai', 'fontSize', 'uiFontSize', 'showComments', 'printStyle', 'speechRate', 'bookmarks'];
+      var vals = [1, 0, 1, 0, 1, 1, 2, 1, 32, 24, 0, 0, 0.8, []];
       for (let k = 0; k < keys.length; k++) {
         if (newSettings[keys[k]] === undefined) {
           newSettings[keys[k]] = vals[k];

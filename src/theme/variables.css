@@ -7,6 +7,8 @@
     --scrollbar-size: 20px;
     --ui-font-size: 24px;
     --text-font-size: 32px;
+    --print-text-color: black;
+    --print-background: white;
 }
 
 body {

@@ -374,8 +374,8 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
     @media print {
       body {
-        color: black !important;
-        background: white !important;
+        color: ${getComputedStyle(document.body).getPropertyValue('--print-text-color')} !important;
+        background: ${getComputedStyle(document.body).getPropertyValue('--print-background')} !important;
         padding: 0 !important;
         width: 100% !important;
         height: 100% !important;
