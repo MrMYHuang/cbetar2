@@ -45,9 +45,9 @@ CBETA電子佛典閱讀器2(非官方)，使用CBETA API存取電子佛經，支
 * 佈景主題切換
   1. 支援多種佈景主題。
   
-  <img src='./docs/images/theme0.png' width='50%' />
-  <img src='./docs/images/theme1.png' width='50%' />
-  <img src='./docs/images/theme2.png' width='50%' />
+  <img src='./docs/images/theme0.png' width='30%' />
+  <img src='./docs/images/theme1.png' width='30%' />
+  <img src='./docs/images/theme2.png' width='30%' />
 
 * 經文分頁
   1. 經文可調整成單頁或分頁模式。單頁模式，使用滑動方式閱讀經文。分頁模式，可使用鍵盤方向鍵或螢幕方向鍵切換經文頁。
@@ -69,6 +69,8 @@ CBETA電子佛典閱讀器2(非官方)，使用CBETA API存取電子佛經，支
   3. 調整：可至設定頁調整字型大小、橫/直排文字、黑體/楷書體，再作列印。
   4. 設定頁可設定"經文列印樣式"，目前支援"黑底白字"、"抄經本"。
   5. 已在Chrome 87, Edge Chrome 87測過可用。Safari不支援!
+
+  <img src='./docs/images/PrintManuscript.png' width='90%' />
 
 * App設定匯出/匯入
   1. 此功能位於設定頁。
