@@ -1,5 +1,5 @@
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonToolbar, IonList, IonItem, IonLabel, IonButton, IonIcon, withIonLifeCycle, IonLoading } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonToolbar, IonList, IonItem, IonLabel, IonButton, IonIcon, withIonLifeCycle, IonLoading, IonSelectOption, IonSelect } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import './CatalogPage.css';
@@ -10,10 +10,21 @@ import { bookmark, arrowBack, home, search, shareSocial, refreshCircle } from 'i
 import SearchAlert from '../components/SearchAlert';
 import queryString from 'query-string';
 
+const famousJuans = [
+  { title: '般若波羅蜜多心經', url: '/catalog/juan/T0251/1' },
+  { title: '金剛般若波羅蜜經', url: '/catalog/juan/T0235/1' },
+  { title: '佛說阿彌陀經', url: '/catalog/juan/T0366/1' },
+  { title: '藥師琉璃光如來本願功德經', url: '/catalog/juan/T0450/1' },
+  { title: '佛說觀彌勒菩薩上生兜率天經', url: '/catalog/juan/T0452/1' },
+  { title: '地藏菩薩本願經', url: '/catalog/juan/T0412/1' },
+  { title: '妙法蓮華經觀世音菩薩普門品經', url: '/catalog/juan/T0262/7' },
+  { title: '大佛頂如來密因修證了義諸菩薩萬行首楞嚴經卷第一', url: '/catalog/juan/T0945/1' },
+  { title: '佛說法滅盡經', url: '/catalog/juan/T0396/1' },
+];
+
 interface Props {
   dispatch: Function;
   bookmarks: [Bookmark];
-  topCatalogsType: number;
 }
 
 interface PageProps extends Props, RouteComponentProps<{
@@ -23,6 +34,7 @@ interface PageProps extends Props, RouteComponentProps<{
 }> { }
 
 interface State {
+  topCatalogsType: number;
   showSearchAlert: boolean;
   fetchError: boolean;
   catalogs: Array<Catalog>;
@@ -33,7 +45,14 @@ interface State {
 class _CatalogPage extends React.Component<PageProps, State> {
   constructor(props: any) {
     super(props);
+    let topCatalogsType = 0;
+    switch (this.props.match.url) {
+      case '/catalog': topCatalogsType = 0; break;
+      case '/catalog/volumes': topCatalogsType = 1; break;
+      case '/catalog/famous': topCatalogsType = 2; break;
+    }
     this.state = {
+      topCatalogsType: topCatalogsType,
       fetchError: false,
       catalogs: [],
       pathLabel: '',
@@ -67,7 +86,7 @@ class _CatalogPage extends React.Component<PageProps, State> {
     let pathLabel = '';
 
     if (path == null) {
-      return this.fetchTopCatalogs(this.props.topCatalogsType);
+      return this.fetchTopCatalogs(this.state.topCatalogsType);
     } else {
       try {
         const res = await Globals.axiosInstance.get(`/catalog_entry?q=${path}`, {
@@ -117,7 +136,7 @@ class _CatalogPage extends React.Component<PageProps, State> {
   }
 
   get isTopCatalog() {
-    return this.props.match.url === '/catalog';
+    return ['/catalog', '/catalog/volumes', '/catalog/famous'].reduce((prev, curr) => prev || curr === this.props.match.url, false);
   }
 
   parentPath(path: string) {
@@ -182,11 +201,28 @@ class _CatalogPage extends React.Component<PageProps, State> {
     return rows;
   }
 
+  getFamousJuanRows() {
+    let rows = Array<object>();
+    famousJuans.forEach(({ title, url }, i) => {
+      rows.push(
+        <IonItem key={`famousJuanItem_` + i} button={true} onClick={async event => {
+          this.props.history.push(url);
+        }}>
+          <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
+          <IonLabel className='ion-text-wrap uiFont' key={`famousItemLabel_` + i}>
+            {title}
+          </IonLabel>
+        </IonItem>
+      );
+    });
+    return rows;
+  }
+
   render() {
     //console.log(`${this.props.match.url} render`)
 
     let list = <IonList>
-      {this.getRows()}
+      {this.state.topCatalogsType === 2 ? this.getFamousJuanRows() : this.getRows()}
     </IonList>
 
     return (
@@ -197,17 +233,27 @@ class _CatalogPage extends React.Component<PageProps, State> {
               <IonIcon icon={arrowBack} slot='icon-only' />
             </IonButton>
 
-            <IonButton hidden={!this.isTopCatalog} slot='start' onClick={ev => {
-              const newTopCatalogsType = (this.props.topCatalogsType + 1) % 2
-              this.fetchTopCatalogs(newTopCatalogsType);
-              this.props.dispatch({
-                type: "SET_KEY_VAL",
-                key: 'topCatalogsType',
-                val: newTopCatalogsType
-              });
-            }}>
-              <span className='uiFont' style={{ color: 'var(--color)' }}>{this.props.topCatalogsType ? '冊分類' : '部分類'}</span>
-            </IonButton>
+            <IonSelect hidden={!this.isTopCatalog} slot='start'
+              value={this.state.topCatalogsType}
+              style={{ fontSize: 'var(--ui-font-size)' }}
+              interface='popover'
+              interfaceOptions={{ cssClass: 'cbetar2themes' }}
+              onIonChange={e => {
+                const value = e.detail.value;
+                let nextPage = '';
+                switch (value) {
+                  case 0: nextPage = '/catalog'; break;
+                  case 1: nextPage = '/catalog/volumes'; break;
+                  case 2: nextPage = '/catalog/famous'; break;
+                }
+                if (this.props.match.url !== nextPage) {
+                  this.props.history.push(nextPage);
+                }
+              }}>
+              <IonSelectOption value={0}>部分類</IonSelectOption>
+              <IonSelectOption value={1}>冊分類</IonSelectOption>
+              <IonSelectOption value={2}>知名經典</IonSelectOption>
+            </IonSelect>
 
             <IonButton hidden={!this.state.fetchError} fill="clear" slot='end' onClick={e => this.fetchData(this.props.match.params.path)}>
               <IonIcon icon={refreshCircle} slot='icon-only' />
@@ -254,6 +300,7 @@ class _CatalogPage extends React.Component<PageProps, State> {
             }}
           />
 
+          <div style={{ fontSize: 'var(--ui-font-size)', textAlign: 'center' }}><a href="https://github.com/MrMYHuang/cbetar2#bookmark" target="_new">書籤新增說明</a></div>
           <div style={{ fontSize: 'var(--ui-font-size)', textAlign: 'center' }}><a href="https://github.com/MrMYHuang/cbetar2#search" target="_new">搜尋經書教學</a></div>
 
           <IonLoading
@@ -263,7 +310,7 @@ class _CatalogPage extends React.Component<PageProps, State> {
             message={'載入中...'}
           />
         </IonContent>
-      </IonPage>
+      </IonPage >
     );
   }
 };
@@ -271,7 +318,6 @@ class _CatalogPage extends React.Component<PageProps, State> {
 const mapStateToProps = (state: any /*, ownProps*/) => {
   return {
     bookmarks: state.settings.bookmarks,
-    topCatalogsType: state.settings.topCatalogsType,
     state: state,
   }
 };
