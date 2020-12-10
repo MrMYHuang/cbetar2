@@ -234,16 +234,13 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
               <Route path="/:tab(catalog)/webview/:work/:path/:label" render={(props: any) => <EPubViewPage {...props} />} exact={true} />
               <Route path="/:tab(catalog)/juan/:work/:path/" render={(props: any) => <EPubViewPage {...props} />} exact={true} />
               {/* The following route is for backward compatibility. */}
-              <Route path="/:tab(catalog)/work/:path/:label" component={(props: any) => <WorkPage key={props.match.url} {...props} />} exact={true} />
-              <Route path="/:tab(catalog)/work/:path" component={(props: any) => <WorkPage key={props.match.url} {...props} />} exact={true} />
+              <Route path="/:tab(catalog)/work/:path/:label" render={(props: any) => <WorkPage {...props} />} exact={true} />
+              <Route path="/:tab(catalog)/work/:path" render={(props: any) => <WorkPage {...props} />} exact={true} />
               <Route path="/:tab(catalog)/search/:keyword" render={props => <SearchPage {...props} />} exact={true} />
               <Route path="/:tab(catalog)/fulltextsearch/:keyword" render={props => <FullTextSearchPage {...props} />} exact={true} />
               {/* The following route is for backward compatibility. */}
-              <Route path="/:tab(catalog)/catalog/:path/:label" component={(props: any) => <CatalogPage key={props.match.url} {...props} />} exact={true} />
-              <Route path="/:tab(catalog)/catalog/:path" component={(props: any) => <CatalogPage key={props.match.url} {...props} />} exact={true} />
-              <Route path="/:tab(catalog)/volumes" component={(props: any) => <CatalogPage key={props.match.url} {...props} />} exact={true} />
-              <Route path="/:tab(catalog)/famous" component={(props: any) => <CatalogPage key={props.match.url} {...props} />} exact={true} />
-              <Route path="/:tab(catalog)" component={(props: any) => <CatalogPage key={props.match.url} {...props} />} exact={true} />
+              <Route path="/:tab(catalog)/catalog/:path/:label" render={(props: any) => <CatalogPage {...props} />} exact={true} />
+              <Route path="/:tab(catalog)/:type()?/:path?" render={(props: any) => <CatalogPage {...props} />} exact={true} />
               <Route path="/:tab(bookmarks)" component={(props: any) => <BookmarkPage {...props} />} exact={true} />
               <Route path={`/:tab(dictionary)/search/:keyword?`} component={(props: any) => <DictionaryPage {...props} />} exact={true} />
               <Route path={`/:tab(dictionary)/searchWord/:keyword?`} component={(props: any) => <WordDictionaryPage {...props} />} exact={true} />

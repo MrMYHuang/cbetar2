@@ -42,11 +42,11 @@ class _WorkPage extends React.Component<PageProps, State> {
   }
 
   ionViewWillEnter() {
-    //console.log( 'view will enter' );
+    //console.log( `${this.props.match.params} will enter` );
+    this.fetchWork(this.props.match.params.path);
   }
 
   componentDidMount() {
-    this.fetchWork(this.props.match.params.path);
   }
 
   async fetchWork(path: string) {

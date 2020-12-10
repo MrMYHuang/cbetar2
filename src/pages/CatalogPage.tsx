@@ -45,14 +45,8 @@ interface State {
 class _CatalogPage extends React.Component<PageProps, State> {
   constructor(props: any) {
     super(props);
-    let topCatalogsType = 0;
-    switch (this.props.match.url) {
-      case '/catalog': topCatalogsType = 0; break;
-      case '/catalog/volumes': topCatalogsType = 1; break;
-      case '/catalog/famous': topCatalogsType = 2; break;
-    }
     this.state = {
-      topCatalogsType: topCatalogsType,
+      topCatalogsType: 0,
       fetchError: false,
       catalogs: [],
       pathLabel: '',
@@ -62,27 +56,47 @@ class _CatalogPage extends React.Component<PageProps, State> {
   }
 
   ionViewWillEnter() {
-    //console.log(this.props.match.url);
+    console.log(`${this.props.match.url} will enter.`);
+    let topCatalogsType = 0;
+    switch (this.props.match.url) {
+      case '/catalog': topCatalogsType = 0; break;
+      case '/catalog/catalog/volumes': topCatalogsType = 1; break;
+      case '/catalog/catalog/famous': topCatalogsType = 2; break;
+    }
+    this.setState({ topCatalogsType: topCatalogsType });
+    //console.log(this.props.history.length);
+    this.fetchData(this.props.match.params.path);
+  }
+
+  /* * /
+  ionViewDidEnter() {
+    console.log(`${this.props.match.url} did enter.`);
+    //console.log(this.props.history.length);
+  }
+
+  ionViewWillLeave() {
+    console.log(`${this.props.match.url} will leave.`);
+    //console.log(this.props.history.length);
+  }
+
+  ionViewDidLeave() {
+    console.log(`${this.props.match.url} did leave.`);
     //console.log(this.props.history.length);
   }
 
   componentWillUnmount() {
-    //console.log(`${this.props.match.url} unmount`);
+    console.log(`${this.props.match.url} unmount`);
   }
 
-  /*
-  componentWillReceiveProps(nextProps){
+
+  componentWillReceiveProps(nextProps: any) {
     console.log(`route changed: ${nextProps.match.url}`)
- }*/
+  }
 
   componentDidMount() {
     console.log(`did mount: ${this.props.match.url}`);
-    this.fetchData(this.props.match.params.path);
   }
-
-  /*
-  componentWillUnmount() {
-  }*/
+  /**/
 
   async fetchData(path: string) {
     //console.log('fetch');
@@ -90,8 +104,8 @@ class _CatalogPage extends React.Component<PageProps, State> {
     let catalogs = new Array<Catalog>();
     let pathLabel = '';
 
-    if (path == null) {
-      return this.fetchTopCatalogs(this.state.topCatalogsType);
+    if (this.props.match.params.path == null ||  this.props.match.params.path === 'volumes') {
+      return this.fetchTopCatalogs(+(this.props.match.params.path === 'volumes'));
     } else {
       try {
         const res = await Globals.axiosInstance.get(`/catalog_entry?q=${path}`, {
@@ -141,7 +155,7 @@ class _CatalogPage extends React.Component<PageProps, State> {
   }
 
   get isTopCatalog() {
-    return ['/catalog', '/catalog/volumes', '/catalog/famous'].reduce((prev, curr) => prev || curr === this.props.match.url, false);
+    return ['/catalog', '/catalog/catalog/volumes', '/catalog/catalog/famous'].reduce((prev, curr) => prev || curr === this.props.match.url, false);
   }
 
   parentPath(path: string) {
@@ -248,7 +262,7 @@ class _CatalogPage extends React.Component<PageProps, State> {
                 let nextPage = '';
                 switch (value) {
                   case 0: nextPage = '/catalog'; break;
-                  case 1: nextPage = '/catalog/volumes'; break;
+                  case 1: nextPage = '/catalog/catalog/volumes'; break;
                   case 2: nextPage = '/catalog/famous'; break;
                 }
                 if (this.props.match.url !== nextPage) {
