@@ -234,11 +234,11 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
                   document.body.classList.forEach((val) => document.body.classList.remove(val));
                   document.body.classList.toggle(`theme${value}`, true);
                 }}>
-                <IonSelectOption className='cbeta' value={0}>CBETA</IonSelectOption>
-                <IonSelectOption className='dark' value={1}>暗色</IonSelectOption>
-                <IonSelectOption className='light' value={2}>亮色</IonSelectOption>
-                <IonSelectOption className='oldPaper' value={3}>舊書</IonSelectOption>
-                <IonSelectOption className='marble' value={4}>大理石</IonSelectOption>
+                <IonSelectOption className='uiFont cbeta' value={0}>CBETA</IonSelectOption>
+                <IonSelectOption className='uiFont dark' value={1}>暗色</IonSelectOption>
+                <IonSelectOption className='uiFont light' value={2}>亮色</IonSelectOption>
+                <IonSelectOption className='uiFont oldPaper' value={3}>舊書</IonSelectOption>
+                <IonSelectOption className='uiFont marble' value={4}>大理石</IonSelectOption>
               </IonSelect>
             </IonItem>
             <IonItem>
@@ -285,9 +285,9 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
                   });
                   Globals.updateCssVars(this.props.settings);
                 }}>
-                <IonSelectOption value={0}>無</IonSelectOption>
-                <IonSelectOption value={1}>中</IonSelectOption>
-                <IonSelectOption value={2}>大</IonSelectOption>
+                <IonSelectOption className='uiFont' value={0}>無</IonSelectOption>
+                <IonSelectOption className='uiFont' value={1}>中</IonSelectOption>
+                <IonSelectOption className='uiFont' value={2}>大</IonSelectOption>
               </IonSelect>
             </IonItem>
             <IonItem>
@@ -372,8 +372,8 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
                   });
                   document.body.classList.toggle(`print${value}`, true);
                 }}>
-                <IonSelectOption className='blackWhite printVar' value={0}>白底黑字</IonSelectOption>
-                <IonSelectOption className='manuscript printVar' value={1}>抄經本</IonSelectOption>
+                <IonSelectOption className='uiFont blackWhite printVar' value={0}>白底黑字</IonSelectOption>
+                <IonSelectOption className='uiFont manuscript printVar' value={1}>抄經本</IonSelectOption>
               </IonSelect>
             </IonItem>
             <IonItem>

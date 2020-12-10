@@ -250,9 +250,9 @@ class _CatalogPage extends React.Component<PageProps, State> {
                   this.props.history.push(nextPage);
                 }
               }}>
-              <IonSelectOption value={0}>部分類</IonSelectOption>
-              <IonSelectOption value={1}>冊分類</IonSelectOption>
-              <IonSelectOption value={2}>知名經典</IonSelectOption>
+              <IonSelectOption className='uiFont' value={0}>部分類</IonSelectOption>
+              <IonSelectOption className='uiFont' value={1}>冊分類</IonSelectOption>
+              <IonSelectOption className='uiFont' value={2}>知名經典</IonSelectOption>
             </IonSelect>
 
             <IonButton hidden={!this.state.fetchError} fill="clear" slot='end' onClick={e => this.fetchData(this.props.match.params.path)}>
