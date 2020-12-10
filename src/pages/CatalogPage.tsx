@@ -29,8 +29,8 @@ interface Props {
 
 interface PageProps extends Props, RouteComponentProps<{
   tab: string;
+  type: string;
   path: string;
-  label: string;
 }> { }
 
 interface State {
@@ -57,15 +57,20 @@ class _CatalogPage extends React.Component<PageProps, State> {
 
   ionViewWillEnter() {
     console.log(`${this.props.match.url} will enter.`);
-    let topCatalogsType = 0;
+    let topCatalogsType = -1;
     switch (this.props.match.url) {
       case '/catalog': topCatalogsType = 0; break;
-      case '/catalog/catalog/volumes': topCatalogsType = 1; break;
-      case '/catalog/catalog/famous': topCatalogsType = 2; break;
+      case '/catalog/volumes': topCatalogsType = 1; break;
+      case '/catalog/famous': topCatalogsType = 2; break;
+      default: topCatalogsType = -1; break;
     }
     this.setState({ topCatalogsType: topCatalogsType });
     //console.log(this.props.history.length);
     this.fetchData(this.props.match.params.path);
+  }
+
+  componentDidMount() {
+    console.log(`did mount: ${this.props.match.url}`);
   }
 
   /* * /
@@ -93,9 +98,6 @@ class _CatalogPage extends React.Component<PageProps, State> {
     console.log(`route changed: ${nextProps.match.url}`)
   }
 
-  componentDidMount() {
-    console.log(`did mount: ${this.props.match.url}`);
-  }
   /**/
 
   async fetchData(path: string) {
@@ -104,34 +106,39 @@ class _CatalogPage extends React.Component<PageProps, State> {
     let catalogs = new Array<Catalog>();
     let pathLabel = '';
 
-    if (this.props.match.params.path == null ||  this.props.match.params.path === 'volumes') {
-      return this.fetchTopCatalogs(+(this.props.match.params.path === 'volumes'));
-    } else {
-      try {
-        const res = await Globals.axiosInstance.get(`/catalog_entry?q=${path}`, {
-          responseType: 'arraybuffer',
-        });
-        const obj = JSON.parse(new TextDecoder().decode(res.data)) as any;
-        const data = obj.results as [any];
-        catalogs = data.map((json) => new Catalog(json));
+    switch (this.state.topCatalogsType) {
+      case 0:
+      case 1:
+        return this.fetchTopCatalogs(this.state.topCatalogsType);
+      case -1:
+        try {
+          const res = await Globals.axiosInstance.get(`/catalog_entry?q=${path}`, {
+            responseType: 'arraybuffer',
+          });
+          const obj = JSON.parse(new TextDecoder().decode(res.data)) as any;
+          const data = obj.results as [any];
+          catalogs = data.map((json) => new Catalog(json));
 
-        const parentPath = this.parentPath(path);
-        // path is not a top catalog.
-        if (parentPath !== '') {
-          pathLabel = obj.label;
-        } else {
-          const topCatalogsByCatLabel = Globals.topCatalogsByCat[path];
-          pathLabel = (topCatalogsByCatLabel !== undefined) ? topCatalogsByCatLabel : Globals.topCatalogsByVol[path];
+          const parentPath = this.parentPath(path);
+          // path is not a top catalog.
+          if (parentPath !== '') {
+            pathLabel = obj.label;
+          } else {
+            const topCatalogsByCatLabel = Globals.topCatalogsByCat[path];
+            pathLabel = (topCatalogsByCatLabel !== undefined) ? topCatalogsByCatLabel : Globals.topCatalogsByVol[path];
+          }
+
+          this.setState({ fetchError: false, isLoading: false, catalogs: catalogs, pathLabel });
+          return true;
+        } catch (e) {
+          console.error(e);
+          console.error(new Error().stack);
+          this.setState({ fetchError: true, isLoading: false, pathLabel: '' });
+          return false;
         }
-
-        this.setState({ fetchError: false, isLoading: false, catalogs: catalogs, pathLabel });
-        return true;
-      } catch (e) {
-        console.error(e);
-        console.error(new Error().stack);
-        this.setState({ fetchError: true, isLoading: false });
-        return false;
-      }
+      case 2:
+        this.setState({ fetchError: false, isLoading: false, pathLabel: '' });
+        break;
     }
   }
 
@@ -150,12 +157,12 @@ class _CatalogPage extends React.Component<PageProps, State> {
       };
       catalogs.push(catalog);
     });
-    this.setState({ fetchError: false, isLoading: false, catalogs: catalogs });
+    this.setState({ fetchError: false, isLoading: false, catalogs: catalogs, pathLabel: '' });
     return true;
   }
 
   get isTopCatalog() {
-    return ['/catalog', '/catalog/catalog/volumes', '/catalog/catalog/famous'].reduce((prev, curr) => prev || curr === this.props.match.url, false);
+    return ['/catalog', '/catalog/volumes', '/catalog/famous'].reduce((prev, curr) => prev || curr === this.props.match.url, false);
   }
 
   parentPath(path: string) {
@@ -262,8 +269,9 @@ class _CatalogPage extends React.Component<PageProps, State> {
                 let nextPage = '';
                 switch (value) {
                   case 0: nextPage = '/catalog'; break;
-                  case 1: nextPage = '/catalog/catalog/volumes'; break;
+                  case 1: nextPage = '/catalog/volumes'; break;
                   case 2: nextPage = '/catalog/famous'; break;
+                  case -1: nextPage = this.props.match.url; break;
                 }
                 if (this.props.match.url !== nextPage) {
                   this.props.history.push(nextPage);

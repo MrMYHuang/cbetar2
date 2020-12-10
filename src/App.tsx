@@ -240,11 +240,11 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
               <Route path="/:tab(catalog)/fulltextsearch/:keyword" render={props => <FullTextSearchPage {...props} />} exact={true} />
               {/* The following route is for backward compatibility. */}
               <Route path="/:tab(catalog)/catalog/:path/:label" render={(props: any) => <CatalogPage {...props} />} exact={true} />
-              <Route path="/:tab(catalog)/:type()?/:path?" render={(props: any) => <CatalogPage {...props} />} exact={true} />
-              <Route path="/:tab(bookmarks)" component={(props: any) => <BookmarkPage {...props} />} exact={true} />
-              <Route path={`/:tab(dictionary)/search/:keyword?`} component={(props: any) => <DictionaryPage {...props} />} exact={true} />
-              <Route path={`/:tab(dictionary)/searchWord/:keyword?`} component={(props: any) => <WordDictionaryPage {...props} />} exact={true} />
-              <Route path="/settings" component={SettingsPage} />
+              <Route path="/:tab(catalog)/:type(catalog|volumes|famous)?/:path?" render={(props: any) => <CatalogPage {...props} />} exact={true} />
+              <Route path="/:tab(bookmarks)" render={(props: any) => <BookmarkPage {...props} />} exact={true} />
+              <Route path={`/:tab(dictionary)/search/:keyword?`} render={(props: any) => <DictionaryPage {...props} />} exact={true} />
+              <Route path={`/:tab(dictionary)/searchWord/:keyword?`} render={(props: any) => <WordDictionaryPage {...props} />} exact={true} />
+              <Route path="/settings" render={(props: any) => <SettingsPage {...props} />} />
               <Route path="/" render={() => { return this.routeByQueryString(); }} exact={true} />
             </IonRouterOutlet>
             <IonTabBar slot="bottom">
@@ -254,7 +254,7 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
               <IonTabButton tab="catalog" href="/catalog">
                 <IonIcon icon={library} />
               </IonTabButton>
-              <IonTabButton tab="dictionay" href="/dictionary/search/">
+              <IonTabButton tab="dictionay" href="/dictionary/search">
                 <IonIcon icon={book} />
               </IonTabButton>
               <IonTabButton tab="settings" href="/settings">

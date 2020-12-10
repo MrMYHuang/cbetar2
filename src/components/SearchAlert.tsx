@@ -10,7 +10,6 @@ interface Props {
 interface PageProps extends Props, RouteComponentProps<{
   tab: string;
   path: string;
-  label: string;
 }> { }
 
 class SearchAlert extends React.Component<PageProps> {

@@ -3,7 +3,7 @@ import { IonContent, IonHeader, IonPage, IonToolbar, withIonLifeCycle, IonButton
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Globals from '../Globals';
-import { home, shareSocial, book, ellipsisHorizontal, ellipsisVertical, refreshCircle, copy } from 'ionicons/icons';
+import { home, shareSocial, book, ellipsisHorizontal, ellipsisVertical, refreshCircle, copy, arrowBack } from 'ionicons/icons';
 import { DictItem } from '../models/DictItem';
 
 interface Props {
@@ -48,15 +48,16 @@ class _DictionaryPage extends React.Component<PageProps, State> {
   }
 
   ionViewWillEnter() {
-    //console.log( 'view will enter' );
-    //console.log(this.props.match.url);
-    //console.log(this.props.history.length);
+    //console.log(`${this.props.match.url} will enter`);
+    this.setState({ keyword: this.props.match.params.keyword });
     if (this.props.match.params.keyword) {
-      this.setState({ keyword: this.props.match.params.keyword });
       this.lookupDict(this.props.match.params.keyword);
+    } else {
+      this.setState({ searches: [] });      
     }
   }
 
+  /*
   componentDidMount() {
     //console.log(`did mount: ${this.props.match.url}`);
   }
@@ -67,9 +68,10 @@ class _DictionaryPage extends React.Component<PageProps, State> {
 
   ionViewWillLeave() {
   }
+  */
 
   get isTopPage() {
-    return this.props.match.url === `/${this.props.match.params.tab}`;
+    return this.props.match.params.keyword === undefined;
   }
 
   async lookupDict(keyword: string) {
@@ -121,8 +123,12 @@ class _DictionaryPage extends React.Component<PageProps, State> {
       <IonPage>
         <IonHeader>
           <IonToolbar>
+            <IonButton hidden={this.isTopPage} fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
+              <IonIcon icon={arrowBack} slot='icon-only' />
+            </IonButton>
+
             <IonButton slot='start' onClick={ev => {
-              this.props.history.replace(`/dictionary/searchWord/`);
+              this.props.history.push(`/dictionary/searchWord`);
             }}>
               <span className='uiFont' style={{ color: 'var(--color)' }}>佛學詞典</span>
             </IonButton>
@@ -224,7 +230,7 @@ class _DictionaryPage extends React.Component<PageProps, State> {
               const value = ev.target.value;
               this.setState({ keyword: value })
               if (ev.key === 'Enter') {
-                this.props.history.replace(`/dictionary/search/${value}`);
+                this.props.history.push(`/dictionary/search/${value}`);
               }
             }} />
           {/*

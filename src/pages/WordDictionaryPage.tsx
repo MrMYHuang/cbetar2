@@ -4,7 +4,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as uuid from 'uuid';
 import Globals from '../Globals';
-import { home, shareSocial, book, ellipsisHorizontal, ellipsisVertical, refreshCircle, copy } from 'ionicons/icons';
+import { home, shareSocial, book, ellipsisHorizontal, ellipsisVertical, refreshCircle, copy, arrowBack } from 'ionicons/icons';
 import { DictWordDefItem, DictWordItem, WordType } from '../models/DictWordItem';
 
 interface Props {
@@ -140,10 +140,12 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
       <IonPage>
         <IonHeader>
           <IonToolbar>
+            <IonButton fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
+              <IonIcon icon={arrowBack} slot='icon-only' />
+            </IonButton>
+
             <IonButton slot='start' onClick={ev => {
-              this.props.history.push({
-                pathname: `/dictionary/`,
-              });
+              this.props.history.push(`/dictionary/search`);
             }}>
               <span className='uiFont' style={{ color: 'var(--color)' }}>萌典字典</span>
             </IonButton>
@@ -211,7 +213,7 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
                     return;
                   }
 
-                  this.props.history.replace(`/dictionary/search/${this.selectedTextBeforeIonPopover}`);
+                  this.props.history.push(`/dictionary/search/${this.selectedTextBeforeIonPopover}`);
                 }}>
                   <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
                   <IonIcon icon={book} slot='start' />
