@@ -62,7 +62,12 @@ class _CatalogPage extends React.Component<PageProps, State> {
   }
 
   ionViewWillEnter() {
-    console.log(`view will enter: ${this.props.match.url}`);
+    //console.log(this.props.match.url);
+    //console.log(this.props.history.length);
+  }
+
+  componentWillUnmount() {
+    //console.log(`${this.props.match.url} unmount`);
   }
 
   /*
@@ -310,7 +315,7 @@ class _CatalogPage extends React.Component<PageProps, State> {
             message={'載入中...'}
           />
         </IonContent>
-      </IonPage >
+      </IonPage>
     );
   }
 };

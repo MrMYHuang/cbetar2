@@ -38,6 +38,9 @@ class _SearchPage extends React.Component<PageProps, State> {
 
   ionViewWillEnter() {
     //console.log( 'view will enter' );
+  }
+
+  componentDidMount() {
     this.search(this.props.match.params.keyword);
   }
 

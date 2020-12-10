@@ -3,7 +3,7 @@ import { IonContent, IonHeader, IonPage, IonToolbar, withIonLifeCycle, IonButton
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Globals from '../Globals';
-import { home, arrowBack, shareSocial, book, ellipsisHorizontal, ellipsisVertical, refreshCircle, copy } from 'ionicons/icons';
+import { home, shareSocial, book, ellipsisHorizontal, ellipsisVertical, refreshCircle, copy } from 'ionicons/icons';
 import { DictItem } from '../models/DictItem';
 
 interface Props {
@@ -49,10 +49,20 @@ class _DictionaryPage extends React.Component<PageProps, State> {
 
   ionViewWillEnter() {
     //console.log( 'view will enter' );
+    //console.log(this.props.match.url);
+    //console.log(this.props.history.length);
     if (this.props.match.params.keyword) {
       this.setState({ keyword: this.props.match.params.keyword });
       this.lookupDict(this.props.match.params.keyword);
     }
+  }
+
+  componentDidMount() {
+    //console.log(`did mount: ${this.props.match.url}`);
+  }
+  
+  componentWillUnmount() {
+    console.log(`${this.props.match.url} unmount`);
   }
 
   ionViewWillLeave() {
@@ -111,14 +121,8 @@ class _DictionaryPage extends React.Component<PageProps, State> {
       <IonPage>
         <IonHeader>
           <IonToolbar>
-            <IonButton hidden={this.isTopPage} fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
-              <IonIcon icon={arrowBack} slot='icon-only' />
-            </IonButton>
-
             <IonButton slot='start' onClick={ev => {
-              this.props.history.push({
-                pathname: `/dictionary/searchWord/`,
-              });
+              this.props.history.replace(`/dictionary/searchWord/`);
             }}>
               <span className='uiFont' style={{ color: 'var(--color)' }}>佛學詞典</span>
             </IonButton>
@@ -220,9 +224,7 @@ class _DictionaryPage extends React.Component<PageProps, State> {
               const value = ev.target.value;
               this.setState({ keyword: value })
               if (ev.key === 'Enter') {
-                this.props.history.push(`/dictionary/search/${value}`);
-              } else if (value === '') {
-                this.setState({ searches: [] });
+                this.props.history.replace(`/dictionary/search/${value}`);
               }
             }} />
           {/*

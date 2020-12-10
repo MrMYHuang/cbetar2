@@ -1,5 +1,5 @@
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonLabel, withIonLifeCycle, IonButton, IonIcon, IonLoading } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonLabel, withIonLifeCycle, IonButton, IonIcon, IonLoading, IonInfiniteScroll, IonInfiniteScrollContent } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Globals from '../Globals';
@@ -21,6 +21,7 @@ interface PageProps extends Props, RouteComponentProps<{
 interface State {
   showSearchAlert: boolean;
   searches: Array<FullTextSearch>;
+  isScrollOn: boolean;
   isLoading: boolean;
   fetchError: boolean;
 }
@@ -31,6 +32,7 @@ class _SearchPage extends React.Component<PageProps, State> {
     this.state = {
       showSearchAlert: false,
       searches: [],
+      isScrollOn: false,
       isLoading: false,
       fetchError: false,
     }
@@ -38,24 +40,35 @@ class _SearchPage extends React.Component<PageProps, State> {
 
   ionViewWillEnter() {
     //console.log( 'view will enter' );
+  }
+
+  componentDidMount() {
     this.search(this.props.match.params.keyword);
   }
 
+  page = 0;
+  rows = 20;
   async search(keyword: string) {
     this.setState({ isLoading: true });
     try {
-      const res = await Globals.axiosInstance.get(`/sphinx?q=${keyword}`, {
+      console.log(`Loading page ${this.page}`);
+
+      const res = await Globals.axiosInstance.get(`/sphinx?q=${keyword}&start=${this.page}&rows=${this.rows}`, {
         responseType: 'arraybuffer',
       });
       const data = JSON.parse(new TextDecoder().decode(res.data)).results as [any];
       const searches = data.map((json) => new FullTextSearch(json));
 
-      this.setState({ fetchError: false, isLoading: false, searches: searches });
+      this.setState({ fetchError: false, isLoading: false, searches: [...this.state.searches, ...searches],
+        isScrollOn: searches.length === this.rows,
+      });
+
+      this.page += 1;
       return true;
     } catch (e) {
       console.error(e);
       console.error(new Error().stack);
-      this.setState({ fetchError: true, isLoading: false });
+      this.setState({ fetchError: true, isLoading: false, isScrollOn: false });
       return false;
     }
   }
@@ -105,7 +118,7 @@ class _SearchPage extends React.Component<PageProps, State> {
             <IonButton fill="clear" slot='end' onClick={e => this.props.history.push(`/${this.props.match.params.tab}`)}>
               <IonIcon icon={home} slot='icon-only' />
             </IonButton>
-            
+
             <IonButton fill="clear" slot='end' onClick={e => this.setState({ showSearchAlert: true })}>
               <IonIcon icon={search} slot='icon-only' />
             </IonButton>
@@ -130,6 +143,16 @@ class _SearchPage extends React.Component<PageProps, State> {
               Globals.fetchErrorContent :
               <IonList>
                 {rows}
+                <IonInfiniteScroll threshold="100px"
+                  disabled={!this.state.isScrollOn}
+                  onIonInfinite={(ev: CustomEvent<void>) => {
+                    this.search(this.props.match.params.keyword);
+                    (ev.target as HTMLIonInfiniteScrollElement).complete();
+                  }}>
+                  <IonInfiniteScrollContent
+                    loadingText="載入中...">
+                  </IonInfiniteScrollContent>
+                </IonInfiniteScroll>
               </IonList>
           }
 

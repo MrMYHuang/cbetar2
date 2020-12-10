@@ -440,7 +440,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
             />
           </IonList>
         </IonContent>
-      </IonPage >
+      </IonPage>
     );
   }
 };

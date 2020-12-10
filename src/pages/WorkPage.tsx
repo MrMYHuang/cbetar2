@@ -43,6 +43,9 @@ class _WorkPage extends React.Component<PageProps, State> {
 
   ionViewWillEnter() {
     //console.log( 'view will enter' );
+  }
+
+  componentDidMount() {
     this.fetchWork(this.props.match.params.path);
   }
 

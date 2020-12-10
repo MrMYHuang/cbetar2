@@ -4,7 +4,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as uuid from 'uuid';
 import Globals from '../Globals';
-import { home, arrowBack, shareSocial, book, ellipsisHorizontal, ellipsisVertical, refreshCircle, copy } from 'ionicons/icons';
+import { home, shareSocial, book, ellipsisHorizontal, ellipsisVertical, refreshCircle, copy } from 'ionicons/icons';
 import { DictWordDefItem, DictWordItem, WordType } from '../models/DictWordItem';
 
 interface Props {
@@ -50,10 +50,16 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
 
   ionViewWillEnter() {
     //console.log( 'view will enter' );
+    //console.log(this.props.match.url);
+    //console.log(this.props.history.length);
     if (this.props.match.params.keyword) {
       this.setState({ keyword: this.props.match.params.keyword });
       this.lookupDict(this.props.match.params.keyword);
     }
+  }
+
+  componentDidMount() {
+    //console.log(`did mount: ${this.props.match.url}`);
   }
 
   ionViewWillLeave() {
@@ -134,10 +140,6 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
       <IonPage>
         <IonHeader>
           <IonToolbar>
-            <IonButton hidden={this.isTopPage} fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
-              <IonIcon icon={arrowBack} slot='icon-only' />
-            </IonButton>
-
             <IonButton slot='start' onClick={ev => {
               this.props.history.push({
                 pathname: `/dictionary/`,
@@ -209,9 +211,7 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
                     return;
                   }
 
-                  this.props.history.push({
-                    pathname: `/dictionary/search/${this.selectedTextBeforeIonPopover}`,
-                  });
+                  this.props.history.replace(`/dictionary/search/${this.selectedTextBeforeIonPopover}`);
                 }}>
                   <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
                   <IonIcon icon={book} slot='start' />
@@ -244,8 +244,6 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
               this.setState({ keyword: value })
               if (ev.key === 'Enter') {
                 this.props.history.push(`/dictionary/searchWord/${value}`);
-              } else if (value === '') {
-                this.setState({ search: null });
               }
             }} />
           {/*
