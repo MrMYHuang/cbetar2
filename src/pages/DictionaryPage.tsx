@@ -145,9 +145,9 @@ class _DictionaryPage extends React.Component<PageProps, State> {
               // Thus, we must capture the selected text in advance.
               this.selectedTextBeforeIonPopover = this.getSelectedString();
             }}
-            onClick={e => {
-              this.setState({ popover: { show: true, event: e.nativeEvent } });
-            }}>
+              onClick={e => {
+                this.setState({ popover: { show: true, event: e.nativeEvent } });
+              }}>
               <IonIcon ios={ellipsisHorizontal} md={ellipsisVertical} slot='icon-only' />
             </IonButton>
 
@@ -216,17 +216,13 @@ class _DictionaryPage extends React.Component<PageProps, State> {
         </IonHeader>
         <IonContent>
           <IonSearchbar ref={this.searchBarRef} placeholder='請輸入字詞，再按鍵盤Enter鍵' value={this.state.keyword}
-            onIonChange={ev => {
-              this.setState({ keyword: ev.detail.value! })
-            }}
-            onIonClear={ev => {
-              this.setState({ searches: [] });
-            }}
-            onKeyUp={ev => {
+            onKeyUp={(ev: any) => {
+              const value = ev.target.value;
+              this.setState({ keyword: value })
               if (ev.key === 'Enter') {
-                this.props.history.push({
-                  pathname: `/dictionary/search/${this.state.keyword}`,
-                });
+                this.props.history.push(`/dictionary/search/${value}`);
+              } else if (value === '') {
+                this.setState({ searches: [] });
               }
             }} />
           {/*
