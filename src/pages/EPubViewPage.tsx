@@ -266,6 +266,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     if (this.props.paginated && this.state.currentPage > 1) {
       this.rendition?.prev(n);
       this.setState({ currentPage: this.state.currentPage - n });
+      this.getIFrameTextsInView();
     }
   }
 
@@ -273,6 +274,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     if (this.props.paginated && this.state.currentPage < this.state.pageCount) {
       this.rendition?.next(n);
       this.setState({ currentPage: this.state.currentPage + n });
+      this.getIFrameTextsInView();
     }
   }
 
@@ -542,6 +544,10 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       ePubIframeWindow.loadTwKaiFont();
       ePubIframeWindow.addCbetaLineBreaks = addCbetaLineBreaks;
       ePubIframeWindow.addCbetaLineBreaks();
+      ePubIframeWindow.findVisibleTextNodes = this.findVisibleTextNodes.bind(ePubIframeWindow);
+      ePubIframeWindow.findVisibleTextNodes(ePubIframeWindow);
+      ePubIframeWindow.setTextNodesObservers = this.setTextNodesObservers.bind(ePubIframeWindow);
+      ePubIframeWindow.setTextNodesObservers(ePubIframeWindow);
       ePubIframeWindow.addSwpiedEvents = addSwpiedEvents;
       ePubIframeWindow.addSwpiedEvents();
       ePubIframeWindow.document.addEventListener('swiped', (e: any) => {
@@ -630,26 +636,38 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     return walker;
   }
 
-  searchTextRanges: Array<Range> = [];
-
-  findSearchTextRanges(searchText: string) {
-    this.searchTextRanges = [];
-    this.showedSearchTextIndex = 0;
-    const cbetaHtmlBody = this.ePubIframe!.contentDocument!.getElementById('body');
-    const textNodesWalker = this.getAllTextNodes(cbetaHtmlBody);
-    let visibleTextNodes: Array<Node> = [];
+  visibleTextNodes: Array<Node> = [];
+  findVisibleTextNodes(window: Window) {
+    const window2 = window as any;
+    this.visibleTextNodes = [];
+    window2.textNodeParentElements = [];
+    window2.textNodeParentElementsInView = [];
+    const cbetaHtmlBody = window.document.getElementById('body')!;
+    const textNodesWalker = window.document.createTreeWalker(cbetaHtmlBody, NodeFilter.SHOW_TEXT);
 
     let node: Node | null;
     while ((node = textNodesWalker.nextNode()) != null) {
-      let node2 = node!;
+      const node2 = node!;
       if (['t', 'pc', 'gaijiAnchor'].reduce((prev, curr) => prev && curr !== node2.parentElement?.className, true)) {
         continue;
       }
 
-      visibleTextNodes.push(node);
-    }
+      const nodeParentElement = node2.parentElement;
+      if (nodeParentElement?.getAttribute('l') && !window2.textNodeParentElements.includes(nodeParentElement)) {
+        window2.textNodeParentElements.push(nodeParentElement);
+        window2.textNodeParentElementsInView.push(false);
+      }
 
-    const allTexts = visibleTextNodes.map((n) => n.textContent).reduce((prev, curr) => `${prev}${curr}`, '')!;
+      this.visibleTextNodes.push(node);
+    }
+  }
+
+  searchTextRanges: Array<Range> = [];
+  findSearchTextRanges(searchText: string) {
+    this.searchTextRanges = [];
+    this.showedSearchTextIndex = 0;
+
+    const allTexts = this.visibleTextNodes.map((n) => n.textContent).reduce((prev, curr) => `${prev}${curr}`, '')!;
 
     let searchTextIndexes: Array<number> = []
 
@@ -672,8 +690,8 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     let searchTextNodes: Array<any> = [];
     let i = 0;
     searchTextIndex = searchTextIndexes.shift()!;
-    for (let n = 0; n < visibleTextNodes.length; n++) {
-      const visibleTextNode = visibleTextNodes[n];
+    for (let n = 0; n < this.visibleTextNodes.length; n++) {
+      const visibleTextNode = this.visibleTextNodes[n];
       for (let c = 0; c < (visibleTextNode as any).length; c++) {
         if (i === searchTextIndex) {
           searchTextNodes.push({ node: visibleTextNode, offset: c });
@@ -765,6 +783,43 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       }
     } while ((parent = parent?.parentElement));
     return parent;
+  }
+
+  observer: any;
+  setTextNodesObservers(window: Window) {
+    const window2 = window as any;
+    const container = document.getElementsByClassName('epub-container')[0];
+    console.log(container)
+    //const container = window.document.getElementsByTagName('body')[0];
+    //const container = this.ePubIframe!.contentWindow!.document.documentElement;
+    const options = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 1
+    };
+
+    this.observer = new IntersectionObserver((entries, observer) => {
+      console.log('observing')
+      for (let i = 0; i !== entries.length; i++) {
+        const entry = entries[i];
+        const element = entry.target as HTMLElement;
+        const elementId = window2.textNodeParentElements.indexOf(element);
+        window2.textNodeParentElementsInView[elementId] = entry.isIntersecting;
+        //console.log(element.textContent);
+      }
+      const textsInView = window2.textNodeParentElements.map((el: HTMLElement, i: number) => window2.textNodeParentElementsInView[i] ? el.textContent : '').join('');
+      console.log(textsInView);
+    }, options);
+
+    window2.textNodeParentElements.forEach((el: any) => {
+      this.observer.observe(el);
+    });
+  }
+
+  getIFrameTextsInView() {
+    const ePubIframeWindow = this.ePubIframe!.contentWindow! as any;
+    const textsInView = ePubIframeWindow.textNodeParentElements.map((el: HTMLElement, i: number) => ePubIframeWindow.textNodeParentElementsInView[i] ? el.textContent : '').join('');
+    console.log(textsInView);
   }
 
   // There is a max characters per utterance limit on Android Chrome.
