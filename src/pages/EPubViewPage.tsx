@@ -272,7 +272,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
   pagePrev(n: number = 1) {
     if (this.props.paginated && this.state.currentPage > 1) {
       this.rendition?.prev(n);
-      console.log(this.visibleChars.filter((vc) => vc.page === (this.state.currentPage - n)).map((vc) => vc.char).join(''));
+      //console.log(this.visibleChars.filter((vc) => vc.page === (this.state.currentPage - n)).map((vc) => vc.char).join(''));
       this.setState({ currentPage: this.state.currentPage - n });
     }
   }
@@ -280,7 +280,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
   pageNext(n: number = 1) {
     if (this.props.paginated && this.state.currentPage < this.state.pageCount) {
       this.rendition?.next(n);
-      console.log(this.visibleChars.filter((vc) => vc.page === (this.state.currentPage + n)).map((vc) => vc.char).join(''));
+      //console.log(this.visibleChars.filter((vc) => vc.page === (this.state.currentPage + n)).map((vc) => vc.char).join(''));
       this.setState({ currentPage: this.state.currentPage + n });
     }
   }
@@ -648,20 +648,28 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     return r;
   }
 
+  rectBinDirSize(rect: DOMRect) {
+    if (this.props.rtlVerticalLayout) {
+      return rect.y;
+    } else {
+      return rect.x;
+    }
+  }
+
   findBinBoundaryVisibleCharIndex(binBoundary: number, leftSearchIndex: number, rightSearchIndex: number): number {
     const checkpointIndex = leftSearchIndex + Math.floor((rightSearchIndex - leftSearchIndex) / 2);
     const checkpointRange0 = this.visibleCharToRange(checkpointIndex);
     const checkpointRange1 = this.visibleCharToRange(checkpointIndex + 1);
     const rect0 = checkpointRange0.getBoundingClientRect();
     const rect1 = checkpointRange1.getBoundingClientRect();
-    const rect0y = rect0.y - this.offsetY;
-    const rect1y = rect1.y - this.offsetY;
+    let rect0BinDirSize = this.rectBinDirSize(rect0) - this.ePubIframeOffset;
+    let rect1BinDirSize = this.rectBinDirSize(rect1) - this.ePubIframeOffset;
     // Find the classification point.
-    if (rect0y < binBoundary && rect1y >= binBoundary) {
+    if (rect0BinDirSize < binBoundary && rect1BinDirSize >= binBoundary) {
       return checkpointIndex;
-    } else if (rect0y < binBoundary && rect1y < binBoundary) {
+    } else if (rect0BinDirSize < binBoundary && rect1BinDirSize < binBoundary) {
       return this.findBinBoundaryVisibleCharIndex(binBoundary, checkpointIndex + 1, rightSearchIndex);
-    } else if (rect0y >= binBoundary && rect1y >= binBoundary) {
+    } else if (rect0BinDirSize >= binBoundary && rect1BinDirSize >= binBoundary) {
       return this.findBinBoundaryVisibleCharIndex(binBoundary, leftSearchIndex, checkpointIndex);
     } else {
       console.error('Unreasonable case!');
@@ -670,14 +678,9 @@ class _EPubViewPage extends React.Component<PageProps, State> {
   }
 
   binWidth = 0;
-  classifyBins(binBoundaryStart: number, binBoundaryEnd: number, leftSearchIndex: number, rightSearchIndex: number, isRight: boolean = false) {
+  classifyBins(binBoundaryStart: number, binBoundaryEnd: number, leftSearchIndex: number, rightSearchIndex: number) {
     const binsWidth = binBoundaryEnd - binBoundaryStart;
     if (binsWidth <= this.binWidth ) {
-      if (isRight) {
-        for (let i = leftSearchIndex; i < this.visibleChars.length; i++) {
-          //this.visibleChars[i].page++;
-        }
-      }
       return;
     }
 
@@ -692,14 +695,14 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       this.visibleChars[i].page++;
     }
     this.classifyBins(bins0BoundaryStart, bins0BoundaryEnd, leftSearchIndex, binBoundaryVisibleCharIndex);
-    this.classifyBins(bins1BoundaryStart, bins1BoundaryEnd, binBoundaryVisibleCharIndex + 1, rightSearchIndex, true);
+    this.classifyBins(bins1BoundaryStart, bins1BoundaryEnd, binBoundaryVisibleCharIndex + 1, rightSearchIndex);
   }
 
   searchTextRanges: Array<Range> = [];
   visibleTextNodes: Array<Node> = [];
   visibleChars: Array<VisibleChar> = [];
   allTexts = '';
-  offsetY = 0;
+  ePubIframeOffset = 0;
 
   findVisibleTexts() {
     const cbetaHtmlBody = this.ePubIframe!.contentDocument!.getElementById('body');
@@ -727,9 +730,15 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         i++;
       }
     }
-    this.binWidth = cbetaHtmlBody!.clientHeight + 20;
-    this.offsetY = this.visibleCharToRange(0).getBoundingClientRect().y;
+    const epubContainer = document.querySelector('.epub-container')!;
+    this.binWidth = this.props.rtlVerticalLayout ? epubContainer.clientHeight : epubContainer.clientWidth;
+    const rect0 = this.visibleCharToRange(0).getBoundingClientRect();
+    this.ePubIframeOffset = this.props.rtlVerticalLayout ? rect0.y : rect0.x;
+    const timeStart = new Date();
     this.classifyBins(0, this.binWidth * this.state.pageCount, 0, this.visibleChars.length - 1);
+    const timeEnd = new Date();
+    const timeDiff = timeEnd.getTime() - timeStart.getTime();
+    console.log(`classifyBins spends: ${timeDiff/1e3}s`)
   }
 
   findSearchTextRanges(searchText: string) {
