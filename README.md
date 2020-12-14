@@ -414,7 +414,7 @@ Please refer to https://ionicframework.com/ for building Ionic development envir
 ```
 git clone https://github.com/MrMYHuang/cbetar2.git
 cd cbetar2
-npm i
+npm i -D
 npm run start
 ```
 
