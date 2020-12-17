@@ -141,9 +141,10 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         return;
       }
 
-      if (this.workTextsIndex < this.workTexts.length - 1) {
-        this.workTextsIndex += 1;
-        this.speechSynthesisUtterance.text = this.workTexts[this.workTextsIndex];
+      if (this.state.currentPage < this.state.pageCount) {
+        this.pageNext();
+        const texts = this.findTextsInPage(this.state.currentPage);
+        this.speechSynthesisUtterance.text = texts;
         speechSynthesis.speak(this.speechSynthesisUtterance);
         console.log(`Play work text to speech part: ${this.workTextsIndex}`);
       } else {
@@ -658,6 +659,12 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
   findBinBoundaryVisibleCharIndex(binBoundary: number, leftSearchIndex: number, rightSearchIndex: number): number {
     const checkpointIndex = leftSearchIndex + Math.floor((rightSearchIndex - leftSearchIndex) / 2);
+    if (checkpointIndex === 0) {
+      return 0;
+    } else if (checkpointIndex === this.visibleChars.length - 1) {
+      return this.visibleChars.length - 1;
+    }
+
     const checkpointRange0 = this.visibleCharToRange(checkpointIndex);
     const checkpointRange1 = this.visibleCharToRange(checkpointIndex + 1);
     const rect0 = checkpointRange0.getBoundingClientRect();
@@ -665,11 +672,11 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     let rect0BinDirSize = this.rectBinDirSize(rect0) - this.ePubIframeOffset;
     let rect1BinDirSize = this.rectBinDirSize(rect1) - this.ePubIframeOffset;
     // Find the classification point.
-    if (rect0BinDirSize < binBoundary && rect1BinDirSize >= binBoundary) {
+    if (rect0BinDirSize < binBoundary && binBoundary <= rect1BinDirSize) {
       return checkpointIndex;
-    } else if (rect0BinDirSize < binBoundary && rect1BinDirSize < binBoundary) {
+    } else if (rect0BinDirSize < binBoundary && binBoundary > rect1BinDirSize) {
       return this.findBinBoundaryVisibleCharIndex(binBoundary, checkpointIndex + 1, rightSearchIndex);
-    } else if (rect0BinDirSize >= binBoundary && rect1BinDirSize >= binBoundary) {
+    } else if (rect0BinDirSize >= binBoundary && binBoundary <= rect1BinDirSize) {
       return this.findBinBoundaryVisibleCharIndex(binBoundary, leftSearchIndex, checkpointIndex);
     } else {
       console.error('Unreasonable case!');
@@ -677,30 +684,51 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     }
   }
 
-  binWidth = 0;
-  classifyBins(binBoundaryStart: number, binBoundaryEnd: number, leftSearchIndex: number, rightSearchIndex: number) {
-    const binsWidth = binBoundaryEnd - binBoundaryStart;
-    if (binsWidth <= this.binWidth ) {
-      return;
-    }
+  pageWidth = 0;
+  pagesWidth = 0;
+  findTextsInPage(n: number) {
+    const timeStart = new Date();
+    // Zero-based index n.
+    const nZ = n - 1;
+    if (!this.isPageSearched[nZ]) {
+      const pageStartOffset = this.pageWidth * (n - 1);
+      const pageEndOffset = this.pageWidth * n;
+      let pageStartCharIndex = 0;
+      if (n !== 1) {
+        // Reuse the searched boundary if available.
+        if (this.isPageSearched[nZ - 1]) {
+          pageStartCharIndex = (this.visibleChars.length - 1) - this.visibleChars.slice().reverse().findIndex((vc) => vc.page === (n - 1));
+        } else {
+          pageStartCharIndex = this.findBinBoundaryVisibleCharIndex(pageStartOffset, 0, this.visibleChars.length - 1);
+        }
+      }
 
-    const halfBinsWidth = Math.floor((binsWidth / this.binWidth) / 2) * this.binWidth;
-    const bins0BoundaryStart = binBoundaryStart;
-    const bins0BoundaryEnd = binBoundaryStart + halfBinsWidth;
-    const bins1BoundaryStart = bins0BoundaryEnd;
-    const bins1BoundaryEnd = binBoundaryEnd;
-
-    const binBoundaryVisibleCharIndex = this.findBinBoundaryVisibleCharIndex(bins0BoundaryEnd, leftSearchIndex, rightSearchIndex);
-    for (let i = binBoundaryVisibleCharIndex + 1; i < this.visibleChars.length; i++) {
-      this.visibleChars[i].page++;
+      let pageEndCharSearchRangeEnd = this.visibleChars.length - 1;
+      let pageEndCharIndex = this.visibleChars.length - 1;
+      if (n !== this.state.pageCount) {
+        // Reuse the searched boundary if available.
+        if (this.isPageSearched[nZ + 1]) {
+          pageEndCharIndex = this.visibleChars.findIndex((vc) => vc.page === (n + 1)) - 1;
+        } else {
+          pageEndCharIndex = this.findBinBoundaryVisibleCharIndex(pageEndOffset, pageStartCharIndex, pageEndCharSearchRangeEnd);
+        }
+      }
+      for (let i = pageStartCharIndex + 1; i <= pageEndCharIndex; i++) {
+        this.visibleChars[i].page = n;
+      }
+      this.isPageSearched[nZ] = true;
     }
-    this.classifyBins(bins0BoundaryStart, bins0BoundaryEnd, leftSearchIndex, binBoundaryVisibleCharIndex);
-    this.classifyBins(bins1BoundaryStart, bins1BoundaryEnd, binBoundaryVisibleCharIndex + 1, rightSearchIndex);
+    const texts = this.visibleChars.filter((vc) => vc.page === n).map((vc) => vc.char).join('');
+    const timeEnd = new Date();
+    const timeDiff = timeEnd.getTime() - timeStart.getTime();
+    console.log(`findTextsInPage spends: ${timeDiff / 1e3}s`);
+    return texts;
   }
 
   searchTextRanges: Array<Range> = [];
   visibleTextNodes: Array<Node> = [];
   visibleChars: Array<VisibleChar> = [];
+  isPageSearched: Array<boolean> = [];
   allTexts = '';
   ePubIframeOffset = 0;
 
@@ -709,6 +737,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     const textNodesWalker = this.getAllTextNodes(cbetaHtmlBody);
     this.visibleTextNodes = [];
     this.visibleChars = [];
+    this.isPageSearched = [];
     let node: Node | null;
     while ((node = textNodesWalker.nextNode()) != null) {
       let node2 = node!;
@@ -726,25 +755,25 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     for (let n = 0; n < this.visibleTextNodes.length; n++) {
       const visibleTextNode = this.visibleTextNodes[n];
       for (let c = 0; c < (visibleTextNode as any).length; c++) {
-        this.visibleChars.push({ node: visibleTextNode, offset: c, page: 1, char: this.allTexts[i] });
+        this.visibleChars.push({ node: visibleTextNode, offset: c, page: 0, char: this.allTexts[i] });
         i++;
       }
     }
     const epubContainer = document.querySelector('.epub-container')!;
-    this.binWidth = this.props.rtlVerticalLayout ? epubContainer.clientHeight : epubContainer.clientWidth;
+    this.pageWidth = this.props.rtlVerticalLayout ? epubContainer.clientHeight : epubContainer.clientWidth;
+    this.pagesWidth = this.pageWidth * this.state.pageCount;
+    this.isPageSearched = new Array(this.state.pageCount);
+    for(let i = 0; i < this.isPageSearched.length; i++) {
+      this.isPageSearched[i] = false;
+    }
     const rect0 = this.visibleCharToRange(0).getBoundingClientRect();
     this.ePubIframeOffset = this.props.rtlVerticalLayout ? rect0.y : rect0.x;
-    const timeStart = new Date();
-    this.classifyBins(0, this.binWidth * this.state.pageCount, 0, this.visibleChars.length - 1);
-    const timeEnd = new Date();
-    const timeDiff = timeEnd.getTime() - timeStart.getTime();
-    console.log(`classifyBins spends: ${timeDiff/1e3}s`)
   }
 
   findSearchTextRanges(searchText: string) {
     this.searchTextRanges = [];
     this.showedSearchTextIndex = 0;
-    
+
     // Search all keywords in allTexts and save their start and end indexes in searchTextIndexes;
     let searchTextIndexes: Array<number> = []
     let startIndex = 0;
@@ -905,8 +934,10 @@ class _EPubViewPage extends React.Component<PageProps, State> {
                   this.speechSynthesisUtterance.voice = zhTwVoice;
                 }
 
-                const remainingWorkText = this.getRemainingWorkTextFromSelectedRange();
-                const workText = remainingWorkText || this.ePubIframe?.contentDocument?.getElementById('body')?.innerText || '無法取得經文內容';
+                const texts = this.findTextsInPage(this.state.currentPage);
+
+                //const remainingWorkText = this.getRemainingWorkTextFromSelectedRange();
+                const workText = texts || this.ePubIframe?.contentDocument?.getElementById('body')?.innerText || '無法取得經文內容';
 
                 this.workTexts = [];
                 for (let i = 0; i < Math.ceil(workText.length / this.maxCharsPerUtterance); i++) {
