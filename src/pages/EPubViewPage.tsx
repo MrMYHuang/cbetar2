@@ -930,7 +930,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
             <span className='uiFont' style={{ color: 'var(--color)' }}>頁{this.state.currentPage}/{this.state.pageCount}</span>
           </IonButton>
 
-          <IonButton fill="clear" slot='end' onClick={e => {
+          <IonButton hidden={this.state.fetchError} fill="clear" slot='end' onClick={e => {
             const voices = speechSynthesis.getVoices();
             if (voices.length === 0) {
               return;
@@ -987,11 +987,11 @@ class _EPubViewPage extends React.Component<PageProps, State> {
             <IonIcon icon={this.state.speechState === SpeechState.SPEAKING ? stopCircle : musicalNotes} slot='icon-only' />
           </IonButton>
 
-          <IonButton fill="clear" slot='end' onClick={e => {
+          <IonButton hidden={this.state.fetchError} fill="clear" slot='end' onClick={e => {
             this.setState({ popover: { show: false, event: null } });
             this.addBookmarkHandler();
           }}>
-            <IonIcon icon={bookmark} slot='start' />
+            <IonIcon icon={bookmark} slot='icon-only' />
           </IonButton>
 
           <IonButton fill="clear" slot='end' onClick={e => this.setState({ popover: { show: true, event: e.nativeEvent } })}>
