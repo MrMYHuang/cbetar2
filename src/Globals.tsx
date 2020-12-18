@@ -239,12 +239,15 @@ export default {
     "Vol-LC": "LC 呂澂佛學著作集",
   } as Record<string, string>,
   fetchErrorContent: (
-    <IonLabel className='contentCenter'>
-      <div>
-        <div>連線失敗!</div>
-        <div style={{ fontSize: 'var(--ui-font-size)', paddingTop: 24 }}>如果問題持續發生，請執行<a href="/settings" target="_self">設定頁</a>的app異常回報功能。</div>
-      </div>
-    </IonLabel>),
+    <div className='contentCenter'>
+      <IonLabel>
+        <div>
+          <div>連線失敗!</div>
+          <div style={{ fontSize: 'var(--ui-font-size)', paddingTop: 24 }}>如果問題持續發生，請執行<a href="/settings" target="_self">設定頁</a>的app異常回報功能。</div>
+        </div>
+      </IonLabel>
+    </div>
+  ),
   updateApp: () => {
     navigator.serviceWorker.getRegistrations().then(regs => {
       return Promise.all(regs.map(reg => reg.update()));

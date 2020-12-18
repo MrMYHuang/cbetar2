@@ -151,8 +151,7 @@ body.dark {
 .contentCenter {
     font-size: 48px;
     text-align: center;
-    height: 100%;
-    width: 100%;
+    flex: 1 1 auto;
     display: flex;
     align-items: center;
     justify-content: center;

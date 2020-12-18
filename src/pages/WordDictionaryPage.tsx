@@ -6,6 +6,7 @@ import * as uuid from 'uuid';
 import Globals from '../Globals';
 import { home, shareSocial, book, ellipsisHorizontal, ellipsisVertical, refreshCircle, copy, arrowBack } from 'ionicons/icons';
 import { DictWordDefItem, DictWordItem, WordType } from '../models/DictWordItem';
+import { AxiosError } from 'axios';
 
 interface Props {
   dispatch: Function;
@@ -19,7 +20,7 @@ interface PageProps extends Props, RouteComponentProps<{
 
 interface State {
   keyword: string;
-  search: [DictWordItem] | null;
+  search: Array<DictWordItem> | null;
   showNoSelectedTextAlert: boolean;
   popover: any;
   isLoading: boolean;
@@ -79,9 +80,14 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
         });
       this.setState({ fetchError: false, isLoading: false, search: res.data.heteronyms });
     } catch (e) {
-      console.error(e);
-      console.error(new Error().stack);
-      this.setState({ fetchError: true, isLoading: false });
+      const err = e as AxiosError;
+      if (err.response?.status === 404) {
+        this.setState({ fetchError: false, isLoading: false, search: [] });
+      } else {
+        console.error(e);
+        console.error(new Error().stack);
+        this.setState({ fetchError: true, isLoading: false });
+      }
       return false;
     }
   }
@@ -240,58 +246,67 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
           </IonToolbar>
         </IonHeader>
         <IonContent>
-          <IonSearchbar ref={this.searchBarRef} placeholder='請輸入字，再按鍵盤Enter鍵' value={this.state.keyword}
-            onKeyUp={(ev: any) => {
-              const value = ev.target.value;
-              this.setState({ keyword: value })
-              if (ev.key === 'Enter') {
-                this.props.history.push(`/dictionary/searchWord/${value}`);
-              }
-            }} />
-          {/*
+          <div style={{ display: 'flex', flexFlow: 'column', height: '100%' }}>
+            <IonSearchbar ref={this.searchBarRef} placeholder='請輸入字，再按鍵盤Enter鍵' value={this.state.keyword}
+              onKeyUp={(ev: any) => {
+                const value = ev.target.value;
+                this.setState({ keyword: value })
+                if (ev.key === 'Enter') {
+                  this.props.history.push(`/dictionary/searchWord/${value}`);
+                }
+              }}
+            />
+            {/*
               <IonButton slot='end' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={e => {
                 this.lookupDict(this.state.keyword);
               }}>搜尋</IonButton>*/}
 
-          {this.state.fetchError ? Globals.fetchErrorContent : dictView}
+            {this.state.fetchError ?
+              Globals.fetchErrorContent :
+              this.state.search?.length === 0 ?
+                <div className='contentCenter'>
+                  <IonLabel>無結果</IonLabel>
+                </div> :
+                dictView}
 
-          {/*
+            {/*
           <div style={{ fontSize: 'var(--ui-font-size)', textAlign: 'center' }}><a href="https://github.com/MrMYHuang/cbetar2#WordDictionary" target="_new">佛學詞典說明</a></div>
           */}
 
-          <IonAlert
-            cssClass='uiFont'
-            isOpen={this.state.showNoSelectedTextAlert}
-            backdropDismiss={false}
-            header='失敗'
-            message='請確認是否已選擇一段文字，然後再執行所選的功能!'
-            buttons={[
-              {
-                text: '確定',
-                cssClass: 'primary uiFont',
-                handler: (value) => {
-                  this.setState({
-                    showNoSelectedTextAlert: false,
-                  });
-                },
-              }
-            ]}
-          />
+            <IonAlert
+              cssClass='uiFont'
+              isOpen={this.state.showNoSelectedTextAlert}
+              backdropDismiss={false}
+              header='失敗'
+              message='請確認是否已選擇一段文字，然後再執行所選的功能!'
+              buttons={[
+                {
+                  text: '確定',
+                  cssClass: 'primary uiFont',
+                  handler: (value) => {
+                    this.setState({
+                      showNoSelectedTextAlert: false,
+                    });
+                  },
+                }
+              ]}
+            />
 
-          <IonLoading
-            cssClass='uiFont'
-            isOpen={this.state.isLoading}
-            onDidDismiss={() => this.setState({ isLoading: false })}
-            message={'載入中...'}
-          />
+            <IonLoading
+              cssClass='uiFont'
+              isOpen={this.state.isLoading}
+              onDidDismiss={() => this.setState({ isLoading: false })}
+              message={'載入中...'}
+            />
 
-          <IonToast
-            cssClass='uiFont'
-            isOpen={this.state.showToast}
-            onDidDismiss={() => this.setState({ showToast: false })}
-            message={this.state.toastMessage}
-            duration={2000}
-          />
+            <IonToast
+              cssClass='uiFont'
+              isOpen={this.state.showToast}
+              onDidDismiss={() => this.setState({ showToast: false })}
+              message={this.state.toastMessage}
+              duration={2000}
+            />
+          </div>
         </IonContent>
       </IonPage>
     );
