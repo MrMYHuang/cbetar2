@@ -13,6 +13,7 @@ import {
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { connect, Provider } from 'react-redux';
+import queryString from 'query-string';
 import getSavedStore from './redux/store';
 import { bookmark, settings, library, book } from 'ionicons/icons';
 import CatalogPage from './pages/CatalogPage';
@@ -79,6 +80,7 @@ export var serviceWorkCallbacks = {
 };
 
 interface Props {
+  dispatch: Function;
   shareTextModal: any;
 }
 
@@ -112,6 +114,15 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
   constructor(props: any) {
     super(props);
     this.registrationNew = null;
+    const queryParams = queryString.parse(this.props.location.search) as any;
+    queryParams.settings && (queryParams.settings as string).split(',').forEach(setting => {
+      const keyVal = setting.split('=');
+      this.props.dispatch({
+        type: "SET_KEY_VAL",
+        key: keyVal[0],
+        val: +keyVal[1],
+      });
+    });
     // ----- Initializing UI settings -----
     // Apply the theme setting.
     if (isPlatform('android')) {
