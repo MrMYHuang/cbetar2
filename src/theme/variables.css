@@ -210,6 +210,10 @@ ion-col {
     -webkit-user-select: text;
 }
 
+.uiBackground, .loading-wrapper.sc-ion-loading-md {
+    background-color: var(--ion-background-color);
+}
+
 .textSelectable {
     user-select: text;
     -webkit-user-select: text;
