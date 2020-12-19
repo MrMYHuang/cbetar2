@@ -218,7 +218,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={colorPalette} slot='start' />
-              <IonLabel className='ion-text-wrap uiFont'>佈景主題</IonLabel>
+              <IonLabel className='ion-text-wrap uiFont'>{Globals.appSettings['theme']}</IonLabel>
               <IonSelect slot='end'
                 value={this.props.theme}
                 style={{ fontSize: 'var(--ui-font-size)' }}
@@ -231,8 +231,6 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
                     key: 'theme',
                     val: value,
                   });
-                  document.body.classList.forEach((val) => document.body.classList.remove(val));
-                  document.body.classList.toggle(`theme${value}`, true);
                 }}>
                 <IonSelectOption className='uiFont cbeta' value={0}>CBETA</IonSelectOption>
                 <IonSelectOption className='uiFont dark' value={1}>暗色</IonSelectOption>
@@ -244,7 +242,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={documentText} slot='start' />
-              <IonLabel className='ion-text-wrap uiFont'>經文直排、右至左書寫</IonLabel>
+              <IonLabel className='ion-text-wrap uiFont'>{Globals.appSettings['rtlVerticalLayout']}</IonLabel>
               <IonToggle slot='end' checked={this.props.rtlVerticalLayout} onIonChange={e => {
                 const isChecked = e.detail.checked;
                 this.props.dispatch({
@@ -257,7 +255,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={documentText} slot='start' />
-              <IonLabel className='ion-text-wrap uiFont'>單頁/分頁</IonLabel>
+              <IonLabel className='ion-text-wrap uiFont'>{Globals.appSettings['paginated']}</IonLabel>
               <IonToggle slot='end' checked={this.props.paginated} onIonChange={e => {
                 const isChecked = e.detail.checked;
                 this.props.dispatch({
@@ -293,7 +291,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={documentText} slot='start' />
-              <IonLabel className='ion-text-wrap uiFont'>顯示經文註解、版權</IonLabel>
+              <IonLabel className='ion-text-wrap uiFont'>{Globals.appSettings['showComments']}</IonLabel>
               <IonToggle slot='end' checked={this.props.showComments} onIonChange={e => {
                 const isChecked = e.detail.checked;
                 (this.props as any).dispatch({
@@ -306,7 +304,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={text} slot='start' />
-              <IonLabel className='ion-text-wrap uiFont'>黑體/楷書字體(初次載入要等待)</IonLabel>
+              <IonLabel className='ion-text-wrap uiFont'>{Globals.appSettings['useFontKai']}</IonLabel>
               <IonToggle slot='end' checked={this.props.useFontKai} onIonChange={e => {
                 const isChecked = e.detail.checked;
                 (this.props as any).dispatch({
@@ -322,7 +320,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
               <IonIcon icon={text} slot='start' />
               <div className="contentBlock">
                 <div style={{ flexDirection: "column" }}>
-                  <IonLabel className='ion-text-wrap uiFont'>UI字型大小: {this.props.uiFontSize}</IonLabel>
+                  <IonLabel className='ion-text-wrap uiFont'>{Globals.appSettings['uiFontSize']}: {this.props.uiFontSize}</IonLabel>
                   <IonRange min={10} max={128} pin={true} snaps={true} value={this.props.uiFontSize} onIonChange={e => {
                     this.props.dispatch({
                       type: "SET_KEY_VAL",
@@ -338,7 +336,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={text} slot='start' />
               <div className="contentBlock">
-                <IonLabel className='ion-text-wrap uiFont'>經文字型大小: <span className='textFont'>{this.props.settings.fontSize}</span></IonLabel>
+                <IonLabel className='ion-text-wrap uiFont'>{Globals.appSettings['fontSize']}: <span className='textFont'>{this.props.settings.fontSize}</span></IonLabel>
                 <IonRange min={10} max={128} pin={true} snaps={true} value={this.props.settings.fontSize} onIonChange={e => {
                   this.props.dispatch({
                     type: "SET_KEY_VAL",
@@ -352,7 +350,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={print} slot='start' />
-              <IonLabel className='ion-text-wrap uiFont'>經文列印樣式</IonLabel>
+              <IonLabel className='ion-text-wrap uiFont'>{Globals.appSettings['printStyle']}</IonLabel>
               <IonSelect slot='end'
                 value={this.props.printStyle}
                 style={{ fontSize: 'var(--ui-font-size)' }}
@@ -365,12 +363,6 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
                     key: 'printStyle',
                     val: value,
                   });
-                  document.body.classList.forEach((val) => {
-                    if (/print/.test(val)) {
-                      document.body.classList.remove(val);
-                    }
-                  });
-                  document.body.classList.toggle(`print${value}`, true);
                 }}>
                 <IonSelectOption className='uiFont blackWhite printVar' value={0}>白底黑字</IonSelectOption>
                 <IonSelectOption className='uiFont manuscript printVar' value={1}>抄經本</IonSelectOption>

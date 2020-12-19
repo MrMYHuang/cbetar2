@@ -12,6 +12,23 @@ export default function reducer(state = {
     case "SET_KEY_VAL":
       var key = action.key;
       var val = action.val;
+      switch (key) {
+        case 'theme': {
+          document.body.classList.forEach((val) => document.body.classList.remove(val));
+          document.body.classList.toggle(`theme${val}`, true);
+          break;
+        }
+        case 'printStyle': {
+          document.body.classList.forEach((val) => {
+            if (/print/.test(val)) {
+              document.body.classList.remove(val);
+            }
+          });
+          document.body.classList.toggle(`print${val}`, true);
+          break;
+        }
+      }
+
       newSettings[key] = val;
       localStorage.setItem(Globals.storeFile, JSON.stringify({ settings: newSettings }));
       break;

@@ -114,15 +114,6 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
   constructor(props: any) {
     super(props);
     this.registrationNew = null;
-    const queryParams = queryString.parse(this.props.location.search) as any;
-    queryParams.settings && (queryParams.settings as string).split(',').forEach(setting => {
-      const keyVal = setting.split('=');
-      this.props.dispatch({
-        type: "SET_KEY_VAL",
-        key: keyVal[0],
-        val: +keyVal[1],
-      });
-    });
     // ----- Initializing UI settings -----
     // Apply the theme setting.
     if (isPlatform('android')) {
@@ -133,6 +124,15 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
     document.body.classList.forEach((val) => document.body.classList.remove(val));
     document.body.classList.toggle(`theme${state.settings.theme}`, true);
     document.body.classList.toggle(`print${state.settings.printStyle}`, true);
+    const queryParams = queryString.parse(this.props.location.search) as any;
+    queryParams.settings && (queryParams.settings as string).split(',').forEach(setting => {
+      const keyVal = setting.split('=');
+      this.props.dispatch({
+        type: "SET_KEY_VAL",
+        key: keyVal[0],
+        val: +keyVal[1],
+      });
+    });
     Globals.updateCssVars(state.settings);
 
     this.state = {
@@ -163,7 +163,7 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
     };
 
     let fontData: any;
-    await new Promise((ok, fail) => {
+    await new Promise<void>((ok, fail) => {
       dbOpenReq.onsuccess = async (ev: Event) => {
         const db = dbOpenReq.result;
 

@@ -54,7 +54,7 @@ async function getFileFromIndexedDB(fileName: string) {
 
 async function saveFileToIndexedDB(fileName: string, data: any) {
   const dbOpenReq = indexedDB.open(cbetardb);
-  return new Promise((ok, fail) => {
+  return new Promise<void>((ok, fail) => {
     dbOpenReq.onsuccess = async (ev: Event) => {
       const db = dbOpenReq.result;
 
@@ -69,7 +69,7 @@ async function saveFileToIndexedDB(fileName: string, data: any) {
 
 async function removeFileFromIndexedDB(fileName: string) {
   const dbOpenReq = indexedDB.open(cbetardb);
-  return new Promise((ok, fail) => {
+  return new Promise<void>((ok, fail) => {
     dbOpenReq.onsuccess = async (ev: Event) => {
       const db = dbOpenReq.result;
 
@@ -237,6 +237,16 @@ export default {
     "Vol-GB": "GB 中國佛寺志叢刊",
     "Vol-Y": "Y 印順法師佛學著作集",
     "Vol-LC": "LC 呂澂佛學著作集",
+  } as Record<string, string>,
+  appSettings: {
+    'theme': '佈景主題',
+    'rtlVerticalLayout': '經文直排、右至左書寫',
+    'paginated': '單頁/分頁',
+    'showComments': '顯示經文註解、版權',
+    'useFontKai': '黑體/楷書字體',
+    'uiFontSize': 'UI字型大小',
+    'fontSize': '經文字型大小',
+    'printStyle': '經文列印樣式',
   } as Record<string, string>,
   fetchErrorContent: (
     <div className='contentCenter'>
