@@ -78,7 +78,7 @@ class _ShareTextModal extends React.Component<PageProps, State> {
               <IonList>
                 {
                   Object.keys(Globals.appSettings).map((key, i) =>
-                    <IonItem>
+                    <IonItem key={`appSettingExportItem_${i}`}>
                       <IonLabel className='ion-text-wrap uiFont'>{Globals.appSettings[key]}</IonLabel>
                       <IonToggle slot='end' onIonChange={e => {
                         const isAppSettingsExport =  this.state.isAppSettingsExport;

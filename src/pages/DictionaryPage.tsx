@@ -8,6 +8,7 @@ import { DictItem } from '../models/DictItem';
 
 interface Props {
   dispatch: Function;
+  dictionaryHistory: Array<string>;
 }
 
 interface PageProps extends Props, RouteComponentProps<{
@@ -53,7 +54,7 @@ class _DictionaryPage extends React.Component<PageProps, State> {
     if (this.props.match.params.keyword) {
       this.lookupDict(this.props.match.params.keyword);
     } else {
-      this.setState({ searches: [] });      
+      this.setState({ searches: [] });
     }
   }
 
@@ -226,11 +227,28 @@ class _DictionaryPage extends React.Component<PageProps, State> {
         </IonHeader>
         <IonContent>
           <IonSearchbar ref={this.searchBarRef} placeholder='請輸入字詞，再按鍵盤Enter鍵' value={this.state.keyword}
+            onIonClear={ev => {
+              this.setState({ searches: [] });
+            }}
             onKeyUp={(ev: any) => {
               const value = ev.target.value;
               this.setState({ keyword: value })
-              if (ev.key === 'Enter') {
-                this.props.history.push(`/dictionary/search/${value}`);
+              if (value === '') {
+                this.setState({ searches: [] });
+              } else if (ev.key === 'Enter') {
+                this.props.dictionaryHistory.unshift(value);
+                this.props.dictionaryHistory.splice(10);
+                this.props.dispatch({
+                  type: "SET_KEY_VAL",
+                  key: 'dictionaryHistory',
+                  val: this.props.dictionaryHistory,
+                });
+                if (value === this.props.match.params.keyword) {
+                  this.setState({ keyword: value });
+                  this.lookupDict(value);
+                } else {
+                  this.props.history.push(`/dictionary/search/${value}`);
+                }
               }
             }} />
           {/*
@@ -239,10 +257,43 @@ class _DictionaryPage extends React.Component<PageProps, State> {
               }}>搜尋</IonButton>*/}
 
           {this.state.fetchError ?
-            Globals.fetchErrorContent :
-            <div style={{ display: 'table' }}>
-              {this.getRows()}
-            </div>
+            Globals.fetchErrorContent
+            :
+            this.state.searches.length < 1 || (this.props.dictionaryHistory.length > 0 && (this.state.keyword === '' || this.state.keyword === undefined)) ?
+              <>
+                <div className='uiFont' style={{ color: 'var(--ion-color-primary)' }}>搜尋歷史</div>
+                <IonList>
+                  {this.props.dictionaryHistory.map((keyword, i) =>
+                    <IonItem key={`dictHistoryItem_${i}`} button={true} onClick={async event => {
+                      if (keyword === this.props.match.params.keyword) {
+                        this.setState({ keyword });
+                        this.lookupDict(keyword);
+                      }
+                      else {
+                        this.props.history.push(`/dictionary/search/${keyword}`);
+                      }
+                    }}>
+                      <IonLabel className='ion-text-wrap uiFont' key={`dictHistoryLabel_` + i}>
+                        {keyword}
+                      </IonLabel>
+                    </IonItem>
+                  )}
+                </IonList>
+                <div style={{ textAlign: 'center' }}>
+                  <IonButton size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={e => {
+                    this.setState({ keyword: '' });
+                    this.props.dispatch({
+                      type: "SET_KEY_VAL",
+                      key: 'dictionaryHistory',
+                      val: [],
+                    });
+                  }}>清除歷史</IonButton>
+                </div>
+              </>
+              :
+              <div style={{ display: 'table' }}>
+                {this.getRows()}
+              </div>
           }
 
           <div style={{ fontSize: 'var(--ui-font-size)', textAlign: 'center' }}><a href="https://github.com/MrMYHuang/cbetar2#dictionary" target="_new">佛學詞典說明</a></div>
@@ -290,6 +341,7 @@ const DictionaryPage = withIonLifeCycle(_DictionaryPage);
 
 const mapStateToProps = (state: any /*, ownProps*/) => {
   return {
+    dictionaryHistory: state.settings.dictionaryHistory,
   }
 };
 

@@ -150,8 +150,14 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
     // Preload speechSynthesis.
     speechSynthesis.getVoices();
     speechSynthesis.cancel();
-
     this.wakeLockScreen();
+    document.addEventListener("visibilitychange", async () => {
+      if (document.visibilityState === 'visible') {
+        this.wakeLockScreen();
+      } else {
+        this.wakeLockScreenRelease()
+      }
+    });
     this.loadTwKaiFont();
   }
 
@@ -198,14 +204,24 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
   async wakeLockScreen() {
     try {
       const wakeLock = (navigator as any).wakeLock;
-      if (wakeLock !== undefined) {
+      if (wakeLock != null) {
         this.wakeLock = await wakeLock.request('screen');
-        console.log('Auto screen lock is disabled.');
+        console.log('Screen wake lock is requested.');
+      } else {
+        console.error('navigator.wakeLock is undefined.');
       }
     } catch (err) {
       // the wake lock request fails - usually system related, such low as battery
-      console.error(`${err.name}, ${err.message}`);
-      console.error(new Error().stack);
+      console.log(`${err.name}, ${err.message}`);
+      console.log(new Error().stack);
+    }
+  }
+
+  async wakeLockScreenRelease() {
+    if (this.wakeLock != null) {
+      await this.wakeLock.release();
+      this.wakeLock = null;
+      console.log('Screen wake lock is released.');
     }
   }
 

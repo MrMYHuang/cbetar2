@@ -10,6 +10,7 @@ import { AxiosError } from 'axios';
 
 interface Props {
   dispatch: Function;
+  wordDictionaryHistory: Array<string>;
 }
 
 interface PageProps extends Props, RouteComponentProps<{
@@ -248,25 +249,70 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
         <IonContent>
           <div style={{ display: 'flex', flexFlow: 'column', height: '100%' }}>
             <IonSearchbar ref={this.searchBarRef} placeholder='請輸入字，再按鍵盤Enter鍵' value={this.state.keyword}
+              onIonClear={ev => {
+                this.setState({ search: null });
+              }}
               onKeyUp={(ev: any) => {
                 const value = ev.target.value;
                 this.setState({ keyword: value })
-                if (ev.key === 'Enter') {
-                  this.props.history.push(`/dictionary/searchWord/${value}`);
+                if (value === '') {
+                  this.setState({ search: null });
+                } else if (ev.key === 'Enter') {
+                  this.props.wordDictionaryHistory.unshift(value);
+                  this.props.wordDictionaryHistory.splice(10);
+                  this.props.dispatch({
+                    type: "SET_KEY_VAL",
+                    key: 'wordDictionaryHistory',
+                    val: this.props.wordDictionaryHistory,
+                  });
+                  if (value === this.props.match.params.keyword) {
+                    this.setState({ keyword: value });
+                    this.lookupDict(value);
+                  } else {
+                    this.props.history.push(`/dictionary/searchWord/${value}`);
+                  }
                 }
-              }}
-            />
+              }} />
             {/*
               <IonButton slot='end' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={e => {
                 this.lookupDict(this.state.keyword);
               }}>搜尋</IonButton>*/}
 
             {this.state.fetchError ?
-              Globals.fetchErrorContent :
-              this.state.search?.length === 0 ?
-                <div className='contentCenter'>
-                  <IonLabel>無結果</IonLabel>
-                </div> :
+              Globals.fetchErrorContent
+              :
+              (this.state.search?.length || 0) < 1 || (this.props.wordDictionaryHistory.length > 0 && (this.state.keyword === '' || this.state.keyword === undefined)) ?
+                <>
+                  <div className='uiFont' style={{ color: 'var(--ion-color-primary)' }}>搜尋歷史</div>
+                  <IonList>
+                    {this.props.wordDictionaryHistory.map((keyword, i) =>
+                      <IonItem key={`wordDictHistoryItem_${i}`} button={true} onClick={async event => {
+                        if (keyword === this.props.match.params.keyword) {
+                          this.setState({ keyword });
+                          this.lookupDict(keyword);
+                        }
+                        else {
+                          this.props.history.push(`/dictionary/searchWord/${keyword}`);
+                        }
+                      }}>
+                        <IonLabel className='ion-text-wrap uiFont' key={`wordDictHistoryLabel_` + i}>
+                          {keyword}
+                        </IonLabel>
+                      </IonItem>
+                    )}
+                  </IonList>
+                  <div style={{ textAlign: 'center' }}>
+                    <IonButton size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={e => {
+                      this.setState({ keyword: '' });
+                      this.props.dispatch({
+                        type: "SET_KEY_VAL",
+                        key: 'wordDictionaryHistory',
+                        val: [],
+                      });
+                    }}>清除歷史</IonButton>
+                  </div>
+                </>
+                :
                 dictView}
 
             {/*
@@ -317,6 +363,7 @@ const WordDictionaryPage = withIonLifeCycle(_WordDictionaryPage);
 
 const mapStateToProps = (state: any /*, ownProps*/) => {
   return {
+    wordDictionaryHistory: state.settings.wordDictionaryHistory,
   }
 };
 

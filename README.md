@@ -150,9 +150,6 @@ https://www.microsoft.com/store/apps/9P6TDQX46JJL
 
 <img src='./docs/images/Safari/AppIcon.png' width='50%' height='50%' />
 
-## 未來功能
-1. 佛學詞典記錄歷史查詢。
-
 ## <a id='knownIssues'>已知問題</a>
 1. iOS Safari在單頁模式下，捲軸無法顯示。
 2. 目前多數Chrome無法暫停合成語音播放，因此此app目前經文語音播放功能不支援暫停，只支援停止。
@@ -165,6 +162,10 @@ https://www.microsoft.com/store/apps/9P6TDQX46JJL
 9. iOS Safari選擇文字後，仍會閃爍彈出式選單才消失。
 
 ## <a id='history'>版本歷史</a>
+
+* 4.13.0:
+  * [新增] 佛學詞典頁/萌典字典頁支援最近查詢歷史。
+  * [修正] Chrome避免螢幕自動鎖定有時失效的問題。
 * 4.12.1:
   * [改善] 設定頁執行app更新，若無新版，會作提示。
 * 4.12.0:
