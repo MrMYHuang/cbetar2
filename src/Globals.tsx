@@ -259,8 +259,13 @@ export default {
     </div>
   ),
   updateApp: () => {
-    navigator.serviceWorker.getRegistrations().then(regs => {
-      return Promise.all(regs.map(reg => reg.update()));
+    return new Promise(async resolve => {
+      navigator.serviceWorker.getRegistrations().then(async regs => {
+        const hasUpdates = await Promise.all(regs.map(reg => (reg.update() as any).then((newReg: ServiceWorkerRegistration) => {
+          return newReg.installing !== null || newReg.waiting !== null;
+        })));
+        resolve(hasUpdates.reduce((prev, curr) => prev || curr, false));
+      });
     });
   },
   scrollbarSizeIdToValue,

@@ -165,6 +165,8 @@ https://www.microsoft.com/store/apps/9P6TDQX46JJL
 9. iOS Safari選擇文字後，仍會閃爍彈出式選單才消失。
 
 ## <a id='history'>版本歷史</a>
+* 4.12.1:
+  * [改善] 設定頁執行app更新，若無新版，會作提示。
 * 4.12.0:
   * [新增] 支援網址帶app設定，詳見<a href='#shareAppLink'>說明</a>。
 * 4.11.1:

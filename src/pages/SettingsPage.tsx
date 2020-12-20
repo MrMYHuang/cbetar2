@@ -12,6 +12,8 @@ interface StateProps {
   showFontLicense: boolean;
   juansDownloadedRatio: number;
   showUpdateAllJuansDone: boolean;
+  showToast: boolean;
+  toastMessage: string;
 }
 
 interface Props {
@@ -44,6 +46,8 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
       showFontLicense: false,
       juansDownloadedRatio: 0,
       showUpdateAllJuansDone: false,
+      showToast: false,
+      toastMessage: '',
     }
   }
 
@@ -141,9 +145,13 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={refreshCircle} slot='start' />
-              <IonLabel className='ion-text-wrap uiFont'>檢查app更新 (若無更新則無回應)</IonLabel>
-              <IonButton slot='end' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={e => {
-                Globals.updateApp();
+              <IonLabel className='ion-text-wrap uiFont'>檢查app更新</IonLabel>
+              <IonButton slot='end' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={async e => {
+                const hasUpdate = await Globals.updateApp();
+
+                if (!hasUpdate) {
+                  this.setState({ showToast: true, toastMessage: 'App已是最新版' });
+                }
               }}>檢查</IonButton>
             </IonItem>
             <IonItem>
@@ -187,7 +195,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
                   // JSON text validation.
                   JSON.parse(fileText);
                   localStorage.setItem('Settings.json', fileText);
-                  this.props.dispatch({type: 'LOAD_SETTINGS'});
+                  this.props.dispatch({ type: 'LOAD_SETTINGS' });
                   this.updateAllJuans();
                 } catch (e) {
                   console.error(e);
@@ -342,7 +350,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
                     type: "SET_KEY_VAL",
                     key: 'fontSize',
                     val: e.detail.value,
-                  });                  
+                  });
                   Globals.updateCssVars(this.props.settings);
                 }} />
               </div>
@@ -431,6 +439,14 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
               ]}
             />
           </IonList>
+
+          <IonToast
+            cssClass='uiFont'
+            isOpen={this.state.showToast}
+            onDidDismiss={() => this.setState({ showToast: false })}
+            message={this.state.toastMessage}
+            duration={2000}
+          />
         </IonContent>
       </IonPage>
     );
