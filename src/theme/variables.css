@@ -180,7 +180,7 @@ body.dark {
     font-size: var(--ui-font-size) !important;
 }
 
-.uiFont .select-interface-option, .uiFont .toast-button-inner {
+ion-toast::part(button) {
     font-size: var(--ui-font-size) !important;
 }
 
