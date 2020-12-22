@@ -7,7 +7,7 @@ import * as uuid from 'uuid';
 import queryString from 'query-string';
 import './EPubViewPage.css';
 import Globals from '../Globals';
-import { bookmark, arrowBack, home, search, ellipsisHorizontal, ellipsisVertical, arrowForward, musicalNotes, stopCircle, book, shareSocial, print, refreshCircle, copy } from 'ionicons/icons';
+import { bookmark, arrowBack, home, search, ellipsisHorizontal, ellipsisVertical, arrowForward, musicalNotes, stopCircle, book, shareSocial, print, refreshCircle, copy, arrowUp, arrowDown } from 'ionicons/icons';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
 import { Work } from '../models/Work';
 import SearchAlert from '../components/SearchAlert';
@@ -1165,7 +1165,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
           onPointerLeave={e => {
             e.currentTarget.style.setProperty('opacity', `${fabButtonOpacity}`);
           }}>
-          <IonIcon icon={arrowBack} />
+          <IonIcon icon={this.props.rtlVerticalLayout ? arrowBack : arrowUp} />
         </IonFabButton>
       </IonFab>
       <IonFab vertical='center' horizontal='end' slot='fixed'>
@@ -1184,7 +1184,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
           onPointerLeave={e => {
             e.currentTarget.style.setProperty('opacity', `${fabButtonOpacity}`);
           }}>
-          <IonIcon icon={arrowForward} />
+          <IonIcon icon={this.props.rtlVerticalLayout ? arrowForward : arrowDown} />
         </IonFabButton>
       </IonFab>
     </>);
