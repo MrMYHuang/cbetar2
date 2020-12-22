@@ -77,9 +77,6 @@ interface State {
   showNoSelectedTextAlert: boolean;
   searchText: string;
   showSearchTextToast: boolean;
-  showAddBookmarkSuccess: boolean;
-  showsCopyToClipboardSuccess: boolean;
-  showsCitationFail: boolean;
   showSearchTextAlert: boolean;
   showToast: boolean;
   toastMessage: string;
@@ -110,9 +107,6 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       pageCount: 1,
       showJumpPageAlert: false,
       showNoSelectedTextAlert: false,
-      showAddBookmarkSuccess: false,
-      showsCopyToClipboardSuccess: false,
-      showsCitationFail: false,
       showSearchTextAlert: false,
       searchText: '',
       showSearchTextToast: false,
@@ -248,7 +242,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         ),
       }),
     });
-    this.setState({ showAddBookmarkSuccess: true });
+    this.setState({ showToast: true, toastMessage: '書籤新增成功！' });
     return;
   }
 
@@ -1026,7 +1020,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
                 this.setState({ popover: { show: false, event: null } });
                 const selectedText = this.getSelectedString();
                 Globals.copyToClipboard(selectedText);
-                this.setState({ showToast: true, toastMessage: `複製文字成功` });
+                this.setState({ showToast: true, toastMessage: `複製文字成功！` });
               }}>
                 <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
                 <IonIcon icon={copy} slot='start' />
@@ -1103,7 +1097,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
                   let endLine = this.findCbetaHtmlLine(range.endContainer)?.getAttribute('l');
                   sel?.removeAllRanges();
                   if (startLine == null || endLine == null) {
-                    this.setState({ showsCitationFail: true });
+                    this.setState({ showToast: true, toastMessage: '所選文字無法引用！' });
                     return;
                   }
                   const startLineMatches = /0*([1-9]*)([a-z])0*([1-9]*)/.exec(startLine!)!;
@@ -1116,7 +1110,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
                   }
                   const citation = `《${this.state.workInfo.title}》卷${this.props.match.params.path}：「${selectedText}」(CBETA, ${this.state.workInfo.vol}, no. ${/[^0-9]*(.*)/.exec(this.state.workInfo.work)![1]}, p. ${lineInfo})`;
                   navigator.clipboard && navigator.clipboard.writeText(citation);
-                  this.setState({ showsCopyToClipboardSuccess: true });
+                  this.setState({ showToast: true, toastMessage: '已複製到剪貼簿！' });
                 } else {
                   this.setState({ showNoSelectedTextAlert: true });
                 }
@@ -1273,30 +1267,6 @@ class _EPubViewPage extends React.Component<PageProps, State> {
                 },
               }
             ]}
-          />
-
-          <IonToast
-            cssClass='uiFont'
-            isOpen={this.state.showAddBookmarkSuccess}
-            onDidDismiss={() => this.setState({ showAddBookmarkSuccess: false })}
-            message="書籤新增成功！"
-            duration={2000}
-          />
-
-          <IonToast
-            cssClass='uiFont'
-            isOpen={this.state.showsCopyToClipboardSuccess}
-            onDidDismiss={() => this.setState({ showsCopyToClipboardSuccess: false })}
-            message="已複製到剪貼簿！"
-            duration={2000}
-          />
-
-          <IonToast
-            cssClass='uiFont'
-            isOpen={this.state.showsCitationFail}
-            onDidDismiss={() => this.setState({ showsCitationFail: false })}
-            message="所選文字無法引用！"
-            duration={2000}
           />
 
           <IonAlert
