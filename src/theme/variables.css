@@ -162,7 +162,7 @@ body.dark {
 }
 
 .alert-sub-title, .alert-message {
-    font-size: calc(var(--ui-font-size) * 0.8) !important;
+    font-size: var(--ui-font-size)px !important;
 }
 
 .textFont {
