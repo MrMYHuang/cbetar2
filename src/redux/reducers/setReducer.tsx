@@ -14,7 +14,11 @@ export default function reducer(state = {
       var val = action.val;
       switch (key) {
         case 'theme': {
-          document.body.classList.forEach((val) => document.body.classList.remove(val));
+          document.body.classList.forEach((val) => {
+            if (/theme/.test(val)) {
+              document.body.classList.remove(val);
+            }
+          });
           document.body.classList.toggle(`theme${val}`, true);
           break;
         }
