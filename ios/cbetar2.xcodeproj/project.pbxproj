@@ -1,0 +1,674 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 51;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		358681412B0FEA8690503AF9 /* Pods_cbetar2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B6D97948BFCB757099CEFD6 /* Pods_cbetar2.framework */; };
+		DB4B052A25946404001E907A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB4B052925946404001E907A /* AppDelegate.swift */; };
+		DB4B052C25946404001E907A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB4B052B25946404001E907A /* SceneDelegate.swift */; };
+		DB4B052E25946404001E907A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB4B052D25946404001E907A /* ViewController.swift */; };
+		DB4B053125946404001E907A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DB4B052F25946404001E907A /* Main.storyboard */; };
+		DB4B05332594640A001E907A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DB4B05322594640A001E907A /* Assets.xcassets */; };
+		DB4B05362594640B001E907A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DB4B05342594640B001E907A /* LaunchScreen.storyboard */; };
+		DB4B05412594640B001E907A /* cbetar2Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB4B05402594640B001E907A /* cbetar2Tests.swift */; };
+		DB4B054C2594640B001E907A /* cbetar2UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB4B054B2594640B001E907A /* cbetar2UITests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		DB4B053D2594640B001E907A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DB4B051E25946404001E907A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DB4B052525946404001E907A;
+			remoteInfo = cbetar2;
+		};
+		DB4B05482594640B001E907A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DB4B051E25946404001E907A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DB4B052525946404001E907A;
+			remoteInfo = cbetar2;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		4AC6176924436031B7D9B0EA /* Pods-cbetar2.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-cbetar2.release.xcconfig"; path = "Target Support Files/Pods-cbetar2/Pods-cbetar2.release.xcconfig"; sourceTree = "<group>"; };
+		7B6D97948BFCB757099CEFD6 /* Pods_cbetar2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_cbetar2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		808D74CA25BE74245E8F59A1 /* Pods-cbetar2.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-cbetar2.debug.xcconfig"; path = "Target Support Files/Pods-cbetar2/Pods-cbetar2.debug.xcconfig"; sourceTree = "<group>"; };
+		DB4B052625946404001E907A /* cbetar2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = cbetar2.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DB4B052925946404001E907A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		DB4B052B25946404001E907A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		DB4B052D25946404001E907A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		DB4B053025946404001E907A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		DB4B05322594640A001E907A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		DB4B05352594640B001E907A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		DB4B05372594640B001E907A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DB4B053C2594640B001E907A /* cbetar2Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = cbetar2Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DB4B05402594640B001E907A /* cbetar2Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = cbetar2Tests.swift; sourceTree = "<group>"; };
+		DB4B05422594640B001E907A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DB4B05472594640B001E907A /* cbetar2UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = cbetar2UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DB4B054B2594640B001E907A /* cbetar2UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = cbetar2UITests.swift; sourceTree = "<group>"; };
+		DB4B054D2594640B001E907A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		DB4B052325946404001E907A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				358681412B0FEA8690503AF9 /* Pods_cbetar2.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DB4B05392594640B001E907A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DB4B05442594640B001E907A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		34B377E363D6A505E1AD6B55 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				808D74CA25BE74245E8F59A1 /* Pods-cbetar2.debug.xcconfig */,
+				4AC6176924436031B7D9B0EA /* Pods-cbetar2.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		C3CF6985895959E1A821B65A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				7B6D97948BFCB757099CEFD6 /* Pods_cbetar2.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		DB4B051D25946404001E907A = {
+			isa = PBXGroup;
+			children = (
+				DB4B052825946404001E907A /* cbetar2 */,
+				DB4B053F2594640B001E907A /* cbetar2Tests */,
+				DB4B054A2594640B001E907A /* cbetar2UITests */,
+				DB4B052725946404001E907A /* Products */,
+				34B377E363D6A505E1AD6B55 /* Pods */,
+				C3CF6985895959E1A821B65A /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		DB4B052725946404001E907A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				DB4B052625946404001E907A /* cbetar2.app */,
+				DB4B053C2594640B001E907A /* cbetar2Tests.xctest */,
+				DB4B05472594640B001E907A /* cbetar2UITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		DB4B052825946404001E907A /* cbetar2 */ = {
+			isa = PBXGroup;
+			children = (
+				DB4B052925946404001E907A /* AppDelegate.swift */,
+				DB4B052B25946404001E907A /* SceneDelegate.swift */,
+				DB4B052D25946404001E907A /* ViewController.swift */,
+				DB4B052F25946404001E907A /* Main.storyboard */,
+				DB4B05322594640A001E907A /* Assets.xcassets */,
+				DB4B05342594640B001E907A /* LaunchScreen.storyboard */,
+				DB4B05372594640B001E907A /* Info.plist */,
+			);
+			path = cbetar2;
+			sourceTree = "<group>";
+		};
+		DB4B053F2594640B001E907A /* cbetar2Tests */ = {
+			isa = PBXGroup;
+			children = (
+				DB4B05402594640B001E907A /* cbetar2Tests.swift */,
+				DB4B05422594640B001E907A /* Info.plist */,
+			);
+			path = cbetar2Tests;
+			sourceTree = "<group>";
+		};
+		DB4B054A2594640B001E907A /* cbetar2UITests */ = {
+			isa = PBXGroup;
+			children = (
+				DB4B054B2594640B001E907A /* cbetar2UITests.swift */,
+				DB4B054D2594640B001E907A /* Info.plist */,
+			);
+			path = cbetar2UITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		DB4B052525946404001E907A /* cbetar2 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DB4B05502594640B001E907A /* Build configuration list for PBXNativeTarget "cbetar2" */;
+			buildPhases = (
+				F61CF96548C0360D174B55C1 /* [CP] Check Pods Manifest.lock */,
+				DB4B052225946404001E907A /* Sources */,
+				DB4B052325946404001E907A /* Frameworks */,
+				DB4B052425946404001E907A /* Resources */,
+				72991BFA8E161086F2E706BB /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = cbetar2;
+			productName = cbetar2;
+			productReference = DB4B052625946404001E907A /* cbetar2.app */;
+			productType = "com.apple.product-type.application";
+		};
+		DB4B053B2594640B001E907A /* cbetar2Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DB4B05532594640B001E907A /* Build configuration list for PBXNativeTarget "cbetar2Tests" */;
+			buildPhases = (
+				DB4B05382594640B001E907A /* Sources */,
+				DB4B05392594640B001E907A /* Frameworks */,
+				DB4B053A2594640B001E907A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DB4B053E2594640B001E907A /* PBXTargetDependency */,
+			);
+			name = cbetar2Tests;
+			productName = cbetar2Tests;
+			productReference = DB4B053C2594640B001E907A /* cbetar2Tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		DB4B05462594640B001E907A /* cbetar2UITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DB4B05562594640B001E907A /* Build configuration list for PBXNativeTarget "cbetar2UITests" */;
+			buildPhases = (
+				DB4B05432594640B001E907A /* Sources */,
+				DB4B05442594640B001E907A /* Frameworks */,
+				DB4B05452594640B001E907A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DB4B05492594640B001E907A /* PBXTargetDependency */,
+			);
+			name = cbetar2UITests;
+			productName = cbetar2UITests;
+			productReference = DB4B05472594640B001E907A /* cbetar2UITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		DB4B051E25946404001E907A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1230;
+				LastUpgradeCheck = 1230;
+				TargetAttributes = {
+					DB4B052525946404001E907A = {
+						CreatedOnToolsVersion = 12.3;
+					};
+					DB4B053B2594640B001E907A = {
+						CreatedOnToolsVersion = 12.3;
+						TestTargetID = DB4B052525946404001E907A;
+					};
+					DB4B05462594640B001E907A = {
+						CreatedOnToolsVersion = 12.3;
+						TestTargetID = DB4B052525946404001E907A;
+					};
+				};
+			};
+			buildConfigurationList = DB4B052125946404001E907A /* Build configuration list for PBXProject "cbetar2" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = DB4B051D25946404001E907A;
+			productRefGroup = DB4B052725946404001E907A /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				DB4B052525946404001E907A /* cbetar2 */,
+				DB4B053B2594640B001E907A /* cbetar2Tests */,
+				DB4B05462594640B001E907A /* cbetar2UITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		DB4B052425946404001E907A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DB4B05362594640B001E907A /* LaunchScreen.storyboard in Resources */,
+				DB4B05332594640A001E907A /* Assets.xcassets in Resources */,
+				DB4B053125946404001E907A /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DB4B053A2594640B001E907A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DB4B05452594640B001E907A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		72991BFA8E161086F2E706BB /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-cbetar2/Pods-cbetar2-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-cbetar2/Pods-cbetar2-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-cbetar2/Pods-cbetar2-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F61CF96548C0360D174B55C1 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-cbetar2-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		DB4B052225946404001E907A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DB4B052E25946404001E907A /* ViewController.swift in Sources */,
+				DB4B052A25946404001E907A /* AppDelegate.swift in Sources */,
+				DB4B052C25946404001E907A /* SceneDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DB4B05382594640B001E907A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DB4B05412594640B001E907A /* cbetar2Tests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DB4B05432594640B001E907A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DB4B054C2594640B001E907A /* cbetar2UITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		DB4B053E2594640B001E907A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DB4B052525946404001E907A /* cbetar2 */;
+			targetProxy = DB4B053D2594640B001E907A /* PBXContainerItemProxy */;
+		};
+		DB4B05492594640B001E907A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DB4B052525946404001E907A /* cbetar2 */;
+			targetProxy = DB4B05482594640B001E907A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		DB4B052F25946404001E907A /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				DB4B053025946404001E907A /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		DB4B05342594640B001E907A /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				DB4B05352594640B001E907A /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		DB4B054E2594640B001E907A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		DB4B054F2594640B001E907A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		DB4B05512594640B001E907A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 808D74CA25BE74245E8F59A1 /* Pods-cbetar2.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
+				DEVELOPMENT_TEAM = XU8X8HU5ST;
+				INFOPLIST_FILE = cbetar2/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.mrmyhuang.cbetar2;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		DB4B05522594640B001E907A /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4AC6176924436031B7D9B0EA /* Pods-cbetar2.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
+				DEVELOPMENT_TEAM = XU8X8HU5ST;
+				INFOPLIST_FILE = cbetar2/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.mrmyhuang.cbetar2;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		DB4B05542594640B001E907A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = XU8X8HU5ST;
+				INFOPLIST_FILE = cbetar2Tests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.mrmyhuang.cbetar2Tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/cbetar2.app/cbetar2";
+			};
+			name = Debug;
+		};
+		DB4B05552594640B001E907A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = XU8X8HU5ST;
+				INFOPLIST_FILE = cbetar2Tests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.mrmyhuang.cbetar2Tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/cbetar2.app/cbetar2";
+			};
+			name = Release;
+		};
+		DB4B05572594640B001E907A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = XU8X8HU5ST;
+				INFOPLIST_FILE = cbetar2UITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.mrmyhuang.cbetar2UITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = cbetar2;
+			};
+			name = Debug;
+		};
+		DB4B05582594640B001E907A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = XU8X8HU5ST;
+				INFOPLIST_FILE = cbetar2UITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.mrmyhuang.cbetar2UITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = cbetar2;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		DB4B052125946404001E907A /* Build configuration list for PBXProject "cbetar2" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DB4B054E2594640B001E907A /* Debug */,
+				DB4B054F2594640B001E907A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DB4B05502594640B001E907A /* Build configuration list for PBXNativeTarget "cbetar2" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DB4B05512594640B001E907A /* Debug */,
+				DB4B05522594640B001E907A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DB4B05532594640B001E907A /* Build configuration list for PBXNativeTarget "cbetar2Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DB4B05542594640B001E907A /* Debug */,
+				DB4B05552594640B001E907A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DB4B05562594640B001E907A /* Build configuration list for PBXNativeTarget "cbetar2UITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DB4B05572594640B001E907A /* Debug */,
+				DB4B05582594640B001E907A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = DB4B051E25946404001E907A /* Project object */;
+}

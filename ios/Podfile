@@ -1,0 +1,18 @@
+source 'https://github.com/CocoaPods/Specs.git'
+platform :ios, "14.0"
+use_frameworks!
+inhibit_all_warnings!
+
+def import_pods
+  pod 'SnapKit', '~> 5.0.0'
+end
+
+target 'cbetar2' do
+  import_pods
+end
+
+post_install do |installer|
+  installer.pods_project.build_configurations.each do |config|
+    config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = "arm64"
+  end
+end
