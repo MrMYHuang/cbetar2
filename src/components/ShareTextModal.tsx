@@ -70,7 +70,7 @@ class _ShareTextModal extends React.Component<PageProps, State> {
             <div>
               <IonLabel className='uiFont'>也可以使用QR Code分享:</IonLabel>
             </div>
-            <div style={{ flexGrow: 1, display: 'flex', alignItems: 'center', margin: 10 }}>
+            <div style={{ flexGrow: 1, flexShrink: 0, display: 'flex', alignItems: 'center', margin: 10 }}>
               <canvas id='qrcCanvas' width='500' height='500' style={{ margin: '0px auto' }} />
             </div>
             <div>
