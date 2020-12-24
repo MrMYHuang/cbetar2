@@ -121,6 +121,13 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
     } else if (isPlatform('ios')) {
       document.ontouchend = Globals.disableIosSafariCallout.bind(window);
     }
+    if (Globals.isTouchDevice()) {
+      window.onorientationchange = (event) => {
+        setTimeout(() => {
+          this.forceUpdate();
+        }, 500);
+      }
+    }
     document.body.classList.forEach((val) => document.body.classList.remove(val));
     document.body.classList.toggle(`theme${state.settings.theme}`, true);
     document.body.classList.toggle(`print${state.settings.printStyle}`, true);
