@@ -110,15 +110,15 @@ CBETA電子佛典閱讀器2(非官方)，使用CBETA API存取電子佛經，支
 ## Web App
 此progressive web app (PWA)，可不安裝直接在網頁瀏覽器執行，或安裝至手機、平板、筆電、桌機。建議安裝，以避免瀏覽器定期清除快取，導致書籤資料不見！
 
-### 網址
+### PWA網址
 https://MrMYHuang.github.io
 
 ### 安裝
 
-#### Windows, macOS, Linux, Android - Chrome
-請參考Chrome官方文件： 
-
-https://support.google.com/chrome/answer/9658361?hl=zh-Hant&co=GENIE.Platform%3DDesktop
+#### Windows, macOS, Linux, Android - 使用Chrome
+使用Chrome瀏覧器（建議最新版）開啟上述PWA網址後，網址列會出現一個加號，如圖所示：
+<img src='./docs/images/ChromeInstall.png' width='50%' />
+點擊它，以完成安裝。安裝完後會在桌面出現"電子佛典"app圖示。
 
 #### Android
 可從Google Play Store下載此PWA：
@@ -134,7 +134,7 @@ https://www.microsoft.com/store/apps/9P6TDQX46JJL
 
 (註：此種安裝渠道尚不支援"App捷徑"功能！)
 
-#### iOS - Safari
+#### iOS - 使用Safari
 1. 使用Safari開啟web app網址，再點擊下方中間的"分享"圖示：
 
 <img src='./docs/images/Safari/OpenAppUrl.png' width='50%' height='50%' />
