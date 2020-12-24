@@ -118,6 +118,7 @@ https://MrMYHuang.github.io
 #### Windows, macOS, Linux, Android - 使用Chrome
 使用Chrome瀏覧器（建議最新版）開啟上述PWA網址後，網址列會出現一個加號，如圖所示：
 <img src='./docs/images/ChromeInstall.png' width='50%' />
+
 點擊它，以完成安裝。安裝完後會在桌面出現"電子佛典"app圖示。
 
 #### Android
