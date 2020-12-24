@@ -15,7 +15,7 @@ let log = '';
 
 const axiosInstance = axios.create({
   baseURL: cbetaApiUrl,
-  timeout: 3000,
+  timeout: 5000,
 });
 
 function scrollbarSizeIdToValue(id: number) {
