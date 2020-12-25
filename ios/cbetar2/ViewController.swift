@@ -29,6 +29,7 @@ class ViewController: UIViewController {
         configuration.userContentController = contentController
         
         let webView = WKWebView(frame: .zero, configuration: configuration)
+        webView.navigationDelegate = self
         webView.scrollView.contentInsetAdjustmentBehavior = .never
         
         let websiteDataTypes = NSSet(array: [WKWebsiteDataTypeDiskCache, WKWebsiteDataTypeMemoryCache])
@@ -67,3 +68,25 @@ extension ViewController: WKScriptMessageHandler {
         }
     }
 }
+
+extension ViewController: WKNavigationDelegate {
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        if navigationAction.navigationType == .linkActivated  {
+            if let url = navigationAction.request.url,
+               let host = url.host, !host.hasPrefix(baseURL.host!),
+               UIApplication.shared.canOpenURL(url) {
+                UIApplication.shared.open(url)
+                print(url)
+                print("Redirected to browser. No need to open it locally")
+                decisionHandler(.cancel)
+            } else {
+                print("Open it locally")
+                decisionHandler(.allow)
+            }
+        } else {
+            print("not a user click")
+            decisionHandler(.allow)
+        }
+    }
+}
+
