@@ -12,9 +12,12 @@ import SnapKit
 class ViewController: UIViewController {
     
     let jsonUriPrefix = "data:text/json;charset=utf-8,"
+    #if DEBUG
     let baseURL = URL(string: "http://localhost:3000")!
+    #else
     //let baseURL = URL(string: "https://mrrogerhuang.github.io")!
-    //let baseURL = URL(string: "https://mrmyhuang.github.io")!
+    let baseURL = URL(string: "https://mrmyhuang.github.io")!
+    #endif
     
     let contentController = WKUserContentController();
     let swiftCallbackHandler = "swiftCallbackHandler"

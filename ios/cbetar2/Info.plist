@@ -20,6 +20,12 @@
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.education</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>data</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -87,9 +93,5 @@
 		<string>mrrogerhuang.github.io</string>
 		<string>mrmyhuang.github.io</string>
 	</array>
-    <key>LSApplicationQueriesSchemes</key>
-    <array>
-        <string>data</string>
-    </array>
 </dict>
 </plist>
