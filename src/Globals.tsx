@@ -187,8 +187,20 @@ function disableIosSafariCallout(this: Window, event: any) {
   }
 }
 
+const webkit = (window as any).webkit;
 function copyToClipboard(text: string) {
-  navigator.clipboard && navigator.clipboard.writeText(text);
+  if (isMacCatalyst()) {
+    (webkit as any).messageHandlers.swiftCallbackHandler.postMessage({
+      event: 'copy',
+      text
+    })
+  } else {
+    navigator.clipboard && navigator.clipboard.writeText(text);
+  }
+}
+
+function isMacCatalyst() {
+  return isPlatform('ios') && navigator.platform === 'MacIntel';
 }
 
 export default {
@@ -274,8 +286,9 @@ export default {
     document.documentElement.style.cssText = `--ion-font-family: ${settings.useFontKai ? 'Heiti, Times, Kai' : 'Times, Heiti'};
         --scrollbar-size: ${scrollbarSize}px; --ui-font-size: ${settings.uiFontSize}px; --text-font-size: ${settings.fontSize}px`
   },
+  isMacCatalyst,
   isTouchDevice: () => {
-    return isPlatform('ios') || isPlatform('android');
+    return (isPlatform('ios') && !isMacCatalyst()) || isPlatform('android');
   },
   fetchJuan,
   getFileName,

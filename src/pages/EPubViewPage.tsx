@@ -83,6 +83,7 @@ interface State {
   showSearchAlert: boolean;
   popover: any;
   lookupDictPopover: any;
+  canTextToSpeech: boolean;
   speechState: SpeechState;
 }
 
@@ -94,7 +95,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
   epub: any;
   displayed: any;
   cfiRange: string;
-  speechSynthesisUtterance: SpeechSynthesisUtterance;
+  speechSynthesisUtterance: SpeechSynthesisUtterance | null;
 
   constructor(props: any) {
     super(props);
@@ -121,6 +122,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         show: false,
         data: [],
       },
+      canTextToSpeech: false,
       speechState: SpeechState.UNINITIAL,
     }
     this.htmlFile = '';
@@ -128,31 +130,35 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     this.book = null;
     this.rendition = null;
     this.cfiRange = '';
-    this.speechSynthesisUtterance = new SpeechSynthesisUtterance();
-    this.speechSynthesisUtterance.lang = 'zh-TW';
-    this.speechSynthesisUtterance.onend = (ev: SpeechSynthesisEvent) => {
-      if (this.state.speechState === SpeechState.UNINITIAL) {
-        return;
-      }
+    this.speechSynthesisUtterance = null;
+    if (typeof SpeechSynthesisUtterance !== 'undefined') {
+      this.setState({ canTextToSpeech: true });
+      this.speechSynthesisUtterance = new SpeechSynthesisUtterance();
+      this.speechSynthesisUtterance.lang = 'zh-TW';
+      this.speechSynthesisUtterance.onend = (ev: SpeechSynthesisEvent) => {
+        if (this.state.speechState === SpeechState.UNINITIAL) {
+          return;
+        }
 
-      const hasNextTexts1 = !this.props.paginated && this.workTextsIndex < this.workTexts.length - 1;
-      const hasNextTexts2 = this.props.paginated && this.state.currentPage < this.state.pageCount;
-      let texts = '';
-      if (hasNextTexts1) {
-        this.workTextsIndex += 1;
-        texts = this.workTexts[this.workTextsIndex];
-      } else if (hasNextTexts2) {
-        this.pageNext();
-        texts = this.findTextsInPage(this.state.currentPage);
-      } else {
-        this.setState({ speechState: SpeechState.UNINITIAL });
-        console.log(`Stop work text to speech.`);
-        return;
-      }
-      this.speechSynthesisUtterance.text = texts;
-      speechSynthesis.speak(this.speechSynthesisUtterance);
-      console.log(`Play work text to speech part / page: ${hasNextTexts1 ? this.workTextsIndex : this.state.currentPage}`);
-    };
+        const hasNextTexts1 = !this.props.paginated && this.workTextsIndex < this.workTexts.length - 1;
+        const hasNextTexts2 = this.props.paginated && this.state.currentPage < this.state.pageCount;
+        let texts = '';
+        if (hasNextTexts1) {
+          this.workTextsIndex += 1;
+          texts = this.workTexts[this.workTextsIndex];
+        } else if (hasNextTexts2) {
+          this.pageNext();
+          texts = this.findTextsInPage(this.state.currentPage);
+        } else {
+          this.setState({ speechState: SpeechState.UNINITIAL });
+          console.log(`Stop work text to speech.`);
+          return;
+        }
+        this.speechSynthesisUtterance!.text = texts;
+        speechSynthesis.speak(this.speechSynthesisUtterance!);
+        console.log(`Play work text to speech part / page: ${hasNextTexts1 ? this.workTextsIndex : this.state.currentPage}`);
+      };
+    }
     document.addEventListener("keydown", this.keyListener.bind(this), false);
   }
 
@@ -264,7 +270,9 @@ class _EPubViewPage extends React.Component<PageProps, State> {
   }
 
   ionViewWillLeave() {
-    speechSynthesis.cancel();
+    if (this.state.canTextToSpeech) {
+      speechSynthesis.cancel();
+    }
     this.setState({ htmlStr: null, currentPage: 1, speechState: SpeechState.UNINITIAL, showSearchTextToast: false });
     this.book?.destroy();
     this.book = null;
@@ -924,7 +932,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
             <span className='uiFont' style={{ color: 'var(--color)' }}>頁{this.state.currentPage}/{this.state.pageCount}</span>
           </IonButton>
 
-          <IonButton hidden={this.state.fetchError} fill="clear" slot='end' onClick={e => {
+          <IonButton hidden={this.state.fetchError || !this.state.canTextToSpeech} fill="clear" slot='end' onClick={e => {
             const voices = speechSynthesis.getVoices();
             if (voices.length === 0) {
               return;
@@ -936,7 +944,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
                   return voice.lang.indexOf('zh-TW') > -1 || voice.lang.indexOf('zh_TW') > -1
                 })
                 if (zhTwVoice !== undefined) {
-                  this.speechSynthesisUtterance.voice = zhTwVoice;
+                  this.speechSynthesisUtterance!.voice = zhTwVoice;
                 }
 
                 let texts: string | undefined;
@@ -955,11 +963,11 @@ class _EPubViewPage extends React.Component<PageProps, State> {
                 }
 
                 this.workTextsIndex = 0;
-                this.speechSynthesisUtterance.text = this.workTexts[this.workTextsIndex];
-                this.speechSynthesisUtterance.rate = this.props.speechRate;
+                this.speechSynthesisUtterance!.text = this.workTexts[this.workTextsIndex];
+                this.speechSynthesisUtterance!.rate = this.props.speechRate;
                 // Improve reliability by cancel first.
                 speechSynthesis.cancel();
-                speechSynthesis.speak(this.speechSynthesisUtterance);
+                speechSynthesis.speak(this.speechSynthesisUtterance!);
                 this.setState({ speechState: SpeechState.SPEAKING });
                 break;
               case SpeechState.SPEAKING:
@@ -1078,7 +1086,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
                 <IonLabel className='ion-text-wrap uiFont'>查字典</IonLabel>
               </IonItem>
 
-              <IonItem button onClick={e => {
+              <IonItem hidden={Globals.isMacCatalyst()} button onClick={e => {
                 this.setState({ popover: { show: false, event: null } });
                 this.ePubIframe?.contentWindow?.print();
               }}>
@@ -1109,7 +1117,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
                     lineInfo += `-${endLineModified}`;
                   }
                   const citation = `《${this.state.workInfo.title}》卷${this.props.match.params.path}：「${selectedText}」(CBETA, ${this.state.workInfo.vol}, no. ${/[^0-9]*(.*)/.exec(this.state.workInfo.work)![1]}, p. ${lineInfo})`;
-                  navigator.clipboard && navigator.clipboard.writeText(citation);
+                  Globals.copyToClipboard(citation);
                   this.setState({ showToast: true, toastMessage: '已複製到剪貼簿！' });
                 } else {
                   this.setState({ showNoSelectedTextAlert: true });

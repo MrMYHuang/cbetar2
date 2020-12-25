@@ -40,7 +40,7 @@ class _ShareTextModal extends React.Component<PageProps, State> {
       appUrl += hasQueryString ? `&${appSettingsString}` : `?${appSettingsString}`;
     }
     
-    navigator.clipboard && navigator.clipboard.writeText(appUrl);
+    Globals.copyToClipboard(appUrl);
     const qrcCanvas = document.getElementById('qrcCanvas');
     qrcode.toCanvas(qrcCanvas, appUrl);
     return qrcCanvas;

@@ -11,14 +11,12 @@ import SnapKit
 
 class ViewController: UIViewController {
 
-    let baseURL = URL(string: "https://mrmyhuang.github.io")! //URL(string: "http://localhost:3000")! //
+    let baseURL = URL(string: "http://localhost:3000")!
+    //let baseURL = URL(string: "https://mrrogerhuang.github.io")!
+    //let baseURL = URL(string: "https://mrmyhuang.github.io")!
     
-    var activity: UIActivityIndicatorView = {
-        var view = UIActivityIndicatorView()
-        view.transform = CGAffineTransform(scaleX: 5, y: 5)
-        view.hidesWhenStopped = true
-        return view
-    }()
+    let contentController = WKUserContentController();
+    let swiftCallbackHandler = "swiftCallbackHandler"
     
     lazy var webView: WKWebView = {
         let preferences = WKPreferences()
@@ -28,9 +26,9 @@ class ViewController: UIViewController {
         configuration.preferences = preferences
         configuration.defaultWebpagePreferences.allowsContentJavaScript = true
         configuration.limitsNavigationsToAppBoundDomains = true
+        configuration.userContentController = contentController
         
         let webView = WKWebView(frame: .zero, configuration: configuration)
-        webView.navigationDelegate = self
         webView.scrollView.contentInsetAdjustmentBehavior = .never
         
         let websiteDataTypes = NSSet(array: [WKWebsiteDataTypeDiskCache, WKWebsiteDataTypeMemoryCache])
@@ -47,30 +45,25 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        contentController.add(self, name: swiftCallbackHandler)
         view.addSubview(webView)
         webView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
+            //$0.edges.equalToSuperview()
+            $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.topMargin)
+            $0.leading.trailing.bottom.equalToSuperview()
         }
-        webView.layoutIfNeeded()
         webView.load(URLRequest(url: baseURL))
-        webView.evaluateJavaScript("alert(window.innerHeight)", completionHandler: nil)
-        
-        /*
-        webView.addSubview(activity)
-        activity.snp.makeConstraints({
-            $0.center.equalToSuperview()
-        })*/
-        
-        //activity.startAnimating()
     }
 }
 
-extension ViewController: WKNavigationDelegate {
-    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        activity.stopAnimating()
-    }
-
-    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-        activity.stopAnimating()
+extension ViewController: WKScriptMessageHandler {
+    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        guard let dict = message.body as? Dictionary<String, Any> else { return }
+        guard let event = dict["event"] as? String else { return }
+        
+        if(event == "copy") {
+            let text = dict["text"] as? String ?? ""
+            UIPasteboard.general.string = text
+        }
     }
 }

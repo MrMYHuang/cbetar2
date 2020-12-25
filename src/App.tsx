@@ -155,8 +155,10 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
     };
 
     // Preload speechSynthesis.
-    speechSynthesis.getVoices();
-    speechSynthesis.cancel();
+    if (typeof speechSynthesis !== 'undefined') {
+      speechSynthesis.getVoices();
+      speechSynthesis.cancel();
+    }
     this.wakeLockScreen();
     document.addEventListener("visibilitychange", async () => {
       if (document.visibilityState === 'visible') {

@@ -53,6 +53,7 @@
 		DB4B05472594640B001E907A /* cbetar2UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = cbetar2UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB4B054B2594640B001E907A /* cbetar2UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = cbetar2UITests.swift; sourceTree = "<group>"; };
 		DB4B054D2594640B001E907A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DB4B05AF25956C82001E907A /* cbetar2.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = cbetar2.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,6 +124,7 @@
 		DB4B052825946404001E907A /* cbetar2 */ = {
 			isa = PBXGroup;
 			children = (
+				DB4B05AF25956C82001E907A /* cbetar2.entitlements */,
 				DB4B052925946404001E907A /* AppDelegate.swift */,
 				DB4B052B25946404001E907A /* SceneDelegate.swift */,
 				DB4B052D25946404001E907A /* ViewController.swift */,
@@ -505,6 +507,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = cbetar2/cbetar2.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2;
@@ -517,6 +520,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = io.github.mrmyhuang.cbetar2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -528,6 +532,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = cbetar2/cbetar2.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2;
@@ -540,6 +545,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = io.github.mrmyhuang.cbetar2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

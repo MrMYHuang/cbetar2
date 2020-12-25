@@ -83,7 +83,9 @@
 	</array>
 	<key>WKAppBoundDomains</key>
 	<array>
-		<string>mrmyhuang.github.io</string>
+        <string>localhost</string>
+        <string>mrrogerhuang.github.io</string>
+        <string>mrmyhuang.github.io</string>
 	</array>
 </dict>
 </plist>

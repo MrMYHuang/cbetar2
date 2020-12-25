@@ -160,10 +160,13 @@ https://www.microsoft.com/store/apps/9P6TDQX46JJL
 5. iOS Safari 13.4以上才支援"分享此頁"功能。
 6. iOS上，經文頁"搜尋文字"視窗中，按下搜尋鈕後，要再點擊一次向前搜尋鈕，被搜尋文字才開始會上色。
 7. iOS不支援app捷徑。
-8. Safari不支援列印經文。
+8. Safari不支援列印直排經文( https://bugs.webkit.org/show_bug.cgi?id=220043 )。
 9. iOS Safari選擇文字後，仍會閃爍彈出式選單才消失。
+10. Mac Catalyst app不支援列印經文。
 
 ## <a id='history'>版本歷史</a>
+* 4.14.0:
+  * [修正] 支援Mac Catalyst app (macOS)。
 * 4.13.8:
   * [修正] 在iOS, Android螢幕旋轉後，版面異常的問題。
 * 4.13.7:
