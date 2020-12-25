@@ -165,6 +165,8 @@ https://www.microsoft.com/store/apps/9P6TDQX46JJL
 10. Mac Catalyst app不支援列印經文。
 
 ## <a id='history'>版本歷史</a>
+* 4.14.2:
+  * [修正] 佛學詞典頁在iPhone會有文字被切掉的問題。
 * 4.14.0:
   * [修正] 支援Mac Catalyst app (macOS)。
 * 4.13.8:
