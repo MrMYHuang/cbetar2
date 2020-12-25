@@ -10,7 +10,8 @@ import WebKit
 import SnapKit
 
 class ViewController: UIViewController {
-
+    
+    let jsonUriPrefix = "data:text/json;charset=utf-8,"
     let baseURL = URL(string: "http://localhost:3000")!
     //let baseURL = URL(string: "https://mrrogerhuang.github.io")!
     //let baseURL = URL(string: "https://mrmyhuang.github.io")!
@@ -55,6 +56,26 @@ class ViewController: UIViewController {
         }
         webView.load(URLRequest(url: baseURL))
     }
+    
+    var fileURL: URL?
+    private func saveText(text: String, file: String) {
+        if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+            fileURL = dir.appendingPathComponent(file)
+            do {
+                try text.write(to: fileURL!, atomically: false, encoding: .utf8)
+                let controller = UIDocumentPickerViewController(forExporting: [fileURL!])
+                controller.delegate = self
+                present(controller, animated: true)
+            }
+            catch {/* error handling here */}
+        }
+    }
+}
+
+extension ViewController: UIDocumentPickerDelegate {
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+        try? FileManager.default.removeItem(at: fileURL! )
+    }
 }
 
 extension ViewController: WKScriptMessageHandler {
@@ -72,21 +93,21 @@ extension ViewController: WKScriptMessageHandler {
 extension ViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         if navigationAction.navigationType == .linkActivated  {
-            if let url = navigationAction.request.url,
-               let host = url.host, !host.hasPrefix(baseURL.host!),
-               UIApplication.shared.canOpenURL(url) {
-                UIApplication.shared.open(url)
-                print(url)
-                print("Redirected to browser. No need to open it locally")
-                decisionHandler(.cancel)
-            } else {
-                print("Open it locally")
-                decisionHandler(.allow)
+            if let url = navigationAction.request.url {
+                if url.absoluteString.contains(jsonUriPrefix) {
+                    if let dataStr = url.absoluteString.replacingOccurrences(of: jsonUriPrefix, with: "").removingPercentEncoding {
+                        saveText(text: dataStr, file: "Settings.json")
+                        decisionHandler(.cancel)
+                        return
+                    }
+                } else if let host = url.host, !host.hasPrefix(baseURL.host!), UIApplication.shared.canOpenURL(url) {
+                    UIApplication.shared.open(url)
+                    decisionHandler(.cancel)
+                    return
+                }
             }
-        } else {
-            print("not a user click")
-            decisionHandler(.allow)
         }
+        
+        decisionHandler(.allow)
     }
 }
-
