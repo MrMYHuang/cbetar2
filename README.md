@@ -170,7 +170,7 @@ https://www.microsoft.com/store/apps/9P6TDQX46JJL
 * 4.13.8:
   * [修正] 在iOS, Android螢幕旋轉後，版面異常的問題。
 * 4.13.7:
-  * [修正] 在iOS執行分享功能，QR code會與文字重疊的問題。
+  * [修正] 在iOS執行分享功能，QR code會與文字重疊的問題。
   * [調整] API逾時時間調為5秒。
 * 4.13.4:
   * [修正] 佈景主提切換異常的問題。
