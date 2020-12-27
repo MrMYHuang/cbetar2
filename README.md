@@ -121,14 +121,14 @@ https://MrMYHuang.github.io
 
 點擊它，以完成安裝。安裝完後會在桌面出現"電子佛典"app圖示。
 
-#### Android
+#### Android - 使用Google Play Store
 可從Google Play Store下載此PWA：
 
 https://play.google.com/store/apps/details?id=io.github.mrmyhuang.cbetar2
 
 (註：此種安裝渠道尚不支援"App捷徑"功能！)
 
-#### Windows 10
+#### Windows 10 - 使用Microsoft Store
 可從Microsoft Store下載此PWA：
 
 https://www.microsoft.com/store/apps/9P6TDQX46JJL
@@ -151,6 +151,11 @@ https://www.microsoft.com/store/apps/9P6TDQX46JJL
 4. App安裝完，出現在主畫面的圖示：
 
 <img src='./docs/images/Safari/AppIcon.png' width='50%' height='50%' />
+
+### Linux - Snap Store
+可從Snap Store下載此PWA：
+
+https://snapcraft.io/cbetar2
 
 ## <a id='knownIssues'>已知問題</a>
 1. iOS Safari在單頁模式下，捲軸無法顯示。
