@@ -152,7 +152,7 @@ https://www.microsoft.com/store/apps/9P6TDQX46JJL
 
 <img src='./docs/images/Safari/AppIcon.png' width='50%' height='50%' />
 
-### Linux - Snap Store
+#### Linux - Snap Store
 可從Snap Store下載此PWA：
 
 https://snapcraft.io/cbetar2
