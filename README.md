@@ -107,35 +107,29 @@ CBETA電子佛典閱讀器2(非官方)，使用CBETA API存取電子佛經，支
 
 建議OS與Chrome、Safari保持在最新版，以取得最佳app體驗。
 
-## Web App
-此progressive web app (PWA)，可不安裝直接在網頁瀏覽器執行，或安裝至手機、平板、筆電、桌機。建議安裝，以避免瀏覽器定期清除快取，導致書籤資料不見！
+## <a id='install'>安裝</a>
 
-### PWA網址
+此app有兩種取得、安裝方式：
+
+  1. Chrome、Safari網頁瀏覽器。
+  2. App商店。
+
+建議採用第1種用瀏覽器安裝，以取得最完整的app功能體驗。兩種安裝方法如下。
+
+### <a id='web-app'>從瀏覽器開啟/安裝</a>
+請用Chrome (Windows, macOS, Linux, Android作業系統使用者)、Safari (iOS (iPhone, iPad)使用者)瀏覽器開啟以下網址：
+
 https://MrMYHuang.github.io
 
-### 安裝
+此progressive web app (PWA)，可不安裝直接在網頁瀏覽器執行，或安裝至手機、平板、筆電、桌機。建議安裝，以避免瀏覽器定期清除快取，導致書籤資料不見！
 
-#### Windows, macOS, Linux, Android - 使用Chrome
+#### Windows, macOS, Linux, Android - 使用Chrome安裝
 使用Chrome瀏覧器（建議最新版）開啟上述PWA網址後，網址列會出現一個加號，如圖所示：
 <img src='./docs/images/ChromeInstall.png' width='50%' />
 
 點擊它，以完成安裝。安裝完後會在桌面出現"電子佛典"app圖示。
 
-#### Android - 使用Google Play Store
-可從Google Play Store下載此PWA：
-
-https://play.google.com/store/apps/details?id=io.github.mrmyhuang.cbetar2
-
-(註：此種安裝渠道尚不支援"App捷徑"功能！)
-
-#### Windows 10 - 使用Microsoft Store
-可從Microsoft Store下載此PWA：
-
-https://www.microsoft.com/store/apps/9P6TDQX46JJL
-
-(註：此種安裝渠道尚不支援"App捷徑"功能！)
-
-#### iOS - 使用Safari
+#### iOS - 使用Safari安裝
 1. 使用Safari開啟web app網址，再點擊下方中間的"分享"圖示：
 
 <img src='./docs/images/Safari/OpenAppUrl.png' width='50%' height='50%' />
@@ -152,10 +146,31 @@ https://www.microsoft.com/store/apps/9P6TDQX46JJL
 
 <img src='./docs/images/Safari/AppIcon.png' width='50%' height='50%' />
 
+### <a id='storeApp'>從App商店安裝</a>
+
+#### Android - 使用Google Play Store
+可從Google Play Store下載此PWA：
+
+<a href='https://play.google.com/store/apps/details?id=io.github.mrmyhuang.cbetar2&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'>
+<img style='width: 284px; height: auto;' alt='Google Play立即下載' src='https://play.google.com/intl/en_us/badges/static/images/badges/zh-tw_badge_web_generic.png'/>
+</a>
+
+(註：此種安裝渠道尚不支援"App捷徑"功能！)
+
+#### Windows 10 - 使用Microsoft Store
+可從Microsoft Store下載此PWA：
+
+<a href='//www.microsoft.com/store/apps/9P6TDQX46JJL?cid=storebadge&ocid=badge'>
+<img style='width: 284px; height: 104px;' src='https://developer.microsoft.com/store/badges/images/Chinese-Traditional_get-it-from-MS.png' alt='Chinese Traditional badge'/>
+</a>
+
+(註：此種安裝渠道尚不支援"App捷徑"功能！)
 #### Linux - Snap Store
 可從Snap Store下載此PWA：
 
-https://snapcraft.io/cbetar2
+<a href='https://snapcraft.io/cbetar2'>
+<img style='width: 284px; height: auto;' src='./docs/images/[TW]-snap-store-black@2x.png' />
+</a>
 
 ## <a id='knownIssues'>已知問題</a>
 1. iOS Safari在單頁模式下，捲軸無法顯示。
