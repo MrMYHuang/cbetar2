@@ -157,6 +157,13 @@ https://MrMYHuang.github.io
 
 (註：此種安裝渠道尚不支援"App捷徑"功能！)
 
+#### iOS (iPhone, iPad) - 使用App Store
+可從App Store下載此PWA：
+
+<a href='https://apps.apple.com/us/app/cbeta電子佛典2-非官方/id1546347689' target='_blank'>
+<img width="284px" height='auto' src='./docs/images/Download_on_the_App_Store_Badge_CNTC_RGB_blk_100217.svg'/>
+</a>
+
 #### Windows 10 - 使用Microsoft Store
 可從Microsoft Store下載此PWA：
 
