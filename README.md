@@ -160,21 +160,21 @@ https://MrMYHuang.github.io
 #### iOS 14.3 (iPhone, iPad) - 使用App Store
 可從App Store下載此PWA：
 
-<a href='https://apps.apple.com/us/app/cbeta電子佛典2-非官方/id1546347689' target='_blank'>
+<a href='https://apps.apple.com/us/app/id1546347689' target='_blank'>
 <img width="auto" height='60px' src='./docs/images/Download_on_the_App_Store_Badge_CNTC_RGB_blk_100217.svg'/>
 </a>
 
 #### macOS 11.1 - 使用App Store
 可從App Store下載此PWA：
 
-<a href='https://apps.apple.com/us/app/cbeta電子佛典2-非官方/id1546347689' target='_blank'>
+<a href='https://apps.apple.com/us/app/id1546347689' target='_blank'>
 <img width="auto" height='60px' src='./docs/images/Download_on_the_Mac_App_Store_Badge_CNTC_RGB_blk_100217.svg'/>
 </a>
 
 #### Windows 10 - 使用Microsoft Store
 可從Microsoft Store下載此PWA：
 
-<a href='//www.microsoft.com/store/apps/9P6TDQX46JJL?cid=storebadge&ocid=badge' target='_blank'>
+<a href='//www.microsoft.com/store/apps/9P6TDQX46JJL' target='_blank'>
 <img width="auto" height='60px' src='https://developer.microsoft.com/store/badges/images/Chinese-Traditional_get-it-from-MS.png' alt='Chinese Traditional badge'/>
 </a>
 
