@@ -151,7 +151,7 @@ https://MrMYHuang.github.io
 #### Android - 使用Google Play Store
 可從Google Play Store下載此PWA：
 
-<a href='https://play.google.com/store/apps/details?id=io.github.mrmyhuang.cbetar2&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'>
+<a href='https://play.google.com/store/apps/details?id=io.github.mrmyhuang.cbetar2&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1' target='_blank'>
 <img width="284px" height='auto' alt='Google Play立即下載' src='https://play.google.com/intl/en_us/badges/static/images/badges/zh-tw_badge_web_generic.png'/>
 </a>
 
@@ -160,7 +160,7 @@ https://MrMYHuang.github.io
 #### Windows 10 - 使用Microsoft Store
 可從Microsoft Store下載此PWA：
 
-<a href='//www.microsoft.com/store/apps/9P6TDQX46JJL?cid=storebadge&ocid=badge'>
+<a href='//www.microsoft.com/store/apps/9P6TDQX46JJL?cid=storebadge&ocid=badge' target='_blank'>
 <img width="284px" height='auto' src='https://developer.microsoft.com/store/badges/images/Chinese-Traditional_get-it-from-MS.png' alt='Chinese Traditional badge'/>
 </a>
 
@@ -168,7 +168,7 @@ https://MrMYHuang.github.io
 #### Linux - Snap Store
 可從Snap Store下載此PWA：
 
-<a href='https://snapcraft.io/cbetar2'>
+<a href='https://snapcraft.io/cbetar2' target='_blank'>
 <img width="284px" height='auto' src='./docs/images/[TW]-snap-store-black@2x.png' />
 </a>
 
