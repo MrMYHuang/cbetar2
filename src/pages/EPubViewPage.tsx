@@ -373,6 +373,8 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     html {
       writing-mode: vertical-rl;
       direction: ltr;
+      -webkit-text-size-adjust: none;
+      text-size-adjust: none;
     }
     `;
 
