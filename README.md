@@ -164,7 +164,7 @@ https://MrMYHuang.github.io
 <img width="auto" height='60px' src='./docs/images/Download_on_the_App_Store_Badge_CNTC_RGB_blk_100217.svg'/>
 </a>
 
-#### macOS 11 - 使用App Store
+#### macOS 11.1 - 使用App Store
 可從App Store下載此PWA：
 
 <a href='https://apps.apple.com/us/app/cbeta電子佛典2-非官方/id1546347689' target='_blank'>
