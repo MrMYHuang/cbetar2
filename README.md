@@ -151,8 +151,8 @@ https://MrMYHuang.github.io
 #### Android - 使用Google Play Store
 可從Google Play Store下載此PWA：
 
-<a href='https://play.google.com/store/apps/details?id=io.github.mrmyhuang.cbetar2&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1' target='_blank'>
-<img width="284px" height='auto' alt='Google Play立即下載' src='https://play.google.com/intl/en_us/badges/static/images/badges/zh-tw_badge_web_generic.png'/>
+<a href='https://play.google.com/store/apps/details?id=io.github.mrmyhuang.cbetar2' target='_blank'>
+<img width="284px" height='auto' alt='Google Play立即下載' src='./docs/images/zh-tw_badge_web_generic.png'/>
 </a>
 
 (註：此種安裝渠道尚不支援"App捷徑"功能！)
