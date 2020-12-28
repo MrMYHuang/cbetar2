@@ -6,7 +6,7 @@
 
 ## 說明
 
-CBETA電子佛典閱讀器2(非官方)，使用CBETA API存取電子佛經，支援以下功能
+CBETA電子佛典閱讀器2(非官方) (Chinese Buddhist Electronic Text Association Reader 2)，使用CBETA API存取電子佛經，支援以下功能
 
 * <a id='search'>搜尋</a>
   1. 搜索目錄：在目錄頁，按下右上角放大鏡圖示。在對話框輸入經文部分(或全部)標題，按下"搜索目錄"後會列出相關經文。
