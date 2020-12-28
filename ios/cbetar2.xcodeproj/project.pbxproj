@@ -510,7 +510,7 @@
 				CODE_SIGN_ENTITLEMENTS = cbetar2/cbetar2.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = XU8X8HU5ST;
 				INFOPLIST_FILE = cbetar2/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -535,7 +535,7 @@
 				CODE_SIGN_ENTITLEMENTS = cbetar2/cbetar2.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = XU8X8HU5ST;
 				INFOPLIST_FILE = cbetar2/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
