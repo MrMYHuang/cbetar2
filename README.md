@@ -152,7 +152,7 @@ https://MrMYHuang.github.io
 可從Google Play Store下載此PWA：
 
 <a href='https://play.google.com/store/apps/details?id=io.github.mrmyhuang.cbetar2' target='_blank'>
-<img width="284px" height='auto' alt='Google Play立即下載' src='./docs/images/zh-tw_badge_web_generic.png'/>
+<img width="auto" height='60px' alt='Google Play立即下載' src='./docs/images/zh-tw_badge_web_generic.png'/>
 </a>
 
 (註：此種安裝渠道尚不支援"App捷徑"功能！)
@@ -161,22 +161,29 @@ https://MrMYHuang.github.io
 可從App Store下載此PWA：
 
 <a href='https://apps.apple.com/us/app/cbeta電子佛典2-非官方/id1546347689' target='_blank'>
-<img width="284px" height='auto' src='./docs/images/Download_on_the_App_Store_Badge_CNTC_RGB_blk_100217.svg'/>
+<img width="auto" height='60px' src='./docs/images/Download_on_the_App_Store_Badge_CNTC_RGB_blk_100217.svg'/>
+</a>
+
+#### macOS 11 - 使用App Store
+可從App Store下載此PWA：
+
+<a href='https://apps.apple.com/us/app/cbeta電子佛典2-非官方/id1546347689' target='_blank'>
+<img width="auto" height='60px' src='./docs/images/Download_on_the_Mac_App_Store_Badge_CNTC_RGB_blk_100217.svg'/>
 </a>
 
 #### Windows 10 - 使用Microsoft Store
 可從Microsoft Store下載此PWA：
 
 <a href='//www.microsoft.com/store/apps/9P6TDQX46JJL?cid=storebadge&ocid=badge' target='_blank'>
-<img width="284px" height='auto' src='https://developer.microsoft.com/store/badges/images/Chinese-Traditional_get-it-from-MS.png' alt='Chinese Traditional badge'/>
+<img width="auto" height='60px' src='https://developer.microsoft.com/store/badges/images/Chinese-Traditional_get-it-from-MS.png' alt='Chinese Traditional badge'/>
 </a>
 
 (註：此種安裝渠道尚不支援"App捷徑"功能！)
-#### Linux - Snap Store
+#### Linux - 使用Snap Store
 可從Snap Store下載此PWA：
 
 <a href='https://snapcraft.io/cbetar2' target='_blank'>
-<img width="284px" height='auto' src='./docs/images/[TW]-snap-store-black@2x.png' />
+<img width="auto" height='60px' src='./docs/images/[TW]-snap-store-black@2x.png' />
 </a>
 
 ## <a id='knownIssues'>已知問題</a>
