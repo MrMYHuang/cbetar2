@@ -157,7 +157,7 @@ https://MrMYHuang.github.io
 
 (註：此種安裝渠道尚不支援"App捷徑"功能！)
 
-#### iOS (iPhone, iPad) - 使用App Store
+#### iOS 14.3 (iPhone, iPad) - 使用App Store
 可從App Store下載此PWA：
 
 <a href='https://apps.apple.com/us/app/cbeta電子佛典2-非官方/id1546347689' target='_blank'>
