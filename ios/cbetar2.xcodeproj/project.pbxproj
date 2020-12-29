@@ -39,7 +39,7 @@
 		4AC6176924436031B7D9B0EA /* Pods-cbetar2.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-cbetar2.release.xcconfig"; path = "Target Support Files/Pods-cbetar2/Pods-cbetar2.release.xcconfig"; sourceTree = "<group>"; };
 		7B6D97948BFCB757099CEFD6 /* Pods_cbetar2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_cbetar2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		808D74CA25BE74245E8F59A1 /* Pods-cbetar2.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-cbetar2.debug.xcconfig"; path = "Target Support Files/Pods-cbetar2/Pods-cbetar2.debug.xcconfig"; sourceTree = "<group>"; };
-		DB4B052625946404001E907A /* cbetar2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = cbetar2.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DB4B052625946404001E907A /* 電子佛典.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "電子佛典.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB4B052925946404001E907A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DB4B052B25946404001E907A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		DB4B052D25946404001E907A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -114,7 +114,7 @@
 		DB4B052725946404001E907A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				DB4B052625946404001E907A /* cbetar2.app */,
+				DB4B052625946404001E907A /* 電子佛典.app */,
 				DB4B053C2594640B001E907A /* cbetar2Tests.xctest */,
 				DB4B05472594640B001E907A /* cbetar2UITests.xctest */,
 			);
@@ -173,7 +173,7 @@
 			);
 			name = cbetar2;
 			productName = cbetar2;
-			productReference = DB4B052625946404001E907A /* cbetar2.app */;
+			productReference = DB4B052625946404001E907A /* 電子佛典.app */;
 			productType = "com.apple.product-type.application";
 		};
 		DB4B053B2594640B001E907A /* cbetar2Tests */ = {
@@ -510,15 +510,16 @@
 				CODE_SIGN_ENTITLEMENTS = cbetar2/cbetar2.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = XU8X8HU5ST;
 				INFOPLIST_FILE = cbetar2/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = io.github.mrmyhuang.cbetar2;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "電子佛典";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
@@ -535,15 +536,16 @@
 				CODE_SIGN_ENTITLEMENTS = cbetar2/cbetar2.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = XU8X8HU5ST;
 				INFOPLIST_FILE = cbetar2/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = io.github.mrmyhuang.cbetar2;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "電子佛典";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
