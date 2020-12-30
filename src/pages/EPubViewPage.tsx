@@ -122,7 +122,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         show: false,
         data: [],
       },
-      canTextToSpeech: false,
+      canTextToSpeech: typeof SpeechSynthesisUtterance !== 'undefined',
       speechState: SpeechState.UNINITIAL,
     }
     this.htmlFile = '';
@@ -131,8 +131,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     this.rendition = null;
     this.cfiRange = '';
     this.speechSynthesisUtterance = null;
-    if (typeof SpeechSynthesisUtterance !== 'undefined') {
-      this.setState({ canTextToSpeech: true });
+    if (this.state.canTextToSpeech) {
       this.speechSynthesisUtterance = new SpeechSynthesisUtterance();
       this.speechSynthesisUtterance.lang = 'zh-TW';
       this.speechSynthesisUtterance.onend = (ev: SpeechSynthesisEvent) => {

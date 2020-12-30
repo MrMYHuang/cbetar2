@@ -196,9 +196,11 @@ https://MrMYHuang.github.io
 7. iOS不支援app捷徑。
 8. Safari不支援列印直排經文( https://bugs.webkit.org/show_bug.cgi?id=220043 )。
 9. iOS Safari選擇文字後，仍會閃爍彈出式選單才消失。
-10. Mac Catalyst app不支援列印經文。
+10. Mac Catalyst app不支援列印經文、與語音播放。
 
 ## <a id='history'>版本歷史</a>
+* 4.14.4:
+  * [修正] 經文頁語音播放按鈕未顯示的問題。
 * 4.14.3:
   * [修正] 在iPhone有經文字型大小不一致的問題。
 * 4.14.2:
