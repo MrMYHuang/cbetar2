@@ -1,3 +1,3 @@
 Set-Location .\MrMYHuang.github.io\
-Get-Item * -Exclude .git,.well-known,.nojekyll | Remove-Item -Recurse
+Get-Item * -Exclude .git | Remove-Item -Recurse
 Copy-Item -Recurse ..\build\* . 
