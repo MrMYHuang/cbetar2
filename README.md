@@ -157,14 +157,14 @@ https://MrMYHuang.github.io
 
 (註：此種安裝渠道尚不支援"App捷徑"功能！)
 
-#### iOS 14.3 (iPhone, iPad) - 使用App Store
+#### iOS 14.0, iPadOS 14.0 (iPhone, iPad) - 使用App Store
 可從App Store下載此PWA：
 
 <a href='https://apps.apple.com/us/app/id1546347689' target='_blank'>
 <img width="auto" height='60px' src='./docs/images/Download_on_the_App_Store_Badge_CNTC_RGB_blk_100217.svg'/>
 </a>
 
-#### macOS 11.1 - 使用App Store
+#### macOS 11.0 - 使用App Store
 可從App Store下載此PWA：
 
 <a href='https://apps.apple.com/us/app/id1546347689' target='_blank'>
