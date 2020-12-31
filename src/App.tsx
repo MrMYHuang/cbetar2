@@ -208,7 +208,7 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
     console.log('[Main] TW-Kai font loading success!');
   }
 
-  // Prevent from device sleeping.
+  // Prevent device from sleeping.
   wakeLock: any;
   async wakeLockScreen() {
     try {

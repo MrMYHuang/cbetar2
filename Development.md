@@ -1,5 +1,8 @@
 # Development
 
+## Technology Keywords
+Frontend, TypeScript, CSS, Ionic, React, Redux, react-app-rewired, server side redirection, Webpack Alias, IndexedDB, Service Worker, workbox, speechSynthesis, ePub Viewer, Progressive Web App (PWA), Android, Google Play Store, Windows 10, Microsoft Store, iPhone, iPad, iOS, iPadOS, App Store, WKWebView, macOS, Mac Store App (MAS), Electron, Linux, Snap Store
+
 ## Run Locally
 0. Required software: Node 12
 1. Run Shell script:
