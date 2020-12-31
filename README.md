@@ -199,6 +199,10 @@ https://MrMYHuang.github.io
 10. Mac Catalyst app不支援列印經文、與語音播放。
 
 ## <a id='history'>版本歷史</a>
+* Electron Mac App Store app 10.0.2:
+  * [新增] App支援macOS 10.10以上。
+  * [修正] 經文語音播放功能。
+  * [修正] 經文列印功能。
 * 4.14.4:
   * [修正] 經文頁語音播放按鈕未顯示的問題。
 * 4.14.3:

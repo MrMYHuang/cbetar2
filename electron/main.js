@@ -1,23 +1,33 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow} = require('electron')
-const path = require('path')
+const {app, BrowserWindow} = require('electron');
+const windowStateKeeper = require('electron-window-state');
+const path = require('path');
+app.commandLine.appendSwitch('ignore-certificate-errors', true);
 
 function createWindow () {
+  let mainWindowState = windowStateKeeper({
+    defaultWidth: 1280,
+    defaultHeight: 800
+  });
+
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    'x': mainWindowState.x,
+    'y': mainWindowState.y,
+    'width': mainWindowState.width,
+    'height': mainWindowState.height,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js')
     }
-  })
+  });
+  mainWindowState.manage(mainWindow);
+
+  // Open the DevTools.
+  //mainWindow.webContents.openDevTools()
 
   // and load the index.html of the app.
   //mainWindow.loadFile('index.html');
   mainWindow.loadURL('https://mrmyhuang.github.io');
-
-  // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
 }
 
 // This method will be called when Electron has finished
