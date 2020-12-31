@@ -520,5 +520,5 @@ If a developer wants to migrate this app to other web servers, please use a simi
 * DILA (https://www.dila.edu.tw/)
 * Godfery Wang
 * Meng-Yuan Huang (myh@live.com)
-* 仁方
 * 曹博堯
+* 謝仁方
