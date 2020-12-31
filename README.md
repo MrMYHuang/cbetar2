@@ -475,32 +475,7 @@ https://MrMYHuang.github.io
 * 1.0.0:
   * 第1版。
 
-## Run Locally
-Please refer to https://ionicframework.com/ for building Ionic development environment.
-```
-git clone https://github.com/MrMYHuang/cbetar2.git
-cd cbetar2
-npm i -D
-npm run start
-```
-
-## Build for Production
-### Build on Windows
-```
-npm run build
-```
-### Build on macOS or Linux
-```
-npm run build_linux
-```
-Then, upload files under build folder to your github.io.
-
-### Client Side Routing
-Notice! This app uses client side routing for page navigation. Without loading this app (and its client side router) once, a client side route is resolved as a server side route by browser! Generally, the web server serving this app can't resolve this route and thus responses a 404 error. To solve this problem, this repo provides a 404.html for GitHub.io web server. When the GitHub.io server can't resolve a client side route, it redirects to 404.html, which further redirect to URL of this app with path info of the route. For example, if a user on a new PC opens this URL
-https://mrmyhuang.github.io/bookmarks
-, the GitHub.io server can't find bookmarks/index.html and thus redirects the resource to 404.html. Our 404.html extracts the app path "/bookmarks" and redirects the browser to the app URL https://mrmyhuang.github.io/ with query parameter `?route=/bookmarks`. After the app and its client side router loaded, the app redirects itself by using the original URL https://mrmyhuang.github.io/bookmarks by its router!
-
-If a developer wants to migrate this app to other web servers, please use a similar server side redirection technique to correctly do the client side routing.
+## <a href='Development.md'>程式開發</a>
 
 ## 隱私政策聲明
 
