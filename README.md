@@ -6,20 +6,26 @@
 
 ## 說明
 
-CBETA電子佛典閱讀器2(非官方) (Chinese Buddhist Electronic Text Association Reader 2)，使用CBETA API存取電子佛經，支援以下功能
+CBETA電子佛典閱讀器2(非官方) (Chinese Buddhist Electronic Text Association Reader 2)，簡寫cbetar2，使用CBETA API存取電子佛經，支援以下功能
 
 * <a id='search'>搜尋</a>
   1. 搜索目錄：在目錄頁，按下右上角放大鏡圖示。在對話框輸入經文部分(或全部)標題，按下"搜索目錄"後會列出相關經文。
-  ![Search](https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/Search.png)
+
+  <img src='./docs/images/Search.png' width='50%' />
+
   2. 全文檢索：類似"搜索目錄"。但在對話框可輸入某卷經文內的一段文字，如"大水忽起卒至無期"。
 * <a id='bookmark'>書籤</a>
-  1. 開啟某經文後，(手機、平板)長按後選擇想標記為書籤的字串位置，再按右上角三點圖示，再選擇"新增書籤"，即新增一書籤，可至書籤頁查詢。
+  1. 開啟某經文後，(手機、平板)長按後選擇想標記為書籤的字串位置，按右上角書籤圖示，即新增一書籤，可至書籤頁查詢。加入書籤的經文可作離線瀏覽。
+
+  <img src='./docs/images/Bookmark.png' width='50%' />
+
   2. 刪除：至書籤頁，左滑項目即出現刪除鈕，再點擊。
 * <a id='shareAppLink'>網址分享</a>
   1. 用瀏覽器開啟此app並開啟某卷經文後，可複製其網址分享給別人開啟。
   2. 也可以使用瀏覽器內建書籤功能儲存經文網址。與app書籤功能相比，可以依個人使習慣作選擇。
   3. App內建"分享此頁"功能，可複製以下連結至作業系統剪貼簿或產生QR code，可分享給其他人：目錄、經、卷、目錄搜尋、全文檢索搜尋、詞典搜尋、app主頁
   4. 分享網址可帶上部分app設定參數。
+
   <img src='./docs/images/ShareAppUrlWithSettings.png' width='50%' />
   
   5. 經文文字連結功能：選取經文一段文字後、執行"分享此頁"功能，所產生的app連結開啟後會自動跳至選取文字頁面並標示選取文字。
@@ -29,13 +35,16 @@ CBETA電子佛典閱讀器2(非官方) (Chinese Buddhist Electronic Text Associa
   2. 設定頁的"更新離線經文檔"按鈕用途為：當CBETA每季更新經文後，離線經文檔不會自動更新，必須手動執行此功能更新所有離線檔。
 * <a id='text2speech'>語音播放</a>
   1. 使用電腦語音合成技術 - text to speech，作唸經文功能，即所謂的"有聲書"。(注意，當代電腦語音合成技術與"真人發音"仍有落差。因此聽到的經文發音偶爾不正確是正常現象。)
-  2. 播放步驟：開啟經文 / 按下右上方播放鍵，即可播放（如擷圖所示）
+  2. 播放步驟：開啟經文，按下右上方音符鈕，即可播放（如擷圖所示）
+
   <img src='./docs/images/PlaySpeech.png' width='70%' />
+
   3. 單頁模式下指定位置播放：選取部分經文，按下播放鍵，即會從選取處開始播放至經文結尾。
   4. 分頁模式下指定頁數播放：切換至特定頁數，按下播放鍵，即會從該頁開始播放。一頁播完會自動跳下一頁，至經文結尾。
 
 * <a id='dictionary'>佛學詞典(線上查詢)</a>
   1. 整合"DILA 佛學術語字辭典"，可在"佛學詞典"分頁查詢佛學字詞。
+
   <img src='./docs/images/LookupDictionary.png' width='50%' />
 
   2. 也可以從查詢的結果選取文字，再執行查詢詞典功能。
@@ -156,12 +165,12 @@ https://MrMYHuang.github.io
 (註：此種安裝渠道尚不支援"App捷徑"功能！)
 
 #### iOS 14.0, iPadOS 14.0 (iPhone, iPad) - 使用App Store
-<a href='https://apps.apple.com/us/app/id1546347689' target='_blank'>
+<a href='https://apps.apple.com/app/id1546347689' target='_blank'>
 <img width="auto" height='60px' src='./docs/images/Download_on_the_App_Store_Badge_CNTC_RGB_blk_100217.svg'/>
 </a>
 
 #### macOS 10.10 - 使用App Store
-<a href='https://apps.apple.com/us/app/id1546347689' target='_blank'>
+<a href='https://apps.apple.com/app/id1546347689' target='_blank'>
 <img width="auto" height='60px' src='./docs/images/Download_on_the_Mac_App_Store_Badge_CNTC_RGB_blk_100217.svg'/>
 </a>
 
@@ -188,6 +197,8 @@ https://MrMYHuang.github.io
 9. iOS Safari選擇文字後，仍會閃爍彈出式選單才消失。
 
 ## <a id='history'>版本歷史</a>
+* 4.14.6:
+  * [修正] 部分UI用字。
 * 4.14.5:
   * [修正] 設定頁移除"檢查App更新"項目，以符合Mac App Store上架規範。
 * Electron Mac App Store (MAS) app 10.0.2:
