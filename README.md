@@ -196,11 +196,14 @@ https://MrMYHuang.github.io
 7. iOS不支援app捷徑。
 8. Safari不支援列印直排經文( https://bugs.webkit.org/show_bug.cgi?id=220043 )。
 9. iOS Safari選擇文字後，仍會閃爍彈出式選單才消失。
-10. Mac Catalyst app不支援列印經文、與語音播放。
 
 ## <a id='history'>版本歷史</a>
 * 4.14.5:
   * [修正] 設定頁移除"檢查App更新"項目，以符合Mac App Store上架規範。
+* Electron Mac App Store (MAS) app 10.0.2:
+  * [新增] App支援macOS 10.10以上。
+  * [修正] 經文語音播放功能。
+  * [修正] 經文列印功能。
 * 4.14.4:
   * [修正] 經文頁語音播放按鈕未顯示的問題。
 * 4.14.3:
