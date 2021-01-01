@@ -86,7 +86,7 @@ CBETA電子佛典閱讀器2(非官方) (Chinese Buddhist Electronic Text Associa
   此app不定期發佈更新，包含新功能或bug修正。注意!App檔案更新後，要關閉、重啟1次app或所有瀏覧器app分頁才會載入新版程式。目前支援2種更新方式:
 
   1. App啟動: app啟動後，會自動檢查一次有無新版。
-  2. 手動: 至設定頁，按更新按鈕。
+  2. 手動: 至設定頁，按"電子佛典app版本"文字。
 
 * <a id='report'>App異常回報</a>
 
@@ -199,6 +199,8 @@ https://MrMYHuang.github.io
 10. Mac Catalyst app不支援列印經文、與語音播放。
 
 ## <a id='history'>版本歷史</a>
+* 4.14.5:
+  * [修正] 設定頁移除"檢查App更新"項目，以符合Mac App Store上架規範。
 * 4.14.4:
   * [修正] 經文頁語音播放按鈕未顯示的問題。
 * 4.14.3:

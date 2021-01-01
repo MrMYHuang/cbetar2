@@ -130,7 +130,13 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={shareSocial} slot='start' />
-              <IonLabel className='ion-text-wrap uiFont'>電子佛典app版本: <a href="https://github.com/MrMYHuang/cbetar2#history" target="_new">{PackageInfos.version}</a></IonLabel>
+              <IonLabel className='ion-text-wrap uiFont' onClick={async e => {
+                const hasUpdate = await Globals.updateApp();
+
+                if (!hasUpdate) {
+                  this.setState({ showToast: true, toastMessage: 'App已是最新版' });
+                }
+              }}>電子佛典app版本: <a href="https://github.com/MrMYHuang/cbetar2#history" target="_new">{PackageInfos.version}</a></IonLabel>
               <IonButton slot='end' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={e => {
                 this.props.dispatch({
                   type: "TMP_SET_KEY_VAL",
@@ -141,18 +147,6 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
                   },
                 });
               }}>分享</IonButton>
-            </IonItem>
-            <IonItem>
-              <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
-              <IonIcon icon={refreshCircle} slot='start' />
-              <IonLabel className='ion-text-wrap uiFont'>檢查app更新</IonLabel>
-              <IonButton slot='end' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={async e => {
-                const hasUpdate = await Globals.updateApp();
-
-                if (!hasUpdate) {
-                  this.setState({ showToast: true, toastMessage: 'App已是最新版' });
-                }
-              }}>檢查</IonButton>
             </IonItem>
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
