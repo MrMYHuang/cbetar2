@@ -177,6 +177,11 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     fs.writeFileSync('logo.png', logoArray);
   }
 
+  get workJuanId() {
+    return `${this.props.match.params.work}/${this.props.match.params.path}`;
+  }
+
+  currentWork = '';
   uuidStr = '';
   epubcfiFromUrl = '';
   ionViewWillEnter() {
@@ -187,10 +192,26 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     let state = this.props.location.state as any;
     this.uuidStr = state ? state.uuid : '';
     //console.log( 'view will enter' );
+      if (this.currentWork !== this.workJuanId) {
+        this.currentWork = this.workJuanId;
+        this.lastPage = 0;
+      }
     this.fetchData();
   }
 
   ionViewDidEnter() {
+  }
+
+  lastPage = 0;
+  ionViewWillLeave() {
+    if (this.state.canTextToSpeech) {
+      speechSynthesis.cancel();
+    }
+    this.lastPage = this.state.currentPage;
+    this.setState({ htmlStr: null, currentPage: 1, speechState: SpeechState.UNINITIAL, showSearchTextToast: false });
+    this.book?.destroy();
+    this.book = null;
+    this.bookCreated = false;
   }
 
   get fileName() {
@@ -266,16 +287,6 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
   get epubcfi() {
     return this.epubcfiFromUrl !== '' ? this.epubcfiFromUrl : this.bookmark != null ? this.bookmark!.epubcfi : 'epubcfi(/6/6[s1]!/4/4/2/6[body]/6,/1:0,/1:1)';
-  }
-
-  ionViewWillLeave() {
-    if (this.state.canTextToSpeech) {
-      speechSynthesis.cancel();
-    }
-    this.setState({ htmlStr: null, currentPage: 1, speechState: SpeechState.UNINITIAL, showSearchTextToast: false });
-    this.book?.destroy();
-    this.book = null;
-    this.bookCreated = false;
   }
 
   pagePrev(n: number = 1) {
@@ -372,8 +383,6 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     html {
       writing-mode: vertical-rl;
       direction: ltr;
-      -webkit-text-size-adjust: none;
-      text-size-adjust: none;
     }
     `;
 
@@ -413,6 +422,8 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       Fortunately, we can set the line height based on the same font size as below.
       */
       line-height: 1.2;
+      -webkit-text-size-adjust: none;
+      text-size-adjust: none;
     }
 
     body {
@@ -516,21 +527,26 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         });
 
         this.rendition.on(EVENTS.RENDITION.DISPLAYED, () => {
+          //console.log(`EVENTS.RENDITION.DISPLAYED`);
           this.updatePageInfos();
         });
 
         this.rendition.on(EVENTS.VIEWS.RENDERED, () => {
+          //console.log(`EVENTS.VIEWS.RENDERED`);
           this.updateEPubIframe();
         });
 
         await this.rendition.display(this.props.paginated ? this.epubcfi : undefined);
         // Navigate to the first work page.
-        if (!this.props.paginated) {
+        if (!(this.props.paginated)) {
           // Skip cover page.
           await this.rendition?.next();
           // Skip TOC page.
           await this.rendition?.next();
           this.updateEPubIframe();
+        }
+        if (this.lastPage !== 0 && this.bookmark == null && this.lastPage !== this.state.currentPage) {
+          this.jumpToPage(this.lastPage);
         }
         this.setState({ isLoading: false });
 
@@ -606,6 +622,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
   updatePageInfos() {
     const displayed = (this.rendition?.currentLocation() as any).start.displayed;
     this.setState({ currentPage: displayed.page, pageCount: displayed.total });
+    //console.log(`displayed ${displayed.page} / ${displayed.total}`);
   }
 
   getSelectedString() {

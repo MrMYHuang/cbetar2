@@ -83,6 +83,13 @@ class _DictionaryPage extends React.Component<PageProps, State> {
         {
           responseType: 'json',
         });
+      this.props.dictionaryHistory.unshift(keyword);
+      this.props.dictionaryHistory.splice(10);
+      this.props.dispatch({
+        type: "SET_KEY_VAL",
+        key: 'dictionaryHistory',
+        val: this.props.dictionaryHistory,
+      });
       this.setState({ fetchError: false, isLoading: false, searches: res.data });
     } catch (e) {
       console.error(e);
@@ -236,13 +243,6 @@ class _DictionaryPage extends React.Component<PageProps, State> {
               if (value === '') {
                 this.setState({ searches: [] });
               } else if (ev.key === 'Enter') {
-                this.props.dictionaryHistory.unshift(value);
-                this.props.dictionaryHistory.splice(10);
-                this.props.dispatch({
-                  type: "SET_KEY_VAL",
-                  key: 'dictionaryHistory',
-                  val: this.props.dictionaryHistory,
-                });
                 if (value === this.props.match.params.keyword) {
                   this.setState({ keyword: value });
                   this.lookupDict(value);

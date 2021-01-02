@@ -79,6 +79,13 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
         {
           responseType: 'json',
         });
+      this.props.wordDictionaryHistory.unshift(keyword);
+      this.props.wordDictionaryHistory.splice(10);
+      this.props.dispatch({
+        type: "SET_KEY_VAL",
+        key: 'wordDictionaryHistory',
+        val: this.props.wordDictionaryHistory,
+      });
       this.setState({ fetchError: false, isLoading: false, search: res.data.heteronyms });
     } catch (e) {
       const err = e as AxiosError;
@@ -258,13 +265,6 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
                 if (value === '') {
                   this.setState({ search: null });
                 } else if (ev.key === 'Enter') {
-                  this.props.wordDictionaryHistory.unshift(value);
-                  this.props.wordDictionaryHistory.splice(10);
-                  this.props.dispatch({
-                    type: "SET_KEY_VAL",
-                    key: 'wordDictionaryHistory',
-                    val: this.props.wordDictionaryHistory,
-                  });
                   if (value === this.props.match.params.keyword) {
                     this.setState({ keyword: value });
                     this.lookupDict(value);
