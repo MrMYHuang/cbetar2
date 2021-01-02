@@ -12,6 +12,7 @@ interface StateProps {
   showFontLicense: boolean;
   juansDownloadedRatio: number;
   showUpdateAllJuansDone: boolean;
+  showClearAlert: boolean;
   showToast: boolean;
   toastMessage: string;
 }
@@ -46,6 +47,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
       showFontLicense: false,
       juansDownloadedRatio: 0,
       showUpdateAllJuansDone: false,
+      showClearAlert: false,
       showToast: false,
       toastMessage: '',
     }
@@ -173,33 +175,75 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={download} slot='start' />
-              <IonLabel className='ion-text-wrap uiFont'>App設定與書籤</IonLabel>
-              <IonButton size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={async (e) => {
-                const settingsJsonUri = `data:text/json;charset=utf-8,${encodeURIComponent(localStorage.getItem('Settings.json') || '')}`;
-                const a = document.createElement('a');
-                a.href = settingsJsonUri;
-                a.download = 'Settings.json';
-                a.click();
-                a.remove();
-              }}>匯出</IonButton>
-              <input id='importJsonInput' type='file' accept='.json' style={{ display: 'none' }} onChange={async (ev) => {
-                const file = ev.target.files?.item(0);
-                const fileText = await file?.text() || '';
-                try {
-                  // JSON text validation.
-                  JSON.parse(fileText);
-                  localStorage.setItem('Settings.json', fileText);
-                  this.props.dispatch({ type: 'LOAD_SETTINGS' });
-                  this.updateAllJuans();
-                } catch (e) {
-                  console.error(e);
-                  console.error(new Error().stack);
-                }
-                (document.getElementById('importJsonInput') as HTMLInputElement).value = '';
-              }} />
-              <IonButton size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={(e) => {
-                (document.querySelector('#importJsonInput') as HTMLInputElement).click();
-              }}>匯入</IonButton>
+              <div className='contentBlock'>
+                <div style={{ flexDirection: 'column' }}>
+                  <IonLabel className='ion-text-wrap uiFont'>App設定與書籤</IonLabel>
+                  <div style={{ textAlign: 'right' }}>
+                    <IonButton size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={async (e) => {
+                      const settingsJsonUri = `data:text/json;charset=utf-8,${encodeURIComponent(localStorage.getItem('Settings.json') || '')}`;
+                      const a = document.createElement('a');
+                      a.href = settingsJsonUri;
+                      a.download = 'Settings.json';
+                      a.click();
+                      a.remove();
+                    }}>匯出</IonButton>
+                    <input id='importJsonInput' type='file' accept='.json' style={{ display: 'none' }} onChange={async (ev) => {
+                      const file = ev.target.files?.item(0);
+                      const fileText = await file?.text() || '';
+                      try {
+                        // JSON text validation.
+                        JSON.parse(fileText);
+                        localStorage.setItem('Settings.json', fileText);
+                        this.props.dispatch({ type: 'LOAD_SETTINGS' });
+                        this.updateAllJuans();
+                      } catch (e) {
+                        console.error(e);
+                        console.error(new Error().stack);
+                      }
+                      (document.getElementById('importJsonInput') as HTMLInputElement).value = '';
+                    }} />
+
+                    <IonButton size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={(e) => {
+                      (document.querySelector('#importJsonInput') as HTMLInputElement).click();
+                    }}>匯入</IonButton
+                    >
+                    <IonButton size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={(e) => {
+                      this.setState({ showClearAlert: true });
+                    }}>重置</IonButton>
+                    <IonAlert
+                      cssClass='uiFont'
+                      isOpen={this.state.showClearAlert}
+                      backdropDismiss={false}
+                      onDidPresent={(ev) => {
+                      }}
+                      header={'重置會還原app設定預設值並清除書籤、字型檔！確定重置？'}
+                      buttons={[
+                        {
+                          text: '取消',
+                          cssClass: 'primary uiFont',
+                          handler: (value) => {
+                            this.setState({
+                              showClearAlert: false,
+                            });
+                          },
+                        },
+                        {
+                          text: '重置',
+                          cssClass: 'secondary uiFont',
+                          handler: async (value) => {
+                            await Globals.clearAppData();
+                            this.props.dispatch({ type: 'DEFAULT_SETTINGS' });
+                            document.body.classList.forEach((val) => document.body.classList.remove(val));
+                            document.body.classList.toggle(`theme${this.props.theme}`, true);
+                            document.body.classList.toggle(`print${this.props.printStyle}`, true);
+                            this.setState({ showClearAlert: false, showToast: true, toastMessage: "清除成功!" });
+                          },
+                        }
+                      ]}
+                    />
+                  </div>
+                </div>
+              </div>
             </IonItem>
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
@@ -442,7 +486,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
             duration={2000}
           />
         </IonContent>
-      </IonPage>
+      </IonPage >
     );
   }
 };

@@ -92,6 +92,10 @@ export default function reducer(state = {
       localStorage.setItem(Globals.storeFile, JSON.stringify({ settings: newSettings }));
       break;
     }
+    case "DEFAULT_SETTINGS":
+      newSettings = {};
+      // Don't use break here!
+      // eslint-disable-next-line
     default:
       if (Object.keys(newSettings).length === 0) {
         newSettings = {};

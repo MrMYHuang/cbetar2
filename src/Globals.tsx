@@ -8,7 +8,7 @@ const apiVersion = 'v1.2';
 const cbetaApiUrl = `https://cbdata.dila.edu.tw/${apiVersion}`;
 const dilaDictApiUrl = `https://glossaries.dila.edu.tw/search.json`;
 const cbetardb = 'cbetardb';
-const twKaiFontKey = 'twKaoFont';
+const twKaiFontKey = 'twKaiFont';
 /* Font source: https://data.gov.tw/dataset/5961 */
 const twKaiFontPath = '/assets/TW-Kai-98_1.woff';
 let log = '';
@@ -60,9 +60,8 @@ async function saveFileToIndexedDB(fileName: string, data: any) {
 
       const transWrite = db.transaction(["store"], 'readwrite')
       const reqWrite = transWrite.objectStore('store').put(data, fileName);
-      reqWrite.onsuccess = (_ev: any) => {
-        return ok();
-      };
+      reqWrite.onsuccess = (_ev: any) => ok();
+      reqWrite.onerror = (_ev: any) => fail();
     };
   });
 }
@@ -75,11 +74,29 @@ async function removeFileFromIndexedDB(fileName: string) {
 
       const transWrite = db.transaction(["store"], 'readwrite')
       const reqWrite = transWrite.objectStore('store').delete(fileName);
-      reqWrite.onsuccess = (_ev: any) => {
-        return ok();
-      };
+      reqWrite.onsuccess = (_ev: any) => ok();
+      reqWrite.onerror = (_ev: any) => fail();
     };
   });
+}
+
+async function clearIndexedDB() {
+  const dbOpenReq = indexedDB.open(cbetardb);
+  return new Promise<void>((ok, fail) => {
+    dbOpenReq.onsuccess = async (ev: Event) => {
+      const db = dbOpenReq.result;
+
+      const transWrite = db.transaction(["store"], 'readwrite')
+      const reqWrite = transWrite.objectStore('store').clear();
+      reqWrite.onsuccess = (_ev: any) => ok();
+      reqWrite.onerror = (_ev: any) => fail();
+    };
+  });
+}
+
+async function clearAppData() {
+  localStorage.clear();
+  await clearIndexedDB();
 }
 
 // Fetch juan or HTML file.
@@ -295,6 +312,7 @@ export default {
   getFileFromIndexedDB,
   saveFileToIndexedDB,
   removeFileFromIndexedDB,
+  clearAppData,
   removeElementsByClassName,
   disableAndroidChromeCallout,
   disableIosSafariCallout,
