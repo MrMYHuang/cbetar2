@@ -116,7 +116,7 @@ class _DictionaryPage extends React.Component<PageProps, State> {
         <div style={{ display: 'table-row' }} key={`dictItem` + index}>
           <div className='tableCell'>
             <div className='textFont' style={{ color: 'var(--ion-color-primary)', paddingBottom: '18pt' }} dangerouslySetInnerHTML={{ __html: item.dict_name_zh }}></div>
-            <div className='textFont' style={{ width: '100vw', padding: '0 5px', textAlign: 'justify' }} key={`dictItemLabel` + index} dangerouslySetInnerHTML={{ __html: item.desc }}>
+            <div className='textFont' style={{ padding: '0 5px', textAlign: 'justify', overflowWrap: 'normal' }} key={`dictItemLabel` + index} dangerouslySetInnerHTML={{ __html: item.desc }}>
             </div>
           </div>
         </div>
@@ -291,7 +291,7 @@ class _DictionaryPage extends React.Component<PageProps, State> {
                 </div>
               </>
               :
-              <div style={{ display: 'table' }}>
+              <div style={{ display: 'table', tableLayout: 'fixed', width: '100%' }}>
                 {this.getRows()}
               </div>
           }
