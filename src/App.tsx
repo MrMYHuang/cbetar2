@@ -70,7 +70,7 @@ if (!state.settings.hasAppLog) {
 }
 
 setupConfig({
-  mode: 'md',
+  mode: 'md', // Use a consistent UI style across Android and iOS.
   swipeBackEnabled: false,
 });
 
@@ -114,13 +114,13 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
   constructor(props: any) {
     super(props);
     this.registrationNew = null;
-    // ----- Initializing UI settings -----
-    // Apply the theme setting.
+    // Disable browser callout.
     if (isPlatform('android')) {
       window.oncontextmenu = Globals.disableAndroidChromeCallout;
     } else if (isPlatform('ios')) {
       document.ontouchend = Globals.disableIosSafariCallout.bind(window);
     }
+    // Update IonApp height after screen rotation.
     if (Globals.isTouchDevice()) {
       window.onorientationchange = (event) => {
         setTimeout(() => {
@@ -128,9 +128,14 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
         }, 500);
       }
     }
+
+    // ----- Initializing UI settings -----
+    // Apply the theme setting.
     document.body.classList.forEach((val) => document.body.classList.remove(val));
     document.body.classList.toggle(`theme${state.settings.theme}`, true);
     document.body.classList.toggle(`print${state.settings.printStyle}`, true);
+
+    // Modify UI settings from query string.
     const queryParams = queryString.parse(this.props.location.search) as any;
     queryParams.settings && (queryParams.settings as string).split(',').forEach(setting => {
       const keyVal = setting.split('=');
@@ -159,49 +164,40 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
       speechSynthesis.getVoices();
       speechSynthesis.cancel();
     }
-    this.wakeLockScreen();
-    document.addEventListener("visibilitychange", async () => {
-      if (document.visibilityState === 'visible') {
-        this.wakeLockScreen();
-      } else {
-        this.wakeLockScreenRelease()
-      }
-    });
-    this.loadTwKaiFont();
-  }
 
-  async loadTwKaiFont() {
+    // Enable screen wake lock.
+    if ((navigator as any).wakeLock) {
+      this.wakeLockScreen();
+      document.addEventListener("visibilitychange", async () => {
+        if (document.visibilityState === 'visible') {
+          this.wakeLockScreen();
+        } else {
+          this.wakeLockScreenRelease()
+        }
+      });
+    }
+
     const dbOpenReq = indexedDB.open(Globals.cbetardb);
+    // Init store in indexedDB if necessary.
     dbOpenReq.onupgradeneeded = function (event: IDBVersionChangeEvent) {
       var db = (event.target as any).result;
       db.createObjectStore('store');
     };
+    this.loadTwKaiFont();
+  }
 
+  async loadTwKaiFont() {
     let fontData: any;
-    await new Promise<void>((ok, fail) => {
-      dbOpenReq.onsuccess = async (ev: Event) => {
-        const db = dbOpenReq.result;
-
-        const trans = db.transaction(["store"], 'readwrite');
-        let req = trans.objectStore('store').get(Globals.twKaiFontKey);
-        req.onsuccess = async (_ev: any) => {
-          fontData = req.result;
-          if (!fontData) {
-            const res = await Globals.axiosInstance.get(`${window.location.origin}/${Globals.twKaiFontPath}`, {
-              responseType: 'arraybuffer',
-              timeout: 0,
-            });
-            const transWrite = db.transaction(["store"], 'readwrite');
-            fontData = res.data;
-            const reqWrite = transWrite.objectStore('store').put(fontData, Globals.twKaiFontKey);
-            reqWrite.onsuccess = (_ev: any) => {
-              return ok();
-            };
-          }
-          return ok();
-        };
-      };
-    });
+    try {
+      fontData = await Globals.getFileFromIndexedDB(Globals.twKaiFontKey);
+    } catch (err) {
+      const res = await Globals.axiosInstance.get(`${window.location.origin}/${Globals.twKaiFontPath}`, {
+        responseType: 'arraybuffer',
+        timeout: 0,
+      });
+      fontData = res.data;
+      Globals.saveFileToIndexedDB(Globals.twKaiFontKey, fontData);
+    }
     const fontFace = new (window as any).FontFace('Kai', fontData);
     await fontFace.load();
     (document as any).fonts.add(fontFace);
