@@ -198,10 +198,6 @@ input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:foc
     box-shadow: 0px 0px 0px 1000px var(--background) inset;
 }
 
-ion-col {
-    text-align: center;
-}
-
 .tableCell {
     display: table-cell;
     border-bottom: 1px solid var(--color);

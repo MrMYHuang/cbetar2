@@ -92,7 +92,7 @@ class _ShareTextModal extends React.Component<PageProps, State> {
               </IonList>
             </div>
             <div>
-              <IonButton size='large' onClick={() => this.props.finish()}>關閉</IonButton>
+              <IonButton fill='outline' shape='round' size='large' onClick={() => this.props.finish()}>關閉</IonButton>
             </div>
           </div>
         </IonContent>

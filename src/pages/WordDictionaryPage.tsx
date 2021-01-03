@@ -158,10 +158,10 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
               <IonIcon icon={arrowBack} slot='icon-only' />
             </IonButton>
 
-            <IonButton slot='start' onClick={ev => {
+            <IonButton fill='outline' shape='round' slot='start' onClick={ev => {
               this.props.history.push(`/dictionary/search`);
             }}>
-              <span className='uiFont' style={{ color: 'var(--color)' }}>萌典字典</span>
+              <span className='uiFont'>萌典字典</span>
             </IonButton>
 
             <IonButton hidden={!this.state.fetchError} fill="clear" slot='end' onClick={e => this.lookupDict(this.props.match.params.keyword)}>
@@ -302,7 +302,7 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
                     )}
                   </IonList>
                   <div style={{ textAlign: 'center' }}>
-                    <IonButton size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={e => {
+                    <IonButton fill='outline' shape='round' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={e => {
                       this.setState({ keyword: '' });
                       this.props.dispatch({
                         type: "SET_KEY_VAL",

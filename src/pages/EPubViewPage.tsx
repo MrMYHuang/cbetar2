@@ -944,7 +944,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
             <IonIcon icon={refreshCircle} slot='icon-only' />
           </IonButton>
 
-          <IonButton hidden={!this.props.paginated} slot='end' onClick={ev => {
+          <IonButton fill='outline' shape='round' hidden={!this.props.paginated} slot='end' onClick={ev => {
             this.setState({ showJumpPageAlert: true });
           }}>
             <span className='uiFont' style={{ color: 'var(--color)' }}>頁{this.state.currentPage}/{this.state.pageCount}</span>

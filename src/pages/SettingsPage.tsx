@@ -139,7 +139,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
                   this.setState({ showToast: true, toastMessage: 'App已是最新版' });
                 }
               }}>電子佛典app版本: <a href="https://github.com/MrMYHuang/cbetar2#history" target="_new">{PackageInfos.version}</a></IonLabel>
-              <IonButton slot='end' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={e => {
+              <IonButton fill='outline' shape='round' slot='end' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={e => {
                 this.props.dispatch({
                   type: "TMP_SET_KEY_VAL",
                   key: 'shareTextModal',
@@ -168,7 +168,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={bug} slot='start' />
               <IonLabel className='ion-text-wrap uiFont'>回報app異常記錄</IonLabel>
-              <IonButton slot='end' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={e => {
+              <IonButton fill='outline' shape='round' slot='end' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={e => {
                 window.open(`mailto:myh@live.com?subject=電子佛典異常記錄回報&body=${encodeURIComponent("問題描述(建議填寫)：\n\n瀏覽器：" + navigator.userAgent + "\n\nApp版本：" + PackageInfos.version + "\n\nApp設定：" + JSON.stringify(this.props.settings) + "\n\nLog：\n" + Globals.getLog())}`);
               }}>回報</IonButton>
             </IonItem>
@@ -179,7 +179,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
                 <div style={{ flexDirection: 'column' }}>
                   <IonLabel className='ion-text-wrap uiFont'>App設定與書籤</IonLabel>
                   <div style={{ textAlign: 'right' }}>
-                    <IonButton size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={async (e) => {
+                    <IonButton fill='outline' shape='round' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={async (e) => {
                       const settingsJsonUri = `data:text/json;charset=utf-8,${encodeURIComponent(localStorage.getItem('Settings.json') || '')}`;
                       const a = document.createElement('a');
                       a.href = settingsJsonUri;
@@ -203,11 +203,11 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
                       (document.getElementById('importJsonInput') as HTMLInputElement).value = '';
                     }} />
 
-                    <IonButton size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={(e) => {
+                    <IonButton fill='outline' shape='round' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={(e) => {
                       (document.querySelector('#importJsonInput') as HTMLInputElement).click();
                     }}>匯入</IonButton
                     >
-                    <IonButton size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={(e) => {
+                    <IonButton fill='outline' shape='round' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={(e) => {
                       this.setState({ showClearAlert: true });
                     }}>重置</IonButton>
                     <IonAlert
@@ -252,7 +252,7 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
                 <IonLabel className='ion-text-wrap uiFont'>更新離線經文檔</IonLabel>
                 <IonProgressBar value={this.state.juansDownloadedRatio} />
               </div>
-              <IonButton slot='end' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={async (e) => this.updateAllJuans()}>更新</IonButton>
+              <IonButton fill='outline' shape='round' slot='end' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={async (e) => this.updateAllJuans()}>更新</IonButton>
               <IonToast
                 cssClass='uiFont'
                 isOpen={this.state.showUpdateAllJuansDone}
