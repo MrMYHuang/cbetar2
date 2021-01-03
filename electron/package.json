@@ -32,7 +32,8 @@
   },
   "scripts": {
     "start": "electron .",
-    "dist-linux": "electron-builder --linux snap",
+    "dist-linux": "rm dist/*.snap && electron-builder --linux snap",
+    "publish-linux": "snapcraft upload --release=stable dist/*.snap",
     "icons-mas": "cd build && iconutil -c icns icon.iconset",
     "dist-mas": "electron-builder -m mas",
     "build-mas-dev": "electron-builder -m mas-dev"
