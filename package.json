@@ -17,6 +17,7 @@
     "axios": "^0.19.2",
     "epubjs-myh": "^0.3.111",
     "history": "^4.10.1",
+    "html-docx-js": "^0.3.1",
     "ionicons": "^5.2.3",
     "memfs": "^3.2.0",
     "nodepub": "^2.2.0",

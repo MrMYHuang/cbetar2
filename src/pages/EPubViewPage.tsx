@@ -13,6 +13,7 @@ import { Work } from '../models/Work';
 import SearchAlert from '../components/SearchAlert';
 import ePub, { Book, Rendition, EVENTS } from 'epubjs-myh';
 import * as nodepub from 'nodepub';
+import * as HtmlDocx from 'html-docx-js';
 
 // Load TW-Kai font in iframe.
 async function loadTwKaiFont(this: any) {
@@ -363,7 +364,6 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       source: '',
       images: ['logo.png'],
     }, 'logo.png');
-
     let htmlStrModifiedStyles = this.state.htmlStr!;
     if (this.props.rtlVerticalLayout) {
       htmlStrModifiedStyles = htmlStrModifiedStyles.replace(/margin-left/g, 'margin-top');
@@ -386,7 +386,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     }
     `;
 
-    this.epub.addCSS(`
+    const css = `
     @page {
       size: A4;
       margin: 0.5in;
@@ -495,7 +495,17 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     #back, #cbeta-copyright {
       display: ${this.props.showComments ? "block" : "none"};
     }
-    `);
+    `;
+
+    const b = HtmlDocx.asBlob(`<html><head><style>${css}</style></head><body>${this.state.htmlStr!}</body></html>`);
+    /*const docxUri = `data:application/vnd.openxmlformats-officedocument.wordprocessing;charset=utf-8,${encodeURIComponent()}`;*/
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(b);
+    a.download = 'cbetar2.docx';
+    a.click();
+    a.remove();/**/
+
+    this.epub.addCSS(css);
     //await new Promise((ok, fail) => {
     this.epub.writeEPUB(
       (e: any) => {
