@@ -1,7 +1,8 @@
 {
   "name": "cbetar2",
-  "version": "4.15.4",
-  "private": true,
+  "version": "4.15.7",
+  "private": false,
+  "files": ["README.md"],
   "dependencies": {
     "@ionic/react": "^5.5.2",
     "@ionic/react-router": "^5.5.2",
