@@ -2,8 +2,9 @@ import React from 'react';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonRange, IonIcon, IonLabel, IonToggle, IonButton, IonAlert, IonSelect, IonSelectOption, IonProgressBar, IonToast } from '@ionic/react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
+import { ipcRenderer } from 'electron';
 import Globals from '../Globals';
-import { helpCircle, text, documentText, refreshCircle, musicalNotes, colorPalette, shareSocial, bug, download, print } from 'ionicons/icons';
+import { helpCircle, text, documentText, refreshCircle, musicalNotes, colorPalette, shareSocial, bug, download, print, informationCircle } from 'ionicons/icons';
 import './SettingsPage.css';
 import PackageInfos from '../../package.json';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
@@ -15,6 +16,7 @@ interface StateProps {
   showClearAlert: boolean;
   showToast: boolean;
   toastMessage: string;
+  mainVersion: string | null;
 }
 
 interface Props {
@@ -50,7 +52,12 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
       showClearAlert: false,
       showToast: false,
       toastMessage: '',
-    }
+      mainVersion: null,
+    };
+
+    ipcRenderer.on('mainVersion', (ev, arg) => {
+      this.setState({ mainVersion: arg });
+    });
   }
 
   updateBookmark(newBookmarks: Array<Bookmark>, newBookmark: Bookmark) {
@@ -149,6 +156,13 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
                   },
                 });
               }}>分享</IonButton>
+            </IonItem>
+            <IonItem hidden={!this.state.mainVersion}>
+              <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
+              <IonIcon icon={informationCircle} slot='start' />
+              <IonLabel className='ion-text-wrap uiFont'>Electron app版本: {this.state.mainVersion}</IonLabel>
+              {/*<IonButton fill='outline' shape='round' slot='end' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={e => {
+              }}>分享</IonButton>*/}
             </IonItem>
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
