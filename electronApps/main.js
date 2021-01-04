@@ -1,7 +1,8 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow} = require('electron');
+const {app, BrowserWindow, ipcMain} = require('electron');
 const windowStateKeeper = require('electron-window-state');
 const path = require('path');
+import PackageInfos from '../../package.json';
 app.commandLine.appendSwitch('ignore-certificate-errors', true);
 
 function createWindow () {
@@ -28,6 +29,10 @@ function createWindow () {
   // and load the index.html of the app.
   //mainWindow.loadFile('index.html');
   mainWindow.loadURL('https://mrmyhuang.github.io');
+
+  ipcMain.on('rendererReady', () => {
+    mainWindow.webContents.send('mainVersion', PackageInfos.version);
+  });
 }
 
 // This method will be called when Electron has finished

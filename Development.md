@@ -52,7 +52,7 @@ pod install
 ### Mac App Store
 1. Run Shell script:
 ```
-cd electron
+cd electronApps
 npm i -D
 npm run dist_mas
 ```
@@ -70,7 +70,7 @@ https://apps.apple.com/tw/app/transporter/id1450874784
 
 1. Run Shell script:
 ```
-cd electron
+cd electronApps
 npm i -D
 npm run dist_linux
 ```
