@@ -1,5 +1,5 @@
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonRange, IonIcon, IonLabel, IonToggle, IonButton, IonAlert, IonSelect, IonSelectOption, IonProgressBar, IonToast } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonRange, IonIcon, IonLabel, IonToggle, IonButton, IonAlert, IonSelect, IonSelectOption, IonProgressBar, IonToast, withIonLifeCycle } from '@ionic/react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { ipcRenderer } from 'electron';
@@ -41,7 +41,7 @@ interface PageProps extends Props, RouteComponentProps<{
   label: string;
 }> { }
 
-class SettingsPage extends React.Component<PageProps, StateProps> {
+class _SettingsPage extends React.Component<PageProps, StateProps> {
   constructor(props: any) {
     super(props);
 
@@ -58,6 +58,10 @@ class SettingsPage extends React.Component<PageProps, StateProps> {
     ipcRenderer.on('mainVersion', (ev, arg) => {
       this.setState({ mainVersion: arg });
     });
+  }
+
+  ionViewWillEnter() {
+    ipcRenderer.send('rendererReady', true);
   }
 
   updateBookmark(newBookmarks: Array<Bookmark>, newBookmark: Bookmark) {
@@ -521,6 +525,8 @@ const mapStateToProps = (state: any /*, ownProps*/) => {
     bookmarks: state.settings.bookmarks,
   }
 };
+
+const SettingsPage = withIonLifeCycle(_SettingsPage);
 
 export default connect(
   mapStateToProps,
