@@ -156,7 +156,7 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
 
     this.state = {
       showUpdateAlert: false,
-      showRestoreAppSettingsToast: (queryParams.settings != null) || false,
+      showRestoreAppSettingsToast: (queryParams.settings != null && this.originalAppSettingsStr != null) || false,
     };
 
     serviceWorkCallbacks.onUpdate = (registration: ServiceWorkerRegistration) => {
