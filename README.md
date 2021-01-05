@@ -197,7 +197,7 @@ https://MrMYHuang.github.io
 9. iOS Safari選擇文字後，仍會閃爍彈出式選單才消失。
 
 ## <a id='history'>版本歷史</a>
-* 4.16.0:
+* PWA 4.16.0, Electron app 10.1.0:
   * [新增] 設定頁支援顯示Electron app版本。
 * 4.15.4:
   * [修正] 修改按鈕樣式，以繞開按鈕文字在iPhone iOS 14.3顏色不正確的問題。
