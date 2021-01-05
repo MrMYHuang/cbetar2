@@ -2,12 +2,13 @@ import React from 'react';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonRange, IonIcon, IonLabel, IonToggle, IonButton, IonAlert, IonSelect, IonSelectOption, IonProgressBar, IonToast, withIonLifeCycle } from '@ionic/react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
-import { ipcRenderer } from 'electron';
 import Globals from '../Globals';
 import { helpCircle, text, documentText, refreshCircle, musicalNotes, colorPalette, shareSocial, bug, download, print, informationCircle } from 'ionicons/icons';
 import './SettingsPage.css';
 import PackageInfos from '../../package.json';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
+
+const electronBackendApi: any = (window as any).electronBackendApi;
 
 interface StateProps {
   showFontLicense: boolean;
@@ -55,13 +56,17 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
       mainVersion: null,
     };
 
-    ipcRenderer.on('mainVersion', (ev, arg) => {
-      this.setState({ mainVersion: arg });
+    electronBackendApi?.receive("fromMain", (data: any) => {
+      switch (data.event) {
+        case 'version':
+          this.setState({ mainVersion: data.version });
+          break;
+      }
     });
   }
 
   ionViewWillEnter() {
-    ipcRenderer.send('rendererReady', true);
+    electronBackendApi?.send("toMain", { event: 'ready' });
   }
 
   updateBookmark(newBookmarks: Array<Bookmark>, newBookmark: Bookmark) {

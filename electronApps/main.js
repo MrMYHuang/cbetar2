@@ -1,11 +1,12 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow, ipcMain} = require('electron');
+const { app, BrowserWindow, Menu, ipcMain } = require('electron');
 const windowStateKeeper = require('electron-window-state');
 const path = require('path');
-import PackageInfos from '../../package.json';
+const PackageInfos = require('./package.json');
 app.commandLine.appendSwitch('ignore-certificate-errors', true);
+Menu.setApplicationMenu(null)
 
-function createWindow () {
+function createWindow() {
   let mainWindowState = windowStateKeeper({
     defaultWidth: 1280,
     defaultHeight: 800
@@ -18,7 +19,9 @@ function createWindow () {
     'width': mainWindowState.width,
     'height': mainWindowState.height,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js')
+      contextIsolation: true, // protect against prototype pollution
+      enableRemoteModule: false, // turn off remote
+      preload: path.join(__dirname, 'preload.js'),
     }
   });
   mainWindowState.manage(mainWindow);
@@ -26,13 +29,21 @@ function createWindow () {
   // Open the DevTools.
   //mainWindow.webContents.openDevTools()
 
+  ipcMain.on('toMain', (ev, args) => {
+    switch (args.event) {
+      case 'ready':
+        mainWindow.webContents.send('fromMain', { event: 'version', version: PackageInfos.version });
+        break;
+    }
+  });
+
   // and load the index.html of the app.
   //mainWindow.loadFile('index.html');
-  mainWindow.loadURL('https://mrmyhuang.github.io');
-
-  ipcMain.on('rendererReady', () => {
-    mainWindow.webContents.send('mainVersion', PackageInfos.version);
-  });
+  if (!app.isPackaged || process.defaultApp) {
+    mainWindow.loadURL('http://localhost:3000');
+  } else {
+    mainWindow.loadURL('https://mrmyhuang.github.io');
+  }
 }
 
 // This method will be called when Electron has finished
@@ -40,7 +51,7 @@ function createWindow () {
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
   createWindow()
-  
+
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
