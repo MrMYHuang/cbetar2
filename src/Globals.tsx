@@ -108,7 +108,7 @@ async function fetchJuan(work: string, juan: string, htmlFile: string | null, up
   } catch {
     // Ignore file not found.
   }
-  const settingsStr = localStorage.getItem('Settings.json')
+  const settingsStr = localStorage.getItem('Settings.json');
 
   let workInfo = new Work({});
   let bookmark: Bookmark | undefined;

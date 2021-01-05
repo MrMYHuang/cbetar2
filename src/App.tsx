@@ -10,6 +10,7 @@ import {
   IonTabs,
   IonAlert,
   isPlatform,
+  IonToast,
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { connect, Provider } from 'react-redux';
@@ -63,12 +64,6 @@ class DebugRouter extends IonReactRouter {
 }
 */
 
-const state = store.getState();
-
-if (!state.settings.hasAppLog) {
-  Globals.disableAppLog();
-}
-
 setupConfig({
   mode: 'md', // Use a consistent UI style across Android and iOS.
   swipeBackEnabled: false,
@@ -82,6 +77,7 @@ export var serviceWorkCallbacks = {
 interface Props {
   dispatch: Function;
   shareTextModal: any;
+  settings: any;
 }
 
 interface PageProps extends RouteComponentProps<{
@@ -96,9 +92,10 @@ interface AppOrigProps extends Props, RouteComponentProps<{
 
 interface State {
   showUpdateAlert: boolean;
+  showRestoreAppSettingsToast: boolean;
 }
 
-class _App extends React.Component<PageProps, State> {
+class _App extends React.Component<PageProps> {
   render() {
     return (
       <Provider store={store}>
@@ -110,9 +107,14 @@ class _App extends React.Component<PageProps, State> {
 
 class _AppOrig extends React.Component<AppOrigProps, State> {
   registrationNew: ServiceWorkerRegistration | null;
+  originalAppSettingsStr: string | null | undefined;
 
   constructor(props: any) {
     super(props);
+    if (!this.props.settings.hasAppLog) {
+      Globals.disableAppLog();
+    }
+
     this.registrationNew = null;
     // Disable browser callout.
     if (isPlatform('android')) {
@@ -131,24 +133,30 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
 
     // ----- Initializing UI settings -----
     // Apply the theme setting.
-    document.body.classList.forEach((val) => document.body.classList.remove(val));
-    document.body.classList.toggle(`theme${state.settings.theme}`, true);
-    document.body.classList.toggle(`print${state.settings.printStyle}`, true);
+    while(document.body.classList.length > 0) {
+      document.body.classList.remove(document.body.classList.item(0)!);
+    }
+    document.body.classList.toggle(`theme${this.props.settings.theme}`, true);
+    document.body.classList.toggle(`print${this.props.settings.printStyle}`, true);
 
     // Modify UI settings from query string.
     const queryParams = queryString.parse(this.props.location.search) as any;
-    queryParams.settings && (queryParams.settings as string).split(',').forEach(setting => {
-      const keyVal = setting.split('=');
-      this.props.dispatch({
-        type: "SET_KEY_VAL",
-        key: keyVal[0],
-        val: +keyVal[1],
+    if (queryParams.settings) {
+      this.originalAppSettingsStr = localStorage.getItem('Settings.json');
+      (queryParams.settings as string).split(',').forEach(setting => {
+        const keyVal = setting.split('=');
+        this.props.dispatch({
+          type: "SET_KEY_VAL",
+          key: keyVal[0],
+          val: +keyVal[1],
+        });
       });
-    });
-    Globals.updateCssVars(state.settings);
+    }
+    Globals.updateCssVars(this.props.settings);
 
     this.state = {
       showUpdateAlert: false,
+      showRestoreAppSettingsToast: (queryParams.settings != null) || false,
     };
 
     serviceWorkCallbacks.onUpdate = (registration: ServiceWorkerRegistration) => {
@@ -184,6 +192,17 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
       db.createObjectStore('store');
     };
     this.loadTwKaiFont();
+  }
+
+  restoreAppSettings() {
+    localStorage.setItem(Globals.storeFile, this.originalAppSettingsStr!);
+    this.props.dispatch({ type: 'LOAD_SETTINGS' });
+    while(document.body.classList.length > 0) {
+      document.body.classList.remove(document.body.classList.item(0)!);
+    }
+    document.body.classList.toggle(`theme${this.props.settings.theme}`, true);
+    document.body.classList.toggle(`print${this.props.settings.printStyle}`, true);
+    Globals.updateCssVars(this.props.settings);
   }
 
   async loadTwKaiFont() {
@@ -339,6 +358,24 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
             }, ...this.props
           }}
         />
+
+        <IonToast
+          cssClass='uiFont'
+          isOpen={this.state.showRestoreAppSettingsToast}
+          onDidDismiss={() => this.setState({ showRestoreAppSettingsToast: false })}
+          message={`已套用app連結中的設定，是否還原設定？`}
+          buttons={[
+            {
+              text: '取消',
+              role: 'cancel',
+              handler: () => this.setState({ showRestoreAppSettingsToast: false })
+            },
+            {
+              text: '還原',
+              handler: () => this.restoreAppSettings(),
+            },
+          ]}
+        />
       </IonApp>
     );
   }
@@ -347,6 +384,7 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
 const mapStateToProps = (state: any /*, ownProps*/) => {
   return {
     shareTextModal: state.tmpSettings.shareTextModal,
+    settings: state.settings,
   }
 };
 

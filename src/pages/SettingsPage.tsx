@@ -256,7 +256,9 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                           handler: async (value) => {
                             await Globals.clearAppData();
                             this.props.dispatch({ type: 'DEFAULT_SETTINGS' });
-                            document.body.classList.forEach((val) => document.body.classList.remove(val));
+                            while(document.body.classList.length > 0) {
+                              document.body.classList.remove(document.body.classList.item(0)!);
+                            }
                             document.body.classList.toggle(`theme${this.props.theme}`, true);
                             document.body.classList.toggle(`print${this.props.printStyle}`, true);
                             this.setState({ showClearAlert: false, showToast: true, toastMessage: "清除成功!" });
@@ -295,6 +297,14 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                 interfaceOptions={{ cssClass: 'cbetar2themes' }}
                 onIonChange={e => {
                   const value = e.detail.value;
+                  // Important! Because it can results in rerendering of its parent component but
+                  // store states of this component is not updated yet! And IonSelect value is changed
+                  // back to the old value and onIonChange is triggered again!
+                  // Thus, we use this check to ignore this invalid change.
+                  if (this.props.theme === value) {
+                    return;
+                  }
+
                   this.props.dispatch({
                     type: "SET_KEY_VAL",
                     key: 'theme',
@@ -345,6 +355,10 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                 interfaceOptions={{ cssClass: 'uiFont' }}
                 onIonChange={e => {
                   const value = e.detail.value;
+                  if (this.props.scrollbarSize === value) {
+                    return;
+                  }
+                  
                   this.props.dispatch({
                     type: "SET_KEY_VAL",
                     key: 'scrollbarSize',
@@ -427,6 +441,10 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                 interfaceOptions={{ cssClass: 'cbetar2themes' }}
                 onIonChange={e => {
                   const value = e.detail.value;
+                  if (this.props.printStyle === value) {
+                    return;
+                  }
+
                   this.props.dispatch({
                     type: "SET_KEY_VAL",
                     key: 'printStyle',

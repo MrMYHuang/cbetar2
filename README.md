@@ -197,6 +197,8 @@ https://MrMYHuang.github.io
 9. iOS Safari選擇文字後，仍會閃爍彈出式選單才消失。
 
 ## <a id='history'>版本歷史</a>
+* PWA 4.17.0:
+  * [新增] 若開啟的app連結包含app設定，會先套用，並詢問是否還原app設定。
 * PWA 4.16.0, Electron app 10.1.0:
   * [新增] 設定頁支援顯示Electron app版本。
 * 4.15.4:
