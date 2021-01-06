@@ -60,7 +60,7 @@
 
 .printVar {    
     --color: var(--print-text-color);
-    --background-color: var(--print-background);
+    --background: var(--print-background);
     --ion-background-color: var(--print-background);
 }
 

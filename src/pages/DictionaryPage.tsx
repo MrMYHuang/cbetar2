@@ -179,7 +179,7 @@ class _DictionaryPage extends React.Component<PageProps, State> {
             >
               <IonList>
                 <IonItem button onClick={e => {
-                  this.props.history.push(`/${this.props.match.params.tab}`);
+                  this.props.history.push(`/${this.props.match.params.tab}/search`);
                   this.setState({ popover: { show: false, event: null } });
                 }}>
                   <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}

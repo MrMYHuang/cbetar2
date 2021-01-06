@@ -179,6 +179,11 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
               <IonLabel className='ion-text-wrap uiFont'><a href="https://github.com/MrMYHuang/cbetar2#report" target="_new">啟用app異常記錄</a></IonLabel>
               <IonToggle slot='end' checked={this.props.hasAppLog} onIonChange={e => {
                 const isChecked = e.detail.checked;
+
+                if (this.props.hasAppLog === isChecked) {
+                  return;
+                }
+
                 isChecked ? Globals.enableAppLog() : Globals.disableAppLog();
                 this.props.dispatch({
                   type: "SET_KEY_VAL",
@@ -324,6 +329,11 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
               <IonLabel className='ion-text-wrap uiFont'>{Globals.appSettings['rtlVerticalLayout']}</IonLabel>
               <IonToggle slot='end' checked={this.props.rtlVerticalLayout} onIonChange={e => {
                 const isChecked = e.detail.checked;
+
+                if (this.props.rtlVerticalLayout === isChecked) {
+                  return;
+                }
+
                 this.props.dispatch({
                   type: "SET_KEY_VAL",
                   key: 'rtlVerticalLayout',
@@ -337,6 +347,11 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
               <IonLabel className='ion-text-wrap uiFont'>{Globals.appSettings['paginated']}</IonLabel>
               <IonToggle slot='end' checked={this.props.paginated} onIonChange={e => {
                 const isChecked = e.detail.checked;
+
+                if (this.props.paginated === isChecked) {
+                  return;
+                }
+
                 this.props.dispatch({
                   type: "SET_KEY_VAL",
                   key: 'paginated',
@@ -377,6 +392,11 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
               <IonLabel className='ion-text-wrap uiFont'>{Globals.appSettings['showComments']}</IonLabel>
               <IonToggle slot='end' checked={this.props.showComments} onIonChange={e => {
                 const isChecked = e.detail.checked;
+
+                if (this.props.showComments === isChecked) {
+                  return;
+                }
+
                 (this.props as any).dispatch({
                   type: "SET_KEY_VAL",
                   key: 'showComments',
@@ -390,6 +410,11 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
               <IonLabel className='ion-text-wrap uiFont'>{Globals.appSettings['useFontKai']}</IonLabel>
               <IonToggle slot='end' checked={this.props.useFontKai} onIonChange={e => {
                 const isChecked = e.detail.checked;
+
+                if (this.props.useFontKai === isChecked) {
+                  return;
+                }
+
                 (this.props as any).dispatch({
                   type: "SET_KEY_VAL",
                   key: 'useFontKai',
