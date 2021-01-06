@@ -1,6 +1,8 @@
 {
   "name": "cbetar2",
   "version": "4.17.1",
+  "description": "CBETA電子佛典閱讀器2(非官方)，使用CBETA API存取電子佛經。",
+  "repository": "https://github.com/MrMYHuang/cbetar2",
   "private": false,
   "files": ["README.md"],
   "dependencies": {
@@ -32,7 +34,9 @@
     "redux": "^4.0.5",
     "swiped-events-myh": "^1.2.0",
     "typescript": "3.8.3",
-    "uuid": "^8.3.1"
+    "uuid": "^8.3.1",
+    "customize-cra": "^1.0.0",
+    "react-app-rewired": "^2.1.7"
   },
   "scripts": {
     "start": "react-app-rewired start",
@@ -61,9 +65,6 @@
   "devDependencies": {
     "@types/qrcode": "^1.3.5",
     "@types/react-redux": "^7.1.11",
-    "@types/uuid": "^8.3.0",
-    "customize-cra": "^1.0.0",
-    "react-app-rewired": "^2.1.7"
-  },
-  "description": "An Ionic project"
+    "@types/uuid": "^8.3.0"
+  }
 }

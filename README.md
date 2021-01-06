@@ -197,6 +197,9 @@ https://MrMYHuang.github.io
 9. iOS Safari選擇文字後，仍會閃爍彈出式選單才消失。
 
 ## <a id='history'>版本歷史</a>
+* Electron app 10.2.0:
+  * [修正] MAS app關閉視窗，再點擊工作列圖示重啟，切至設定頁會出現錯誤訊息。
+  * [修正] 加回開發者工具至選單。
 * PWA 4.17.1:
   * [修正] 若開啟的app連結包含app設定且為第1次開啟app，卻顯示是否還原app設定的問題。
 * PWA 4.17.0:

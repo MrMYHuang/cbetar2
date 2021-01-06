@@ -1,10 +1,14 @@
 {
   "name": "cbetar2-electron-apps",
   "productName": "電子佛典",
-  "version": "10.1.0",
+  "version": "10.2.0",
   "description": "CBETA電子佛典閱讀器2(非官方)，使用CBETA API存取電子佛經。",
-  "main": "main.js",
+  "main": "build/main.js",
   "build": {
+    "files": [
+      "build/**/*",
+      "package.json"
+    ],
     "appId": "io.github.mrmyhuang.cbetar2",
     "mac": {
       "type": "distribution",
@@ -31,12 +35,13 @@
     }
   },
   "scripts": {
-    "start": "electron .",
-    "dist-linux": "rm dist/*.snap && electron-builder --linux snap",
+    "build": "tsc",
+    "start": "npm run build && electron .",
+    "dist-linux": "npm run build && rm dist/*.snap && electron-builder --linux snap",
     "publish-linux": "snapcraft upload --release=stable dist/*.snap",
     "icons-mas": "cd build && iconutil -c icns icon.iconset",
-    "dist-mas": "electron-builder -m mas",
-    "build-mas-dev": "electron-builder -m mas-dev"
+    "dist-mas": "npm run build && electron-builder -m mas",
+    "build-mas-dev": "npm run build && electron-builder -m mas-dev"
   },
   "repository": "https://github.com/MrMYHuang/cbetar2",
   "keywords": [
@@ -52,7 +57,11 @@
     "electron": "^11.1.0",
     "electron-builder": "^22.9.1"
   },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
   "dependencies": {
-    "electron-window-state": "^5.0.3"
+    "electron-window-state": "^5.0.3",
+    "typescript": "^4.1.3"
   }
 }

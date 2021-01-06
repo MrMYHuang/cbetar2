@@ -6,13 +6,13 @@ const {
 } = require("electron");
 
 window.addEventListener('DOMContentLoaded', () => {
-  const replaceText = (selector, text) => {
+  const replaceText = (selector: string, text: string) => {
     const element = document.getElementById(selector)
     if (element) element.innerText = text
   }
 
   for (const type of ['chrome', 'node', 'electron']) {
-    replaceText(`${type}-version`, process.versions[type])
+    replaceText(`${type}-version`, (process.versions as any)[type]);
   }
 });
 
@@ -20,14 +20,14 @@ window.addEventListener('DOMContentLoaded', () => {
 // the ipcRenderer without exposing the entire object
 contextBridge.exposeInMainWorld(
   "electronBackendApi", {
-      send: (channel, data) => {
+      send: (channel: string, data: any) => {
           // whitelist channels
           let validChannels = ["toMain"];
           if (validChannels.includes(channel)) {
               ipcRenderer.send(channel, data);
           }
       },
-      receive: (channel, func) => {
+      receive: (channel: string, func: Function) => {
           let validChannels = ["fromMain"];
           if (validChannels.includes(channel)) {
               // Deliberately strip event as it includes `sender` 

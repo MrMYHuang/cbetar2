@@ -1,11 +1,26 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow, Menu, ipcMain } = require('electron');
+import { app, BrowserWindow, Menu, MenuItem, MenuItemConstructorOptions, ipcMain } from 'electron';
 const windowStateKeeper = require('electron-window-state');
 const path = require('path');
-const PackageInfos = require('./package.json');
-app.commandLine.appendSwitch('ignore-certificate-errors', true);
-Menu.setApplicationMenu(null)
+const PackageInfos = require('../package.json');
+app.commandLine.appendSwitch('ignore-certificate-errors', 'true');
 
+const template = [new MenuItem({
+    label: 'File',
+    submenu: [
+      {
+        role: 'toggleDevTools'
+      },
+      {
+        role: 'quit'
+      },
+    ]
+  }
+)];
+const menu = Menu.buildFromTemplate(template)
+Menu.setApplicationMenu(menu)
+
+let mainWindow: BrowserWindow | null | undefined;
 function createWindow() {
   let mainWindowState = windowStateKeeper({
     defaultWidth: 1280,
@@ -13,7 +28,7 @@ function createWindow() {
   });
 
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     'x': mainWindowState.x,
     'y': mainWindowState.y,
     'width': mainWindowState.width,
@@ -32,14 +47,14 @@ function createWindow() {
   ipcMain.on('toMain', (ev, args) => {
     switch (args.event) {
       case 'ready':
-        mainWindow.webContents.send('fromMain', { event: 'version', version: PackageInfos.version });
+        mainWindow?.webContents.send('fromMain', { event: 'version', version: PackageInfos.version });
         break;
     }
   });
 
   // and load the index.html of the app.
   //mainWindow.loadFile('index.html');
-  if (!app.isPackaged || process.defaultApp) {
+  if (!app.isPackaged || (process as any).defaultApp) {
     mainWindow.loadURL('http://localhost:3000');
   } else {
     mainWindow.loadURL('https://mrmyhuang.github.io');
@@ -50,12 +65,12 @@ function createWindow() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
-  createWindow()
+  createWindow();
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
-    if (BrowserWindow.getAllWindows().length === 0) createWindow()
+    if (BrowserWindow.getAllWindows().length === 0) createWindow();
   })
 })
 
@@ -63,7 +78,7 @@ app.whenReady().then(() => {
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
 app.on('window-all-closed', function () {
-  if (process.platform !== 'darwin') app.quit()
+  if (process.platform !== 'darwin') app.quit();
 })
 
 // In this file you can include the rest of your app's specific main process
