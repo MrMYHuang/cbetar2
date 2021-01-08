@@ -39,6 +39,7 @@ https://www.pwabuilder.com/
 
 ### App Store
 Note: The Mac Catalyst app in this section has limited functions. It is recommended to use Electron Mac Store app for submission as in next section!
+
 0. Required software:
     1. CocoaPods: https://guides.cocoapods.org/using/getting-started.html
     2. Xcode 12
