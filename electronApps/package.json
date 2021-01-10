@@ -1,7 +1,7 @@
 {
   "name": "cbetar2-electron-apps",
   "productName": "電子佛典",
-  "version": "10.2.0",
+  "version": "10.3.0",
   "description": "CBETA電子佛典閱讀器2(非官方)，使用CBETA API存取電子佛經。",
   "main": "build/main.js",
   "build": {
@@ -37,8 +37,9 @@
   "scripts": {
     "build": "tsc",
     "start": "npm run build && electron .",
+    "dist-win": "npm run build && electron-builder -w",
     "dist-linux": "npm run build && electron-builder -l deb rpm",
-    "dist-snap": "npm run build && rm dist/*.snap && electron-builder --linux snap",
+    "dist-snap": "npm run build && rm dist/*.snap && electron-builder -l snap",
     "publish-snap": "snapcraft upload --release=stable dist/*.snap",
     "icons-mas": "cd build && iconutil -c icns icon.iconset",
     "dist-mas": "npm run build && electron-builder -m mas",

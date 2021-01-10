@@ -5,18 +5,39 @@ const path = require('path');
 const PackageInfos = require('../package.json');
 app.commandLine.appendSwitch('ignore-certificate-errors', 'true');
 
-const template = [new MenuItem({
-    label: 'File',
+const template = [
+  new MenuItem({
+    label: '檔案',
     submenu: [
       {
-        role: 'toggleDevTools'
-      },
-      {
-        role: 'quit'
+        role: 'quit',
+        label: '關閉',
       },
     ]
-  }
-)];
+  }),
+  new MenuItem({
+    label: '顯示',
+    submenu: [
+      {
+        role: 'togglefullscreen',
+        label: '全螢幕',
+      },
+      {
+        role: 'toggleDevTools',
+        label: '開發者工具',
+      },
+    ]
+  }),
+  new MenuItem({
+    label: '執行',
+    submenu: [
+      {
+        role: 'forceReload',
+        label: '強制重新載入',
+      },
+    ]
+  }),
+];
 const menu = Menu.buildFromTemplate(template)
 Menu.setApplicationMenu(menu)
 
