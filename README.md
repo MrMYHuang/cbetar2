@@ -118,17 +118,21 @@ CBETA電子佛典閱讀器2(非官方) (Chinese Buddhist Electronic Text Associa
 
 ## <a id='install'>安裝</a>
 
-此app有兩種取得、安裝方式：
+此app有3種取得、安裝方式：
 
   1. Chrome、Safari網頁瀏覽器。
   2. App商店。
+  3. 下載安裝檔。
 
-建議採用第1種用瀏覽器安裝，以取得最完整的app功能體驗。兩種安裝方法如下。
+建議採用第1種用瀏覽器安裝，以取得最完整的app功能體驗。3種安裝方法如下。
 
 ### <a id='web-app'>從瀏覽器開啟/安裝</a>
 請用Chrome (Windows, macOS, Linux, Android作業系統使用者)、Safari (iOS (iPhone, iPad)使用者)瀏覽器開啟以下網址：
 
 https://MrMYHuang.github.io
+<a href='https://MrMYHuang.github.io' target='_blank'>
+<img width="auto" height='60px' src='https://user-images.githubusercontent.com/9122190/28998409-c5bf7362-7a00-11e7-9b63-db56694522e7.png'/>
+</a>
 
 此progressive web app (PWA)，可不安裝直接在網頁瀏覽器執行，或安裝至手機、平板、筆電、桌機。建議安裝，以避免瀏覽器定期清除快取，導致書籤資料不見！
 
@@ -164,12 +168,12 @@ https://MrMYHuang.github.io
 
 (註：此種安裝渠道尚不支援"App捷徑"功能！)
 
-#### iOS 14.0, iPadOS 14.0 (iPhone, iPad) - 使用App Store
+#### iOS 14.0+ (iPhone), iPadOS 14.0+ (iPad) - 使用App Store
 <a href='https://apps.apple.com/app/id1546347689' target='_blank'>
 <img width="auto" height='60px' src='https://github.com/MrMYHuang/cbetar2/blob/master/docs/images/Download_on_the_App_Store_Badge_CNTC_RGB_blk_100217.svg'/>
 </a>
 
-#### macOS 10.10 - 使用App Store
+#### macOS 10.10+ - 使用App Store
 <a href='https://apps.apple.com/app/id1546347689' target='_blank'>
 <img width="auto" height='60px' src='https://github.com/MrMYHuang/cbetar2/blob/master/docs/images/Download_on_the_Mac_App_Store_Badge_CNTC_RGB_blk_100217.svg'/>
 </a>
@@ -184,6 +188,18 @@ https://MrMYHuang.github.io
 <a href='https://snapcraft.io/cbetar2' target='_blank'>
 <img width="auto" height='60px' src='https://github.com/MrMYHuang/cbetar2/blob/master/docs/images/[TW]-snap-store-black@2x.png' />
 </a>
+
+### 下載安裝檔
+請至此頁面下載最新版安裝檔：
+https://github.com/MrMYHuang/cbetar2/releases
+
+支援的64-bit作業系統如下：
+
+  1. Android(中國大陸使用者也能安裝)
+  2. Linux DEB (Debian, Ubuntu, ...)
+  3. Linux RPM (Fedora, ...)
+  4. Windows 7+
+  5. macOS 10.10+
 
 ## <a id='knownIssues'>已知問題</a>
 1. iOS Safari在單頁模式下，捲軸無法顯示。
