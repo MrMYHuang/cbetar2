@@ -130,6 +130,9 @@ CBETA電子佛典閱讀器2(非官方) (Chinese Buddhist Electronic Text Associa
 請用Chrome (Windows, macOS, Linux, Android作業系統使用者)、Safari (iOS (iPhone, iPad)使用者)瀏覽器開啟以下網址：
 
 https://MrMYHuang.github.io
+
+或：
+
 <a href='https://MrMYHuang.github.io' target='_blank'>
 <img width="auto" height='60px' src='https://user-images.githubusercontent.com/9122190/28998409-c5bf7362-7a00-11e7-9b63-db56694522e7.png'/>
 </a>
