@@ -51,6 +51,14 @@ pod install
 2. Open cbetar2.xcworkspace by Xcode...
 
 ### Mac App Store
+0. Generate and install the following certificates from https://developer.apple.com/account/resources/certificates/list
+   1. Apple Development
+   2. Apple Distribution
+   3. Mac Developer
+   4. 3rd Party Mac Developer Application
+   5. 3rd Party Mac Developer Installer
+   6. Developer ID Application
+   7. Developer ID Installer
 1. Run Shell script:
 ```
 cd electronApps
