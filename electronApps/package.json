@@ -11,7 +11,7 @@
     "dist-linux": "npm run build && electron-builder -l deb rpm",
     "dist-snap": "npm run build && rm dist/*.snap && electron-builder -l snap",
     "publish-snap": "snapcraft upload --release=stable dist/*.snap",
-    "dist-mac": "APPLE_ID=myh@live.com && npm run build && electron-builder -m pkg -c mac.json",
+    "dist-mac": "source appleAuth.sh && npm run build && electron-builder -m pkg -c mac.json",
     "icons-mas": "cd build && iconutil -c icns icon.iconset",
     "dist-mas": "npm run build && electron-builder -m mas -c mas.json",
     "build-mas-dev": "npm run build && electron-builder -m mas-dev -c masDev.json"
