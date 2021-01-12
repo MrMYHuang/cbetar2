@@ -1,0 +1,22 @@
+{
+  "appId": "io.github.mrmyhuang.cbetar2",
+  "files": [
+    "build/**/*",
+    "package.json"
+  ],
+  "mac": {
+    "type": "distribution",
+    "identity": null
+  },
+  "mas": {
+    "type": "distribution",
+    "identity": "3rd Party Mac Developer",
+    "artifactName": "${name}_${version}_mas64.${ext}",
+    "category": "public.app-category.education",
+    "minimumSystemVersion": "10.10",
+    "hardenedRuntime": false,
+    "entitlements": "build/entitlements.mas.plist",
+    "entitlementsInherit": "build/entitlements.mas.inherit.plist",
+    "provisioningProfile": "cbetar2.provisionprofile"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "appId": "io.github.mrmyhuang.cbetar2",
+  "files": [
+    "build/**/*",
+    "package.json"
+  ],
+  "afterAllArtifactBuild": "electron-builder-notarize-pkg",
+  "mac": {
+    "type": "distribution",
+    "artifactName": "${name}_${version}_macos64.${ext}",
+    "category": "public.app-category.education",
+    "minimumSystemVersion": "10.10",
+    "hardenedRuntime": true
+  }
+}

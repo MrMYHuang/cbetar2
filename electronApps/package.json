@@ -1,36 +1,9 @@
 {
   "name": "cbetar2",
   "productName": "電子佛典",
-  "version": "10.3.0",
+  "version": "10.4.1",
   "description": "CBETA電子佛典閱讀器2(非官方)，使用CBETA API存取電子佛經。",
   "main": "build/main.js",
-  "build": {
-    "files": [
-      "build/**/*",
-      "package.json"
-    ],
-    "appId": "io.github.mrmyhuang.cbetar2",
-    "afterAllArtifactBuild": "electron-builder-notarize-pkg",
-    "mac": {
-      "comment": "Use distribution type for dist-mac or development type for dist-mas.", 
-      "type": "development",
-      "artifactName": "${name}_${version}_macos64.${ext}",
-      "category": "public.app-category.education",
-      "minimumSystemVersion": "10.10"
-    },
-    "mas": {
-      "hardenedRuntime": false,
-      "type": "distribution",
-      "entitlements": "build/entitlements.mas.plist",
-      "entitlementsInherit": "build/entitlements.mas.inherit.plist",
-      "provisioningProfile": "cbetar2.provisionprofile"
-    },
-    "masDev": {
-      "hardenedRuntime": false,
-      "entitlements": "build/entitlements.mas.plist",
-      "entitlementsInherit": "build/entitlements.mas.inherit.plist"
-    }
-  },
   "scripts": {
     "build": "tsc",
     "start": "npm run build && electron .",
@@ -38,10 +11,10 @@
     "dist-linux": "npm run build && electron-builder -l deb rpm",
     "dist-snap": "npm run build && rm dist/*.snap && electron-builder -l snap",
     "publish-snap": "snapcraft upload --release=stable dist/*.snap",
-    "dist-mac": "npm run build && electron-builder -m pkg",
+    "dist-mac": "APPLE_ID=myh@live.com && npm run build && electron-builder -m pkg -c mac.json",
     "icons-mas": "cd build && iconutil -c icns icon.iconset",
-    "dist-mas": "npm run build && electron-builder -m mas",
-    "build-mas-dev": "npm run build && electron-builder -m mas-dev"
+    "dist-mas": "npm run build && electron-builder -m mas -c mas.json",
+    "build-mas-dev": "npm run build && electron-builder -m mas-dev -c masDev.json"
   },
   "repository": "https://github.com/MrMYHuang/cbetar2",
   "keywords": [

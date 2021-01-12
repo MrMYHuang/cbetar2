@@ -4,6 +4,7 @@
 Frontend, TypeScript, CSS, Ionic, React, Redux, react-app-rewired, Webpack Alias, in-memory file system, server side redirection, IndexedDB, web font, Service Worker, workbox, speechSynthesis, ePub Viewer, Progressive Web App (PWA), Android, Google Play Store, Windows 10, Microsoft Store, iPhone, iPad, iOS, iPadOS, App Store, WKWebView, macOS, Mac App Store (MAS), Electron, Linux, Snap Store
 
 ## Run Locally
+### Progressive Web App
 0. Required software: Node 12
 1. Run Shell script:
 ```
@@ -12,6 +13,23 @@ cd cbetar2
 npm i -D
 npm run start
 ```
+
+### Mac Store App
+0. Generate and install the following certificates from https://developer.apple.com/account/resources/certificates/list
+   1. Apple Development
+   2. Apple Distribution
+   3. Mac Developer
+   4. 3rd Party Mac Developer Application
+   5. 3rd Party Mac Developer Installer
+   6. Developer ID Application
+   7. Developer ID Installer
+1. Run Shell script:
+```
+cd electronApps
+npm i -D
+npm run build-mas-dev
+```
+2. Open dist/mas-dev/foo.app
 
 ## Publish App
 ### Progressive Web App
@@ -52,13 +70,7 @@ pod install
 
 ### Mac App Store
 0. Generate and install the following certificates from https://developer.apple.com/account/resources/certificates/list
-   1. Apple Development
-   2. Apple Distribution
-   3. Mac Developer
-   4. 3rd Party Mac Developer Application
-   5. 3rd Party Mac Developer Installer
-   6. Developer ID Application
-   7. Developer ID Installer
+   1. Mac Developer
 1. Run Shell script:
 ```
 cd electronApps
@@ -67,6 +79,17 @@ npm run dist_mas
 ```
 2. Upload dist/mas/foo.pkg to App Store Connect by Transporter:
 https://apps.apple.com/tw/app/transporter/id1450874784
+
+### Mac PKG
+0. Generate and install the following certificates from https://developer.apple.com/account/resources/certificates/list
+   1. Developer ID Application
+   2. Developer ID Installer
+1. Run Shell script:
+```
+cd electronApps
+npm i -D
+npm run dist_mac
+```
 
 ### Linux Snap Store
 0. Required software:
