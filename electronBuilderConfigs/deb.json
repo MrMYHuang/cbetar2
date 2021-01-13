@@ -1,9 +1,11 @@
 {
+  "extends": null,
   "appId": "io.github.mrmyhuang.cbetar2",
   "files": [
-    "build/**/*",
+    "buildElectron/**/*",
     "package.json"
   ],
+  "icon": "buildElectron/icon.png",
   "deb": {
     "artifactName": "${name}_${version}_linux64.${ext}",
     "category": "public.app-category.education"

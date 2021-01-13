@@ -1,6 +1,8 @@
 {
   "name": "cbetar2",
-  "version": "4.17.5",
+  "productName": "電子佛典",
+  "pwaVersion": "4.17.5",
+  "version": "10.4.1",
   "license": "MIT",
   "keywords": [
     "CBETA",
@@ -22,19 +24,37 @@
   "files": [
     "README.md"
   ],
+  "main": "buildElectron/main.js",
+  "scripts": {
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build && powershell -file CopyBuild.ps1",
+    "build_linux": "react-app-rewired build && ./CopyBuild.sh",
+    "test": "react-app-rewired test",
+    "eject": "react-scripts eject",
+    "build-electron": "tsc -b tsconfigElectron.json",
+    "start-electron": "npm run build-electron && electron .",
+    "dist-win": "npm run build-electron && electron-builder -w -c electronBuilderConfigs/win.json",
+    "dist-deb": "npm run build-electron && electron-builder -l deb -c electronBuilderConfigs/deb.json",
+    "dist-rpm": "npm run build-electron && electron-builder -l rpm -c electronBuilderConfigs/rpm.json",
+    "dist-snap": "npm run build-electron && rm -f dist/*.snap && electron-builder -l snap -c electronBuilderConfigs/snap.json",
+    "publish-snap": "snapcraft upload --release=stable dist/*.snap",
+    "dist-mac": "source appleAuth.sh && npm run build-electron && electron-builder -m pkg -c electronBuilderConfigs/mac.json",
+    "icons-mas": "cd buildElectron && iconutil -c icns icon.iconset",
+    "dist-mas": "npm run build-electron && electron-builder -m mas -c electronBuilderConfigs/mas.json",
+    "dist-mas-dev": "npm run build-electron && electron-builder -m mas-dev -c electronBuilderConfigs/masDev.json"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
   "dependencies": {
     "@ionic/react": "^5.5.2",
     "@ionic/react-router": "^5.5.2",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.4.0",
     "@testing-library/user-event": "^8.0.3",
-    "@types/jest": "^24.0.25",
-    "@types/node": "^12.19.8",
-    "@types/react": "^16.14.2",
-    "@types/react-dom": "^16.9.10",
-    "@types/react-router": "^5.1.8",
-    "@types/react-router-dom": "^5.1.6",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
+    "customize-cra": "^1.0.0",
+    "electron-window-state": "^5.0.3",
     "epubjs-myh": "^0.3.111",
     "history": "^4.10.1",
     "ionicons": "^5.2.3",
@@ -43,6 +63,7 @@
     "qrcode": "^1.4.4",
     "query-string": "^6.13.7",
     "react": "^16.14.0",
+    "react-app-rewired": "^2.1.7",
     "react-dom": "^16.14.0",
     "react-redux": "^7.2.2",
     "react-router": "^5.2.0",
@@ -50,22 +71,22 @@
     "react-scripts": "^3.4.4",
     "redux": "^4.0.5",
     "swiped-events-myh": "^1.2.0",
-    "typescript": "3.8.3",
-    "uuid": "^8.3.1",
-    "customize-cra": "^1.0.0",
-    "react-app-rewired": "^2.1.7"
+    "typescript": "^4.1.3",
+    "uuid": "^8.3.1"
   },
-  "scripts": {
-    "start": "react-app-rewired start",
-    "build": "react-app-rewired build && powershell -file CopyBuild.ps1",
-    "build_linux": "react-app-rewired build && ./CopyBuild.sh",
-    "test": "react-app-rewired test",
-    "eject": "react-scripts eject",
-    "android": "npx cap open android",
-    "sync": "npx cap sync android"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
+  "devDependencies": {
+    "@types/jest": "^24.0.25",
+    "@types/node": "^12.19.8",
+    "@types/react": "^16.14.2",
+    "@types/react-dom": "^16.9.10",
+    "@types/react-router": "^5.1.8",
+    "@types/react-router-dom": "^5.1.6",
+    "@types/qrcode": "^1.3.5",
+    "@types/react-redux": "^7.1.11",
+    "@types/uuid": "^8.3.0",
+    "electron": "^11.1.0",
+    "electron-builder": "^22.9.1",
+    "electron-builder-notarize-pkg": "^1.2.0"
   },
   "browserslist": {
     "production": [
@@ -78,10 +99,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "@types/qrcode": "^1.3.5",
-    "@types/react-redux": "^7.1.11",
-    "@types/uuid": "^8.3.0"
   }
 }

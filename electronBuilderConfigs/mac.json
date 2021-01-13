@@ -1,11 +1,13 @@
 {
+  "extends": null,
   "appId": "io.github.mrmyhuang.cbetar2",
   "files": [
-    "build/**/*",
+    "buildElectron/**/*",
     "package.json"
   ],
-  "afterAllArtifactBuild": "electron-builder-notarize-pkg",
+  "icon": "buildElectron/icon.icns",
   "mac": {
+    "publish": ["github"],
     "type": "distribution",
     "artifactName": "${name}_${version}_macos64.${ext}",
     "category": "public.app-category.education",

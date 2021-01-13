@@ -4,6 +4,9 @@
     "module": "commonjs",
     "strict": true,
     "esModuleInterop": true,
-    "outDir": "./build"
-  }
+    "outDir": "./buildElectron"
+  },
+  "include": [
+    "srcElectron"
+  ]
 }

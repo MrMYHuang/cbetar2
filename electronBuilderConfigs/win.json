@@ -1,9 +1,11 @@
 {
+  "extends": null,
   "appId": "io.github.mrmyhuang.cbetar2",
   "files": [
-    "build/**/*",
+    "buildElectron/**/*",
     "package.json"
   ],
+  "icon": "buildElectron/icon.png",
   "win": {
     "artifactName": "${name}_${version}_win64.${ext}"
   }

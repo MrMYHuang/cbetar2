@@ -27,3 +27,7 @@ apk
 ios/Pods
 others
 MrMYHuang.github.io
+buildElectron/**/*.js
+dist
+temp
+*.provisionprofile
