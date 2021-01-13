@@ -1,0 +1,11 @@
+{
+  "appId": "io.github.mrmyhuang.cbetar2",
+  "files": [
+    "build/**/*",
+    "package.json"
+  ],
+  "snap": {
+    "artifactName": "${name}_${version}_linux64.${ext}",
+    "category": "public.app-category.education"
+  }
+}

@@ -104,7 +104,7 @@ npm run dist_mac
 ```
 cd electronApps
 npm i -D
-npm run dist_linux
+npm run dist_snap
 ```
 2. Upload by this example command:
 ```

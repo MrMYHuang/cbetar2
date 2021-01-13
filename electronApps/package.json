@@ -10,7 +10,7 @@
     "dist-win": "npm run build && electron-builder -w -c win.json",
     "dist-deb": "npm run build && electron-builder -l deb -c deb.json",
     "dist-rpm": "npm run build && electron-builder -l rpm -c rpm.json",
-    "dist-snap": "npm run build && rm dist/*.snap && electron-builder -l snap",
+    "dist-snap": "npm run build && rm -f dist/*.snap && electron-builder -l snap -c snap.json",
     "publish-snap": "snapcraft upload --release=stable dist/*.snap",
     "dist-mac": "source appleAuth.sh && npm run build && electron-builder -m pkg -c mac.json",
     "icons-mas": "cd build && iconutil -c icns icon.iconset",
