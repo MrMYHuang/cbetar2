@@ -1,0 +1,10 @@
+{
+  "appId": "io.github.mrmyhuang.cbetar2",
+  "files": [
+    "build/**/*",
+    "package.json"
+  ],
+  "win": {
+    "artifactName": "${name}_${version}_win64.${ext}"
+  }
+}
