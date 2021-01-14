@@ -220,7 +220,7 @@ function isMacCatalyst() {
   return isPlatform('ios') && navigator.platform === 'MacIntel';
 }
 
-export default {
+const Globals = {
   storeFile: 'Settings.json',
   fontSizeNorm: 24,
   fontSizeLarge: 48,
@@ -318,3 +318,5 @@ export default {
   disableIosSafariCallout,
   copyToClipboard,
 };
+
+export default Globals;

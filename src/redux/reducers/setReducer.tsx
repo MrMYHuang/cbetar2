@@ -92,6 +92,7 @@ export default function reducer(state = {
       localStorage.setItem(Globals.storeFile, JSON.stringify({ settings: newSettings }));
       break;
     }
+    // @ts-ignore
     case "DEFAULT_SETTINGS":
       newSettings = {};
       // Don't use break here!
