@@ -24,4 +24,4 @@ jobs:
           DEFAULT_BRANCH: master
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
       - run: npm i -D
-      - run: npm run dist-win "-p always"
+      - run: export GH_TOKEN=${GH_TOKEN} && npm run dist-win "-p always"
