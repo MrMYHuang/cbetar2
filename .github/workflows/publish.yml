@@ -5,11 +5,16 @@ on:
     branches:
       - "!*"
     tags:
-      - "*"
+      - "[0-9].[0-9].[0-9]"
+
+env:
+  DEFAULT_BRANCH: master
+  GH_TOKEN: ${{ secrets.GH_TOKEN }}
+  APPLE_ID: ${{ secrets.APPLE_ID }}
+  APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
 
 jobs:
   publish-win:
-    environment: Publish
     runs-on: windows-latest
 
     steps:
@@ -20,9 +25,39 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12
-      - run: npm i -D
-      - env:
-          DEFAULT_BRANCH: master
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        run:
-          npm run dist-win "-p always"
+
+      - run: |
+          npm i -D
+          npm run dist-win
+
+  publish-deb:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build and publish
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+
+      - run: |
+          npm i -D
+          npm run dist-deb
+
+  publish-rpm:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build and publish
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+
+      - run: |
+          npm i -D
+          npm run dist-rpm
