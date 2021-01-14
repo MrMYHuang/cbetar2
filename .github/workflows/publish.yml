@@ -12,8 +12,6 @@ env:
   GH_TOKEN: ${{ secrets.GH_TOKEN }}
   APPLE_ID: ${{ secrets.APPLE_ID }}
   APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
-  API_KEY_ID: ${{ secrets.API_KEY_ID }}
-  API_KEY_ISSUER_ID: ${{ secrets.API_KEY_ISSUER_ID }}
 
 jobs:
   publish-mac:
@@ -29,7 +27,5 @@ jobs:
           node-version: 12
 
       - run: |
-          mkdir -p ~/private_keys/
-          echo '${{ secrets.APPLE_API_KEY }}' > ~/private_keys/AuthKey_${{ secrets.API_KEY_ID }}.p8
           npm i -D
           npm run dist-mac
