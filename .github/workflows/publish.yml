@@ -30,7 +30,7 @@ jobs:
 
       - run: |
           npm i -D
-          npm run dist-win
+          npm run dist-win -- -p always
 
   publish-deb:
     runs-on: ubuntu-latest
@@ -46,7 +46,7 @@ jobs:
 
       - run: |
           npm i -D
-          npm run dist-deb
+          npm run dist-deb -- -p always
 
   publish-rpm:
     runs-on: ubuntu-latest
@@ -62,7 +62,7 @@ jobs:
 
       - run: |
           npm i -D
-          npm run dist-rpm
+          npm run dist-rpm -- -p always
           
   publish-mac:
     runs-on: macos-latest
@@ -78,4 +78,4 @@ jobs:
 
       - run: |
           npm i -D
-          npm run dist-mac
+          npm run dist-mac -- -p always
