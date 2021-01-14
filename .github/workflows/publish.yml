@@ -22,6 +22,6 @@ jobs:
           node-version: 12
         env:
           DEFAULT_BRANCH: master
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
       - run: npm i -D
       - run: npm run dist-win "-p always"
