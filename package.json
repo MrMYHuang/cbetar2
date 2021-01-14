@@ -38,7 +38,7 @@
     "dist-rpm": "npm run build-electron && electron-builder -l rpm -c electronBuilderConfigs/rpm.json",
     "dist-snap": "npm run build-electron && rm -f dist/*.snap && electron-builder -l snap -c electronBuilderConfigs/snap.json",
     "publish-snap": "snapcraft upload --release=stable dist/*.snap",
-    "dist-mac": "source appleAuth.sh && npm run build-electron && electron-builder -m pkg -c electronBuilderConfigs/mac.json",
+    "dist-mac": "npm run build-electron && electron-builder -m pkg -c electronBuilderConfigs/mac.json",
     "icons-mas": "cd buildElectron && iconutil -c icns icon.iconset",
     "dist-mas": "npm run build-electron && electron-builder -m mas -c electronBuilderConfigs/mas.json",
     "dist-mas-dev": "npm run build-electron && electron-builder -m mas-dev -c electronBuilderConfigs/masDev.json"
