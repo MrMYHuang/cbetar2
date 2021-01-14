@@ -10,7 +10,7 @@ Frontend, TypeScript, CSS, Ionic, React, Redux, react-app-rewired, Webpack Alias
 ```
 git clone https://github.com/MrMYHuang/cbetar2.git
 cd cbetar2
-npm i -D
+npm i
 npm run start
 ```
 
@@ -26,7 +26,7 @@ npm run start
 1. Run Shell script:
 ```
 cd electronApps
-npm i -D
+npm i
 npm run build-mas-dev
 ```
 2. Open dist/mas-dev/foo.app
@@ -74,7 +74,7 @@ pod install
 1. Run Shell script:
 ```
 cd electronApps
-npm i -D
+npm i
 npm run dist_mas
 ```
 2. Upload dist/mas/foo.pkg to App Store Connect by Transporter:
@@ -87,7 +87,7 @@ https://apps.apple.com/tw/app/transporter/id1450874784
 1. Run Shell script:
 ```
 cd electronApps
-npm i -D
+npm i
 npm run dist_mac
 ```
 
@@ -103,7 +103,7 @@ npm run dist_mac
 1. Run Shell script:
 ```
 cd electronApps
-npm i -D
+npm i
 npm run dist_snap
 ```
 2. Upload by this example command:
