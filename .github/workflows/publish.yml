@@ -16,6 +16,54 @@ env:
   CSC_KEY_PASSWORD: ${{ secrets.MAC_CERTS_PASSWORD }}
 
 jobs:
+  publish-win:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build and publish
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+
+      - run: |
+          npm i -D
+          npm run dist-win
+
+  publish-deb:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build and publish
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+
+      - run: |
+          npm i -D
+          npm run dist-deb
+
+  publish-rpm:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build and publish
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+
+      - run: |
+          npm i -D
+          npm run dist-rpm
+          
   publish-mac:
     runs-on: macos-latest
 
