@@ -20,9 +20,9 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12
-        env:
+      - run: npm i -D
+      - env:
           DEFAULT_BRANCH: master
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
-      - run: npm i -D
-      - run: $env:GH_TOKEN = \"${GH_TOKEN}\"
-      - run: npm run dist-win "-p always"
+        run:
+          npm run dist-win "-p always"
