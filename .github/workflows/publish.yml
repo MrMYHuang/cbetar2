@@ -24,4 +24,4 @@ jobs:
           DEFAULT_BRANCH: master
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: npm i -D
-      - run: npm dist-win -p always
+      - run: npm dist-win "-p always"
