@@ -216,6 +216,8 @@ https://github.com/MrMYHuang/cbetar2/releases
 9. iOS Safari選擇文字後，仍會閃爍彈出式選單才消失。
 
 ## <a id='history'>版本歷史</a>
+* Electron app 10.5.0:
+  * [修正] 降低安裝檔大小。
 * PWA 4.17.6:
   * [修正] 一些用字。
   * [更新] 升級第3方程式packages版本。
