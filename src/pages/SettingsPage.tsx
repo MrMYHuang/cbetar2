@@ -154,7 +154,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                 if (!hasUpdate) {
                   this.setState({ showToast: true, toastMessage: 'App已是最新版' });
                 }
-              }}>Web app版本: <a href="https://github.com/MrMYHuang/cbetar2#history" target="_new">{PackageInfos.pwaVersion}</a></IonLabel>
+              }}>PWA版本: <a href="https://github.com/MrMYHuang/cbetar2#history" target="_new">{PackageInfos.pwaVersion}</a></IonLabel>
               <IonButton fill='outline' shape='round' slot='end' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={e => {
                 this.props.dispatch({
                   type: "TMP_SET_KEY_VAL",

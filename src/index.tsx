@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter } from "react-router-dom";
 import App, {serviceWorkCallbacks} from './App';
 import Globals from './Globals';
-import * as serviceWorker from './serviceWorker';
+import * as serviceWorker from './serviceWorkerRegistration';
 
 // Enable at the very start for logging most messages.
 Globals.enableAppLog();

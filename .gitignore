@@ -31,3 +31,4 @@ buildElectron/**/*.js
 dist
 temp
 *.provisionprofile
+/.eslintcache

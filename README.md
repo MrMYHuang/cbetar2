@@ -216,6 +216,9 @@ https://github.com/MrMYHuang/cbetar2/releases
 9. iOS Safari選擇文字後，仍會閃爍彈出式選單才消失。
 
 ## <a id='history'>版本歷史</a>
+* PWA 4.17.6:
+  * [修正] 一些用字。
+  * [更新] 升級第3方程式packages版本。
 * PWA 4.17.4:
   * [修正] 設定頁開關無法切換。
   * [修正] 詞典/字典頁回首頁功能異常。
