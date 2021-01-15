@@ -86,6 +86,9 @@ https://apps.apple.com/tw/app/transporter/id1450874784
    2. Developer ID Installer
 1. Run Shell script:
 ```
+export APPLE_ID=your@email.domain
+# An app-specific password. You can create one at appleid.apple.com.
+export APPLE_ID_PASSWORD=yourAppleIdAppPassword
 cd electronApps
 npm i
 npm run dist_mac
