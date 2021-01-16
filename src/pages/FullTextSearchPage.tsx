@@ -53,7 +53,7 @@ class _SearchPage extends React.Component<PageProps, State> {
     try {
       console.log(`Loading page ${this.page}`);
 
-      const res = await Globals.axiosInstance.get(`/sphinx?q=${keyword}&start=${this.page}&rows=${this.rows}`, {
+      const res = await Globals.axiosInstance.get(`/sphinx?q=${keyword}&start=${this.page * this.rows}&rows=${this.rows}`, {
         responseType: 'arraybuffer',
       });
       const data = JSON.parse(new TextDecoder().decode(res.data)).results as [any];

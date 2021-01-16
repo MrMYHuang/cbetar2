@@ -216,6 +216,8 @@ https://github.com/MrMYHuang/cbetar2/releases
 9. iOS Safari選擇文字後，仍會閃爍彈出式選單才消失。
 
 ## <a id='history'>版本歷史</a>
+* PWA 4.18.2:
+  * [修正] 全文檢索頁滑動至底讀取下一頁搜索項目有重複項目的問題。
 * PWA 4.18.1:
   * [調整] 目錄頁分類選單改成按鈕樣式。
 * PWA 4.18.0:
