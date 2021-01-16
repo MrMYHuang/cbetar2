@@ -213,3 +213,10 @@ input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:foc
     user-select: text;
     -webkit-user-select: text;
 }
+
+.buttonRounded {
+    font-size: var(--ui-font-size);
+    color: var(--ion-color-primary);
+    border: 2px var(--ion-color-primary) solid;
+    border-radius: 64px;
+}
