@@ -133,7 +133,7 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
 
     // ----- Initializing UI settings -----
     // Apply the theme setting.
-    while(document.body.classList.length > 0) {
+    while (document.body.classList.length > 0) {
       document.body.classList.remove(document.body.classList.item(0)!);
     }
     document.body.classList.toggle(`theme${this.props.settings.theme}`, true);
@@ -197,7 +197,7 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
   restoreAppSettings() {
     localStorage.setItem(Globals.storeFile, this.originalAppSettingsStr!);
     this.props.dispatch({ type: 'LOAD_SETTINGS' });
-    while(document.body.classList.length > 0) {
+    while (document.body.classList.length > 0) {
       document.body.classList.remove(document.body.classList.item(0)!);
     }
     document.body.classList.toggle(`theme${this.props.settings.theme}`, true);

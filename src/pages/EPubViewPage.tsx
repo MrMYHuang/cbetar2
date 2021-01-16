@@ -1,6 +1,6 @@
 //import * as fs from 'fs';
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton, withIonLifeCycle, IonIcon, IonAlert, IonPopover, IonList, IonItem, IonLabel, IonFab, IonFabButton, IonToast, IonLoading, isPlatform } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton, withIonLifeCycle, IonIcon, IonAlert, IonPopover, IonList, IonItem, IonLabel, IonFab, IonFabButton, IonToast, IonLoading, isPlatform, IonProgressBar } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as uuid from 'uuid';
@@ -947,7 +947,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
           <IonButton fill='outline' shape='round' hidden={!this.props.paginated} slot='end' onClick={ev => {
             this.setState({ showJumpPageAlert: true });
           }}>
-            <span className='uiFont' style={{ color: 'var(--color)' }}>頁{this.state.currentPage}/{this.state.pageCount}</span>
+            <IonLabel className='uiFont' >{this.state.currentPage}</IonLabel>
           </IonButton>
 
           <IonButton hidden={this.state.fetchError || !this.state.canTextToSpeech} fill="clear" slot='end' onClick={e => {
@@ -1168,6 +1168,8 @@ class _EPubViewPage extends React.Component<PageProps, State> {
               </IonItem>
             </IonList>
           </IonPopover>
+          
+          <IonProgressBar reversed={this.props.rtlVerticalLayout} value={ this.state.currentPage / this.state.pageCount} />
         </IonToolbar>
       </IonHeader>
     );

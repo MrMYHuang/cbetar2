@@ -216,6 +216,9 @@ https://github.com/MrMYHuang/cbetar2/releases
 9. iOS Safari選擇文字後，仍會閃爍彈出式選單才消失。
 
 ## <a id='history'>版本歷史</a>
+* PWA 4.18.0:
+  * [調整] 經文頁跳頁鈕為只顯示目前頁數，以避免過長，導致其它按鈕被擠出螢幕。
+  * [新增] 經文頁使用進度條標示目前頁數佔所有頁數的比例。
 * Electron app 10.5.0:
   * [修正] 降低安裝檔大小。
 * PWA 4.17.6:
