@@ -187,7 +187,7 @@ class _WorkPage extends React.Component<PageProps, State> {
               <IonIcon icon={arrowBack} slot='icon-only' />
             </IonButton>
 
-            <IonButton slot='start' onClick={ev => {
+            <IonButton fill='outline' shape='round' size='large' slot='start' onClick={ev => {
               const newWorkListType = this.props.workListType === WorkListType.BY_CHAPTER ? WorkListType.BY_JUAN : WorkListType.BY_CHAPTER;
               this.props.dispatch({
                 type: "TMP_SET_KEY_VAL",
