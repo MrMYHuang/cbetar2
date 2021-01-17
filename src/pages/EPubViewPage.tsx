@@ -986,7 +986,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
                 // Improve reliability by cancel first.
                 speechSynthesis.cancel();
                 speechSynthesis.speak(this.speechSynthesisUtterance!);
-                this.setState({ speechState: SpeechState.SPEAKING });
+                this.setState({ speechState: SpeechState.SPEAKING, showToast: true, toastMessage: '經文唸誦非真人發音，僅作參考！' });
                 break;
               case SpeechState.SPEAKING:
                 // Unfortunately, pause() doesn't work on most Chrome browser.
