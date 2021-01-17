@@ -202,7 +202,7 @@ class _WorkPage extends React.Component<PageProps, State> {
               <IonIcon icon={refreshCircle} slot='icon-only' />
             </IonButton>
 
-            <IonButton fill="clear" color={this.hasBookmark ? 'warning' : 'primary'} slot='end' onClick={e => this.hasBookmark ? this.delBookmarkHandler() : this.addBookmarkHandler()}>
+            <IonButton fill={this.hasBookmark ? 'solid' : 'clear'} slot='end' onClick={e => this.hasBookmark ? this.delBookmarkHandler() : this.addBookmarkHandler()}>
               <IonIcon icon={bookmark} slot='icon-only' />
             </IonButton>
 
