@@ -11,13 +11,13 @@ CBETA電子佛典閱讀器2(非官方) (Chinese Buddhist Electronic Text Associa
 * <a id='search'>搜尋</a>
   1. 搜索目錄：在目錄頁，按下右上角放大鏡圖示。在對話框輸入經文部分(或全部)標題，按下"搜索目錄"後會列出相關經文。
 
-  <img src='https://github.com/MrMYHuang/cbetar2/blob/master/docs/images/Search.png' width='50%' />
+  <img src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/Search.png' width='50%' />
 
   2. 全文檢索：類似"搜索目錄"。但在對話框可輸入某卷經文內的一段文字，如"大水忽起卒至無期"。
 * <a id='bookmark'>書籤</a>
   1. 開啟某經文後，(手機、平板)長按後選擇想標記為書籤的字串位置，按右上角書籤圖示，即新增一書籤，可至書籤頁查詢。加入書籤的經文可作離線瀏覽。
 
-  <img src='https://github.com/MrMYHuang/cbetar2/blob/master/docs/images/Bookmark.png' width='50%' />
+  <img src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/Bookmark.png' width='50%' />
 
   2. 刪除：至書籤頁，左滑項目即出現刪除鈕，再點擊。
 * <a id='shareAppLink'>網址分享</a>
@@ -26,7 +26,7 @@ CBETA電子佛典閱讀器2(非官方) (Chinese Buddhist Electronic Text Associa
   3. App內建"分享此頁"功能，可複製以下連結至作業系統剪貼簿或產生QR code，可分享給其他人：目錄、經、卷、目錄搜尋、全文檢索搜尋、詞典搜尋、app主頁
   4. 分享網址可帶上部分app設定參數。
 
-  <img src='https://github.com/MrMYHuang/cbetar2/blob/master/docs/images/ShareAppUrlWithSettings.png' width='50%' />
+  <img src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/ShareAppUrlWithSettings.png' width='50%' />
   
   5. 經文文字連結功能：選取經文一段文字後、執行"分享此頁"功能，所產生的app連結開啟後會自動跳至選取文字頁面並標示選取文字。
   6. 文章引用：選取經文一段文字後、執行"文章引用"功能，引用文字即複製至作業系統剪貼簿。引用格式基於CBETA Online，例如："《長阿含經》卷1：「長阿含經」(CBETA, T01, no. 1, p. 1a02)"
@@ -37,7 +37,7 @@ CBETA電子佛典閱讀器2(非官方) (Chinese Buddhist Electronic Text Associa
   1. 使用電腦語音合成技術 - text to speech，作唸經文功能，即所謂的"有聲書"。(注意，當代電腦語音合成技術與"真人發音"仍有落差。因此聽到的經文發音偶爾不正確是正常現象。)
   2. 播放步驟：開啟經文，按下右上方音符鈕，即可播放（如擷圖所示）
 
-  <img src='https://github.com/MrMYHuang/cbetar2/blob/master/docs/images/PlaySpeech.png' width='70%' />
+  <img src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/PlaySpeech.png' width='70%' />
 
   3. 單頁模式下指定位置播放：選取部分經文，按下播放鍵，即會從選取處開始播放至經文結尾。
   4. 分頁模式下指定頁數播放：切換至特定頁數，按下播放鍵，即會從該頁開始播放。一頁播完會自動跳下一頁，至經文結尾。
@@ -45,7 +45,7 @@ CBETA電子佛典閱讀器2(非官方) (Chinese Buddhist Electronic Text Associa
 * <a id='dictionary'>佛學詞典(線上查詢)</a>
   1. 整合"DILA 佛學術語字辭典"，可在"佛學詞典"分頁查詢佛學字詞。
 
-  <img src='https://github.com/MrMYHuang/cbetar2/blob/master/docs/images/LookupDictionary.png' width='50%' />
+  <img src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/LookupDictionary.png' width='50%' />
 
   2. 也可以從查詢的結果選取文字，再執行查詢詞典功能。
   3. 也可以在經文頁選取文字後，執行查詢詞典功能。
@@ -58,9 +58,9 @@ CBETA電子佛典閱讀器2(非官方) (Chinese Buddhist Electronic Text Associa
 * 佈景主題切換
   1. 支援多種佈景主題。
   
-  <img src='https://github.com/MrMYHuang/cbetar2/blob/master/docs/images/theme0.png' width='30%' />
-  <img src='https://github.com/MrMYHuang/cbetar2/blob/master/docs/images/theme1.png' width='30%' />
-  <img src='https://github.com/MrMYHuang/cbetar2/blob/master/docs/images/theme2.png' width='30%' />
+  <img src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/theme0.png' width='30%' />
+  <img src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/theme1.png' width='30%' />
+  <img src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/theme2.png' width='30%' />
 
 * 經文分頁
   1. 經文可調整成單頁或分頁模式。單頁模式，使用滑動方式閱讀經文。分頁模式，可使用鍵盤方向鍵或螢幕方向鍵切換經文頁。
@@ -74,7 +74,7 @@ CBETA電子佛典閱讀器2(非官方) (Chinese Buddhist Electronic Text Associa
   2. 不支援由Microsoft Store或Google Play Store下載的PWA!
   3. 若由舊版app升級至 >= 4.3.0版，要作一次移除app(但可不刪app資料)，再重新安裝，此app捷徑選單才會出現。
 
-  <img src='https://github.com/MrMYHuang/cbetar2/blob/master/docs/images/AppShortcuts.png' width='50%' />
+  <img src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/AppShortcuts.png' width='50%' />
 
 * <a id='print'>列印經文</a>
   1. 經文頁右上三點按鈕點開，按下列印按鈕，即會跳出列印對話框。
@@ -83,7 +83,7 @@ CBETA電子佛典閱讀器2(非官方) (Chinese Buddhist Electronic Text Associa
   4. 設定頁可設定"經文列印樣式"，目前支援"白底黑字"、"抄經本"。
   5. 已在Chrome 87, Edge Chrome 87測過可用。Safari不支援!
 
-  <img src='https://github.com/MrMYHuang/cbetar2/blob/master/docs/images/PrintManuscript.png' width='90%' />
+  <img src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/PrintManuscript.png' width='90%' />
 
 * App設定匯出/匯入
   1. 此功能位於設定頁。
@@ -141,44 +141,44 @@ https://MrMYHuang.github.io
 
 #### Windows, macOS, Linux, Android - 使用Chrome安裝
 使用Chrome瀏覧器（建議最新版）開啟上述PWA網址後，網址列會出現一個加號，如圖所示：
-<img src='https://github.com/MrMYHuang/cbetar2/blob/master/docs/images/ChromeInstall.png' width='50%' />
+<img src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/ChromeInstall.png' width='50%' />
 
 點擊它，以完成安裝。安裝完後會在桌面出現"電子佛典"app圖示。
 
 #### iOS - 使用Safari安裝
 1. 使用Safari開啟web app網址，再點擊下方中間的"分享"圖示：
 
-<img src='https://github.com/MrMYHuang/cbetar2/blob/master/docs/images/Safari/OpenAppUrl.png' width='50%' height='50%' />
+<img src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/Safari/OpenAppUrl.png' width='50%' />
 
-2. 滑動頁面至下方，點選"加入主畫面"(Add to Home Screen)：
+1. 滑動頁面至下方，點選"加入主畫面"(Add to Home Screen)：
 
-<img src='https://github.com/MrMYHuang/cbetar2/blob/master/docs/images/Safari/AddToHomeScreen.png' width='50%' height='50%' />
+<img src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/Safari/AddToHomeScreen.png' width='50%' />
 
-3. 點擊"新增"(Add)：
+1. 點擊"新增"(Add)：
 
-<img src='https://github.com/MrMYHuang/cbetar2/blob/master/docs/images/Safari/AddToHomeScreen2.png' width='50%' height='50%' />
+<img src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/Safari/AddToHomeScreen2.png' width='50%' />
 
 4. App安裝完，出現在主畫面的圖示：
 
-<img src='https://github.com/MrMYHuang/cbetar2/blob/master/docs/images/Safari/AppIcon.png' width='50%' height='50%' />
+<img src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/Safari/AppIcon.png' width='50%' />
 
 ### <a id='storeApp'>從App商店安裝</a>
 
 #### Android - 使用Google Play Store
 <a href='https://play.google.com/store/apps/details?id=io.github.mrmyhuang.cbetar2' target='_blank'>
-<img width="auto" height='60px' alt='Google Play立即下載' src='https://github.com/MrMYHuang/cbetar2/blob/master/docs/images/zh-tw_badge_web_generic.png'/>
+<img width="auto" height='60px' alt='Google Play立即下載' src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/zh-tw_badge_web_generic.png'/>
 </a>
 
 (註：此種安裝渠道尚不支援"App捷徑"功能！)
 
 #### iOS 14.0+ (iPhone), iPadOS 14.0+ (iPad) - 使用App Store
 <a href='https://apps.apple.com/app/id1546347689' target='_blank'>
-<img width="auto" height='60px' src='https://github.com/MrMYHuang/cbetar2/blob/master/docs/images/Download_on_the_App_Store_Badge_CNTC_RGB_blk_100217.svg'/>
+<img width="auto" height='60px' src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/Download_on_the_App_Store_Badge_CNTC_RGB_blk_100217.svg'/>
 </a>
 
 #### macOS 10.10+ - 使用App Store
 <a href='https://apps.apple.com/app/id1546347689' target='_blank'>
-<img width="auto" height='60px' src='https://github.com/MrMYHuang/cbetar2/blob/master/docs/images/Download_on_the_Mac_App_Store_Badge_CNTC_RGB_blk_100217.svg'/>
+<img width="auto" height='60px' src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/Download_on_the_Mac_App_Store_Badge_CNTC_RGB_blk_100217.svg'/>
 </a>
 
 #### Windows 10 - 使用Microsoft Store
@@ -189,7 +189,7 @@ https://MrMYHuang.github.io
 (註：此種安裝渠道尚不支援"App捷徑"功能！)
 #### Linux - 使用Snap Store
 <a href='https://snapcraft.io/cbetar2' target='_blank'>
-<img width="auto" height='60px' src='https://github.com/MrMYHuang/cbetar2/blob/master/docs/images/[TW]-snap-store-black@2x.png' />
+<img width="auto" height='60px' src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/[TW]-snap-store-black@2x.png' />
 </a>
 
 ### 下載安裝檔
@@ -538,7 +538,7 @@ https://github.com/MrMYHuang/cbetar2/releases
 * 1.0.0:
   * 第1版。
 
-## <a href='https://github.com/MrMYHuang/cbetar2/blob/master/Development.md'>程式開發</a>
+## <a href='https://github.com/MrMYHuang/cbetar2/raw/master/Development.md'>程式開發</a>
 
 ## 隱私政策聲明
 
