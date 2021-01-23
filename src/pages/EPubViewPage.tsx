@@ -50,6 +50,7 @@ interface Props {
   paginated: boolean;
   rtlVerticalLayout: boolean;
   useFontKai: boolean;
+  voiceURI: string;
   speechRate: number;
 }
 
@@ -951,16 +952,11 @@ class _EPubViewPage extends React.Component<PageProps, State> {
           </IonButton>
 
           <IonButton hidden={this.state.fetchError || !this.state.canTextToSpeech} fill="clear" slot='end' onClick={e => {
-            const voices = speechSynthesis.getVoices();
-            if (voices.length === 0) {
-              return;
-            }
+            const voices = Globals.zhVoices();
 
             switch (this.state.speechState) {
               case SpeechState.UNINITIAL:
-                const zhTwVoice = voices.find((voice: SpeechSynthesisVoice) => {
-                  return voice.lang.indexOf('zh-TW') > -1 || voice.lang.indexOf('zh_TW') > -1
-                })
+                const zhTwVoice = voices.find(v => v.voiceURI === this.props.voiceURI) || voices[0];
                 if (zhTwVoice !== undefined) {
                   this.speechSynthesisUtterance!.voice = zhTwVoice;
                 }
@@ -1373,6 +1369,7 @@ const mapStateToProps = (state: any /*, ownProps*/) => {
     rtlVerticalLayout: state.settings.rtlVerticalLayout,
     settings: state.settings,
     scrollbarSize: state.settings.scrollbarSize,
+    voiceURI: state.settings.voiceURI,
     speechRate: state.settings.speechRate,
   }
 };

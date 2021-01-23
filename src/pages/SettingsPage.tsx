@@ -32,6 +32,7 @@ interface Props {
   rtlVerticalLayout: boolean;
   useFontKai: boolean;
   printStyle: number;
+  voiceURI: string;
   speechRate: number;
   bookmarks: [Bookmark];
 }
@@ -482,6 +483,32 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
             </IonItem>
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
+              <IonIcon icon={print} slot='start' />
+              <IonLabel className='ion-text-wrap uiFont'>合成語音</IonLabel>
+              <IonSelect slot='end'
+                value={this.props.voiceURI}
+                style={{ fontSize: 'var(--ui-font-size)' }}
+                interface='action-sheet'
+                cancelText='取消'
+                onIonChange={e => {
+                  const value = e.detail.value;
+                  if (this.props.voiceURI === value) {
+                    return;
+                  }
+
+                  this.props.dispatch({
+                    type: "SET_KEY_VAL",
+                    key: 'voiceURI',
+                    val: value,
+                  });
+                }}>
+                  {
+                     Globals.zhVoices().map((v, i) =>  <IonSelectOption key={i} className='uiFont blackWhite printVar' value={v.voiceURI}>{v.name}</IonSelectOption>)
+                  }
+              </IonSelect>
+            </IonItem>
+            <IonItem>
+              <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={musicalNotes} slot='start' />
               <div className="contentBlock">
                 <div style={{ flexDirection: "column" }}>
@@ -571,6 +598,7 @@ const mapStateToProps = (state: any /*, ownProps*/) => {
     printStyle: state.settings.printStyle,
     speechRate: state.settings.speechRate,
     bookmarks: state.settings.bookmarks,
+    voiceURI: state.settings.voiceURI,
   }
 };
 

@@ -220,6 +220,10 @@ function isMacCatalyst() {
   return isPlatform('ios') && navigator.platform === 'MacIntel';
 }
 
+function zhVoices() {
+  return speechSynthesis.getVoices().filter(v => ['zh-TW', 'zh_TW', 'zh-CN', 'zh_CN', 'zh-HK', 'zh_HK'].some(name => v.lang.indexOf(name) > -1));
+}
+
 const Globals = {
   storeFile: 'Settings.json',
   fontSizeNorm: 24,
@@ -317,6 +321,7 @@ const Globals = {
   disableAndroidChromeCallout,
   disableIosSafariCallout,
   copyToClipboard,
+  zhVoices,
 };
 
 export default Globals;

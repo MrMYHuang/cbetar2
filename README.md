@@ -216,6 +216,8 @@ https://github.com/MrMYHuang/cbetar2/releases
 9. iOS Safari選擇文字後，仍會閃爍彈出式選單才消失。
 
 ## <a id='history'>版本歷史</a>
+* PWA 4.19.0:
+  * [新增] 設定頁支援合成語音選項。
 * PWA 4.18.5:
   * [調整] 經目錄頁按鈕樣式。
   * [調整] 部冊目錄、經目錄已加入書籤按鈕樣式。
