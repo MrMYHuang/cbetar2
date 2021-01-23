@@ -134,26 +134,26 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     this.speechSynthesisUtterance = null;
     if (this.state.canTextToSpeech) {
       this.speechSynthesisUtterance = new SpeechSynthesisUtterance();
-      this.speechSynthesisUtterance.lang = 'zh-TW';
       this.speechSynthesisUtterance.onend = (ev: SpeechSynthesisEvent) => {
+        speechSynthesis.cancel();
         if (this.state.speechState === SpeechState.UNINITIAL) {
           return;
         }
 
-        const hasNextTexts1 = !this.props.paginated && this.workTextsIndex < this.workTexts.length - 1;
+        const hasNextTexts1 = this.workTextsIndex < this.workTexts.length - 1;
         const hasNextTexts2 = this.props.paginated && this.state.currentPage < this.state.pageCount;
         let texts = '';
         if (hasNextTexts1) {
           this.workTextsIndex += 1;
-          texts = this.workTexts[this.workTextsIndex];
         } else if (hasNextTexts2) {
           this.pageNext();
-          texts = this.findTextsInPage(this.state.currentPage);
+          this.findTextsInPageAndChunking();
         } else {
           this.setState({ speechState: SpeechState.UNINITIAL });
           console.log(`Stop work text to speech.`);
           return;
         }
+        texts = this.workTexts[this.workTextsIndex];
         this.speechSynthesisUtterance!.text = texts;
         speechSynthesis.speak(this.speechSynthesisUtterance!);
         console.log(`Play work text to speech part / page: ${hasNextTexts1 ? this.workTextsIndex : this.state.currentPage}`);
@@ -931,6 +931,26 @@ class _EPubViewPage extends React.Component<PageProps, State> {
   maxCharsPerUtterance = 1000;
   workTexts: Array<string> = [];
   workTextsIndex = 0;
+
+  findTextsInPageAndChunking() {
+    let texts: string | undefined;
+    if (this.props.paginated) {
+      texts = this.findTextsInPage(this.state.currentPage);
+    } else {
+      texts = this.getRemainingWorkTextFromSelectedRange();
+    }
+
+    //const remainingWorkText = this.getRemainingWorkTextFromSelectedRange();
+    const workText = texts || this.ePubIframe?.contentDocument?.getElementById('body')?.innerText || '無法取得經文內容';
+
+    this.workTexts = [];
+    for (let i = 0; i < Math.ceil(workText.length / this.maxCharsPerUtterance); i++) {
+      this.workTexts.push(workText.substring(i * this.maxCharsPerUtterance, (i + 1) * this.maxCharsPerUtterance));
+    }
+
+    this.workTextsIndex = 0;
+  }
+
   render() {
     let header = (
       <IonHeader>
@@ -958,25 +978,11 @@ class _EPubViewPage extends React.Component<PageProps, State> {
               case SpeechState.UNINITIAL:
                 const zhTwVoice = voices.find(v => v.voiceURI === this.props.voiceURI) || voices[0];
                 if (zhTwVoice !== undefined) {
+                  this.speechSynthesisUtterance!.lang = zhTwVoice.lang;
                   this.speechSynthesisUtterance!.voice = zhTwVoice;
                 }
 
-                let texts: string | undefined;
-                if (this.props.paginated) {
-                  texts = this.findTextsInPage(this.state.currentPage);
-                } else {
-                  texts = this.getRemainingWorkTextFromSelectedRange();
-                }
-
-                //const remainingWorkText = this.getRemainingWorkTextFromSelectedRange();
-                const workText = texts || this.ePubIframe?.contentDocument?.getElementById('body')?.innerText || '無法取得經文內容';
-
-                this.workTexts = [];
-                for (let i = 0; i < Math.ceil(workText.length / this.maxCharsPerUtterance); i++) {
-                  this.workTexts.push(workText.substring(i * this.maxCharsPerUtterance, (i + 1) * this.maxCharsPerUtterance));
-                }
-
-                this.workTextsIndex = 0;
+                this.findTextsInPageAndChunking();                
                 this.speechSynthesisUtterance!.text = this.workTexts[this.workTextsIndex];
                 this.speechSynthesisUtterance!.rate = this.props.speechRate;
                 // Improve reliability by cancel first.

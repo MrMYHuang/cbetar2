@@ -214,8 +214,13 @@ https://github.com/MrMYHuang/cbetar2/releases
 7. iOS不支援app捷徑。
 8. Safari不支援列印直排經文( https://bugs.webkit.org/show_bug.cgi?id=220043 )。
 9. iOS Safari選擇文字後，仍會閃爍彈出式選單才消失。
+10. 合成語音選項濾掉非離線語音，以避開非離線語音單次播放最長字串過小的問題。
+11. 合成語音選項在Android Chrome無效。
 
 ## <a id='history'>版本歷史</a>
+* PWA 4.19.2:
+  * [修正] 分頁模式下經文語音播放，若單頁字數多於某數字，多的部分不會播放而直接跳至下一頁的問題。
+  * [修正] 合成語音選項濾掉非離線語音。
 * PWA 4.19.0:
   * [新增] 設定頁支援合成語音選項。
 * PWA 4.18.5:

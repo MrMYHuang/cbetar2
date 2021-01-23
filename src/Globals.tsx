@@ -221,7 +221,7 @@ function isMacCatalyst() {
 }
 
 function zhVoices() {
-  return speechSynthesis.getVoices().filter(v => ['zh-TW', 'zh_TW', 'zh-CN', 'zh_CN', 'zh-HK', 'zh_HK'].some(name => v.lang.indexOf(name) > -1));
+  return speechSynthesis.getVoices().filter(v => ['zh-TW', 'zh_TW', 'zh-CN', 'zh_CN', 'zh-HK', 'zh_HK'].some(name => v.localService && v.lang.indexOf(name) > -1));
 }
 
 const Globals = {
