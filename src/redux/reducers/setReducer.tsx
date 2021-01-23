@@ -54,14 +54,12 @@ export default function reducer(state = {
         let deletedBookmarks = bookmarksTemp.splice(idxToDel, 1);
 
         if (deletedBookmarks.length === 1) {
-          // Remove the HTML file from localStorage if all its bookmarks are deleted.
+          // Remove the HTML file from indexedDB if all its bookmarks are deleted.
           const deletedBookmark = deletedBookmarks[0];
-          let fileName = deletedBookmark.fileName;
-          let noJuanBookmarkUseTheFile = bookmarksTemp.find((b) => b.type === BookmarkType.JUAN && b.uuid === deletedBookmark.uuid) == null;
           let noWorkBookmarkUseTheFile = bookmarksTemp.find((b) => b.type === BookmarkType.WORK && b.work?.work === deletedBookmark.work?.work) == null;
           if (noWorkBookmarkUseTheFile) {
             switch (deletedBookmark.type) {
-              case BookmarkType.WORK:
+              case BookmarkType.WORK: {
                 const work = deletedBookmark.work!;
                 // For back compatibility.
                 if (work == null) {
@@ -70,16 +68,20 @@ export default function reducer(state = {
                 const juans = work.juan_list.split(',');
                 for (let i = 0; i < juans.length; i++) {
                   const fileName = Globals.getFileName(work.work, juans[i]);
-                  noJuanBookmarkUseTheFile = bookmarksTemp.find((b) => b.type === BookmarkType.JUAN && b.fileName === fileName) == null;
+                  const noJuanBookmarkUseTheFile = bookmarksTemp.find((b) => b.type === BookmarkType.JUAN && b.fileName === fileName) == null;
                   if (noJuanBookmarkUseTheFile) {
                     Globals.removeFileFromIndexedDB(fileName);
                   }
                 }
                 break;
-              case BookmarkType.JUAN:
+              }
+              case BookmarkType.JUAN: {
+                const fileName = deletedBookmark.fileName;
+                const noJuanBookmarkUseTheFile = bookmarksTemp.find((b) => b.type === BookmarkType.JUAN && b.fileName === fileName) == null;
                 if (noJuanBookmarkUseTheFile)
                   Globals.removeFileFromIndexedDB(fileName);
                 break;
+              }
             }
           }
         }
@@ -95,8 +97,8 @@ export default function reducer(state = {
     // @ts-ignore
     case "DEFAULT_SETTINGS":
       newSettings = {};
-      // Don't use break here!
-      // eslint-disable-next-line
+    // Don't use break here!
+    // eslint-disable-next-line
     default:
       if (Object.keys(newSettings).length === 0) {
         newSettings = {};
