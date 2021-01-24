@@ -7,7 +7,7 @@ import * as uuid from 'uuid';
 import queryString from 'query-string';
 import './EPubViewPage.css';
 import Globals from '../Globals';
-import { bookmark, arrowBack, home, search, ellipsisHorizontal, ellipsisVertical, arrowForward, musicalNotes, stopCircle, book, shareSocial, print, refreshCircle, copy, arrowUp, arrowDown } from 'ionicons/icons';
+import { bookmark, arrowBack, home, search, ellipsisHorizontal, ellipsisVertical, arrowForward, musicalNotes, stopCircle, book, shareSocial, print, refreshCircle, copy, arrowUp, arrowDown, musicalNote } from 'ionicons/icons';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
 import { Work } from '../models/Work';
 import SearchAlert from '../components/SearchAlert';
@@ -86,6 +86,9 @@ interface State {
   lookupDictPopover: any;
   canTextToSpeech: boolean;
   speechState: SpeechState;
+  isSpeechRepeatMode: boolean;
+  showSpeechRepeatStart: boolean;
+  showSpeechRepeatEnd: boolean;
 }
 
 class _EPubViewPage extends React.Component<PageProps, State> {
@@ -125,6 +128,9 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       },
       canTextToSpeech: typeof SpeechSynthesisUtterance !== 'undefined',
       speechState: SpeechState.UNINITIAL,
+      isSpeechRepeatMode: false,
+      showSpeechRepeatStart: false,
+      showSpeechRepeatEnd: false,
     }
     this.htmlFile = '';
     this.htmlTitle = '';
@@ -136,12 +142,14 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       this.speechSynthesisUtterance = new SpeechSynthesisUtterance();
       this.speechSynthesisUtterance.onend = (ev: SpeechSynthesisEvent) => {
         speechSynthesis.cancel();
+
+        // Stop button pressed.
         if (this.state.speechState === SpeechState.UNINITIAL) {
           return;
         }
 
         const hasNextTexts1 = this.workTextsIndex < this.workTexts.length - 1;
-        const hasNextTexts2 = this.props.paginated && this.state.currentPage < this.state.pageCount;
+        const hasNextTexts2 = !this.state.isSpeechRepeatMode && this.props.paginated && this.state.currentPage < this.state.pageCount;
         let texts = '';
         if (hasNextTexts1) {
           this.workTextsIndex += 1;
@@ -151,6 +159,9 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         } else {
           this.setState({ speechState: SpeechState.UNINITIAL });
           console.log(`Stop work text to speech.`);
+          if (this.state.isSpeechRepeatMode) {
+            this.playText2Speech();
+          }
           return;
         }
         texts = this.workTexts[this.workTextsIndex];
@@ -193,10 +204,10 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     let state = this.props.location.state as any;
     this.uuidStr = state ? state.uuid : '';
     //console.log( 'view will enter' );
-      if (this.currentWork !== this.workJuanId) {
-        this.currentWork = this.workJuanId;
-        this.lastPage = 0;
-      }
+    if (this.currentWork !== this.workJuanId) {
+      this.currentWork = this.workJuanId;
+      this.lastPage = 0;
+    }
     this.fetchData();
   }
 
@@ -640,6 +651,10 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     return selectedText;
   }
 
+  getSelectedRange() {
+    return this.ePubIframe?.contentDocument?.getSelection()?.getRangeAt(0);
+  }
+
   getRemainingWorkTextFromSelectedRange() {
     let selection = this.ePubIframe!.contentWindow!.getSelection();
     let remainingWorkText;
@@ -864,6 +879,16 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     }
   }
 
+  findVisibleCharIndex(node: Node, offset: number) {
+    for (let i = 0; i < this.visibleChars.length; i++) {
+      const visibleChar = this.visibleChars[i];
+      if (visibleChar.node === node && visibleChar.offset === offset) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
   showedSearchTextIndex = 0;
   searchTextPrev() {
     if (this.showedSearchTextIndex > 0) {
@@ -938,7 +963,14 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
   findTextsInPageAndChunking() {
     let texts: string | undefined;
-    if (this.props.paginated) {
+    if (this.state.isSpeechRepeatMode) {
+      const repeatStartVisibleCharIndex = this.findVisibleCharIndex(this.speechRepeatStart!.startContainer, this.speechRepeatStart!.startOffset);
+      const repeatEndVisibleCharIndex = this.findVisibleCharIndex(this.speechRepeatEnd!.endContainer, this.speechRepeatEnd!.endOffset - 1);
+      texts = '';
+      for (let i = repeatStartVisibleCharIndex; i < repeatEndVisibleCharIndex + 1; i++) {
+        texts += this.visibleChars[i].char;
+      }
+    } else if (this.props.paginated) {
       texts = this.findTextsInPage(this.state.currentPage);
     } else {
       texts = this.getRemainingWorkTextFromSelectedRange();
@@ -953,6 +985,44 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     }
 
     this.workTextsIndex = 0;
+  }
+
+  speechRepeatStart: Range | undefined;
+  speechRepeatEnd: Range | undefined;
+  playText2Speech() {
+    const voices = Globals.zhVoices();
+
+    switch (this.state.speechState) {
+      case SpeechState.UNINITIAL:
+        const zhTwVoice = voices.find(v => v.voiceURI === this.props.voiceURI) || voices[0];
+        if (zhTwVoice !== undefined) {
+          this.speechSynthesisUtterance!.lang = zhTwVoice.lang;
+          this.speechSynthesisUtterance!.voice = zhTwVoice;
+        }
+
+        this.findTextsInPageAndChunking();
+        this.speechSynthesisUtterance!.text = this.workTexts[this.workTextsIndex];
+        this.speechSynthesisUtterance!.rate = this.props.speechRate;
+        // Improve reliability by cancel first.
+        speechSynthesis.cancel();
+        speechSynthesis.speak(this.speechSynthesisUtterance!);
+        this.setState({ speechState: SpeechState.SPEAKING, showToast: true, toastMessage: '經文唸誦非真人發音，僅作參考！' });
+        break;
+      case SpeechState.SPEAKING:
+        // Unfortunately, pause() doesn't work on most Chrome browser.
+        // Instead, we support stop.
+        /*
+        speechSynthesis.pause();
+        this.setState({speechState: SpeechState.PAUSE});
+        */
+        speechSynthesis.cancel();
+        this.setState({ speechState: SpeechState.UNINITIAL, isSpeechRepeatMode: false });
+        break;
+      case SpeechState.PAUSE:
+        speechSynthesis.resume();
+        this.setState({ speechState: SpeechState.SPEAKING });
+        break;
+    }
   }
 
   render() {
@@ -976,41 +1046,9 @@ class _EPubViewPage extends React.Component<PageProps, State> {
           </IonButton>
 
           <IonButton hidden={this.state.fetchError || !this.state.canTextToSpeech} fill="clear" slot='end' onClick={e => {
-            const voices = Globals.zhVoices();
-
-            switch (this.state.speechState) {
-              case SpeechState.UNINITIAL:
-                const zhTwVoice = voices.find(v => v.voiceURI === this.props.voiceURI) || voices[0];
-                if (zhTwVoice !== undefined) {
-                  this.speechSynthesisUtterance!.lang = zhTwVoice.lang;
-                  this.speechSynthesisUtterance!.voice = zhTwVoice;
-                }
-
-                this.findTextsInPageAndChunking();                
-                this.speechSynthesisUtterance!.text = this.workTexts[this.workTextsIndex];
-                this.speechSynthesisUtterance!.rate = this.props.speechRate;
-                // Improve reliability by cancel first.
-                speechSynthesis.cancel();
-                speechSynthesis.speak(this.speechSynthesisUtterance!);
-                this.setState({ speechState: SpeechState.SPEAKING, showToast: true, toastMessage: '經文唸誦非真人發音，僅作參考！' });
-                break;
-              case SpeechState.SPEAKING:
-                // Unfortunately, pause() doesn't work on most Chrome browser.
-                // Instead, we support stop.
-                /*
-                speechSynthesis.pause();
-                this.setState({speechState: SpeechState.PAUSE});
-                */
-                speechSynthesis.cancel();
-                this.setState({ speechState: SpeechState.UNINITIAL });
-                break;
-              case SpeechState.PAUSE:
-                speechSynthesis.resume();
-                this.setState({ speechState: SpeechState.SPEAKING });
-                break;
-            }
+            this.playText2Speech();
           }}>
-            <IonIcon icon={this.state.speechState === SpeechState.SPEAKING ? stopCircle : musicalNotes} slot='icon-only' />
+            <IonIcon icon={this.state.speechState === SpeechState.SPEAKING ? stopCircle : musicalNote} slot='icon-only' />
           </IonButton>
 
           <IonButton hidden={this.state.fetchError} fill="clear" slot='end' onClick={e => {
@@ -1030,6 +1068,14 @@ class _EPubViewPage extends React.Component<PageProps, State> {
             onDidDismiss={e => { this.setState({ popover: { show: false, event: null } }) }}
           >
             <IonList>
+              <IonItem button onClick={e => {
+                this.setState({ showSpeechRepeatStart: true, popover: { show: false, event: null } });
+              }}>
+                <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
+                <IonIcon icon={musicalNotes} slot='start' />
+                <IonLabel className='ion-text-wrap uiFont'>循環播放</IonLabel>
+              </IonItem>
+
               <IonItem button onClick={e => {
                 this.setState({ popover: { show: false, event: null } });
                 this.props.history.push(`/catalog/work/${this.props.match.params.work}`);
@@ -1174,8 +1220,8 @@ class _EPubViewPage extends React.Component<PageProps, State> {
               </IonItem>
             </IonList>
           </IonPopover>
-          
-          <IonProgressBar reversed={this.props.rtlVerticalLayout} value={ this.state.currentPage / this.state.pageCount} />
+
+          <IonProgressBar reversed={this.props.rtlVerticalLayout} value={this.state.currentPage / this.state.pageCount} />
         </IonToolbar>
       </IonHeader>
     );
@@ -1353,6 +1399,41 @@ class _EPubViewPage extends React.Component<PageProps, State> {
                 text: '關閉',
                 role: 'cancel',
                 handler: () => this.setState({ showSearchTextToast: false })
+              }
+            ]}
+          />
+
+          <IonToast
+            cssClass='uiFont'
+            isOpen={this.state.showSpeechRepeatStart}
+            onDidDismiss={() => this.setState({ showSpeechRepeatStart: false })}
+            message={`請選擇偱環播放文字起點，再按確定`}
+            buttons={[
+              {
+                text: '確定',
+                role: 'ok',
+                handler: () => {
+                  this.speechRepeatStart = this.getSelectedRange();
+                  this.setState({ showSpeechRepeatStart: false, showSpeechRepeatEnd: true });
+                }
+              }
+            ]}
+          />
+
+          <IonToast
+            cssClass='uiFont'
+            isOpen={this.state.showSpeechRepeatEnd}
+            onDidDismiss={() => this.setState({ showSpeechRepeatEnd: false })}
+            message={`請選擇偱環播放文字終點，再按確定`}
+            buttons={[
+              {
+                text: '確定',
+                role: 'ok',
+                handler: () => {
+                  this.speechRepeatEnd = this.getSelectedRange();
+                  this.setState({ isSpeechRepeatMode: true, showSpeechRepeatEnd: false });
+                  this.playText2Speech();
+                }
               }
             ]}
           />
