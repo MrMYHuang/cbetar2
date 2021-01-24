@@ -45,7 +45,7 @@ CBETA電子佛典閱讀器2(非官方) (Chinese Buddhist Electronic Text Associa
 
   <img src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/Text2SpeechRepeat.png' width='70%' />
 
-  6. 合成語音：可切換中國大陸腔、台灣腔、廣東腔，尚不支援Android, Linux。Windows 10使用者，請先至OS設定安裝各種語音檔，如圖所示：
+  6. 合成語音切換：可切換中國大陸腔、台灣腔、廣東腔，尚不支援Android, Linux。Windows 10使用者，請先至OS設定安裝各種語音檔，如圖所示：
 
   <img src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/InstalledVoicesWin10.png' width='70%' />
 
