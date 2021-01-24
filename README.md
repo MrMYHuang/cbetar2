@@ -43,6 +43,8 @@ CBETA電子佛典閱讀器2(非官方) (Chinese Buddhist Electronic Text Associa
   4. 分頁模式下指定頁數播放：切換至特定頁數，按下播放鍵，即會從該頁開始播放。一頁播完會自動跳下一頁，至經文結尾。
   5. 循環播放：可選擇循環播放的啟始與結束文字，即會自動重複播放，直到按下暫停播放鈕。用途：作唸佛機用。
 
+  <img src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/Text2SpeechRepeat.png' width='70%' />
+
 * <a id='dictionary'>佛學詞典(線上查詢)</a>
   1. 整合"DILA 佛學術語字辭典"，可在"佛學詞典"分頁查詢佛學字詞。
 
