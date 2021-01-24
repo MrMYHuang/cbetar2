@@ -515,6 +515,10 @@ class _EPubViewPage extends React.Component<PageProps, State> {
           flow: this.props.paginated ? 'paginated' : 'scrolled',
           scrollbarWidth: Globals.scrollbarSizeIdToValue(this.props.scrollbarSize),
           defaultDirection: this.props.rtlVerticalLayout ? 'rtl' : 'ltr',
+          // Improve scrolling performance in scrolled mode by
+          // avoiding too many EVENTS.MANAGERS.SCROLLED events to call Rendition.reportLocation.
+          // Set a large enough timeout to get good performance and small enough to make user interactions well with updated reportLocation!
+          afterScrolledTimeout: 500,
         });
         //this.rendition.on("keydown", this.keyListener.bind(this));
 

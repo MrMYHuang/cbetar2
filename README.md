@@ -212,12 +212,14 @@ https://github.com/MrMYHuang/cbetar2/releases
 5. iOS Safari 13.4以上才支援"分享此頁"功能。
 6. iOS上，經文頁"搜尋文字"視窗中，按下搜尋鈕後，要再點擊一次向前搜尋鈕，被搜尋文字才開始會上色。
 7. iOS不支援app捷徑。
-8. Safari不支援列印直排經文( https://bugs.webkit.org/show_bug.cgi?id=220043 )。
+8. Safari不支援列印直排經文。( https://bugs.webkit.org/show_bug.cgi?id=220043 )
 9. iOS Safari選擇文字後，仍會閃爍彈出式選單才消失。
 10. 合成語音選項濾掉非離線語音，以避開非離線語音單次播放最長字串過小的問題。
-11. 合成語音選項在Android Chrome無效。
+11. 合成語音選項在Android Chrome無效。( https://stackoverflow.com/a/61366224/631869 )
 
 ## <a id='history'>版本歷史</a>
+* PWA 4.19.4:
+  * [改善] 單頁模式經文在桌機上捲動的效能。
 * PWA 4.19.3:
   * [修正] 一卷經有多個書籤，刪除其中一個，會造成該卷經無法離線瀏覽的問題。
 * PWA 4.19.2:
