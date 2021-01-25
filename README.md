@@ -225,6 +225,8 @@ https://github.com/MrMYHuang/cbetar2/releases
 11. 合成語音選項在Android Chrome無效。( https://stackoverflow.com/a/61366224/631869 )
 
 ## <a id='history'>版本歷史</a>
+* PWA 4.20.?:
+  * [修正] Chrome for macOS與Linux顯示黑體字的問題。
 * PWA 4.20.0:
   * [新增] 經文頁"循環播放"功能。
 * PWA 4.19.4:
