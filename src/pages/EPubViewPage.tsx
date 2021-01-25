@@ -453,7 +453,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
     /* Workaround parenthesis orientation problem of TW-Kai-98_1 on iOS Safari. */
     @font-face {
-        font-family: 'Heiti';
+        font-family: HeitiScoped;
         src: local('Heiti TC');
         unicode-range: U+3008-301B, U+FF01-FF60;
     }
@@ -590,8 +590,10 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       } else if (isPlatform('ios')) {
         (ePubIframeWindow as Window).document.ontouchend = Globals.disableIosSafariCallout.bind(ePubIframeWindow);
       }
-      ePubIframeWindow.loadTwKaiFont = loadTwKaiFont;
-      ePubIframeWindow.loadTwKaiFont();
+      if (this.props.useFontKai) {
+        ePubIframeWindow.loadTwKaiFont = loadTwKaiFont;
+        ePubIframeWindow.loadTwKaiFont();
+      }
       ePubIframeWindow.addCbetaLineBreaks = addCbetaLineBreaks;
       ePubIframeWindow.addCbetaLineBreaks();
       ePubIframeWindow.addSwpiedEvents = addSwpiedEvents;
@@ -1453,12 +1455,13 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
 const mapStateToProps = (state: any /*, ownProps*/) => {
   return {
+    settings: state.settings,
     bookmarks: state.settings.bookmarks,
     fontSize: state.settings.fontSize,
     showComments: state.settings.showComments,
     paginated: state.settings.paginated,
     rtlVerticalLayout: state.settings.rtlVerticalLayout,
-    settings: state.settings,
+    useFontKai: state.settings.useFontKai,
     scrollbarSize: state.settings.scrollbarSize,
     voiceURI: state.settings.voiceURI,
     speechRate: state.settings.speechRate,
