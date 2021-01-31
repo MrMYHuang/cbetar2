@@ -99,8 +99,9 @@ async function clearAppData() {
   await clearIndexedDB();
 }
 
+const electronBackendApi: any = (window as any).electronBackendApi;
 // Fetch juan or HTML file.
-async function fetchJuan(work: string, juan: string, htmlFile: string | null, update: boolean = false) {
+async function fetchJuan(work: string, juan: string, htmlFile: string | null, update: boolean = false, cbetaOfflineDbMode: boolean = false) {
   const fileName = htmlFile || getFileName(work, juan);
   let htmlStr: string | null = null;
   try {
@@ -132,10 +133,24 @@ async function fetchJuan(work: string, juan: string, htmlFile: string | null, up
         htmlStr = tryDecodeHtmlStr;
       }
     } else {
-      const res = await axiosInstance.get(`/juans?edition=CBETA&work_info=1&work=${work}&juan=${juan}`, {
-        responseType: 'arraybuffer',
-      });
-      let data = JSON.parse(new TextDecoder().decode(res.data));
+      let data: any;
+      if (cbetaOfflineDbMode) {
+        electronBackendApi?.send("toMain", { event: 'fetchJuan', work, juan });
+        data = await new Promise((ok, fail) => {
+          electronBackendApi?.receiveOnce("fromMain", (data: any) => {
+            switch (data.event) {
+              case 'fetchJuan':
+                ok(data);
+                break;
+            }
+          });
+        });
+      } else {
+        const res = await axiosInstance.get(`/juans?edition=CBETA&work_info=1&work=${work}&juan=${juan}`, {
+          responseType: 'arraybuffer',
+        });
+        data = JSON.parse(new TextDecoder().decode(res.data));
+      }
       htmlStr = data.results[0];
       workInfo = data.work_info;
     }

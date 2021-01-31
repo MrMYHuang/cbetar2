@@ -93,6 +93,8 @@ interface AppOrigProps extends Props, RouteComponentProps<{
 }> { }
 
 interface State {
+  showToast: boolean;
+  toastMessage: string;
   showUpdateAlert: boolean;
   showRestoreAppSettingsToast: boolean;
 }
@@ -179,6 +181,8 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
     this.state = {
       showUpdateAlert: false,
       showRestoreAppSettingsToast: (queryParams.settings != null && this.originalAppSettingsStr != null) || false,
+      showToast: false,
+      toastMessage: '',
     };
 
     serviceWorkCallbacks.onUpdate = (registration: ServiceWorkerRegistration) => {
@@ -397,6 +401,14 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
               handler: () => this.restoreAppSettings(),
             },
           ]}
+        />
+
+        <IonToast
+          cssClass='uiFont'
+          isOpen={this.state.showToast}
+          onDidDismiss={() => this.setState({ showToast: false })}
+          message={this.state.toastMessage}
+          duration={2000}
         />
       </IonApp>
     );

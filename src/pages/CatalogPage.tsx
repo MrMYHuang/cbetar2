@@ -120,7 +120,7 @@ class _CatalogPage extends React.Component<PageProps, State> {
           if (this.props.cbetaOfflineDbMode) {
             electronBackendApi?.send("toMain", { event: 'fetchCatalog', path: path });
             obj = await new Promise((ok, fail) => {
-              electronBackendApi?.receive("fromMain", (data: any) => {
+              electronBackendApi?.receiveOnce("fromMain", (data: any) => {
                 switch (data.event) {
                   case 'fetchCatalog':
                     ok(data);

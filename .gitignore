@@ -33,3 +33,4 @@ temp
 *.provisionprofile
 /.eslintcache
 Bookcase
+BackendAppSettings.json

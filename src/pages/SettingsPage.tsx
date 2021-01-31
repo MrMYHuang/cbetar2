@@ -159,7 +159,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
             <IonItem hidden={!this.props.mainVersion}>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={informationCircle} slot='start' />
-              <IonLabel className='ion-text-wrap uiFont'>Electron app版本: {this.props.mainVersion}</IonLabel>
+              <IonLabel className='ion-text-wrap uiFont'>Backend app版本: {this.props.mainVersion}</IonLabel>
               {/*<IonButton fill='outline' shape='round' slot='end' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={e => {
               }}>分享</IonButton>*/}
             </IonItem>

@@ -2,9 +2,51 @@
 import { app, BrowserWindow, ipcMain, Menu, MenuItem, dialog } from 'electron';
 const windowStateKeeper = require('electron-window-state');
 const path = require('path');
+import * as fs from 'fs';
 const PackageInfos = require('../package.json');
 import * as cbetaOfflineDb from './CbetaOfflineDb';
+
+const backendAppSettingsFile = 'BackendAppSettings.json';
+
 app.commandLine.appendSwitch('ignore-certificate-errors', 'true');
+let mainWindow: BrowserWindow | null | undefined;
+let cbetaBookcaseDir: string | undefined;
+let frontendIsReady = false;
+
+function notifyFrontendCbetaOfflineDbMode() {
+  if (!frontendIsReady) {
+    setTimeout(() => {
+      notifyFrontendCbetaOfflineDbMode();
+    }, 10);
+  } else {
+    mainWindow?.webContents.send('fromMain', { event: 'cbetaOfflineDbMode', isOn: cbetaBookcaseDir !== undefined });
+  }
+}
+
+async function setCbetaBookcase() {
+  const res = await dialog.showOpenDialog({
+    properties: ['openDirectory'],
+    message: '設定Bookcase目錄',
+  });
+
+  if (!res.canceled) {
+    if (fs.existsSync(`${res.filePaths[0]}/CBETA`)) {
+      cbetaBookcaseDir = res.filePaths[0];
+      cbetaOfflineDb.init(cbetaBookcaseDir!);
+      fs.writeFileSync(backendAppSettingsFile, JSON.stringify({cbetaBookcaseDir}));
+      notifyFrontendCbetaOfflineDbMode();
+    }
+  }
+}
+
+let settings: any;
+if (fs.existsSync(backendAppSettingsFile)) {
+  const settingsStr = fs.readFileSync(backendAppSettingsFile).toString();
+  settings = JSON.parse(settingsStr);
+  cbetaBookcaseDir = settings.cbetaBookcaseDir;
+  cbetaOfflineDb.init(cbetaBookcaseDir!);
+  notifyFrontendCbetaOfflineDbMode();
+}
 
 const template = [
   new MenuItem({
@@ -12,15 +54,7 @@ const template = [
     submenu: [
       {
         label: '設定Bookcase目錄',
-        click: async () => {
-          const res = await dialog.showOpenDialog({
-            properties: ['openDirectory']
-          });
-
-          if (!res.canceled) {
-
-          }
-        }
+        click: setCbetaBookcase,
       },
       {
         role: 'quit',
@@ -54,7 +88,6 @@ const template = [
 const menu = Menu.buildFromTemplate(template)
 Menu.setApplicationMenu(menu)
 
-let mainWindow: BrowserWindow | null | undefined;
 function createWindow() {
   let mainWindowState = windowStateKeeper({
     defaultWidth: 1280,
@@ -81,14 +114,17 @@ function createWindow() {
   ipcMain.on('toMain', (ev, args) => {
     switch (args.event) {
       case 'ready':
+        frontendIsReady = true;
         mainWindow?.webContents.send('fromMain', { event: 'version', version: PackageInfos.version });
-        mainWindow?.webContents.send('fromMain', { event: 'cbetaOfflineDbMode', isOn: true });
         break;
       case 'fetchCatalog':
         mainWindow?.webContents.send('fromMain', Object.assign({ event: args.event }, cbetaOfflineDb.fetchCatalogs(args.path)));
         break;
       case 'fetchWork':
         mainWindow?.webContents.send('fromMain', Object.assign({ event: args.event }, cbetaOfflineDb.fetchWork(args.path)));
+        break;
+      case 'fetchJuan':
+        mainWindow?.webContents.send('fromMain', Object.assign({ event: args.event }, cbetaOfflineDb.fetchJuan(args.work, args.juan)));
         break;
     }
   });

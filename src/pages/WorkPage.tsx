@@ -63,7 +63,7 @@ class _WorkPage extends React.Component<PageProps, State> {
         if (this.props.cbetaOfflineDbMode) {
           electronBackendApi?.send("toMain", { event: 'fetchWork', path: path });
           data = await new Promise((ok, fail) => {
-            electronBackendApi?.receive("fromMain", (data: any) => {
+            electronBackendApi?.receiveOnce("fromMain", (data: any) => {
               switch (data.event) {
                 case 'fetchWork':
                   ok(data);
@@ -80,8 +80,11 @@ class _WorkPage extends React.Component<PageProps, State> {
         const works = data.results as [Work];
         work = works[0];
 
-        const resToc = await Globals.axiosInstance.get(`/toc?work=${path}`) as any;
-        work.mulu = (resToc.data.results[0].mulu as WorkChapter[]).map((wc) => new WorkChapter(wc));
+        // [TODO]
+        if (!this.props.cbetaOfflineDbMode) {
+          const resToc = await Globals.axiosInstance.get(`/toc?work=${path}`) as any;
+          work.mulu = (resToc.data.results[0].mulu as WorkChapter[]).map((wc) => new WorkChapter(wc));
+        }
 
       } catch (err) {
         console.error(err);

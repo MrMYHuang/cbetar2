@@ -52,6 +52,7 @@ interface Props {
   useFontKai: boolean;
   voiceURI: string;
   speechRate: number;
+  cbetaOfflineDbMode: boolean;
 }
 
 interface PageProps extends Props, RouteComponentProps<{
@@ -240,6 +241,8 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         this.props.match.params.work,
         this.props.match.params.path,
         this.htmlFile,
+        false,
+        this.props.cbetaOfflineDbMode,
       );
 
       await this.loadEpubCoverToMemFs();
@@ -1467,6 +1470,7 @@ const mapStateToProps = (state: any /*, ownProps*/) => {
     scrollbarSize: state.settings.scrollbarSize,
     voiceURI: state.settings.voiceURI,
     speechRate: state.settings.speechRate,
+    cbetaOfflineDbMode: state.tmpSettings.cbetaOfflineDbMode,
   }
 };
 
