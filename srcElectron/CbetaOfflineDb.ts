@@ -43,7 +43,7 @@ export function fetchCatalogs(path: string) {
             const label = ele.text();
             if (ele.name() === 'cblink') {
                 const href = node.get('cblink')!.attr('href')!.value();
-                const matches = /.*\/([\W]*).*n(.*)_.*.xml$/.exec(href)!;
+                const matches = /.*\/([A-Z]*).*n(.*)_.*.xml$/.exec(href)!;
                 const work = matches[1] + matches[2];
                 const catalog = catalogs[work];
                 return Object.assign({ n, label }, catalog);
