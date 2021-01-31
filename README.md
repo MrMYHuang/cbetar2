@@ -13,10 +13,10 @@ CBETA電子佛典閱讀器2(非官方) (Chinese Buddhist Electronic Text Associa
 
   cbetar2為一支模組化程式，由frontend app (PWA) + backend app (CBETA API or cbetar2 backend)組成。有兩種使用方式：
 
-  1. PWA + CBETA API
+  1. 連線DB版：PWA + CBETA API
     * 此模式不須先下載CBETA離線經文資料檔，但要作離線瀏覽要把經文加至書籤。
     * 安裝方式：瀏覽器安裝、商店安裝。支援多種平台。
-  2. PWA + cbetar2 backend (測試版)
+  2. 離線DB版：PWA + cbetar2 backend (測試版)
     * 此模式須先下載、解壓<a href='http://www.cbeta.org/download/cbreader.htm'>CBETA離線經文資料檔</a>，可離線瀏覽目錄、經文。
     * 安裝方式：下載安裝檔案安裝。目前僅支援Windows 7+，預計能支援Linux, macOS 10.10+。
     * 設定：啟動app後，執行選單/檔案/設定Bookcase目錄。
