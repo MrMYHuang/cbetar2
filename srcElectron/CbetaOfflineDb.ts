@@ -1,5 +1,6 @@
 import * as libxslt from 'libxslt';
 import { Document as XmlDoc, Element as XmlEle } from 'libxmljs';
+import * as path from 'path';
 const libxmljs = libxslt.libxmljs;
 const fs = require('fs');
 
@@ -9,7 +10,7 @@ var catalogs: any;
 let cbetaBookcaseDir: string;
 export function init(cbetaBookcaseDirIn: string) {
     cbetaBookcaseDir = cbetaBookcaseDirIn;
-    const stylesheetString = fs.readFileSync('buildElectron/nav_fix.xsl').toString();
+    const stylesheetString = fs.readFileSync(`buildElectron/nav_fix.xsl`).toString();
     const stylesheet = libxslt.parse(stylesheetString);
 
     let documentString = fs.readFileSync(`${cbetaBookcaseDir}/CBETA/bulei_nav.xhtml`).toString();
@@ -65,7 +66,7 @@ export function fetchWork(path: string) {
 
 export function fetchJuan(work: string, juan: string) {
     const work_info = fetchWork(work).results[0];
-    const stylesheetString = fs.readFileSync('buildElectron/tei.xsl').toString();
+    const stylesheetString = fs.readFileSync(`buildElectron/tei.xsl`).toString();
     const documentString = fs.readFileSync(`${cbetaBookcaseDir}/CBETA/XML/${work_info.id}/${work_info.id}${work_info.vol}/${work_info.id}${work_info.vol}n${work_info.sutra}_${juan.toString().padStart(3, '0')}.xml`).toString();
 
     const stylesheet = libxslt.parse(stylesheetString);

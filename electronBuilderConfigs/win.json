@@ -2,11 +2,21 @@
   "extends": null,
   "appId": "io.github.mrmyhuang.cbetar2",
   "files": [
+    "node_modules/node1-libxmljsmt/**/*",
     "buildElectron/**/*",
     "package.json"
+  ],
+  "extraFiles": [
+    "buildElectron/*.xsl"
+  ],
+  "asarUnpack": [
+    "node_modules/node1-libxmljsmt/**/*"
   ],
   "icon": "buildElectron/icon.png",
   "win": {
     "artifactName": "${name}_${version}_win64.${ext}"
+  },
+  "nsis": {
+    "differentialPackage": false
   }
 }

@@ -35,7 +35,13 @@ async function setCbetaBookcase() {
       cbetaOfflineDb.init(cbetaBookcaseDir!);
       fs.writeFileSync(backendAppSettingsFile, JSON.stringify({cbetaBookcaseDir}));
       notifyFrontendCbetaOfflineDbMode();
+    } else {
+      dialog.showErrorBox('目錄無效', '所選的目錄不是有效的CBETA經文資料檔目錄(Bookcase目錄)！');
     }
+  } else {
+    dialog.showMessageBox({
+      message: '設定取消'
+    });
   }
 }
 

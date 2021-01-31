@@ -26,6 +26,7 @@
   ],
   "main": "buildElectron/main.js",
   "scripts": {
+    "postinstall": "electron-builder install-app-deps",
     "start": "react-app-rewired start",
     "build": "react-app-rewired build && powershell -file CopyBuild.ps1",
     "build_linux": "react-app-rewired build && ./CopyBuild.sh",
@@ -48,7 +49,8 @@
   },
   "dependencies": {
     "electron-window-state": "^5.0.3",
-    "libxslt": "^0.9.0"
+    "libxslt": "^0.9.0",
+    "node1-libxmljsmt": "1.0.0"
   },
   "devDependencies": {
     "@ionic/react": "^5.5.3",
