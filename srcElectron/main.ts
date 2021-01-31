@@ -1,14 +1,27 @@
 // Modules to control application life and create native browser window
-import { app, BrowserWindow, Menu, MenuItem, MenuItemConstructorOptions, ipcMain } from 'electron';
+import { app, BrowserWindow, ipcMain, Menu, MenuItem, dialog } from 'electron';
 const windowStateKeeper = require('electron-window-state');
 const path = require('path');
 const PackageInfos = require('../package.json');
+import * as cbetaOfflineDb from './CbetaOfflineDb';
 app.commandLine.appendSwitch('ignore-certificate-errors', 'true');
 
 const template = [
   new MenuItem({
     label: '檔案',
     submenu: [
+      {
+        label: '設定Bookcase目錄',
+        click: async () => {
+          const res = await dialog.showOpenDialog({
+            properties: ['openDirectory']
+          });
+
+          if (!res.canceled) {
+
+          }
+        }
+      },
       {
         role: 'quit',
         label: '關閉',
@@ -69,6 +82,10 @@ function createWindow() {
     switch (args.event) {
       case 'ready':
         mainWindow?.webContents.send('fromMain', { event: 'version', version: PackageInfos.version });
+        mainWindow?.webContents.send('fromMain', { event: 'cbetaOfflineDbMode', isOn: true });
+        break;
+      case 'fetchCatalog':
+        mainWindow?.webContents.send('fromMain', Object.assign({ event: args.event }, cbetaOfflineDb.fetchCatalogs(args.path)));
         break;
     }
   });

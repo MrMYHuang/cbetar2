@@ -48,6 +48,8 @@ import FullTextSearchPage from './pages/FullTextSearchPage';
 import ShareTextModal from './components/ShareTextModal';
 import WordDictionaryPage from './pages/WordDictionaryPage';
 
+const electronBackendApi: any = (window as any).electronBackendApi;
+
 let store = getSavedStore();
 /*
 class DebugRouter extends IonReactRouter {
@@ -114,6 +116,18 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
     if (!this.props.settings.hasAppLog) {
       Globals.disableAppLog();
     }
+
+    electronBackendApi?.receive("fromMain", (data: any) => {
+      switch (data.event) {
+        case 'cbetaOfflineDbMode':
+          store.dispatch({
+            type: "TMP_SET_KEY_VAL",
+            key: 'cbetaOfflineDbMode',
+            val: data.isOn,
+          });
+          break;
+      }
+    });
 
     this.registrationNew = null;
     // Disable browser callout.

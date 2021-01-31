@@ -22,9 +22,12 @@ const famousJuans = [
   { title: '佛說法滅盡經', url: '/catalog/juan/T0396/1' },
 ];
 
+const electronBackendApi: any = (window as any).electronBackendApi;
+
 interface Props {
   dispatch: Function;
   bookmarks: [Bookmark];
+  cbetaOfflineDbMode: boolean;
 }
 
 interface PageProps extends Props, RouteComponentProps<{
@@ -111,13 +114,28 @@ class _CatalogPage extends React.Component<PageProps, State> {
       case 1:
         return this.fetchTopCatalogs(this.state.topCatalogsType);
       case -1:
+        //electronBackendApi?.send("toMain", { event: 'ready' });
         try {
-          const res = await Globals.axiosInstance.get(`/catalog_entry?q=${path}`, {
-            responseType: 'arraybuffer',
-          });
-          const obj = JSON.parse(new TextDecoder().decode(res.data)) as any;
-          const data = obj.results as [any];
-          catalogs = data.map((json) => new Catalog(json));
+          let obj: any;
+          if (this.props.cbetaOfflineDbMode) {
+            electronBackendApi?.send("toMain", { event: 'fetchCatalog', path: path });
+            obj = await new Promise((ok, fail) => {
+              electronBackendApi?.receive("fromMain", (data: any) => {
+                switch (data.event) {
+                  case 'fetchCatalog':
+                    ok(data);
+                    break;
+                }
+              });
+            });
+          } else {
+            const res = await Globals.axiosInstance.get(`/catalog_entry?q=${path}`, {
+              responseType: 'arraybuffer',
+            });
+            obj = JSON.parse(new TextDecoder().decode(res.data)) as any;
+            const data = obj.results as [any];
+            catalogs = data.map((json) => new Catalog(json));
+          }
 
           const parentPath = this.parentPath(path);
           // path is not a top catalog.
@@ -259,29 +277,29 @@ class _CatalogPage extends React.Component<PageProps, State> {
               <IonIcon icon={arrowBack} slot='icon-only' />
             </IonButton>
 
-              <IonSelect
-                hidden={!this.isTopCatalog} slot='start'
-                value={this.state.topCatalogsType}
-                className='buttonRounded'
-                interface='popover'
-                interfaceOptions={{ cssClass: 'cbetar2themes' }}
-                onIonChange={e => {
-                  const value = e.detail.value;
-                  let nextPage = '';
-                  switch (value) {
-                    case 0: nextPage = '/catalog'; break;
-                    case 1: nextPage = '/catalog/volumes'; break;
-                    case 2: nextPage = '/catalog/famous'; break;
-                    case -1: nextPage = this.props.match.url; break;
-                  }
-                  if (this.props.match.url !== nextPage) {
-                    this.props.history.push(nextPage);
-                  }
-                }}>
-                <IonSelectOption className='uiFont' value={0}>部分類</IonSelectOption>
-                <IonSelectOption className='uiFont' value={1}>冊分類</IonSelectOption>
-                <IonSelectOption className='uiFont' value={2}>知名經典</IonSelectOption>
-              </IonSelect>
+            <IonSelect
+              hidden={!this.isTopCatalog} slot='start'
+              value={this.state.topCatalogsType}
+              className='buttonRounded'
+              interface='popover'
+              interfaceOptions={{ cssClass: 'cbetar2themes' }}
+              onIonChange={e => {
+                const value = e.detail.value;
+                let nextPage = '';
+                switch (value) {
+                  case 0: nextPage = '/catalog'; break;
+                  case 1: nextPage = '/catalog/volumes'; break;
+                  case 2: nextPage = '/catalog/famous'; break;
+                  case -1: nextPage = this.props.match.url; break;
+                }
+                if (this.props.match.url !== nextPage) {
+                  this.props.history.push(nextPage);
+                }
+              }}>
+              <IonSelectOption className='uiFont' value={0}>部分類</IonSelectOption>
+              <IonSelectOption className='uiFont' value={1}>冊分類</IonSelectOption>
+              <IonSelectOption className='uiFont' value={2}>知名經典</IonSelectOption>
+            </IonSelect>
 
             <IonButton hidden={!this.state.fetchError} fill="clear" slot='end' onClick={e => this.fetchData(this.props.match.params.path)}>
               <IonIcon icon={refreshCircle} slot='icon-only' />
@@ -347,6 +365,7 @@ const mapStateToProps = (state: any /*, ownProps*/) => {
   return {
     bookmarks: state.settings.bookmarks,
     state: state,
+    cbetaOfflineDbMode: state.tmpSettings.cbetaOfflineDbMode,
   }
 };
 

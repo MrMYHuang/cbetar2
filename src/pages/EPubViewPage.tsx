@@ -384,6 +384,8 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       htmlStrModifiedStyles = htmlStrModifiedStyles.replace(/margin-top/g, 'margin-left');
     }*/
 
+    //htmlStrModifiedStyles = htmlStrModifiedStyles.replace(/<span class="lb">[^<]*<\/span>/g, 'ㄇ');
+
     const htmlStrWithCssJs = htmlStrModifiedStyles + `
     <script>
     </script>
