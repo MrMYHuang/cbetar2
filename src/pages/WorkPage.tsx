@@ -9,10 +9,13 @@ import { bookmark, arrowBack, home, search, shareSocial, refreshCircle } from 'i
 import { Bookmark, BookmarkType } from '../models/Bookmark';
 import SearchAlert from '../components/SearchAlert';
 
+const electronBackendApi: any = (window as any).electronBackendApi;
+
 interface Props {
   dispatch: Function;
   bookmarks: [Bookmark];
   workListType: WorkListType;
+  cbetaOfflineDbMode: boolean;
 }
 
 interface PageProps extends Props, RouteComponentProps<{
@@ -56,10 +59,24 @@ class _WorkPage extends React.Component<PageProps, State> {
       work = this.bookmark!.work!;
     } else {
       try {
-        const res = await Globals.axiosInstance.get(`/works?work=${path}`, {
-          responseType: 'arraybuffer',
-        });
-        const data = JSON.parse(new TextDecoder().decode(res.data));
+        let data: any;
+        if (this.props.cbetaOfflineDbMode) {
+          electronBackendApi?.send("toMain", { event: 'fetchWork', path: path });
+          data = await new Promise((ok, fail) => {
+            electronBackendApi?.receive("fromMain", (data: any) => {
+              switch (data.event) {
+                case 'fetchWork':
+                  ok(data);
+                  break;
+              }
+            });
+          });
+        } else {
+          const res = await Globals.axiosInstance.get(`/works?work=${path}`, {
+            responseType: 'arraybuffer',
+          });
+          data = JSON.parse(new TextDecoder().decode(res.data));
+        }
         const works = data.results as [Work];
         work = works[0];
 
@@ -271,6 +288,7 @@ const mapStateToProps = (state: any /*, ownProps*/) => {
     bookmarks: state.settings.bookmarks,
     // Default to WorkListType.BY_JUAN, because work list by chapter might be empty.
     workListType: state.tmpSettings.workListType !== undefined ? state.tmpSettings.workListType : WorkListType.BY_JUAN,
+    cbetaOfflineDbMode: state.tmpSettings.cbetaOfflineDbMode,
   }
 };
 

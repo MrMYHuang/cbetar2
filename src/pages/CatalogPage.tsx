@@ -133,9 +133,9 @@ class _CatalogPage extends React.Component<PageProps, State> {
               responseType: 'arraybuffer',
             });
             obj = JSON.parse(new TextDecoder().decode(res.data)) as any;
-            const data = obj.results as [any];
-            catalogs = data.map((json) => new Catalog(json));
           }
+          const data = obj.results as [any];
+          catalogs = data.map((json) => new Catalog(json));
 
           const parentPath = this.parentPath(path);
           // path is not a top catalog.

@@ -8,8 +8,6 @@ import './SettingsPage.css';
 import PackageInfos from '../../package.json';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
 
-const electronBackendApi: any = (window as any).electronBackendApi;
-
 interface StateProps {
   showFontLicense: boolean;
   juansDownloadedRatio: number;
@@ -17,7 +15,6 @@ interface StateProps {
   showClearAlert: boolean;
   showToast: boolean;
   toastMessage: string;
-  mainVersion: string | null;
 }
 
 interface Props {
@@ -35,6 +32,8 @@ interface Props {
   voiceURI: string;
   speechRate: number;
   bookmarks: [Bookmark];
+  mainVersion: string | null;
+  cbetaOfflineDbMode: boolean;
 }
 
 interface PageProps extends Props, RouteComponentProps<{
@@ -54,20 +53,10 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
       showClearAlert: false,
       showToast: false,
       toastMessage: '',
-      mainVersion: null,
     };
-
-    electronBackendApi?.receive("fromMain", (data: any) => {
-      switch (data.event) {
-        case 'version':
-          this.setState({ mainVersion: data.version });
-          break;
-      }
-    });
   }
 
   ionViewWillEnter() {
-    electronBackendApi?.send("toMain", { event: 'ready' });
   }
 
   updateBookmark(newBookmarks: Array<Bookmark>, newBookmark: Bookmark) {
@@ -167,12 +156,18 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                 });
               }}>分享</IonButton>
             </IonItem>
-            <IonItem hidden={!this.state.mainVersion}>
+            <IonItem hidden={!this.props.mainVersion}>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={informationCircle} slot='start' />
-              <IonLabel className='ion-text-wrap uiFont'>Electron app版本: {this.state.mainVersion}</IonLabel>
+              <IonLabel className='ion-text-wrap uiFont'>Electron app版本: {this.props.mainVersion}</IonLabel>
               {/*<IonButton fill='outline' shape='round' slot='end' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={e => {
               }}>分享</IonButton>*/}
+            </IonItem>
+            <IonItem hidden={!this.props.mainVersion}>
+              <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
+              <IonIcon icon={informationCircle} slot='start' />
+              <IonLabel className='ion-text-wrap uiFont'>使用CBETA離線經文資料檔</IonLabel>
+              <IonToggle slot='end' disabled checked={this.props.cbetaOfflineDbMode}/>
             </IonItem>
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
@@ -599,6 +594,8 @@ const mapStateToProps = (state: any /*, ownProps*/) => {
     speechRate: state.settings.speechRate,
     bookmarks: state.settings.bookmarks,
     voiceURI: state.settings.voiceURI,
+    mainVersion: state.tmpSettings.mainVersion,
+    cbetaOfflineDbMode: state.tmpSettings.cbetaOfflineDbMode,
   }
 };
 

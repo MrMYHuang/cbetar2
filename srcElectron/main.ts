@@ -87,6 +87,9 @@ function createWindow() {
       case 'fetchCatalog':
         mainWindow?.webContents.send('fromMain', Object.assign({ event: args.event }, cbetaOfflineDb.fetchCatalogs(args.path)));
         break;
+      case 'fetchWork':
+        mainWindow?.webContents.send('fromMain', Object.assign({ event: args.event }, cbetaOfflineDb.fetchWork(args.path)));
+        break;
     }
   });
 

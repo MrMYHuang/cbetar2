@@ -32,3 +32,4 @@ dist
 temp
 *.provisionprofile
 /.eslintcache
+Bookcase

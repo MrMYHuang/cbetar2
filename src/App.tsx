@@ -119,6 +119,13 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
 
     electronBackendApi?.receive("fromMain", (data: any) => {
       switch (data.event) {
+        case 'version':
+          store.dispatch({
+            type: "TMP_SET_KEY_VAL",
+            key: 'mainVersion',
+            val: data.version,
+          });
+          break;
         case 'cbetaOfflineDbMode':
           store.dispatch({
             type: "TMP_SET_KEY_VAL",
@@ -128,6 +135,7 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
           break;
       }
     });
+    electronBackendApi?.send("toMain", { event: 'ready' });
 
     this.registrationNew = null;
     // Disable browser callout.

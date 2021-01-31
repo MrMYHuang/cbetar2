@@ -18,8 +18,8 @@ function init() {
     catalogs = (<any> Object).fromEntries(
         catalogs.map((l: string) => {
             const f = l.split(/\s*,\s*/);
-            const file = `${f[0]}${f[3]}n${f[4]}`;
-            return [file, { file, work: `${f[0]}${f[4]}`, juan_start: 1, category: f[1], creators: f[7] }];
+            const file = `${f[0]}${f[4]}`;
+            return [file, { file, work: `${f[0]}${f[4]}`, juan: f[5], juan_start: 1, category: f[1], creators: f[7], title: f[6] }];
         })
     );
 }
@@ -35,11 +35,19 @@ export function fetchCatalogs(path: string) {
         const label = ele.text();
         if (ele.name() === 'cblink') {
             const href = node.get('cblink')!.attr('href')!.value();
-            const work = /.*\/(.*)_.*.xml$/.exec(href)![1];
+            const matches = /.*\/(.).*([\d]{4})_.*.xml$/.exec(href)!;
+            const work = matches[1]+matches[2];
             const catalog = catalogs[work];
             return Object.assign({ n, label }, catalog);
         }
         return { n, label };
     });
     return { results };
+}
+
+export function fetchWork(path: string) {
+    let work = catalogs[path];
+    work.juan_list = Array.from({ length: work.juan }, (v, i) => i + 1).join(',');
+    work.work = path;
+    return {results: [work]};
 }
