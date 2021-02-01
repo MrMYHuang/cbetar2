@@ -12,8 +12,16 @@ const backendAppSettingsFile = `${cbetar2SettingsPath}/BackendAppSettings.json`;
 
 app.commandLine.appendSwitch('ignore-certificate-errors', 'true');
 let mainWindow: BrowserWindow | null | undefined;
-let cbetaBookcaseDir: string | undefined;
+let settings: any = {};
 let frontendIsReady = false;
+
+function isDevMode() {
+  return !app.isPackaged || (process as any).defaultApp;
+}
+
+if (!fs.existsSync(cbetar2SettingsPath)) {
+  fs.mkdirSync(cbetar2SettingsPath);
+}
 
 function notifyFrontendCbetaOfflineDbMode() {
   if (!frontendIsReady) {
@@ -21,7 +29,7 @@ function notifyFrontendCbetaOfflineDbMode() {
       notifyFrontendCbetaOfflineDbMode();
     }, 10);
   } else {
-    mainWindow?.webContents.send('fromMain', { event: 'cbetaOfflineDbMode', isOn: cbetaBookcaseDir !== undefined });
+    mainWindow?.webContents.send('fromMain', { event: 'cbetaOfflineDbMode', isOn: settings.cbetaBookcaseDir !== undefined });
   }
 }
 
@@ -33,13 +41,12 @@ async function setCbetaBookcase() {
 
   if (!res.canceled) {
     if (fs.existsSync(`${res.filePaths[0]}/CBETA`)) {
-      cbetaBookcaseDir = res.filePaths[0];
+      settings.cbetaBookcaseDir = res.filePaths[0];
       try {
-        cbetaOfflineDb.init(cbetaBookcaseDir!);
-        fs.mkdirSync(cbetar2SettingsPath);
-        fs.writeFileSync(backendAppSettingsFile, JSON.stringify({cbetaBookcaseDir}));
+        cbetaOfflineDb.init(settings.cbetaBookcaseDir, isDevMode());
+        fs.writeFileSync(backendAppSettingsFile, JSON.stringify(settings));
         notifyFrontendCbetaOfflineDbMode();
-      } catch(error) {
+      } catch (error) {
         dialog.showErrorBox('錯誤', `${error.message}`);
       }
     } else {
@@ -52,13 +59,23 @@ async function setCbetaBookcase() {
   }
 }
 
-let settings: any;
-if (fs.existsSync(backendAppSettingsFile)) {
-  const settingsStr = fs.readFileSync(backendAppSettingsFile).toString();
-  settings = JSON.parse(settingsStr);
-  cbetaBookcaseDir = settings.cbetaBookcaseDir;
-  cbetaOfflineDb.init(cbetaBookcaseDir!);
-  notifyFrontendCbetaOfflineDbMode();
+function loadSettings() {
+  if (fs.existsSync(backendAppSettingsFile)) {
+    const settingsStr = fs.readFileSync(backendAppSettingsFile).toString();
+    settings = JSON.parse(settingsStr);
+    if (settings.cbetaBookcaseDir === undefined) {
+      // Do nothing.
+    }
+    else if (fs.existsSync(`${settings.cbetaBookcaseDir}/CBETA`)) {
+      cbetaOfflineDb.init(settings.cbetaBookcaseDir, isDevMode());
+      notifyFrontendCbetaOfflineDbMode();
+    } else {
+      // Remove invalid cbetaBookcaseDir.
+      delete settings.cbetaBookcaseDir;
+      fs.writeFileSync(backendAppSettingsFile, JSON.stringify(settings));
+      dialog.showErrorBox('目錄無效', '儲存的Bookcase目錄設定無效！請重新選擇Bookcase目錄。');
+    }
+  }
 }
 
 const template = [
@@ -102,6 +119,8 @@ const menu = Menu.buildFromTemplate(template)
 Menu.setApplicationMenu(menu)
 
 function createWindow() {
+  frontendIsReady = false;
+
   let mainWindowState = windowStateKeeper({
     defaultWidth: 1280,
     defaultHeight: 800
@@ -144,11 +163,13 @@ function createWindow() {
 
   // and load the index.html of the app.
   //mainWindow.loadFile('index.html');
-  if (!app.isPackaged || (process as any).defaultApp) {
+  if (isDevMode()) {
     mainWindow.loadURL('http://localhost:3000');
   } else {
     mainWindow.loadURL('https://mrmyhuang.github.io');
   }
+
+  loadSettings();
 }
 
 // This method will be called when Electron has finished

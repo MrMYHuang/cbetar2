@@ -249,6 +249,9 @@ https://github.com/MrMYHuang/cbetar2/releases
 11. 合成語音選項在Android Chrome無效。( https://stackoverflow.com/a/61366224/631869 )
 
 ## <a id='history'>版本歷史</a>
+* Backend 11.0.2:
+  * [修正] macOS app關閉再從工作列開啟，會離開離線DB模式的問題。
+  * [修正] 移動Bookcase目錄，會導致app無法開啟的問題。
 * PWA 4.21.0, Backend 11.0.0:
   * [調整] Electron app更名為Backend app。
   * [新增] Backend app支援使用CBETA離線經文資料檔。
