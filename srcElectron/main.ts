@@ -3,10 +3,12 @@ import { app, BrowserWindow, ipcMain, Menu, MenuItem, dialog } from 'electron';
 const windowStateKeeper = require('electron-window-state');
 const path = require('path');
 import * as fs from 'fs';
+import * as os from 'os';
 const PackageInfos = require('../package.json');
 import * as cbetaOfflineDb from './CbetaOfflineDb';
 
-const backendAppSettingsFile = 'BackendAppSettings.json';
+const cbetar2SettingsPath = `${os.homedir()}/.cbetar2`;
+const backendAppSettingsFile = `${cbetar2SettingsPath}/BackendAppSettings.json`;
 
 app.commandLine.appendSwitch('ignore-certificate-errors', 'true');
 let mainWindow: BrowserWindow | null | undefined;
@@ -32,9 +34,14 @@ async function setCbetaBookcase() {
   if (!res.canceled) {
     if (fs.existsSync(`${res.filePaths[0]}/CBETA`)) {
       cbetaBookcaseDir = res.filePaths[0];
-      cbetaOfflineDb.init(cbetaBookcaseDir!);
-      fs.writeFileSync(backendAppSettingsFile, JSON.stringify({cbetaBookcaseDir}));
-      notifyFrontendCbetaOfflineDbMode();
+      try {
+        cbetaOfflineDb.init(cbetaBookcaseDir!);
+        fs.mkdirSync(cbetar2SettingsPath);
+        fs.writeFileSync(backendAppSettingsFile, JSON.stringify({cbetaBookcaseDir}));
+        notifyFrontendCbetaOfflineDbMode();
+      } catch(error) {
+        dialog.showErrorBox('錯誤', `${error.message}`);
+      }
     } else {
       dialog.showErrorBox('目錄無效', '所選的目錄不是有效的CBETA經文資料檔目錄(Bookcase目錄)！');
     }

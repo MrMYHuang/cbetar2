@@ -2,15 +2,15 @@
   "extends": null,
   "appId": "io.github.mrmyhuang.cbetar2",
   "files": [
-    "node_modules/node1-libxmljsmt/**/*",
+    "node_modules/node1-libxmljsmt-myh/**/*",
     "buildElectron/**/*",
     "package.json"
   ],
-  "extraFiles": [
+  "extraResources": [
     "buildElectron/*.xsl"
   ],
   "asarUnpack": [
-    "node_modules/node1-libxmljsmt/**/*"
+    "node_modules/node1-libxmljsmt-myh/**/*"
   ],
   "icon": "buildElectron/icon.png",
   "win": {

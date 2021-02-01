@@ -5,6 +5,12 @@
     "buildElectron/**/*",
     "package.json"
   ],
+  "extraResources": [
+    "buildElectron/*.xsl"
+  ],
+  "asarUnpack": [
+    "node_modules/node1-libxmljsmt-myh/**/*"
+  ],
   "afterAllArtifactBuild": "electron-builder-notarize-pkg",
   "icon": "buildElectron/icon.icns",
   "mac": {
