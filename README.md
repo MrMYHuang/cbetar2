@@ -13,12 +13,12 @@ CBETA電子佛典閱讀器2(非官方) (Chinese Buddhist Electronic Text Associa
 
   cbetar2為一支模組化程式，由frontend app (PWA) + backend app (CBETA API or cbetar2 backend)組成。有兩種使用方式：
 
-  1. 連線DB版：PWA + CBETA API
-    * 此模式不須先下載CBETA離線經文資料檔，但要作離線瀏覽要把經文加至書籤。
+  1. 連線DB版app：PWA + CBETA API
+    * 此版本不須先下載CBETA離線經文資料檔，但要作離線瀏覽要把經文加至書籤。
     * 安裝方式：瀏覽器安裝、商店安裝。支援多種平台。
-  2. 離線DB版：PWA + cbetar2 backend (測試版)
-    * 此模式須先下載、解壓<a href='http://www.cbeta.org/download/cbreader.htm'>CBETA離線經文資料檔</a>，可離線瀏覽目錄、經文。
-    * 安裝方式：下載安裝檔案安裝。目前僅支援Windows 7+，預計能支援Linux, macOS 10.10+。
+  2. 離線DB版app：PWA + cbetar2 backend
+    * 此版本預設與連線版相同。要切為離線DB模式，要先下載、解壓<a href='http://www.cbeta.org/download/cbreader.htm'>CBETA離線經文資料檔</a>，可離線瀏覽目錄、經文。
+    * 安裝方式：下載安裝檔案安裝。支援Windows 7+, Linux, macOS 10.10+。
     * 設定：啟動app後，執行選單/檔案/設定Bookcase目錄。
 
 * <a id='search'>搜尋</a>
@@ -140,9 +140,9 @@ CBETA電子佛典閱讀器2(非官方) (Chinese Buddhist Electronic Text Associa
 
 此app有3種取得、安裝方式：
 
-  1. Chrome、Safari網頁瀏覽器。
-  2. App商店。
-  3. 下載安裝檔。
+  1. 連線DB版app：Chrome、Safari網頁瀏覽器。
+  2. 連線DB版app：App商店。
+  3. 離線DB版app：下載安裝檔。
 
 建議採用第1種用瀏覽器安裝，以取得最完整的app功能體驗。3種安裝方法如下。
 
@@ -214,11 +214,11 @@ https://MrMYHuang.github.io
 
 ### 下載安裝檔
 請至此頁面下載最新版安裝檔：
-https://github.com/MrMYHuang/cbetar2/releases
+https://github.com/MrMYHuang/cbetar2/releases/tag/v11.0.2
 
-支援的64-bit作業系統如下：
+支援的64-bit作業系統如下(Android為連線DB版app，其他都是離線DB版app)：
 
-  1. Android(中國大陸使用者也能安裝)
+  1. Android (中國大陸使用者也能安裝)
   2. Linux DEB (Debian, Ubuntu, ...)
   3. Linux RPM (Fedora, ...)
   4. Windows 7+
