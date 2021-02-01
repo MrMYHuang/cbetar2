@@ -49,7 +49,7 @@
   },
   "dependencies": {
     "electron-window-state": "^5.0.3",
-    "libxslt-myh": "^0.9.6"
+    "libxslt-myh": "^0.9.7"
   },
   "devDependencies": {
     "@ionic/react": "^5.5.3",

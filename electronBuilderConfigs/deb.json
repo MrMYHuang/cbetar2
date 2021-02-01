@@ -5,6 +5,12 @@
     "buildElectron/**/*",
     "package.json"
   ],
+  "extraResources": [
+    "buildElectron/*.xsl"
+  ],
+  "asarUnpack": [
+    "node_modules/node1-libxmljsmt-myh/**/*"
+  ],
   "icon": "buildElectron/icon.png",
   "deb": {
     "artifactName": "${name}_${version}_linux64.${ext}",
