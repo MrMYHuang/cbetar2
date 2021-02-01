@@ -1,6 +1,5 @@
-import * as libxslt from 'libxslt';
+import * as libxslt from 'libxslt-myh';
 import { Document as XmlDoc, Element as XmlEle } from 'libxmljs';
-import * as path from 'path';
 const libxmljs = libxslt.libxmljs;
 const fs = require('fs');
 
