@@ -1,0 +1,8 @@
+<Application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <VisualElements
+        ShowNameOnSquare150x150Logo="off"
+        ForegroundText='light'
+        BackgroundColor='#FFFFFF'
+        Square150x150Logo="resources/buildElectron/icon.png"
+        Square70x70Logo="resources/buildElectron/icon.png"/>
+</Application>

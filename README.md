@@ -214,7 +214,7 @@ https://MrMYHuang.github.io
 
 ### 下載安裝檔
 請至此頁面下載最新版安裝檔：
-https://github.com/MrMYHuang/cbetar2/releases/tag/v11.0.2
+https://github.com/MrMYHuang/cbetar2/releases/tag/v11.0.3
 
 支援的64-bit作業系統如下(Android為連線DB版app，其他都是離線DB版app)：
 
@@ -249,6 +249,8 @@ https://github.com/MrMYHuang/cbetar2/releases/tag/v11.0.2
 11. 合成語音選項在Android Chrome無效。( https://stackoverflow.com/a/61366224/631869 )
 
 ## <a id='history'>版本歷史</a>
+* Backend 11.0.3:
+  * [修正] Windows app加入開始畫面的圖示未佔滿動態磚的問題。
 * Backend 11.0.2:
   * [修正] macOS app關閉再從工作列開啟，會離開離線DB模式的問題。
   * [修正] 移動Bookcase目錄，會導致app無法開啟的問題。

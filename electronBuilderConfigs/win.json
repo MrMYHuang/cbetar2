@@ -5,6 +5,10 @@
     "buildElectron/**/*",
     "package.json"
   ],
+  "extraFiles": [
+    "buildElectron/icon.png",
+    "buildElectron/電子佛典.VisualElementsManifest.xml"
+  ],
   "extraResources": [
     "buildElectron/*.xsl"
   ],
