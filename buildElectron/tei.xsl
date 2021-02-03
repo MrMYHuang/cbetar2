@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:cb="http://www.cbeta.org/ns/1.0">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:cb="http://www.cbeta.org/ns/1.0">
     <xsl:output method="html" encoding="utf-8" indent="yes" />
+
+    <xsl:variable name="spaces50" select="'　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　'" />
 
     <xsl:template match="/">
         <html>
@@ -82,8 +84,7 @@
     </xsl:template>
 
     <!-- TODO -->
-    <xsl:template match="tei:g">
-    </xsl:template>
+    <xsl:template match="tei:g"></xsl:template>
 
     <xsl:template match="tei:graphic">
         <xsl:if test="boolean(@url)">
@@ -123,15 +124,19 @@
         </span>
     </xsl:template>
 
+    <xsl:template match="text()[preceding-sibling::tei:lb]">
+        <span class="t" l="{preceding-sibling::tei:lb[@n]}">
+            <xsl:copy />
+        </span>
+    </xsl:template>
+
     <!-- <lem> TODO -->
     <!-- <lg> TODO -->
 
-    <xsl:template match="tei:list">
-    </xsl:template>
+    <xsl:template match="tei:list"></xsl:template>
 
     <!-- TODO -->
-    <xsl:template match="cb:mulu">
-    </xsl:template>
+    <xsl:template match="cb:mulu"></xsl:template>
 
     <xsl:template match="tei:note" />
 
@@ -168,15 +173,49 @@
     </xsl:template>
 
     <xsl:template match="cb:sg">
-        (<xsl:apply-templates />)
+        (
+        <xsl:apply-templates />
+        )
+    </xsl:template>
+
+    <!-- TODO -->
+    <xsl:template match="tei:space">
+        <xsl:choose>
+            <xsl:when test="boolean(@unit)">
+                <xsl:if test="@unit='chars'">
+                    <xsl:value-of select="ssubstring($spaces50, 1, @quantity)" />
+                </xsl:if>
+            </xsl:when>
+            <xsl:otherwise></xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 
     <xsl:template match="cb:t[not(@xml:lang='zh-Hant')]" />
 
-    <xsl:template match="text()[preceding-sibling::tei:lb]">
-        <span class="t" l="{preceding-sibling::tei:lb[@n]}">
-            <xsl:copy />
+    <xsl:template match="tei:table">
+        <table data-tagname='table' border='1' style="{concat(@rend, ';', @style)}">
+            <tbody data-tagname='tbody'>
+                <xsl:apply-templates />
+            </tbody>
+        </table>
+    </xsl:template>
+
+    <!-- <text> or <term> TODO -->
+
+    <xsl:template match="tei:trailer">
+        <p data-tagname='p'>
+            <xsl:apply-templates />
+        </p>
+    </xsl:template>
+
+    <xsl:template match="cb:tt" />
+
+    <!-- TODO -->
+    <xsl:template match="tei:unclear">
+        <span>
+            <xsl:apply-templates />
+            ▆
         </span>
     </xsl:template>
-    
+
 </xsl:stylesheet>
