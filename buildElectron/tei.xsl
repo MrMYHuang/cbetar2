@@ -212,10 +212,36 @@
 
     <!-- TODO -->
     <xsl:template match="tei:unclear">
-        <span>
-            <xsl:apply-templates />
-            ▆
-        </span>
+        <xsl:variable name="guess">
+            <xsl:choose>
+                <xsl:when test="@cert='high'">
+                    <xsl:text disable-output-escaping="yes">&lt;span class='guess1' title='本字為推測字，信心程度：高'&gt;</xsl:text>
+                </xsl:when>
+                <xsl:when test="@cert='above_medium'">
+                    <xsl:text disable-output-escaping="yes">&lt;span class='guess2' title='本字為推測字，信心程度：中高'&gt;</xsl:text>
+                </xsl:when>
+                <xsl:when test="@cert='medium'">
+                    <xsl:text disable-output-escaping="yes">&lt;span class='guess3' title='本字為推測字，信心程度：中'&gt;</xsl:text>
+                </xsl:when>
+                <xsl:when test="@cert='low'">
+                    <xsl:text disable-output-escaping="yes">&lt;span class='guess4' title='本字為推測字，信心程度：低'&gt;</xsl:text>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:text disable-output-escaping="yes">&lt;span title='未知的文字'&gt;</xsl:text>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+
+        <xsl:value-of select="$guess" disable-output-escaping="yes" />
+        <xsl:choose>
+            <xsl:when test="boolean(./*)">
+                <xsl:apply-templates />
+            </xsl:when>
+            <xsl:otherwise>▆</xsl:otherwise>
+        </xsl:choose>
+        <xsl:text disable-output-escaping="yes">
+            &lt;/span&gt;
+        </xsl:text>
     </xsl:template>
 
 </xsl:stylesheet>
