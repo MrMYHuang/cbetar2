@@ -2,6 +2,7 @@ import * as libxslt from 'libxslt-myh';
 import { Document as XmlDoc, Element as XmlEle } from 'libxmljs';
 const libxmljs = libxslt.libxmljs;
 const fs = require('fs');
+import * as Globals from './Globals';
 
 var navDocBulei: XmlDoc;
 var navDocVol: XmlDoc;
@@ -76,6 +77,6 @@ export function fetchJuan(work: string, juan: string) {
 
     return {
         work_info,
-        results: [result],
+        results: [result.replace(/\.\.\/figures/g, `${Globals.localFileProtocolName}://${cbetaBookcaseDir}/CBETA/figures`)],
     };
 }

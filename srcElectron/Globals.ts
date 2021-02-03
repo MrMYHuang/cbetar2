@@ -1,0 +1,1 @@
+export const localFileProtocolName = 'safe-file-protocol'; 
