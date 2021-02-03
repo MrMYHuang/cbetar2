@@ -94,6 +94,35 @@ const template = [
     ]
   }),
   new MenuItem({
+    label: '編輯',
+    submenu: [
+      {
+        role: 'undo',
+        label: '還原',
+      },
+      {
+        role: 'redo',
+        label: '重作',
+      },
+      {
+        role: 'selectAll',
+        label: '全選',
+      },
+      {
+        role: 'cut',
+        label: '剪下',
+      },
+      {
+        role: 'copy',
+        label: '複製',
+      },
+      {
+        role: 'paste',
+        label: '貼上',
+      },
+    ]
+  }),
+  new MenuItem({
     label: '顯示',
     submenu: [
       {

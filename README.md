@@ -249,7 +249,8 @@ https://github.com/MrMYHuang/cbetar2/releases/tag/v11.0.3
 11. 合成語音選項在Android Chrome無效。( https://stackoverflow.com/a/61366224/631869 )
 
 ## <a id='history'>版本歷史</a>
-* Backend 11.0.4:
+* Backend 11.1.0:
+  * [新增] 支援編輯快速鍵，詳見選單列/編輯。
   * [修正] 離線DB經文圖片未顯示的問題。
   * [修正] 執行強制重新載入後，不會回復離線DB設定的問題。
   * [修正] Windows app加入開始畫面的圖示未佔滿動態磚的問題。
