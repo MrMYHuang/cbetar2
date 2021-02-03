@@ -148,6 +148,7 @@ function createWindow() {
     switch (args.event) {
       case 'ready':
         frontendIsReady = true;
+        loadSettings();
         mainWindow?.webContents.send('fromMain', { event: 'version', version: PackageInfos.version });
         break;
       case 'fetchCatalog':
@@ -169,8 +170,6 @@ function createWindow() {
   } else {
     mainWindow.loadURL('https://mrmyhuang.github.io');
   }
-
-  loadSettings();
 }
 
 // This method will be called when Electron has finished

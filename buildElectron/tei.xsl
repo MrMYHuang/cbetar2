@@ -6,7 +6,6 @@
         <html>
             <head>
                 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-                <title>長阿含經</title>
             </head>
             <body>
                 <div id='body' data-punc="CBETA">
@@ -76,7 +75,7 @@
         </p>
     </xsl:template>
 
-    <!-- <formula> -->
+    <!-- <formula> and <hi> -->
     <xsl:template match="tei:formula">
         <span>
             <xsl:apply-templates />
@@ -98,6 +97,10 @@
             <img src="{@url}" />
         </xsl:if>
     </xsl:template>
+
+    <!-- <head> TODO
+    <xsl:template match="tei:head">
+    </xsl:template> -->
 
     <xsl:template match="tei:note" />
     <xsl:template match="cb:t[not(@xml:lang='zh-Hant')]" />
