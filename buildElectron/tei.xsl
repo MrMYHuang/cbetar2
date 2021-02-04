@@ -3,6 +3,7 @@
     <xsl:output method="html" encoding="utf-8" indent="yes" />
 
     <xsl:variable name="spaces50" select="'　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　'" />
+    <xsl:variable name="BookId" select="/tei:TEI/tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:idno/tei:idno[@type='canon']/text()" />
 
     <xsl:template match="/">
         <html>
@@ -117,6 +118,15 @@
 
     <!-- TODO -->
     <xsl:template match="tei:lb">
+        <xsl:choose>
+            <xsl:when test="@type='old'" />
+            <xsl:when test="$BookId='X' and substring(@ed, 1, 1)='R'">
+                <span class='xr_head' data-linehead='{concat(@ed, "p")}'></span>
+            </xsl:when>
+            <xsl:when test="@ed!=$BookId" />
+            <xsl:otherwise>
+            </xsl:otherwise>
+        </xsl:choose>
         <span class="lb">
             <xsl:attribute name="id">
                 <xsl:value-of select="@n" />
