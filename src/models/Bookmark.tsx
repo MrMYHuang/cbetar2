@@ -14,7 +14,7 @@ export class Bookmark {
     work: Work | null | undefined = null;
     selectedText: string = '';
     epubcfi: string = '';
-    fileName: string = '';
+    fileName: string | null = '';
 
     constructor(json: Bookmark) {
         this.type = json.type;

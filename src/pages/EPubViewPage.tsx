@@ -275,7 +275,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         uuid: uuidStr,
         selectedText: selectedText,
         epubcfi: this.epubcfiFromSelectedString,
-        fileName: this.htmlFile || `${this.props.match.params.work}_juan${this.props.match.params.path}.html`,
+        fileName: this.props.cbetaOfflineDbMode ? null : this.htmlFile || `${this.props.match.params.work}_juan${this.props.match.params.path}.html`,
         work: Object.assign(this.state.workInfo, {
           title: this.htmlFile ? this.htmlTitle : this.state.workInfo.title,
           juan: this.props.match.params.path,

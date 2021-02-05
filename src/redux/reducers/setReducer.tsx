@@ -79,7 +79,7 @@ export default function reducer(state = {
                 const fileName = deletedBookmark.fileName;
                 const noJuanBookmarkUseTheFile = bookmarksTemp.find((b) => b.type === BookmarkType.JUAN && b.fileName === fileName) == null;
                 if (noJuanBookmarkUseTheFile)
-                  Globals.removeFileFromIndexedDB(fileName);
+                  Globals.removeFileFromIndexedDB(fileName!);
                 break;
               }
             }

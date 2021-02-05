@@ -112,11 +112,13 @@ class _WorkPage extends React.Component<PageProps, State> {
         console.error(new Error().stack);
       }
     }
-    this.setState({ showAddBookmarkDone: true });
   }
 
   async addBookmarkHandler() {
-    await this.saveJuans();
+    if (!this.props.cbetaOfflineDbMode) {
+      await this.saveJuans();
+    }
+    this.setState({ showAddBookmarkDone: true });
     this.props.dispatch({
       type: "ADD_BOOKMARK",
       bookmark: new Bookmark({

@@ -94,7 +94,9 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
         const res = await Globals.fetchJuan(work.work, fetchJuan, null, true);
         const fileName = Globals.getFileName(work.work, fetchJuan);
         // Update HTML.
-        Globals.saveFileToIndexedDB(fileName, res.htmlStr);
+        if (!this.props.cbetaOfflineDbMode) {
+          Globals.saveFileToIndexedDB(fileName, res.htmlStr);
+        }
         if (j === 0) {
           // Update bookmarks for once.
           this.updateBookmark(this.props.bookmarks, Object.assign(bookmarkWithHtml, { work: res.workInfo }));
@@ -112,7 +114,9 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
       let newWork = res.workInfo;
       newWork.juan = work.juan;
       // Update HTML.
-      Globals.saveFileToIndexedDB(fileName, res.htmlStr);
+      if (!this.props.cbetaOfflineDbMode) {
+        Globals.saveFileToIndexedDB(fileName, res.htmlStr);
+      }
       // Update bookmarks
       this.updateBookmark(this.props.bookmarks, Object.assign(bookmarkWithHtml, { work: newWork }));
       console.log(`File saved: ${fileName}`);
@@ -167,7 +171,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={informationCircle} slot='start' />
               <IonLabel className='ion-text-wrap uiFont'>使用CBETA離線經文資料檔</IonLabel>
-              <IonToggle slot='end' disabled checked={this.props.cbetaOfflineDbMode}/>
+              <IonToggle slot='end' disabled checked={this.props.cbetaOfflineDbMode} />
             </IonItem>
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
@@ -257,7 +261,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                           handler: async (value) => {
                             await Globals.clearAppData();
                             this.props.dispatch({ type: 'DEFAULT_SETTINGS' });
-                            while(document.body.classList.length > 0) {
+                            while (document.body.classList.length > 0) {
                               document.body.classList.remove(document.body.classList.item(0)!);
                             }
                             document.body.classList.toggle(`theme${this.props.theme}`, true);
@@ -369,7 +373,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                   if (this.props.scrollbarSize === value) {
                     return;
                   }
-                  
+
                   this.props.dispatch({
                     type: "SET_KEY_VAL",
                     key: 'scrollbarSize',
@@ -497,9 +501,9 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                     val: value,
                   });
                 }}>
-                  {
-                     Globals.zhVoices().map((v, i) =>  <IonSelectOption key={i} className='uiFont blackWhite printVar' value={v.voiceURI}>{v.name}</IonSelectOption>)
-                  }
+                {
+                  Globals.zhVoices().map((v, i) => <IonSelectOption key={i} className='uiFont blackWhite printVar' value={v.voiceURI}>{v.name}</IonSelectOption>)
+                }
               </IonSelect>
             </IonItem>
             <IonItem>
