@@ -37,9 +37,10 @@ export function init(cbetaBookcaseDirIn: string, isDevModeIn: boolean) {
 export function fetchCatalogs(path: string) {
     let subpaths = path.split('.');
     const catalogTypeIsBulei = subpaths.shift() === 'CBETA';
-    const catalogXPath = subpaths.map(s => +s).map(n => `[${n}]/ol/li`).join('');
+    const subcatalogsXPath = subpaths.map(s => +s).map(n => `[${n}]/ol/li`).join('');
+    const catalogXPath = subpaths.map(s => +s).map(n => `li[${n}]/ol`).join('');
     try {
-        const results = (catalogTypeIsBulei ? navDocBulei : navDocVol).find(`//nav/li${catalogXPath}`).map((node, i) => {
+        const results = (catalogTypeIsBulei ? navDocBulei : navDocVol).find(`//nav/li${subcatalogsXPath}`).map((node, i) => {
             const n = `${path}.${(i + 1).toString().padStart(3, '0')}`;
             const ele = node.child(0) as XmlEle;
             const label = ele.text();
@@ -52,7 +53,8 @@ export function fetchCatalogs(path: string) {
             }
             return { n, label };
         });
-        return { results };
+        const catalogLabel = (catalogTypeIsBulei ? navDocBulei : navDocVol).get(`//nav/${catalogXPath}/../span`)?.text() || '';
+        return { label: catalogLabel, results };
     } catch(error) {
         error.message = `path = ${path}\n${error.message}`;
         throw(error);

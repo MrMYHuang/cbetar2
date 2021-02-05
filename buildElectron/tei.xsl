@@ -121,17 +121,17 @@
         <xsl:choose>
             <xsl:when test="@type='old'" />
             <xsl:when test="$BookId='X' and substring(@ed, 1, 1)='R'">
-                <span class='xr_head' data-linehead='{concat(@ed, "p")}'></span>
+                <span class='xr_head' data-linehead='{concat(@ed, "p", @sn)}'></span>
             </xsl:when>
             <xsl:when test="@ed!=$BookId" />
             <xsl:otherwise>
+                <span class="lb">
+                    <xsl:attribute name="id">
+                        <xsl:value-of select="@n" />
+                    </xsl:attribute>
+                </span>
             </xsl:otherwise>
         </xsl:choose>
-        <span class="lb">
-            <xsl:attribute name="id">
-                <xsl:value-of select="@n" />
-            </xsl:attribute>
-        </span>
     </xsl:template>
 
     <xsl:template match="text()[preceding-sibling::tei:lb]">
