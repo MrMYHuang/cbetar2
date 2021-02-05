@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:cb="http://www.cbeta.org/ns/1.0">
-    <xsl:output method="html" encoding="utf-8" indent="yes" />
+    <xsl:output method="xml" encoding="utf-8" indent="yes" />
 
     <xsl:variable name="spaces50" select="'　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　'" />
     <xsl:variable name="BookId" select="/tei:TEI/tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:idno/tei:idno[@type='canon']/text()" />
@@ -120,23 +120,23 @@
     <xsl:template match="tei:lb">
         <xsl:choose>
             <xsl:when test="@type='old'" />
-            <xsl:when test="$BookId='X' and substring(@ed, 1, 1)='R'">
-                <span class='xr_head' data-linehead='{concat(@ed, "p", @sn)}'></span>
-            </xsl:when>
             <xsl:when test="@ed!=$BookId" />
             <xsl:otherwise>
                 <span class="lb">
                     <xsl:attribute name="id">
                         <xsl:value-of select="@n" />
                     </xsl:attribute>
-                    <xsl:apply-templates />
                 </span>
+                <xsl:apply-templates>
+                    <xsl:with-param name="lb" select="@n" />
+                </xsl:apply-templates>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
 
-    <xsl:template match="text()[preceding-sibling::tei:lb]">
-        <span class="t" l="{preceding-sibling::tei:lb[@n]}">
+    <xsl:template match="text()">
+        <xsl:param name="lb" />
+        <span class="t">
             <xsl:copy />
         </span>
     </xsl:template>
@@ -149,7 +149,25 @@
     <!-- TODO -->
     <xsl:template match="cb:mulu"></xsl:template>
 
-    <xsl:template match="tei:note" />
+    <xsl:template match="tei:note">
+        <xsl:choose>
+            <xsl:when test="boolean(@place)">
+                <xsl:choose>
+                    <xsl:when test="@place='interlinear'">
+                        <span class='interlinear'>
+                            <xsl:apply-templates />
+                        </span>
+                    </xsl:when>
+                    <xsl:when test="@place='inline' or @place='inline2'">
+                        <span class='doube-line-note'>
+                            <xsl:apply-templates />
+                        </span>
+                    </xsl:when>
+                    <xsl:otherwise></xsl:otherwise>
+                </xsl:choose>
+            </xsl:when>
+        </xsl:choose>
+    </xsl:template>
 
     <xsl:template match="tei:p">
         <p>
@@ -162,6 +180,25 @@
         </p>
     </xsl:template>
 
+    <xsl:template match="tei:t">
+        <xsl:choose>
+            <xsl:when test="boolean(@place) and contains(@place, 'foot')"></xsl:when>
+            <xsl:otherwise>
+                <xsl:variable name="tt" select="ancestor::tei:tt" />
+                <xsl:choose>
+                    <xsl:when test="boolean($tt)">
+                        <xsl:apply-templates />
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <span style='{@style}'>
+                            <xsl:apply-templates />
+                        </span>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
     <xsl:template match="tei:pb">
         <xsl:apply-templates />
     </xsl:template>
@@ -171,10 +208,22 @@
 
     <!-- <ref> TODO -->
 
-    <xsl:template match="tei:row">
-        <tr data-tagname='tr'>
+    <xsl:template match="tei:table">
+        <div class="{concat(@rend, '; bip-table')}" style="{@style}">
             <xsl:apply-templates />
-        </tr>
+        </div>
+    </xsl:template>
+
+    <xsl:template match="tei:row">
+        <div class='bip-table-row'>
+            <xsl:apply-templates />
+        </div>
+    </xsl:template>
+
+    <xsl:template match="tei:cell">
+        <div class="{concat(@rend, '; bip-table-cell')}" style="{@style}" rowspan="{@rows}" colspan="{@cols}">
+            <xsl:apply-templates />
+        </div>
     </xsl:template>
 
     <xsl:template match="tei:seg">
@@ -202,14 +251,6 @@
     </xsl:template>
 
     <xsl:template match="cb:t[not(@xml:lang='zh-Hant')]" />
-
-    <xsl:template match="tei:table">
-        <table data-tagname='table' border='1' style="{concat(@rend, ';', @style)}">
-            <tbody data-tagname='tbody'>
-                <xsl:apply-templates />
-            </tbody>
-        </table>
-    </xsl:template>
 
     <!-- <text> or <term> TODO -->
 

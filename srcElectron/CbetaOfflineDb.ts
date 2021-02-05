@@ -29,7 +29,7 @@ export function init(cbetaBookcaseDirIn: string, isDevModeIn: boolean) {
         catalogs.map((l: string) => {
             const f = l.split(/\s*,\s*/);
             const file = `${f[0]}${f[4]}`;
-            return [file, { file, work: `${f[0]}${f[4]}`, juan: f[5], juan_start: 1, category: f[1], creators: f[7], title: f[6], id: f[0], vol: f[3], sutra: f[4] }];
+            return [file, { file, work: `${f[0]}${f[4]}`, juan: f[5], juan_start: 1, category: f[1], creators: f[7], title: f[6], id: f[0], vol: `${f[0]}${f[3]}`, sutra: f[4] }];
         })
     );
 }
@@ -55,9 +55,9 @@ export function fetchCatalogs(path: string) {
         });
         const catalogLabel = (catalogTypeIsBulei ? navDocBulei : navDocVol).get(`//nav/${catalogXPath}/../span`)?.text() || '';
         return { label: catalogLabel, results };
-    } catch(error) {
+    } catch (error) {
         error.message = `path = ${path}\n${error.message}`;
-        throw(error);
+        throw (error);
     }
 }
 
@@ -71,14 +71,44 @@ export function fetchWork(path: string) {
 export function fetchJuan(work: string, juan: string) {
     const work_info = fetchWork(work).results[0];
     const stylesheetString = fs.readFileSync(`${isDevMode ? '.' : process.resourcesPath}/buildElectron/tei.xsl`).toString();
-    const documentString = fs.readFileSync(`${cbetaBookcaseDir}/CBETA/XML/${work_info.id}/${work_info.id}${work_info.vol}/${work_info.id}${work_info.vol}n${work_info.sutra}_${juan.toString().padStart(3, '0')}.xml`).toString();
+    const documentString = fs.readFileSync(`${cbetaBookcaseDir}/CBETA/XML/${work_info.id}/${work_info.vol}/${work_info.vol}n${work_info.sutra}_${juan.toString().padStart(3, '0')}.xml`).toString();
 
     const stylesheet = libxslt.parse(stylesheetString);
-    const result = stylesheet.apply(documentString);
+    const xsltResult = stylesheet.apply(documentString);
 
+    let xhtmlDoc = libxmljs.parseXml(xsltResult);
+    const newRoot = elementTPostprocessing(xhtmlDoc.root()!);
+    const result = newRoot.toString({
+        type: 'html',
+        declaration: true,
+        selfCloseEmpty: true,
+        whitespace: true,
+    });
 
     return {
         work_info,
         results: [result.replace(/\.\.\/figures/g, `${Globals.localFileProtocolName}://${cbetaBookcaseDir}/CBETA/figures`)],
     };
+}
+
+let lb = '';
+function elementTPostprocessing(node: XmlEle): XmlEle {
+    const c = node;
+    if (c.type() === 'element') {
+        let c2 = c as XmlEle;
+        if (c2.name() === 'span' && c2.attr('class')?.value() === 'lb') {
+            lb = c2.attr('id')!.value();
+            return elementTPostprocessing(c2.nextSibling() as XmlEle);
+        } else if (c2.name() === 'span' && c2.attr('class')?.value() === 't') {
+            c2.attr({ 'l': lb });
+            return elementTPostprocessing(c2.nextSibling() as XmlEle);
+        } else {
+            c2.childNodes().forEach(cn => {
+                return elementTPostprocessing(cn as XmlEle);
+            })
+            return c2;
+        }
+    } else {
+        return c;
+    }
 }
