@@ -129,6 +129,7 @@
                     <xsl:attribute name="id">
                         <xsl:value-of select="@n" />
                     </xsl:attribute>
+                    <xsl:apply-templates />
                 </span>
             </xsl:otherwise>
         </xsl:choose>

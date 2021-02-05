@@ -38,7 +38,7 @@ export function fetchCatalogs(path: string) {
     let subpaths = path.split('.');
     const catalogTypeIsBulei = subpaths.shift() === 'CBETA';
     const subcatalogsXPath = subpaths.map(s => +s).map(n => `[${n}]/ol/li`).join('');
-    const catalogXPath = subpaths.map(s => +s).map(n => `li[${n}]/ol`).join('');
+    const catalogXPath = subpaths.map(s => +s).map(n => `li[${n}]/ol`).join('/');
     try {
         const results = (catalogTypeIsBulei ? navDocBulei : navDocVol).find(`//nav/li${subcatalogsXPath}`).map((node, i) => {
             const n = `${path}.${(i + 1).toString().padStart(3, '0')}`;
