@@ -97,7 +97,7 @@ function elementTPostprocessing(node: XmlEle): XmlEle {
     if (c.type() === 'element') {
         let c2 = c as XmlEle;
         if (c2.name() === 'span' && c2.attr('class')?.value() === 'lb') {
-            lb = c2.attr('id')!.value();
+            lb = c2.attr('l')!.value();
             return elementTPostprocessing(c2.nextSibling() as XmlEle);
         } else if (c2.name() === 'span' && c2.attr('class')?.value() === 't') {
             c2.attr({ 'l': lb });

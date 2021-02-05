@@ -4,6 +4,7 @@
 
     <xsl:variable name="spaces50" select="'　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　'" />
     <xsl:variable name="BookId" select="/tei:TEI/tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:idno/tei:idno[@type='canon']/text()" />
+    <xsl:variable name="TeiId" select="/tei:TEI/@xml:id" />
 
     <xsl:template match="/">
         <html>
@@ -124,6 +125,9 @@
             <xsl:otherwise>
                 <span class="lb">
                     <xsl:attribute name="id">
+                        <xsl:value-of select="concat($TeiId, '_p', @n)" />
+                    </xsl:attribute>
+                    <xsl:attribute name="l">
                         <xsl:value-of select="@n" />
                     </xsl:attribute>
                 </span>
