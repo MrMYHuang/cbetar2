@@ -1193,7 +1193,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
                   if (startLine !== endLine) {
                     lineInfo += `-${endLineModified}`;
                   }
-                  const citation = `《${this.state.workInfo.title}》卷${this.props.match.params.path}：「${selectedText}」(CBETA, ${this.state.workInfo.vol}, no. ${/[^0-9]*(.*)/.exec(this.state.workInfo.work)![1]}, p. ${lineInfo})`;
+                  const citation = `《${this.state.workInfo.title}》卷${this.props.match.params.path}：「${selectedText}」(CBETA, ${this.state.workInfo.vol}, no. ${+(/[^0-9]*(.*)/.exec(this.state.workInfo.work)![1])}, p. ${lineInfo})`;
                   Globals.copyToClipboard(citation);
                   this.setState({ showToast: true, toastMessage: '已複製到剪貼簿！' });
                 } else {
