@@ -4,9 +4,10 @@ const libxmljs = libxslt.libxmljs;
 const fs = require('fs');
 import * as Globals from './Globals';
 
-var navDocBulei: XmlDoc;
-var navDocVol: XmlDoc;
-var catalogs: any;
+let navDocBulei: XmlDoc;
+let navDocVol: XmlDoc;
+let catalogs: any;
+let spines: Array<any>;
 let cbetaBookcaseDir: string;
 let isDevMode: boolean = false;
 export function init(cbetaBookcaseDirIn: string, isDevModeIn: boolean) {
@@ -32,6 +33,13 @@ export function init(cbetaBookcaseDirIn: string, isDevModeIn: boolean) {
             return [file, { file, work: `${f[0]}${f[4]}`, juan: f[5], juan_start: 1, category: f[1], creators: f[7], title: f[6], id: f[0], vol: `${f[0]}${f[3]}`, sutra: f[4] }];
         })
     );
+
+    const spinesString = fs.readFileSync(`${cbetaBookcaseDir}/CBETA/spine.txt`).toString();
+    spines = spinesString.split(/\r\n/);
+    spines = spines.map((l: string) => {
+        const f = l.split(/\s*,\s*/);
+        return f[0];
+    })
 }
 
 export function fetchCatalogs(path: string) {
@@ -62,8 +70,14 @@ export function fetchCatalogs(path: string) {
 }
 
 export function fetchWork(path: string) {
+    const pathFieldMatches = /([A-Z]*)(.*)/.exec(path)!;
+    const bookId = pathFieldMatches[1];
+    const sutra = pathFieldMatches[2];
     let work = catalogs[path];
-    work.juan_list = Array.from({ length: work.juan }, (v, i) => i + 1).join(',');
+    // E.g. XML/I/I01/I01n0012_001.xml.
+    const re = new RegExp(`${bookId}[^n]*n${sutra}`);
+    const juans = spines.filter(s => re.test(s)).map(s => +(new RegExp(`${bookId}[^n]*n${sutra}_(.*)\.xml`).exec(s)![1]));
+    work.juan_list = juans.join(',');
     work.work = path;
     return { results: [work] };
 }
