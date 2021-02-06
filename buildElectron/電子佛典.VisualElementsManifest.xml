@@ -3,6 +3,6 @@
         ShowNameOnSquare150x150Logo="off"
         ForegroundText='light'
         BackgroundColor='#FFFFFF'
-        Square150x150Logo="resources/buildElectron/icon.png"
-        Square70x70Logo="resources/buildElectron/icon.png"/>
+        Square150x150Logo="icon.png"
+        Square70x70Logo="icon.png"/>
 </Application>
