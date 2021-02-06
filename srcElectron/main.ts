@@ -8,6 +8,8 @@ const PackageInfos = require('../package.json');
 import * as cbetaOfflineDb from './CbetaOfflineDb';
 import * as Globals from './Globals';
 
+const isStoreApp = process.mas || process.windowsStore || fs.existsSync('IsSnap.txt');
+
 const cbetar2SettingsPath = `${os.homedir()}/.cbetar2`;
 const backendAppSettingsFile = `${cbetar2SettingsPath}/BackendAppSettings.json`;
 
@@ -20,7 +22,7 @@ function isDevMode() {
   return !app.isPackaged || (process as any).defaultApp;
 }
 
-if (!fs.existsSync(cbetar2SettingsPath)) {
+if (!isStoreApp && !fs.existsSync(cbetar2SettingsPath)) {
   fs.mkdirSync(cbetar2SettingsPath);
 }
 
@@ -177,7 +179,7 @@ function createWindow() {
     switch (args.event) {
       case 'ready':
         frontendIsReady = true;
-        loadSettings();
+        !isStoreApp && loadSettings();
         mainWindow?.webContents.send('fromMain', { event: 'version', version: PackageInfos.version });
         break;
       case 'fetchCatalog':
@@ -207,16 +209,18 @@ function createWindow() {
 app.whenReady().then(() => {
   createWindow();
 
-  protocol.registerFileProtocol(Globals.localFileProtocolName, (request, callback) => {
-    const url = request.url.replace(`${Globals.localFileProtocolName}://`, '')
-    try {
-      return callback(decodeURIComponent(url))
-    }
-    catch (error) {
-      // Handle the error as needed
-      console.error(error)
-    }
-  });
+  if (!isStoreApp) {
+    protocol.registerFileProtocol(Globals.localFileProtocolName, (request, callback) => {
+      const url = request.url.replace(`${Globals.localFileProtocolName}://`, '')
+      try {
+        return callback(decodeURIComponent(url))
+      }
+      catch (error) {
+        // Handle the error as needed
+        console.error(error)
+      }
+    });
+  }
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the

@@ -5,6 +5,9 @@
     "buildElectron/**/*",
     "package.json"
   ],
+  "extraFiles": [
+    "electronBuilderConfigs/IsSnap.txt",
+  ],
   "extraResources": [
     "buildElectron/*.xsl"
   ],
