@@ -33,7 +33,7 @@
     "test": "react-app-rewired test",
     "eject": "react-scripts eject",
     "build-electron": "tsc -b tsconfigElectron.json",
-    "build-electron-store": "tsc -b tsconfigElectronStore.json && mv buildElectron/mainStore.js buildElectron/main.js",
+    "build-electron-store": "tsc -b tsconfigElectron.json && mv buildElectron/mainStore.js buildElectron/main.js",
     "start-electron": "npm run build-electron && electron .",
     "dist-win": "npm run build-electron && electron-builder -w -c electronBuilderConfigs/win.json",
     "dist-deb": "npm run build-electron && electron-builder -l deb -c electronBuilderConfigs/deb.json",
