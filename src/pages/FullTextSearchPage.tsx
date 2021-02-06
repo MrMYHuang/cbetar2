@@ -40,16 +40,21 @@ class _SearchPage extends React.Component<PageProps, State> {
 
   ionViewWillEnter() {
     //console.log( 'view will enter' );
+    this.search(this.props.match.params.keyword, true);
   }
 
   componentDidMount() {
-    this.search(this.props.match.params.keyword);
   }
 
   page = 0;
   rows = 20;
-  async search(keyword: string) {
+  async search(keyword: string, newSearch: boolean = false) {
     this.setState({ isLoading: true });
+    if (newSearch) {
+      this.page = 0;
+      this.setState({ searches: [] });
+    }
+    
     try {
       console.log(`Loading page ${this.page}`);
 

@@ -2,7 +2,7 @@
 
 ## <a id='feature'>特色</a>
 
-搜尋目錄、全文檢索、書籤功能、網址分享、離線瀏覽、語音播放、佛學詞典、佈景主題切換、經文分頁、字型調整、楷書字型、直排文字、列印經文/抄經本、app更新、跨平台、無廣告、開放原始碼。
+搜尋目錄、全文檢索、書籤功能、網址分享、離線瀏覽、語音播放、佛學詞典、佈景主題切換、經文分頁、字型調整、楷書字型、直排文字、列印經文/抄經本、app更新、連線/離線DB支援、跨平台、無廣告、開放原始碼。
 
 ## 說明
 
@@ -17,7 +17,7 @@ CBETA電子佛典閱讀器2(非官方) (Chinese Buddhist Electronic Text Associa
     * 此版本不須先下載CBETA離線經文資料檔，但要作離線瀏覽要把經文加至書籤。
     * 安裝方式：瀏覽器安裝、商店安裝。支援多種平台。
   2. 離線DB版app：PWA + cbetar2 backend
-    * 此版本預設與連線版相同。要切為離線DB模式，要先下載、解壓<a href='http://www.cbeta.org/download/cbreader.htm'>CBETA離線經文資料檔</a>，可離線瀏覽目錄、經文。
+    * 此版本預設與連線版相同，多了離線DB的支援。要切為離線DB模式，要先下載、解壓<a href='http://www.cbeta.org/download/cbreader.htm'>CBETA離線經文資料檔</a>，可離線瀏覽目錄、經文。
     * 安裝方式：下載安裝檔案安裝。支援Windows 7+, Linux, macOS 10.10+。
     * 設定：啟動app後，執行選單/檔案/設定Bookcase目錄。
 
@@ -230,7 +230,8 @@ https://github.com/MrMYHuang/cbetar2/releases/tag/v12.0.0
   2. 全文搜索
   3. 查字典
   4. 查詞典
-  5. 初次啟動app仍須網路連線(自動下載前端app)。
+  5. 經文顯示缺字
+  6. 初次啟動app仍須網路連線(自動下載前端app)。
 
 ## <a id='knownIssues'>已知問題</a>
 1. iOS Safari在單頁模式下，捲軸無法顯示。
@@ -246,7 +247,8 @@ https://github.com/MrMYHuang/cbetar2/releases/tag/v12.0.0
 11. 合成語音選項在Android Chrome無效。( https://stackoverflow.com/a/61366224/631869 )
 
 ## <a id='history'>版本歷史</a>
-* PWA 4.21.4:
+* PWA 4.21.5:
+  * [修正] 搜尋經典目錄或全文檢索，顯示的卻是上一次的搜尋結果的問題。
   * [調整] 搜尋經典UI按鈕順序。
 * 2021.02.05:
   * PWA 4.21.3:
