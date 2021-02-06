@@ -39,10 +39,27 @@
     <!-- biblScope (ignored) -->
 
     <!-- <byline> -->
+    <xsl:template match="tei:byline">
+        <p class="{concat(@byline, '', @rend)}">
+            <xsl:apply-templates />
+            <xsl:text>&#xd;&#xa;</xsl:text>
+        </p>
+    </xsl:template>
 
     <!-- <caesura> -->
 
-    <!-- <div> -->
+    <xsl:template match="cb:div">
+        <xsl:choose>
+            <xsl:when test="boolean(@type) or boolean(@rend)">
+                <div class="{concat(@type, ' ', @rend)}" >
+                    <xsl:apply-templates />
+                </div>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:apply-templates />
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
 
     <xsl:template match="cb:docNumber">
         <p class='juannum' data-tagname='p'>
@@ -94,10 +111,6 @@
         </xsl:if>
     </xsl:template>
 
-    <!-- TODO
-    <xsl:template match="tei:head">
-    </xsl:template> -->
-
     <xsl:template match="tei:item">
         <li data-tagname="li">
             <span style="{concat(@rend, ';', @style)}">
@@ -110,12 +123,24 @@
     </xsl:template>
 
     <xsl:template match="cb:juan">
-        <span class='juanname'>
+        <p class='juan'>
             <xsl:apply-templates />
-        </span>
+        </p>
     </xsl:template>
 
-    <!-- <l> TODO -->
+    <!-- TODO -->
+    <xsl:template match="tei:head">
+        <p class='head'>
+            <xsl:apply-templates />
+        </p>
+    </xsl:template>
+
+    <!-- TODO -->
+    <xsl:template match="tei:l">
+        <div class='lg-row'>
+            <xsl:apply-templates />
+        </div>
+    </xsl:template>
 
     <!-- TODO -->
     <xsl:template match="tei:lb">

@@ -21,6 +21,7 @@ class SearchAlert extends React.Component<PageProps> {
     return (
       <IonAlert
         cssClass='uiFont'
+        backdropDismiss={false}
         isOpen={this.props.showSearchAlert}
         header={'搜尋經書'}
         subHeader='輸入搜尋'

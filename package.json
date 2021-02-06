@@ -1,8 +1,8 @@
 {
   "name": "cbetar2",
   "productName": "電子佛典",
-  "pwaVersion": "4.21.0",
-  "version": "11.0.2",
+  "pwaVersion": "4.21.2",
+  "version": "12.0.0",
   "license": "MIT",
   "keywords": [
     "CBETA",
