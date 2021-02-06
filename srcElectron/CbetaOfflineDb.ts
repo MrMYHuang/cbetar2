@@ -96,12 +96,18 @@ function elementTPostprocessing(node: XmlEle): XmlEle {
     const c = node;
     if (c.type() === 'element') {
         let c2 = c as XmlEle;
-        if (c2.name() === 'span' && c2.attr('class')?.value() === 'lb') {
-            lb = c2.attr('l')!.value();
-            return elementTPostprocessing(c2.nextSibling() as XmlEle);
-        } else if (c2.name() === 'span' && c2.attr('class')?.value() === 't') {
-            c2.attr({ 'l': lb });
-            return elementTPostprocessing(c2.nextSibling() as XmlEle);
+        if (c2.name() === 'span') {
+            if (c2.attr('class')?.value() === 'lb') {
+                lb = c2.attr('l')!.value();
+            } else if (c2.attr('class')?.value() === 't') {
+                c2.attr({ 'l': lb });
+            }
+            const nextSibling = c2.nextSibling() as XmlEle;
+            if (nextSibling) {
+                return elementTPostprocessing(nextSibling);
+            } else {
+                return c2;
+            }
         } else {
             c2.childNodes().forEach(cn => {
                 return elementTPostprocessing(cn as XmlEle);

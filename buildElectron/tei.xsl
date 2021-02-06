@@ -148,7 +148,20 @@
     <!-- <lem> TODO -->
     <!-- <lg> TODO -->
 
-    <xsl:template match="tei:list"></xsl:template>
+    <xsl:template match="tei:list">
+        <xsl:choose>
+            <xsl:when test="boolean(descendant::item/@n)">
+                <ul class="{@rend}" style="list-style-type:none;margin-left:0;padding-left:0">
+                    <xsl:apply-templates />
+                </ul>
+            </xsl:when>
+            <xsl:otherwise>
+                <ul class="{@rend}">
+                    <xsl:apply-templates />
+                </ul>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
 
     <!-- TODO -->
     <xsl:template match="cb:mulu"></xsl:template>
