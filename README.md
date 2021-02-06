@@ -214,7 +214,7 @@ https://MrMYHuang.github.io
 
 ### 下載安裝檔
 請至此頁面下載最新版安裝檔：
-https://github.com/MrMYHuang/cbetar2/releases/tag/v11.0.3
+https://github.com/MrMYHuang/cbetar2/releases/tag/v12.0.0
 
 支援的64-bit作業系統如下(Android為連線DB版app，其他都是離線DB版app)：
 
@@ -246,6 +246,8 @@ https://github.com/MrMYHuang/cbetar2/releases/tag/v11.0.3
 11. 合成語音選項在Android Chrome無效。( https://stackoverflow.com/a/61366224/631869 )
 
 ## <a id='history'>版本歷史</a>
+* PWA 4.21.4:
+  * [調整] 搜尋經典UI按鈕順序。
 * 2021.02.05:
   * PWA 4.21.3:
     * [修正] 離線DB經文加入書籤，經文被多餘的複製到IndexedDB的問題。

@@ -34,12 +34,6 @@ class SearchAlert extends React.Component<PageProps> {
         ]}
         buttons={[
           {
-            text: '取消',
-            role: 'cancel',
-            cssClass: 'secondary uiFont',
-            handler: () => this.props.finish(),
-          },
-          {
             text: '搜尋目錄',
             cssClass: 'primary uiFont',
             handler: (value) => {
@@ -54,7 +48,13 @@ class SearchAlert extends React.Component<PageProps> {
               this.props.finish();
               this.props.history.push(`/catalog/fulltextsearch/${value.name0}`);
             },
-          }
+          },
+          {
+            text: '取消',
+            role: 'cancel',
+            cssClass: 'secondary uiFont',
+            handler: () => this.props.finish(),
+          },
         ]}
       />
     );
