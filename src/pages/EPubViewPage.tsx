@@ -7,7 +7,7 @@ import * as uuid from 'uuid';
 import queryString from 'query-string';
 import './EPubViewPage.css';
 import Globals from '../Globals';
-import { bookmark, arrowBack, home, search, ellipsisHorizontal, ellipsisVertical, arrowForward, musicalNotes, stopCircle, book, shareSocial, print, refreshCircle, copy, arrowUp, arrowDown, musicalNote } from 'ionicons/icons';
+import { bookmark, arrowBack, home, search, ellipsisHorizontal, ellipsisVertical, arrowForward, musicalNotes, stopCircle, book, shareSocial, print, refreshCircle, copy, arrowUp, arrowDown, musicalNote, link } from 'ionicons/icons';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
 import { Work } from '../models/Work';
 import SearchAlert from '../components/SearchAlert';
@@ -1170,6 +1170,15 @@ class _EPubViewPage extends React.Component<PageProps, State> {
                 <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
                 <IonIcon icon={print} slot='start' />
                 <IonLabel className='ion-text-wrap uiFont'>列印</IonLabel>
+              </IonItem>
+
+              <IonItem button onClick={e => {
+                this.setState({ popover: { show: false, event: null } });
+                window.open(`https://cbetaonline.dila.edu.tw/zh/${this.props.match.params.work}_${this.props.match.params.path.padStart(3, '0')}`, '_bank');
+              }}>
+                <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
+                <IonIcon icon={link} slot='start' />
+                <IonLabel className='ion-text-wrap uiFont'>CBETA Online</IonLabel>
               </IonItem>
 
               <IonItem button onClick={ev => {

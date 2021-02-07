@@ -247,6 +247,8 @@ https://github.com/MrMYHuang/cbetar2/releases/tag/v12.0.0
 11. 合成語音選項在Android Chrome無效。( https://stackoverflow.com/a/61366224/631869 )
 
 ## <a id='history'>版本歷史</a>
+* PWA 4.22.0:
+  * [新增] 經文頁開啟CBETA Online經文功能。
 * PWA 4.21.5:
   * [修正] 搜尋經典目錄或全文檢索，顯示的卻是上一次的搜尋結果的問題。
   * [調整] 搜尋經典UI按鈕順序。
