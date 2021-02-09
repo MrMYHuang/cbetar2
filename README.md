@@ -214,7 +214,7 @@ https://MrMYHuang.github.io
 
 ### 下載安裝檔
 請至此頁面下載最新版安裝檔：
-https://github.com/MrMYHuang/cbetar2/releases/tag/v12.0.0
+https://github.com/MrMYHuang/cbetar2/releases/latest
 
 支援的64-bit作業系統如下(Android為連線DB版app，其他都是離線DB版app)：
 
