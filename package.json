@@ -1,8 +1,8 @@
 {
   "name": "cbetar2",
   "productName": "電子佛典",
-  "pwaVersion": "4.22.0",
-  "version": "12.0.1",
+  "pwaVersion": "4.23.0",
+  "version": "13.0.0",
   "license": "MIT",
   "keywords": [
     "CBETA",
@@ -49,8 +49,12 @@
     "extends": "react-app"
   },
   "dependencies": {
+    "@types/semver": "^7.3.4",
+    "axios": "^0.21.1",
     "electron-window-state": "^5.0.3",
-    "libxslt-myh": "^0.9.7"
+    "libxslt-myh": "^0.9.7",
+    "node-downloader-helper": "^1.0.17",
+    "semver": "^7.3.4"
   },
   "devDependencies": {
     "@ionic/react": "^5.5.3",
@@ -68,7 +72,6 @@
     "@types/react-router": "^5.1.8",
     "@types/react-router-dom": "^5.1.6",
     "@types/uuid": "^8.3.0",
-    "axios": "^0.21.1",
     "customize-cra": "^1.0.0",
     "electron": "^11.2.1",
     "electron-builder": "^22.9.1",

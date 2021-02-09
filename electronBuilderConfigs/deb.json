@@ -5,6 +5,13 @@
     "buildElectron/**/*",
     "package.json"
   ],
+  "extraFiles": [
+    {
+      "from": "electronBuilderConfigs",
+      "to": ".",
+      "filter": ["IsDeb.txt"]
+    }
+  ],
   "extraResources": [
     "buildElectron/*.xsl"
   ],

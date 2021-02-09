@@ -247,6 +247,11 @@ https://github.com/MrMYHuang/cbetar2/releases/latest
 11. 合成語音選項在Android Chrome無效。( https://stackoverflow.com/a/61366224/631869 )
 
 ## <a id='history'>版本歷史</a>
+* 2021.02.09:
+  * PWA 4.23.0:
+    * [新增] 支援檢查後端app下載進度顯示。
+  * Backend 13.0.0:
+    * [新增] 支援檢查後端app更新、下載。
 * PWA 4.22.0:
   * [新增] 經文頁開啟CBETA Online經文功能。
 * PWA 4.21.5:

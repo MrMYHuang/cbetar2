@@ -5,6 +5,7 @@ const path = require('path');
 import * as fs from 'fs';
 import * as os from 'os';
 const PackageInfos = require('../package.json');
+import * as update from './Update';
 import * as cbetaOfflineDb from './CbetaOfflineDb';
 import * as Globals from './Globals';
 
@@ -55,6 +56,7 @@ async function setCbetaBookcase() {
     }
   } else {
     dialog.showMessageBox({
+      type: 'info',
       message: '設定取消'
     });
   }
@@ -77,6 +79,13 @@ function loadSettings() {
       dialog.showErrorBox('目錄無效', '儲存的Bookcase目錄設定無效！請重新選擇Bookcase目錄。');
     }
   }
+}
+
+async function checkUpdate() {
+  const latestVersion = await update.lookupLatestVersion();
+  update.check(mainWindow!);
+  settings.lastCheckedVersion = latestVersion;
+  fs.writeFileSync(backendAppSettingsFile, JSON.stringify(settings));
 }
 
 const template = [
@@ -142,13 +151,17 @@ const template = [
         role: 'forceReload',
         label: '強制重新載入',
       },
+      {
+        label: '檢查後端app更新',
+        click: checkUpdate,
+      },
     ]
   }),
 ];
 const menu = Menu.buildFromTemplate(template)
 Menu.setApplicationMenu(menu)
 
-function createWindow() {
+async function createWindow() {
   frontendIsReady = false;
 
   let mainWindowState = windowStateKeeper({
@@ -173,11 +186,16 @@ function createWindow() {
   // Open the DevTools.
   //mainWindow.webContents.openDevTools()
 
-  ipcMain.on('toMain', (ev, args) => {
+  ipcMain.on('toMain', async (ev, args) => {
     switch (args.event) {
       case 'ready':
         frontendIsReady = true;
         loadSettings();
+        const latestVersion = await update.lookupLatestVersion();
+        // Ask for updating for each new version once.
+        if (settings.lastCheckedVersion !== latestVersion) {
+          checkUpdate();
+        }
         mainWindow?.webContents.send('fromMain', { event: 'version', version: PackageInfos.version });
         break;
       case 'fetchCatalog':

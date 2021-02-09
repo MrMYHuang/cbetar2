@@ -47,6 +47,7 @@ import DictionaryPage from './pages/DictionaryPage';
 import FullTextSearchPage from './pages/FullTextSearchPage';
 import ShareTextModal from './components/ShareTextModal';
 import WordDictionaryPage from './pages/WordDictionaryPage';
+import DownloadModal from './components/DownloadModal';
 
 const electronBackendApi: any = (window as any).electronBackendApi;
 
@@ -97,6 +98,7 @@ interface State {
   toastMessage: string;
   showUpdateAlert: boolean;
   showRestoreAppSettingsToast: boolean;
+  downloadModal: any;
 }
 
 class _App extends React.Component<PageProps> {
@@ -134,6 +136,12 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
             key: 'cbetaOfflineDbMode',
             val: data.isOn,
           });
+          break;
+        case 'DownloadingBackend':
+          this.setState({ downloadModal: { show: true, progress: data.progress / 100 } });
+          break;
+        case 'DownloadingBackendDone':
+          this.setState({ downloadModal: { show: false, progress: this.state.downloadModal.progress } });
           break;
       }
     });
@@ -183,6 +191,7 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
       showRestoreAppSettingsToast: (queryParams.settings != null && this.originalAppSettingsStr != null) || false,
       showToast: false,
       toastMessage: '',
+      downloadModal: { progress: 0, show: false }
     };
 
     serviceWorkCallbacks.onUpdate = (registration: ServiceWorkerRegistration) => {
@@ -382,6 +391,14 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
                 val: { show: false },
               });
             }, ...this.props
+          }}
+        />
+
+        <DownloadModal
+          {...{
+            progress: this.state.downloadModal.progress,
+            showModal: this.state.downloadModal.show,
+            ...this.props
           }}
         />
 

@@ -6,6 +6,11 @@
     "package.json"
   ],
   "extraResources": [
+    {
+      "from": "electronBuilderConfigs",
+      "to": ".",
+      "filter": ["IsMac.txt"]
+    },
     "buildElectron/*.xsl"
   ],
   "asarUnpack": [
