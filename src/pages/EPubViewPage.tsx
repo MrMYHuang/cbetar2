@@ -508,6 +508,10 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       font-family: ${getComputedStyle(document.body).getPropertyValue('--ion-font-family')};
       font-size: ${this.props.fontSize}px;
     }
+
+    .bold {
+      font-weight: 700;
+    }
     
     #back, #cbeta-copyright {
       display: ${this.props.showComments ? "block" : "none"};
