@@ -247,10 +247,11 @@ https://github.com/MrMYHuang/cbetar2/releases/latest
 11. 合成語音選項在Android Chrome無效。( https://stackoverflow.com/a/61366224/631869 )
 
 ## <a id='history'>版本歷史</a>
-* Backend 13.0.2:
+* Backend 13.0.4:
   * [修正] 經文文字間有多餘空白字元。
   * [修正] 部分缺字(g tag ref="#CB")未顯示問題。
   * [修正] 刪除書籤會出現錯誤的問題。
+  * [修正] 檢查更新下載的更新檔版本不正確的問題。
 * 2021.02.09:
   * PWA 4.23.0:
     * [新增] 支援檢查後端app下載進度顯示。

@@ -16,7 +16,13 @@
     }
   ],
   "extraResources": [
-    "buildElectron/*.xsl"
+    {
+      "from": "electronBuilderConfigs",
+      "to": ".",
+      "filter": ["IsWin.txt"]
+    },
+    "buildElectron/*.xsl",
+    "cbeta_gaiji/cbeta_gaiji.json"
   ],
   "asarUnpack": [
     "node_modules/node1-libxmljsmt-myh/**/*"

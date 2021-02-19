@@ -11,7 +11,8 @@
       "to": ".",
       "filter": ["IsMac.txt"]
     },
-    "buildElectron/*.xsl"
+    "buildElectron/*.xsl",
+    "cbeta_gaiji/cbeta_gaiji.json"
   ],
   "asarUnpack": [
     "node_modules/node1-libxmljsmt-myh/**/*"

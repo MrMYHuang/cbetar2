@@ -42,7 +42,7 @@ export function init(cbetaBookcaseDirIn: string, isDevModeIn: boolean) {
         return f[0];
     })
 
-    gaijis = JSON.parse(fs.readFileSync('cbeta_gaiji/cbeta_gaiji.json').toString());
+    gaijis = JSON.parse(fs.readFileSync(`${isDevMode ? '.' : process.resourcesPath}/cbeta_gaiji/cbeta_gaiji.json`).toString());
 }
 
 export function fetchCatalogs(path: string) {
