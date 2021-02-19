@@ -70,7 +70,11 @@ export default function reducer(state = {
                   const fileName = Globals.getFileName(work.work, juans[i]);
                   const noJuanBookmarkUseTheFile = bookmarksTemp.find((b) => b.type === BookmarkType.JUAN && b.fileName === fileName) == null;
                   if (noJuanBookmarkUseTheFile) {
-                    Globals.removeFileFromIndexedDB(fileName);
+                    try {
+                      Globals.removeFileFromIndexedDB(fileName);
+                    } catch (err) {
+                      console.error(err);
+                    }
                   }
                 }
                 break;
@@ -78,8 +82,13 @@ export default function reducer(state = {
               case BookmarkType.JUAN: {
                 const fileName = deletedBookmark.fileName;
                 const noJuanBookmarkUseTheFile = bookmarksTemp.find((b) => b.type === BookmarkType.JUAN && b.fileName === fileName) == null;
-                if (noJuanBookmarkUseTheFile)
-                  Globals.removeFileFromIndexedDB(fileName!);
+                if (noJuanBookmarkUseTheFile) {
+                  try {
+                    Globals.removeFileFromIndexedDB(fileName!);
+                  } catch (err) {
+                    console.error(err);
+                  }
+                }
                 break;
               }
             }

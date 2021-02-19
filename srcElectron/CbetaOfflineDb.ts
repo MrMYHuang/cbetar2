@@ -1,7 +1,7 @@
 import * as libxslt from 'libxslt-myh';
 import { Document as XmlDoc, Element as XmlEle } from 'libxmljs';
 const libxmljs = libxslt.libxmljs;
-const fs = require('fs');
+import * as fs from 'fs';
 import * as Globals from './Globals';
 
 let navDocBulei: XmlDoc;
@@ -10,6 +10,7 @@ let catalogs: any;
 let spines: Array<any>;
 let cbetaBookcaseDir: string;
 let isDevMode: boolean = false;
+let gaijis: any;
 export function init(cbetaBookcaseDirIn: string, isDevModeIn: boolean) {
     isDevMode = isDevModeIn;
     cbetaBookcaseDir = cbetaBookcaseDirIn;
@@ -40,6 +41,8 @@ export function init(cbetaBookcaseDirIn: string, isDevModeIn: boolean) {
         const f = l.split(/\s*,\s*/);
         return f[0];
     })
+
+    gaijis = JSON.parse(fs.readFileSync('cbeta_gaiji/cbeta_gaiji.json').toString());
 }
 
 export function fetchCatalogs(path: string) {
@@ -116,12 +119,17 @@ function elementTPostprocessing(node: XmlEle): XmlEle {
             } else if (c2.attr('class')?.value() === 't') {
                 c2.attr({ 'l': lb });
             }
-            const nextSibling = c2.nextSibling() as XmlEle;
-            if (nextSibling) {
-                return elementTPostprocessing(nextSibling);
-            } else {
-                return c2;
+            c2.childNodes().forEach(cn => {
+                return elementTPostprocessing(cn as XmlEle);
+            })
+            return c2;
+        } else if (c2.name() === 'g') {
+            const gaijiId = c2.attr('ref')?.value().substring(1)!;
+            if (/^CB/.test(gaijiId)) {
+                c2.name('span');
+                c2.text(gaijis[gaijiId].uni_char);
             }
+            return c2;
         } else {
             c2.childNodes().forEach(cn => {
                 return elementTPostprocessing(cn as XmlEle);

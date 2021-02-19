@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:cb="http://www.cbeta.org/ns/1.0">
-    <xsl:output method="xml" encoding="utf-8" indent="yes" />
+    <xsl:output method="xml" encoding="utf-8" indent="no" />
 
     <xsl:variable name="spaces50" select="'　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　'" />
     <xsl:variable name="BookId" select="/tei:TEI/tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:idno/tei:idno[@type='canon']/text()" />
@@ -103,7 +103,9 @@
     </xsl:template>
 
     <!-- TODO -->
-    <xsl:template match="tei:g"></xsl:template>
+    <xsl:template match="tei:g">
+        <g ref="{@ref}" />
+    </xsl:template>
 
     <xsl:template match="tei:graphic">
         <xsl:if test="boolean(@url)">
@@ -164,9 +166,8 @@
     </xsl:template>
 
     <xsl:template match="text()">
-        <xsl:param name="lb" />
         <span class="t">
-            <xsl:copy />
+            <xsl:value-of select="normalize-space()" />
         </span>
     </xsl:template>
 

@@ -69,14 +69,22 @@ async function saveFileToIndexedDB(fileName: string, data: any) {
 async function removeFileFromIndexedDB(fileName: string) {
   const dbOpenReq = indexedDB.open(cbetardb);
   return new Promise<void>((ok, fail) => {
-    dbOpenReq.onsuccess = async (ev: Event) => {
-      const db = dbOpenReq.result;
+    try {
+      dbOpenReq.onsuccess = (ev: Event) => {
+        const db = dbOpenReq.result;
 
-      const transWrite = db.transaction(["store"], 'readwrite')
-      const reqWrite = transWrite.objectStore('store').delete(fileName);
-      reqWrite.onsuccess = (_ev: any) => ok();
-      reqWrite.onerror = (_ev: any) => fail();
-    };
+        const transWrite = db.transaction(["store"], 'readwrite')
+        try {
+          const reqWrite = transWrite.objectStore('store').delete(fileName);
+          reqWrite.onsuccess = (_ev: any) => ok();
+          reqWrite.onerror = (_ev: any) => fail();
+        } catch (err) {
+          console.error(err);
+        }
+      };
+    } catch (err) {
+      fail(err);
+    }
   });
 }
 
