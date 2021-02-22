@@ -381,7 +381,11 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
     let htmlStrModifiedStyles = this.state.htmlStr!;
     if (this.props.rtlVerticalLayout) {
-      htmlStrModifiedStyles = htmlStrModifiedStyles.replace(/margin-left/g, 'margin-top');
+      htmlStrModifiedStyles = htmlStrModifiedStyles.replace(/(margin|border)-left/g, '$1-temp');
+      htmlStrModifiedStyles = htmlStrModifiedStyles.replace(/(margin|border)-bottom/g, '$1-left');
+      htmlStrModifiedStyles = htmlStrModifiedStyles.replace(/(margin|border)-right/g, '$1-bottom');
+      htmlStrModifiedStyles = htmlStrModifiedStyles.replace(/(margin|border)-top/g, '$1-right');
+      htmlStrModifiedStyles = htmlStrModifiedStyles.replace(/(margin|border)-temp/g, '$1-top');
     }
     /* else {
       htmlStrModifiedStyles = htmlStrModifiedStyles.replace(/margin-top/g, 'margin-left');

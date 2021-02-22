@@ -247,6 +247,8 @@ https://github.com/MrMYHuang/cbetar2/releases/latest
 11. 合成語音選項在Android Chrome無效。( https://stackoverflow.com/a/61366224/631869 )
 
 ## <a id='history'>版本歷史</a>
+* PWA 4.23.3:
+  * [修正] 修正經文直排顯示有跨欄表格的邊框問題，如《華雨集（二）》卷2：「先後的開合、增減，總列而比對如下：」(CBETA, Y26, no. 26, p. 145a11-12)
 * 2021.02.19:
   * PWA 4.23.2:
     * [修正] 刪除書籤會出現錯誤的問題。
