@@ -247,6 +247,12 @@ https://github.com/MrMYHuang/cbetar2/releases/latest
 11. 合成語音選項在Android Chrome無效。( https://stackoverflow.com/a/61366224/631869 )
 
 ## <a id='history'>版本歷史</a>
+* 2021.02.23:
+  * PWA 4.23.4:
+    * [新增] 更多知名經典。
+  * Backend 13.1.0:
+    * [新增] 網頁超連結使用系統瀏覽器開啟。
+    * [修正] 部分缺字(g tag ref="#CB")顯示異常問題。
 * PWA 4.23.3:
   * [修正] 修正經文直排顯示有跨欄表格的邊框問題，如《華雨集（二）》卷2：「先後的開合、增減，總列而比對如下：」(CBETA, Y26, no. 26, p. 145a11-12)
 * 2021.02.19:

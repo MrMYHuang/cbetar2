@@ -1,5 +1,5 @@
 // Modules to control application life and create native browser window
-import { app, BrowserWindow, ipcMain, Menu, MenuItem, dialog, protocol } from 'electron';
+import { app, BrowserWindow, ipcMain, Menu, MenuItem, dialog, protocol, shell } from 'electron';
 const windowStateKeeper = require('electron-window-state');
 const path = require('path');
 import * as fs from 'fs';
@@ -217,6 +217,12 @@ async function createWindow() {
   } else {
     mainWindow.loadURL('https://mrmyhuang.github.io');
   }
+
+  // Open web link by external browser.
+  mainWindow?.webContents.on('new-window', function(event, url) {
+    event.preventDefault();
+    shell.openExternal(url);
+ });
 }
 
 // This method will be called when Electron has finished
