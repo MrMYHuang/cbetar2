@@ -127,7 +127,7 @@ function elementTPostprocessing(node: XmlEle): XmlEle {
             const gaijiId = c2.attr('ref')?.value().substring(1)!;
             if (/^CB/.test(gaijiId)) {
                 c2.name('span');
-                c2.text(gaijis[gaijiId].uni_char);
+                c2.text(gaijis[gaijiId].uni_char || gaijis[gaijiId].composition);
             }
             return c2;
         } else {
