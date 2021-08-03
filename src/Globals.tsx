@@ -334,6 +334,9 @@ const Globals = {
   isTouchDevice: () => {
     return (isPlatform('ios') && !isMacCatalyst()) || isPlatform('android');
   },
+  isStoreApps: () => {
+    return isPlatform('ios') || isPlatform('android') || isPlatform('electron');
+  },
   fetchJuan,
   getFileName,
   getFileFromIndexedDB,

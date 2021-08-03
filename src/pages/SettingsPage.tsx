@@ -143,11 +143,13 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={shareSocial} slot='start' />
               <IonLabel className='ion-text-wrap uiFont' onClick={async e => {
+                // Disable app update for Mac App Store submission.
+                /*
                 const hasUpdate = await Globals.updateApp();
 
                 if (!hasUpdate) {
-                  this.setState({ showToast: true, toastMessage: 'App已是最新版' });
-                }
+                  this.setState({ showToast: true, toastMessage: 'App 已是最新版' });
+                }*/
               }}>PWA版本: <a href="https://github.com/MrMYHuang/cbetar2#history" target="_new">{PackageInfos.pwaVersion}</a></IonLabel>
               <IonButton fill='outline' shape='round' slot='end' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={e => {
                 this.props.dispatch({

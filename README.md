@@ -110,13 +110,6 @@ CBETA電子佛典閱讀器2(非官方) (Chinese Buddhist Electronic Text Associa
   2. 匯出app設定，同時也會匯出書籤資訊，可作備分。
   3. 匯入設定後，會重新下載離線經文檔。
 
-* App更新
-
-  此app不定期發佈更新，包含新功能或bug修正。注意!App檔案更新後，要關閉、重啟1次app或所有瀏覧器app分頁才會載入新版程式。目前支援2種更新方式:
-
-  1. App啟動: app啟動後，會自動檢查一次有無新版。
-  2. 手動: 至設定頁，按"電子佛典app版本"文字。
-
 * <a id='report'>App異常回報</a>
 
   App設定頁的異常回報鈕使用方法為：執行會造成app異常的步驟後，再至設定頁按下異常回報鈕，即會自動產生一封E-mail，包含異常的記錄，發送此E-mail給我們即可。
@@ -247,6 +240,10 @@ https://github.com/MrMYHuang/cbetar2/releases/latest
 11. 合成語音選項在Android Chrome無效。( https://stackoverflow.com/a/61366224/631869 )
 
 ## <a id='history'>版本歷史</a>
+* PWA 4.23.6:
+  * 移除 store apps 不必要的 app 安裝連結。
+  * 移除設定頁 app 更新通知功能，以符合 Mac App Store 上架規範。
+
 * 2021.02.23:
   * PWA 4.23.4:
     * [新增] 更多知名經典。

@@ -359,7 +359,7 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
             this.registrationNew?.installing?.postMessage({ type: 'SKIP_WAITING' });
             this.registrationNew?.waiting?.postMessage({ type: 'SKIP_WAITING' });
           }}
-          header={'發現app更新，避免運作異常，請重啟app或關閉相關分頁!然後可至設定頁檢查版本號。'}
+          header={'請重啟 app!'}
           buttons={[
             {
               text: '關閉',
