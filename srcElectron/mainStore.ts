@@ -1,5 +1,5 @@
 // Modules to control application life and create native browser window
-import { app, BrowserWindow, ipcMain, Menu, MenuItem, shell } from 'electron';
+import { app, BrowserWindow, dialog, ipcMain, Menu, MenuItem, shell } from 'electron';
 const windowStateKeeper = require('electron-window-state');
 const path = require('path');
 const PackageInfos = require('../package.json');
@@ -76,7 +76,7 @@ const template = [
 const menu = Menu.buildFromTemplate(template)
 Menu.setApplicationMenu(menu)
 
-function createWindow() {
+async function createWindow() {
 
   let mainWindowState = windowStateKeeper({
     defaultWidth: 1280,
@@ -110,10 +110,41 @@ function createWindow() {
 
   // and load the index.html of the app.
   //mainWindow.loadFile('index.html');
-  if (isDevMode()) {
-    mainWindow.loadURL('http://localhost:3000');
-  } else {
-    mainWindow.loadURL('https://mrmyhuang.github.io');
+  let loadUrlSuccess = false;
+  while (!loadUrlSuccess) {
+    try {
+      await new Promise<any>(async (ok, fail) => {
+        mainWindow?.webContents.once('did-finish-load', (res: any) => {
+          loadUrlSuccess = true;
+          mainWindow?.webContents.removeAllListeners();
+          ok('');
+        });
+        mainWindow?.webContents.once('did-fail-load', (event, errorCode, errorDescription) => {
+          fail(`Error ${errorCode}: ${errorDescription}`);
+        });
+
+        try {
+          if (isDevMode()) {
+            await mainWindow!.loadURL('http://localhost:3000');
+          } else {
+            await mainWindow.loadURL('https://mrmyhuang.github.io');
+          }
+        } catch (error) {
+          fail(error);
+        }
+      });
+    } catch (error) {
+      mainWindow?.webContents.removeAllListeners();
+      console.error(error);
+      const buttonId = dialog.showMessageBoxSync(mainWindow!, {
+        message: `網路連線異常，請重試！\n${error}`,
+        buttons: ['重試', '取消'],
+      })
+
+      if (buttonId === 1) {
+        loadUrlSuccess = true;
+      }
+    }
   }
 
   // Open web link by external browser.
