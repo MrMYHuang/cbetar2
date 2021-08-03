@@ -174,7 +174,7 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
     // Modify UI settings from query string.
     const queryParams = queryString.parse(this.props.location.search) as any;
     if (queryParams.settings) {
-      this.originalAppSettingsStr = localStorage.getItem('Settings.json');
+      this.originalAppSettingsStr = localStorage.getItem(Globals.storeFile);
       (queryParams.settings as string).split(',').forEach(setting => {
         const keyVal = setting.split('=');
         this.props.dispatch({

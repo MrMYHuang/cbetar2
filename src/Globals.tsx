@@ -8,6 +8,7 @@ const apiVersion = 'v1.2';
 const cbetaApiUrl = `https://cbdata.dila.edu.tw/${apiVersion}`;
 const dilaDictApiUrl = `https://glossaries.dila.edu.tw/search.json`;
 const cbetardb = 'cbetardb';
+const storeFile = 'Settings.json';
 const twKaiFontKey = 'twKaiFont';
 /* Font source: https://data.gov.tw/dataset/5961 */
 const twKaiFontPath = '/assets/TW-Kai-98_1.woff';
@@ -117,7 +118,7 @@ async function fetchJuan(work: string, juan: string, htmlFile: string | null, up
   } catch {
     // Ignore file not found.
   }
-  const settingsStr = localStorage.getItem('Settings.json');
+  const settingsStr = localStorage.getItem(storeFile);
 
   let workInfo = new Work({});
   let bookmark: Bookmark | undefined;
@@ -248,7 +249,7 @@ function zhVoices() {
 }
 
 const Globals = {
-  storeFile: 'Settings.json',
+  storeFile: storeFile,
   fontSizeNorm: 24,
   fontSizeLarge: 48,
   getLog,
