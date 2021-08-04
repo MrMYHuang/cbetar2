@@ -72,6 +72,26 @@ const template = [
       },
     ]
   }),
+  new MenuItem({
+    label: '視窗',
+    submenu: [
+      {
+        label: '最小化',
+        role: 'minimize'
+      },
+      process.platform === 'darwin' ?
+        {
+          label: '新視窗',
+          click: () => {
+            createWindow();
+          }
+        } : null,
+      {
+        label: '關閉視窗',
+        role: 'close'
+      }
+    ].filter(v => v != null) as any
+  }),
 ];
 const menu = Menu.buildFromTemplate(template)
 Menu.setApplicationMenu(menu)
