@@ -210,8 +210,10 @@ async function createWindow() {
     }
   });
 
-  // and load the index.html of the app.
-  //mainWindow.loadFile('index.html');
+  const clearListeners = () => {
+    mainWindow?.webContents.removeAllListeners('did-finish-load');
+    mainWindow?.webContents.removeAllListeners('did-fail-load');
+  }
 
   // and load the index.html of the app.
   //mainWindow.loadFile('index.html');
@@ -221,7 +223,7 @@ async function createWindow() {
       await new Promise<any>(async (ok, fail) => {
         mainWindow?.webContents.once('did-finish-load', (res: any) => {
           loadUrlSuccess = true;
-          mainWindow?.webContents.removeAllListeners();
+          clearListeners();
           ok('');
         });
         mainWindow?.webContents.once('did-fail-load', (event, errorCode, errorDescription) => {
@@ -239,7 +241,7 @@ async function createWindow() {
         }
       });
     } catch (error) {
-      mainWindow?.webContents.removeAllListeners();
+      clearListeners();
       console.error(error);
       const buttonId = dialog.showMessageBoxSync(mainWindow!, {
         message: `網路連線異常，請重試！\n${error}`,
