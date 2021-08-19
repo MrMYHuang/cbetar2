@@ -200,6 +200,9 @@ function enableAppLog() {
   console.error = function () {
     log += '----- Error ----\n';
     log += (Array.from(arguments)) + '\n';
+    if (arguments[0].isAxiosError) {
+      log += `URL: ${arguments[0].config.url}\n`;
+    }
     consoleError.apply(console, arguments as any);
   };
 }
