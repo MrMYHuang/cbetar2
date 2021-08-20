@@ -4,10 +4,10 @@ export class Settings {
     // version is the setting file version.
     version: number = 1;
     hasAppLog: boolean = true;
-    theme: number = 1;
+    theme: number = 0;
     paginated: boolean = true;
     rtlVerticalLayout: boolean = true;
-    scrollbarSize = 2;
+    scrollbarSize = 0;
     useFontKai = true;
     fontSize = 32;
     uiFontSize: number = 24;
