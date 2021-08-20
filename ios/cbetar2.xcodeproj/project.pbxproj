@@ -3,11 +3,11 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		358681412B0FEA8690503AF9 /* Pods_cbetar2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B6D97948BFCB757099CEFD6 /* Pods_cbetar2.framework */; };
+		13F0E54D26CF783500698892 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 13F0E54C26CF783500698892 /* SnapKit */; };
 		DB4B052A25946404001E907A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB4B052925946404001E907A /* AppDelegate.swift */; };
 		DB4B052C25946404001E907A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB4B052B25946404001E907A /* SceneDelegate.swift */; };
 		DB4B052E25946404001E907A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB4B052D25946404001E907A /* ViewController.swift */; };
@@ -36,9 +36,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		4AC6176924436031B7D9B0EA /* Pods-cbetar2.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-cbetar2.release.xcconfig"; path = "Target Support Files/Pods-cbetar2/Pods-cbetar2.release.xcconfig"; sourceTree = "<group>"; };
 		7B6D97948BFCB757099CEFD6 /* Pods_cbetar2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_cbetar2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		808D74CA25BE74245E8F59A1 /* Pods-cbetar2.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-cbetar2.debug.xcconfig"; path = "Target Support Files/Pods-cbetar2/Pods-cbetar2.debug.xcconfig"; sourceTree = "<group>"; };
 		DB4B052625946404001E907A /* 電子佛典.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "電子佛典.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB4B052925946404001E907A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DB4B052B25946404001E907A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -61,7 +59,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				358681412B0FEA8690503AF9 /* Pods_cbetar2.framework in Frameworks */,
+				13F0E54D26CF783500698892 /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -82,15 +80,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		34B377E363D6A505E1AD6B55 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				808D74CA25BE74245E8F59A1 /* Pods-cbetar2.debug.xcconfig */,
-				4AC6176924436031B7D9B0EA /* Pods-cbetar2.release.xcconfig */,
-			);
-			path = Pods;
-			sourceTree = "<group>";
-		};
 		C3CF6985895959E1A821B65A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -106,7 +95,6 @@
 				DB4B053F2594640B001E907A /* cbetar2Tests */,
 				DB4B054A2594640B001E907A /* cbetar2UITests */,
 				DB4B052725946404001E907A /* Products */,
-				34B377E363D6A505E1AD6B55 /* Pods */,
 				C3CF6985895959E1A821B65A /* Frameworks */,
 			);
 			sourceTree = "<group>";
@@ -161,17 +149,18 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = DB4B05502594640B001E907A /* Build configuration list for PBXNativeTarget "cbetar2" */;
 			buildPhases = (
-				F61CF96548C0360D174B55C1 /* [CP] Check Pods Manifest.lock */,
 				DB4B052225946404001E907A /* Sources */,
 				DB4B052325946404001E907A /* Frameworks */,
 				DB4B052425946404001E907A /* Resources */,
-				72991BFA8E161086F2E706BB /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = cbetar2;
+			packageProductDependencies = (
+				13F0E54C26CF783500698892 /* SnapKit */,
+			);
 			productName = cbetar2;
 			productReference = DB4B052625946404001E907A /* 電子佛典.app */;
 			productType = "com.apple.product-type.application";
@@ -243,6 +232,9 @@
 				Base,
 			);
 			mainGroup = DB4B051D25946404001E907A;
+			packageReferences = (
+				13F0E54B26CF783500698892 /* XCRemoteSwiftPackageReference "SnapKit" */,
+			);
 			productRefGroup = DB4B052725946404001E907A /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -280,48 +272,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		72991BFA8E161086F2E706BB /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-cbetar2/Pods-cbetar2-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-cbetar2/Pods-cbetar2-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-cbetar2/Pods-cbetar2-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		F61CF96548C0360D174B55C1 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-cbetar2-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		DB4B052225946404001E907A /* Sources */ = {
@@ -505,7 +455,6 @@
 		};
 		DB4B05512594640B001E907A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 808D74CA25BE74245E8F59A1 /* Pods-cbetar2.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -531,7 +480,6 @@
 		};
 		DB4B05522594640B001E907A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4AC6176924436031B7D9B0EA /* Pods-cbetar2.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -679,6 +627,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		13F0E54B26CF783500698892 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		13F0E54C26CF783500698892 /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 13F0E54B26CF783500698892 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = DB4B051E25946404001E907A /* Project object */;
 }
