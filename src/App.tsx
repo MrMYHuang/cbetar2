@@ -48,6 +48,8 @@ import FullTextSearchPage from './pages/FullTextSearchPage';
 import ShareTextModal from './components/ShareTextModal';
 import WordDictionaryPage from './pages/WordDictionaryPage';
 import DownloadModal from './components/DownloadModal';
+import { TmpSettings } from './models/TmpSettings';
+import { Settings } from './models/Settings';
 
 const electronBackendApi: any = (window as any).electronBackendApi;
 
@@ -79,8 +81,8 @@ export var serviceWorkCallbacks = {
 
 interface Props {
   dispatch: Function;
-  shareTextModal: any;
-  settings: any;
+  tmpSettings: TmpSettings;
+  settings: Settings;
 }
 
 interface PageProps extends RouteComponentProps<{
@@ -375,8 +377,8 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
 
         <ShareTextModal
           {...{
-            text: this.props.shareTextModal?.text,
-            showModal: this.props.shareTextModal?.show || false,
+            text: this.props.tmpSettings.shareTextModal?.text,
+            showModal: this.props.tmpSettings.shareTextModal?.show || false,
             finish: () => {
               store.dispatch({
                 type: "TMP_SET_KEY_VAL",
@@ -427,7 +429,7 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
 
 const mapStateToProps = (state: any /*, ownProps*/) => {
   return {
-    shareTextModal: state.tmpSettings.shareTextModal,
+    tmpSettings: state.tmpSettings,
     settings: state.settings,
   }
 };

@@ -3,10 +3,12 @@ import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem,
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import Globals from '../Globals';
-import { helpCircle, text, documentText, refreshCircle, musicalNotes, colorPalette, shareSocial, bug, download, print, informationCircle } from 'ionicons/icons';
+import { helpCircle, text, documentText, refreshCircle, musicalNotes, colorPalette, bug, download, print, informationCircle } from 'ionicons/icons';
 import './SettingsPage.css';
 import PackageInfos from '../../package.json';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
+import { Settings } from '../models/Settings';
+import { TmpSettings } from '../models/TmpSettings';
 
 interface StateProps {
   showFontLicense: boolean;
@@ -19,21 +21,8 @@ interface StateProps {
 
 interface Props {
   dispatch: Function;
-  hasAppLog: boolean;
-  theme: number;
-  uiFontSize: number;
-  scrollbarSize: number;
-  settings: any;
-  showComments: boolean;
-  paginated: boolean;
-  rtlVerticalLayout: boolean;
-  useFontKai: boolean;
-  printStyle: number;
-  voiceURI: string;
-  speechRate: number;
-  bookmarks: [Bookmark];
-  mainVersion: string | null;
-  cbetaOfflineDbMode: boolean;
+  settings: Settings;
+  tmpSettings: TmpSettings;
 }
 
 interface PageProps extends Props, RouteComponentProps<{
@@ -71,8 +60,8 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
 
   async updateAllJuans() {
     this.setState({ juansDownloadedRatio: 0 });
-    const workBookmarksWithHtml = this.props.bookmarks.filter((b) => b.type === BookmarkType.WORK);
-    const juanBookmarksWithHtml = this.props.bookmarks.filter((b) => b.type === BookmarkType.JUAN);
+    const workBookmarksWithHtml = this.props.settings.bookmarks.filter((b) => b.type === BookmarkType.WORK);
+    const juanBookmarksWithHtml = this.props.settings.bookmarks.filter((b) => b.type === BookmarkType.JUAN);
     const juanBookmarksNotInWorkBookmarksWithHtml = juanBookmarksWithHtml.filter((b) => workBookmarksWithHtml.findIndex((wb) => wb.work?.work === b.work?.work) === -1);
 
     // Total juans to download.
@@ -94,12 +83,12 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
         const res = await Globals.fetchJuan(work.work, fetchJuan, null, true);
         const fileName = Globals.getFileName(work.work, fetchJuan);
         // Update HTML.
-        if (!this.props.cbetaOfflineDbMode) {
+        if (!this.props.tmpSettings.cbetaOfflineDbMode) {
           Globals.saveFileToIndexedDB(fileName, res.htmlStr);
         }
         if (j === 0) {
           // Update bookmarks for once.
-          this.updateBookmark(this.props.bookmarks, Object.assign(bookmarkWithHtml, { work: res.workInfo }));
+          this.updateBookmark(this.props.settings.bookmarks, Object.assign(bookmarkWithHtml, { work: res.workInfo }));
         }
         console.log(`File saved: ${fileName}`);
       }
@@ -114,17 +103,17 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
       let newWork = res.workInfo;
       newWork.juan = work.juan;
       // Update HTML.
-      if (!this.props.cbetaOfflineDbMode) {
+      if (!this.props.tmpSettings.cbetaOfflineDbMode) {
         Globals.saveFileToIndexedDB(fileName, res.htmlStr);
       }
       // Update bookmarks
-      this.updateBookmark(this.props.bookmarks, Object.assign(bookmarkWithHtml, { work: newWork }));
+      this.updateBookmark(this.props.settings.bookmarks, Object.assign(bookmarkWithHtml, { work: newWork }));
       console.log(`File saved: ${fileName}`);
     }
 
     this.props.dispatch({
       type: "UPDATE_BOOKMARKS",
-      bookmarks: this.props.bookmarks,
+      bookmarks: this.props.settings.bookmarks,
     });
     this.setState({ showUpdateAllJuansDone: true });
   }
@@ -139,19 +128,18 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
         </IonHeader>
         <IonContent>
           <IonList>
+            {/*
+            // Disable this for Apple App Store submissions!
             <IonItem>
-              <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={shareSocial} slot='start' />
               <IonLabel className='ion-text-wrap uiFont' onClick={async e => {
-                // Disable app update for Mac App Store submission.
-                /*
                 const hasUpdate = await Globals.updateApp();
 
                 if (!hasUpdate) {
                   this.setState({ showToast: true, toastMessage: 'App 已是最新版' });
-                }*/
+                }
               }}>PWA版本: <a href="https://github.com/MrMYHuang/cbetar2#history" target="_new">{PackageInfos.pwaVersion}</a></IonLabel>
-              <IonButton fill='outline' shape='round' slot='end' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={e => {
+              <IonButton fill='outline' shape='round' slot='end' size='large' className='uiFont' onClick={e => {
                 this.props.dispatch({
                   type: "TMP_SET_KEY_VAL",
                   key: 'shareTextModal',
@@ -162,27 +150,25 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                 });
               }}>分享</IonButton>
             </IonItem>
-            <IonItem hidden={!this.props.mainVersion}>
-              <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
+            <IonItem hidden={!this.props.tmpSettings.mainVersion}>
               <IonIcon icon={informationCircle} slot='start' />
-              <IonLabel className='ion-text-wrap uiFont'>Backend app版本: {this.props.mainVersion}</IonLabel>
-              {/*<IonButton fill='outline' shape='round' slot='end' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={e => {
-              }}>分享</IonButton>*/}
+              <IonLabel className='ion-text-wrap uiFont'>Backend app版本: {this.props.tmpSettings.mainVersion}</IonLabel>
             </IonItem>
-            <IonItem hidden={!this.props.mainVersion}>
+          */}
+            <IonItem hidden={!this.props.tmpSettings.mainVersion}>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={informationCircle} slot='start' />
               <IonLabel className='ion-text-wrap uiFont'>使用CBETA離線經文資料檔</IonLabel>
-              <IonToggle slot='end' disabled checked={this.props.cbetaOfflineDbMode} />
+              <IonToggle slot='end' disabled checked={this.props.tmpSettings.cbetaOfflineDbMode} />
             </IonItem>
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={bug} slot='start' />
               <IonLabel className='ion-text-wrap uiFont'><a href="https://github.com/MrMYHuang/cbetar2#report" target="_new">啟用app異常記錄</a></IonLabel>
-              <IonToggle slot='end' checked={this.props.hasAppLog} onIonChange={e => {
+              <IonToggle slot='end' checked={this.props.settings.hasAppLog} onIonChange={e => {
                 const isChecked = e.detail.checked;
 
-                if (this.props.hasAppLog === isChecked) {
+                if (this.props.settings.hasAppLog === isChecked) {
                   return;
                 }
 
@@ -194,11 +180,11 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                 });
               }} />
             </IonItem>
-            <IonItem hidden={!this.props.hasAppLog}>
+            <IonItem hidden={!this.props.settings.hasAppLog}>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={bug} slot='start' />
               <IonLabel className='ion-text-wrap uiFont'>回報app異常記錄</IonLabel>
-              <IonButton fill='outline' shape='round' slot='end' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={e => {
+              <IonButton fill='outline' shape='round' slot='end' size='large' className='uiFont' onClick={e => {
                 window.open(`mailto:myh@live.com?subject=電子佛典異常記錄回報&body=${encodeURIComponent("問題描述(建議填寫)：\n\n瀏覽器：" + navigator.userAgent + "\n\nApp版本：" + PackageInfos.pwaVersion + "\n\nApp設定：" + JSON.stringify(this.props.settings) + "\n\nLog：\n" + Globals.getLog())}`);
               }}>回報</IonButton>
             </IonItem>
@@ -209,7 +195,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                 <div style={{ flexDirection: 'column' }}>
                   <IonLabel className='ion-text-wrap uiFont'>App設定與書籤</IonLabel>
                   <div style={{ textAlign: 'right' }}>
-                    <IonButton fill='outline' shape='round' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={async (e) => {
+                    <IonButton fill='outline' shape='round' size='large' className='uiFont' onClick={async (e) => {
                       const settingsJsonUri = `data:text/json;charset=utf-8,${encodeURIComponent(localStorage.getItem(Globals.storeFile) || '')}`;
                       const a = document.createElement('a');
                       a.href = settingsJsonUri;
@@ -233,11 +219,11 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                       (document.getElementById('importJsonInput') as HTMLInputElement).value = '';
                     }} />
 
-                    <IonButton fill='outline' shape='round' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={(e) => {
+                    <IonButton fill='outline' shape='round' size='large' className='uiFont' onClick={(e) => {
                       (document.querySelector('#importJsonInput') as HTMLInputElement).click();
                     }}>匯入</IonButton
                     >
-                    <IonButton fill='outline' shape='round' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={(e) => {
+                    <IonButton fill='outline' shape='round' size='large' className='uiFont' onClick={(e) => {
                       this.setState({ showClearAlert: true });
                     }}>重置</IonButton>
                     <IonAlert
@@ -266,8 +252,8 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                             while (document.body.classList.length > 0) {
                               document.body.classList.remove(document.body.classList.item(0)!);
                             }
-                            document.body.classList.toggle(`theme${this.props.theme}`, true);
-                            document.body.classList.toggle(`print${this.props.printStyle}`, true);
+                            document.body.classList.toggle(`theme${this.props.settings.theme}`, true);
+                            document.body.classList.toggle(`print${this.props.settings.printStyle}`, true);
                             this.setState({ showClearAlert: false, showToast: true, toastMessage: "清除成功!" });
                           },
                         }
@@ -284,7 +270,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                 <IonLabel className='ion-text-wrap uiFont'>更新離線經文檔</IonLabel>
                 <IonProgressBar value={this.state.juansDownloadedRatio} />
               </div>
-              <IonButton fill='outline' shape='round' slot='end' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={async (e) => this.updateAllJuans()}>更新</IonButton>
+              <IonButton fill='outline' shape='round' slot='end' size='large' className='uiFont' onClick={async (e) => this.updateAllJuans()}>更新</IonButton>
               <IonToast
                 cssClass='uiFont'
                 isOpen={this.state.showUpdateAllJuansDone}
@@ -298,8 +284,8 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
               <IonIcon icon={colorPalette} slot='start' />
               <IonLabel className='ion-text-wrap uiFont'>{Globals.appSettings['theme']}</IonLabel>
               <IonSelect slot='end'
-                value={this.props.theme}
-                style={{ fontSize: 'var(--ui-font-size)' }}
+                value={this.props.settings.theme}
+                className='uiFont'
                 interface='popover'
                 interfaceOptions={{ cssClass: 'cbetar2themes' }}
                 onIonChange={e => {
@@ -308,7 +294,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                   // store states of this component is not updated yet! And IonSelect value is changed
                   // back to the old value and onIonChange is triggered again!
                   // Thus, we use this check to ignore this invalid change.
-                  if (this.props.theme === value) {
+                  if (this.props.settings.theme === value) {
                     return;
                   }
 
@@ -329,10 +315,10 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={documentText} slot='start' />
               <IonLabel className='ion-text-wrap uiFont'>{Globals.appSettings['rtlVerticalLayout']}</IonLabel>
-              <IonToggle slot='end' checked={this.props.rtlVerticalLayout} onIonChange={e => {
+              <IonToggle slot='end' checked={this.props.settings.rtlVerticalLayout} onIonChange={e => {
                 const isChecked = e.detail.checked;
 
-                if (this.props.rtlVerticalLayout === isChecked) {
+                if (this.props.settings.rtlVerticalLayout === isChecked) {
                   return;
                 }
 
@@ -347,10 +333,10 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={documentText} slot='start' />
               <IonLabel className='ion-text-wrap uiFont'>{Globals.appSettings['paginated']}</IonLabel>
-              <IonToggle slot='end' checked={this.props.paginated} onIonChange={e => {
+              <IonToggle slot='end' checked={this.props.settings.paginated} onIonChange={e => {
                 const isChecked = e.detail.checked;
 
-                if (this.props.paginated === isChecked) {
+                if (this.props.settings.paginated === isChecked) {
                   return;
                 }
 
@@ -366,13 +352,13 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
               <IonIcon icon={documentText} slot='start' />
               <IonLabel className='ion-text-wrap uiFont'>單頁經文捲軸大小</IonLabel>
               <IonSelect slot='end'
-                value={this.props.scrollbarSize}
-                style={{ fontSize: 'var(--ui-font-size)' }}
+                value={this.props.settings.scrollbarSize}
+                className='uiFont'
                 interface='popover'
                 interfaceOptions={{ cssClass: 'uiFont' }}
                 onIonChange={e => {
                   const value = e.detail.value;
-                  if (this.props.scrollbarSize === value) {
+                  if (this.props.settings.scrollbarSize === value) {
                     return;
                   }
 
@@ -392,10 +378,10 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={documentText} slot='start' />
               <IonLabel className='ion-text-wrap uiFont'>{Globals.appSettings['showComments']}</IonLabel>
-              <IonToggle slot='end' checked={this.props.showComments} onIonChange={e => {
+              <IonToggle slot='end' checked={this.props.settings.showComments} onIonChange={e => {
                 const isChecked = e.detail.checked;
 
-                if (this.props.showComments === isChecked) {
+                if (this.props.settings.showComments === isChecked) {
                   return;
                 }
 
@@ -410,10 +396,10 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={text} slot='start' />
               <IonLabel className='ion-text-wrap uiFont'>{Globals.appSettings['useFontKai']}</IonLabel>
-              <IonToggle slot='end' checked={this.props.useFontKai} onIonChange={e => {
+              <IonToggle slot='end' checked={this.props.settings.useFontKai} onIonChange={e => {
                 const isChecked = e.detail.checked;
 
-                if (this.props.useFontKai === isChecked) {
+                if (this.props.settings.useFontKai === isChecked) {
                   return;
                 }
 
@@ -430,8 +416,8 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
               <IonIcon icon={text} slot='start' />
               <div className="contentBlock">
                 <div style={{ flexDirection: "column" }}>
-                  <IonLabel className='ion-text-wrap uiFont'>{Globals.appSettings['uiFontSize']}: {this.props.uiFontSize}</IonLabel>
-                  <IonRange min={10} max={128} pin={true} snaps={true} value={this.props.uiFontSize} onIonChange={e => {
+                  <IonLabel className='ion-text-wrap uiFont'>{Globals.appSettings['uiFontSize']}: {this.props.settings.uiFontSize}</IonLabel>
+                  <IonRange min={10} max={128} pin={true} snaps={true} value={this.props.settings.uiFontSize} onIonChange={e => {
                     this.props.dispatch({
                       type: "SET_KEY_VAL",
                       key: 'uiFontSize',
@@ -462,13 +448,13 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
               <IonIcon icon={print} slot='start' />
               <IonLabel className='ion-text-wrap uiFont'>{Globals.appSettings['printStyle']}</IonLabel>
               <IonSelect slot='end'
-                value={this.props.printStyle}
-                style={{ fontSize: 'var(--ui-font-size)' }}
+                value={this.props.settings.printStyle}
+                className='uiFont'
                 interface='popover'
                 interfaceOptions={{ cssClass: 'cbetar2themes' }}
                 onIonChange={e => {
                   const value = e.detail.value;
-                  if (this.props.printStyle === value) {
+                  if (this.props.settings.printStyle === value) {
                     return;
                   }
 
@@ -487,13 +473,13 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
               <IonIcon icon={print} slot='start' />
               <IonLabel className='ion-text-wrap uiFont'>合成語音</IonLabel>
               <IonSelect slot='end'
-                value={this.props.voiceURI}
-                style={{ fontSize: 'var(--ui-font-size)' }}
+                value={this.props.settings.voiceURI}
+                className='uiFont'
                 interface='action-sheet'
                 cancelText='取消'
                 onIonChange={e => {
                   const value = e.detail.value;
-                  if (this.props.voiceURI === value) {
+                  if (this.props.settings.voiceURI === value) {
                     return;
                   }
 
@@ -513,8 +499,8 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
               <IonIcon icon={musicalNotes} slot='start' />
               <div className="contentBlock">
                 <div style={{ flexDirection: "column" }}>
-                  <IonLabel className='ion-text-wrap uiFont'><a href="https://github.com/MrMYHuang/cbetar2#text2speech" target="_new">合成語音語速</a>: {this.props.speechRate}</IonLabel>
-                  <IonRange min={0.1} max={1.5} step={0.1} snaps={true} value={this.props.speechRate} onIonChange={e => {
+                  <IonLabel className='ion-text-wrap uiFont'><a href="https://github.com/MrMYHuang/cbetar2#text2speech" target="_new">合成語音語速</a>: {this.props.settings.speechRate}</IonLabel>
+                  <IonRange min={0.1} max={1.5} step={0.1} snaps={true} value={this.props.settings.speechRate} onIonChange={e => {
                     this.props.dispatch({
                       type: "SET_KEY_VAL",
                       key: 'speechRate',
@@ -527,15 +513,15 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={helpCircle} slot='start' />
-              <div style={{ fontSize: 'var(--ui-font-size)' }}>
+              <div className='uiFont'>
                 <div>關於</div>
-                <div><a href="https://github.com/MrMYHuang/cbetar2" target="_new">操作說明與開放原始碼</a></div>
-                <div>CBETA API版本: {Globals.apiVersion}</div>
-                <div><a href="http://cbdata.dila.edu.tw/v1.2/" target="_new">CBETA API參考文件</a></div>
+                <div><a href="https://github.com/MrMYHuang/cbetar2" target="_new">操作說明</a></div>
+                <div>CBETA API 版本: {Globals.apiVersion}</div>
+                <div><a href="http://cbdata.dila.edu.tw/v1.2/" target="_new">CBETA API 參考文件</a></div>
                 <div><a href="http://glossaries.dila.edu.tw/?locale=zh-TW" target="_new">DILA 佛學術語字辭典</a></div>
                 <div>作者: Meng-Yuan Huang</div>
                 <div><a href="mailto:myh@live.com" target="_new">myh@live.com</a></div>
-                <div><a href="https://github.com/MrMYHuang/cbetar2#contributors" target="_new">App相關貢獻者</a></div>
+                <div><a href="https://github.com/MrMYHuang/cbetar2#contributors" target="_new">App 相關貢獻者</a></div>
                 <div><a href='/' onClick={e => {
                   e.preventDefault();
                   this.setState({ showFontLicense: true });
@@ -546,7 +532,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
               cssClass='uiFont'
               isOpen={this.state.showFontLicense}
               backdropDismiss={false}
-              message="此app使用的全字庫字型(2020-08-18版)由國家發展委員會提供。此開放資料依政府資料開放授權條款 (Open Government Data License) 進行公眾釋出，使用者於遵守本條款各項規定之前提下，得利用之。政府資料開放授權條款：https://data.gov.tw/license"
+              message="此 app 使用的全字庫字型(2020-08-18版)由國家發展委員會提供。此開放資料依政府資料開放授權條款 (Open Government Data License) 進行公眾釋出，使用者於遵守本條款各項規定之前提下，得利用之。政府資料開放授權條款：https://data.gov.tw/license"
               buttons={[
                 {
                   text: '關閉',
@@ -587,20 +573,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
 const mapStateToProps = (state: any /*, ownProps*/) => {
   return {
     settings: state.settings,
-    hasAppLog: state.settings.hasAppLog,
-    theme: state.settings.theme,
-    showComments: state.settings.showComments,
-    paginated: state.settings.paginated,
-    rtlVerticalLayout: state.settings.rtlVerticalLayout,
-    scrollbarSize: state.settings.scrollbarSize,
-    useFontKai: state.settings.useFontKai,
-    uiFontSize: state.settings.uiFontSize,
-    printStyle: state.settings.printStyle,
-    speechRate: state.settings.speechRate,
-    bookmarks: state.settings.bookmarks,
-    voiceURI: state.settings.voiceURI,
-    mainVersion: state.tmpSettings.mainVersion,
-    cbetaOfflineDbMode: state.tmpSettings.cbetaOfflineDbMode,
+    tmpSettings: state.tmpSettings,
   }
 };
 

@@ -97,7 +97,7 @@ class _SearchPage extends React.Component<PageProps, State> {
       <IonPage>
         <IonHeader>
           <IonToolbar>
-            <IonTitle style={{ fontSize: 'var(--ui-font-size)' }}>搜尋 - {this.props.match.params.keyword}</IonTitle>
+            <IonTitle className='uiFont'>搜尋 - {this.props.match.params.keyword}</IonTitle>
             <IonButton hidden={this.isTopPage} fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
               <IonIcon icon={arrowBack} slot='icon-only' />
             </IonButton>

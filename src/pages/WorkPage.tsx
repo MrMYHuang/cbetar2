@@ -8,14 +8,14 @@ import Globals from '../Globals';
 import { bookmark, arrowBack, home, search, shareSocial, refreshCircle } from 'ionicons/icons';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
 import SearchAlert from '../components/SearchAlert';
+import { TmpSettings } from '../models/TmpSettings';
 
 const electronBackendApi: any = (window as any).electronBackendApi;
 
 interface Props {
   dispatch: Function;
   bookmarks: [Bookmark];
-  workListType: WorkListType;
-  cbetaOfflineDbMode: boolean;
+  tmpSettings: TmpSettings;
 }
 
 interface PageProps extends Props, RouteComponentProps<{
@@ -60,7 +60,7 @@ class _WorkPage extends React.Component<PageProps, State> {
     } else {
       try {
         let data: any;
-        if (this.props.cbetaOfflineDbMode) {
+        if (this.props.tmpSettings.cbetaOfflineDbMode) {
           electronBackendApi?.send("toMain", { event: 'fetchWork', path: path });
           data = await new Promise((ok, fail) => {
             electronBackendApi?.receiveOnce("fromMain", (data: any) => {
@@ -81,7 +81,7 @@ class _WorkPage extends React.Component<PageProps, State> {
         work = works[0];
 
         // [TODO]
-        if (!this.props.cbetaOfflineDbMode) {
+        if (!this.props.tmpSettings.cbetaOfflineDbMode) {
           const resToc = await Globals.axiosInstance.get(`/toc?work=${path}`) as any;
           work.mulu = (resToc.data.results[0].mulu as WorkChapter[]).map((wc) => new WorkChapter(wc));
         }
@@ -115,7 +115,7 @@ class _WorkPage extends React.Component<PageProps, State> {
   }
 
   async addBookmarkHandler() {
-    if (!this.props.cbetaOfflineDbMode) {
+    if (!this.props.tmpSettings.cbetaOfflineDbMode) {
       await this.saveJuans();
     }
     this.setState({ showAddBookmarkDone: true });
@@ -200,6 +200,8 @@ class _WorkPage extends React.Component<PageProps, State> {
   }
 
   //work = this.works[0] as Work;
+  // Default to WorkListType.BY_JUAN, because work list by chapter might be empty.
+  workListType = this.props.tmpSettings.workListType !== undefined ? this.props.tmpSettings.workListType : WorkListType.BY_JUAN;
   render() {
     return (
       <IonPage>
@@ -210,14 +212,14 @@ class _WorkPage extends React.Component<PageProps, State> {
             </IonButton>
 
             <IonButton fill='outline' shape='round' size='large' slot='start' onClick={ev => {
-              const newWorkListType = this.props.workListType === WorkListType.BY_CHAPTER ? WorkListType.BY_JUAN : WorkListType.BY_CHAPTER;
+              const newWorkListType = this.workListType === WorkListType.BY_CHAPTER ? WorkListType.BY_JUAN : WorkListType.BY_CHAPTER;
               this.props.dispatch({
                 type: "TMP_SET_KEY_VAL",
                 key: 'workListType',
                 val: newWorkListType
               });
             }}>
-              <span className='uiFont' style={{ color: 'var(--color)' }}>{this.props.workListType === WorkListType.BY_CHAPTER ? '分品' : '分卷'}</span>
+              <span className='uiFont' style={{ color: 'var(--color)' }}>{this.workListType === WorkListType.BY_CHAPTER ? '分品' : '分卷'}</span>
             </IonButton>
 
             <IonButton hidden={!this.state.fetchError} fill="clear" slot='end' onClick={e => this.fetchWork(this.props.match.params.path)}>
@@ -255,7 +257,7 @@ class _WorkPage extends React.Component<PageProps, State> {
           {
             this.state.fetchError ? Globals.fetchErrorContent :
               <IonList>
-                {this.props.workListType === WorkListType.BY_CHAPTER ? this.getRowsByChapter() : this.getRowsByJuan()}
+                {this.workListType === WorkListType.BY_CHAPTER ? this.getRowsByChapter() : this.getRowsByJuan()}
               </IonList>
           }
 
@@ -291,9 +293,7 @@ const WorkPage = withIonLifeCycle(_WorkPage);
 const mapStateToProps = (state: any /*, ownProps*/) => {
   return {
     bookmarks: state.settings.bookmarks,
-    // Default to WorkListType.BY_JUAN, because work list by chapter might be empty.
-    workListType: state.tmpSettings.workListType !== undefined ? state.tmpSettings.workListType : WorkListType.BY_JUAN,
-    cbetaOfflineDbMode: state.tmpSettings.cbetaOfflineDbMode,
+    tmpSettings: state.tmpSettings,
   }
 };
 

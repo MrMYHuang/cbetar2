@@ -9,6 +9,7 @@ import { Bookmark, BookmarkType } from '../models/Bookmark';
 import { bookmark, arrowBack, home, search, shareSocial, refreshCircle } from 'ionicons/icons';
 import SearchAlert from '../components/SearchAlert';
 import queryString from 'query-string';
+import { TmpSettings } from '../models/TmpSettings';
 
 const famousJuans = [
   { title: '般若波羅蜜多心經', url: '/catalog/juan/T0251/1' },
@@ -30,7 +31,7 @@ const electronBackendApi: any = (window as any).electronBackendApi;
 interface Props {
   dispatch: Function;
   bookmarks: [Bookmark];
-  cbetaOfflineDbMode: boolean;
+  tmpSettings: TmpSettings;
 }
 
 interface PageProps extends Props, RouteComponentProps<{
@@ -120,7 +121,7 @@ class _CatalogPage extends React.Component<PageProps, State> {
         //electronBackendApi?.send("toMain", { event: 'ready' });
         try {
           let obj: any;
-          if (this.props.cbetaOfflineDbMode) {
+          if (this.props.tmpSettings.cbetaOfflineDbMode) {
             electronBackendApi?.send("toMain", { event: 'fetchCatalog', path: path });
             obj = await new Promise((ok, fail) => {
               electronBackendApi?.receiveOnce("fromMain", (data: any) => {
@@ -368,7 +369,7 @@ const mapStateToProps = (state: any /*, ownProps*/) => {
   return {
     bookmarks: state.settings.bookmarks,
     state: state,
-    cbetaOfflineDbMode: state.tmpSettings.cbetaOfflineDbMode,
+    tmpSettings: state.tmpSettings,
   }
 };
 

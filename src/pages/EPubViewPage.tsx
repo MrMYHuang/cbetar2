@@ -13,6 +13,7 @@ import { Work } from '../models/Work';
 import SearchAlert from '../components/SearchAlert';
 import ePub, { Book, Rendition, EVENTS } from 'epubjs-myh';
 import * as nodepub from 'nodepub';
+import { TmpSettings } from '../models/TmpSettings';
 
 // Load TW-Kai font in iframe.
 async function loadTwKaiFont(this: any) {
@@ -52,7 +53,7 @@ interface Props {
   useFontKai: boolean;
   voiceURI: string;
   speechRate: number;
-  cbetaOfflineDbMode: boolean;
+  tmpSettings: TmpSettings;
 }
 
 interface PageProps extends Props, RouteComponentProps<{
@@ -242,7 +243,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         this.props.match.params.path,
         this.htmlFile,
         false,
-        this.props.cbetaOfflineDbMode,
+        this.props.tmpSettings.cbetaOfflineDbMode,
       );
 
       await this.loadEpubCoverToMemFs();
@@ -275,7 +276,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         uuid: uuidStr,
         selectedText: selectedText,
         epubcfi: this.epubcfiFromSelectedString,
-        fileName: this.props.cbetaOfflineDbMode ? null : this.htmlFile || `${this.props.match.params.work}_juan${this.props.match.params.path}.html`,
+        fileName: this.props.tmpSettings.cbetaOfflineDbMode ? null : this.htmlFile || `${this.props.match.params.work}_juan${this.props.match.params.path}.html`,
         work: Object.assign(this.state.workInfo, {
           title: this.htmlFile ? this.htmlTitle : this.state.workInfo.title,
           juan: this.props.match.params.path,
@@ -1044,7 +1045,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     let header = (
       <IonHeader>
         <IonToolbar>
-          <IonTitle style={{ fontSize: 'var(--ui-font-size)' }}></IonTitle>
+          <IonTitle className='uiFont'></IonTitle>
 
           <IonButton hidden={this.isTopPage} fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
             <IonIcon icon={arrowBack} slot='icon-only' />
@@ -1487,7 +1488,7 @@ const mapStateToProps = (state: any /*, ownProps*/) => {
     scrollbarSize: state.settings.scrollbarSize,
     voiceURI: state.settings.voiceURI,
     speechRate: state.settings.speechRate,
-    cbetaOfflineDbMode: state.tmpSettings.cbetaOfflineDbMode,
+    tmpSettings: state.tmpSettings,
   }
 };
 

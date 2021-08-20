@@ -7,7 +7,6 @@ import './WorkPage.css';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
 import { download, swapVertical } from 'ionicons/icons';
 import queryString from 'query-string';
-import Globals from '../Globals';
 
 interface Props {
   dispatch: Function;
@@ -25,18 +24,6 @@ interface PageProps extends Props, RouteComponentProps<{
   tab: string;
   path: string;
 }> { }
-
-const helpDoc = <>
-  <div style={{ fontSize: 'var(--ui-font-size)', textAlign: 'center' }}>可離線瀏覽圖示 <IonIcon icon={download} /></div>
-  {Globals.isStoreApps() ?
-    <></>
-    :
-    <>
-      <div style={{ fontSize: 'var(--ui-font-size)', textAlign: 'center' }}><a href="https://github.com/MrMYHuang/cbetar2#web-app" target="_new">程式安裝說明</a></div>
-      <div style={{ fontSize: 'var(--ui-font-size)', textAlign: 'center' }}><a href="https://github.com/MrMYHuang/cbetar2#shortcuts" target="_new">程式捷徑</a></div>
-    </>
-  }
-</>;
 
 class _BookmarkPage extends React.Component<PageProps, State> {
   bookmarkListRef: React.RefObject<HTMLIonListElement>;
@@ -135,7 +122,7 @@ class _BookmarkPage extends React.Component<PageProps, State> {
           </IonItem>
 
           <IonItemOptions side="end">
-            <IonItemOption style={{ fontSize: 'var(--ui-font-size)' }} color='danger' onClick={(e) => {
+            <IonItemOption className='uiFont' color='danger' onClick={(e) => {
               this.delBookmarkHandler(bookmark.uuid);
               this.bookmarkListRef.current?.closeSlidingItems();
             }}>刪除</IonItemOption>
@@ -153,7 +140,7 @@ class _BookmarkPage extends React.Component<PageProps, State> {
       <IonPage key={`bookmarksPage${this.isFamousPage}`}>
         <IonHeader>
           <IonToolbar>
-            <IonTitle style={{ fontSize: 'var(--ui-font-size)' }}>書籤</IonTitle>
+            <IonTitle className='uiFont'>書籤</IonTitle>
 
             <IonButton fill={this.state.reorder ? 'solid' : 'clear'} slot='end'
               onClick={ev => this.setState({ reorder: !this.state.reorder })}>
@@ -169,13 +156,12 @@ class _BookmarkPage extends React.Component<PageProps, State> {
                   {rows}
                 </IonReorderGroup>
               </IonList>
-              {helpDoc}
-            </> :
+            </>
+            :
             <>
               <IonList key='bookmarkList1'>
                 {rows}
               </IonList>
-              {helpDoc}
             </>
           }
 

@@ -274,7 +274,7 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
                 }
               }} />
             {/*
-              <IonButton slot='end' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={e => {
+              <IonButton slot='end' size='large' className='uiFont' onClick={e => {
                 this.lookupDict(this.state.keyword);
               }}>搜尋</IonButton>*/}
 
@@ -302,7 +302,7 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
                     )}
                   </IonList>
                   <div style={{ textAlign: 'center' }}>
-                    <IonButton fill='outline' shape='round' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={e => {
+                    <IonButton fill='outline' shape='round' size='large' className='uiFont' onClick={e => {
                       this.setState({ keyword: '' });
                       this.props.dispatch({
                         type: "SET_KEY_VAL",

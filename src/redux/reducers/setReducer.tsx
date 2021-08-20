@@ -1,10 +1,10 @@
 import Globals from '../../Globals';
 import { Bookmark, BookmarkType } from '../../models/Bookmark';
+import { Settings } from '../../models/Settings';
 
 // Used to store settings. They will be saved to file.
-export default function reducer(state = {
-}, action: any) {
-  var newSettings = { ...state } as any;
+export default function reducer(state = new Settings(), action: any) {
+  let newSettings: Settings = { ...state };
   switch (action.type) {
     case "LOAD_SETTINGS":
       newSettings = JSON.parse(localStorage.getItem(Globals.storeFile)!).settings;
@@ -33,7 +33,7 @@ export default function reducer(state = {
         }
       }
 
-      newSettings[key] = val;
+      (newSettings as any)[key] = val;
       localStorage.setItem(Globals.storeFile, JSON.stringify({ settings: newSettings }));
       break;
     case "ADD_BOOKMARK":
@@ -105,21 +105,12 @@ export default function reducer(state = {
     }
     // @ts-ignore
     case "DEFAULT_SETTINGS":
-      newSettings = {};
+      newSettings = new Settings();
     // Don't use break here!
     // eslint-disable-next-line
     default:
       if (Object.keys(newSettings).length === 0) {
-        newSettings = {};
-      }
-      // Setting default values.
-      // version is the setting file version.
-      var keys = ['version', 'hasAppLog', 'theme', 'paginated', 'rtlVerticalLayout', 'scrollbarSize', 'useFontKai', 'fontSize', 'uiFontSize', 'showComments', 'printStyle', 'voiceURI', 'speechRate', 'bookmarks', 'dictionaryHistory', 'wordDictionaryHistory'];
-      var vals = [1, 1, 0, 1, 1, 2, 1, 32, 24, 0, 0, null, 0.8, [], [], []];
-      for (let k = 0; k < keys.length; k++) {
-        if (newSettings[keys[k]] === undefined) {
-          newSettings[keys[k]] = vals[k];
-        }
+        newSettings = new Settings();
       }
   }
   return newSettings;

@@ -240,6 +240,9 @@ https://github.com/MrMYHuang/cbetar2/releases/latest
 11. 合成語音選項在Android Chrome無效。( https://stackoverflow.com/a/61366224/631869 )
 
 ## <a id='history'>版本歷史</a>
+* PWA 4.23.8:
+  * 移除 app 安裝連結，以符合 App Store 上架規範。
+
 * PWA 4.23.7:
   * 增加 app 錯誤 log 訊息詳細度。
 

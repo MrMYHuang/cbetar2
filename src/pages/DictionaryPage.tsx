@@ -252,7 +252,7 @@ class _DictionaryPage extends React.Component<PageProps, State> {
               }
             }} />
           {/*
-              <IonButton slot='end' size='large' style={{ fontSize: 'var(--ui-font-size)' }} onClick={e => {
+              <IonButton slot='end' size='large' className='uiFont' onClick={e => {
                 this.lookupDict(this.state.keyword);
               }}>搜尋</IonButton>*/}
 
