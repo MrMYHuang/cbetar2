@@ -240,6 +240,9 @@ https://github.com/MrMYHuang/cbetar2/releases/latest
 11. 合成語音選項在Android Chrome無效。( https://stackoverflow.com/a/61366224/631869 )
 
 ## <a id='history'>版本歷史</a>
+* iOS 1.2.1:
+  * 修正經文頁 CBETA Online 選單功能無作用的問題。
+
 * PWA 4.23.8:
   * 移除 app 安裝連結，以符合 App Store 上架規範。
 
