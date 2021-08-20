@@ -7,70 +7,49 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		13F0E54D26CF783500698892 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 13F0E54C26CF783500698892 /* SnapKit */; };
-		DB4B052A25946404001E907A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB4B052925946404001E907A /* AppDelegate.swift */; };
-		DB4B052C25946404001E907A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB4B052B25946404001E907A /* SceneDelegate.swift */; };
-		DB4B052E25946404001E907A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB4B052D25946404001E907A /* ViewController.swift */; };
-		DB4B053125946404001E907A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DB4B052F25946404001E907A /* Main.storyboard */; };
-		DB4B05332594640A001E907A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DB4B05322594640A001E907A /* Assets.xcassets */; };
-		DB4B05362594640B001E907A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DB4B05342594640B001E907A /* LaunchScreen.storyboard */; };
-		DB4B05412594640B001E907A /* cbetar2Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB4B05402594640B001E907A /* cbetar2Tests.swift */; };
-		DB4B054C2594640B001E907A /* cbetar2UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB4B054B2594640B001E907A /* cbetar2UITests.swift */; };
+		DBC713B2269D606400FCE5B0 /* Tests_iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC713B1269D606400FCE5B0 /* Tests_iOS.swift */; };
+		DBC713BF269D606400FCE5B0 /* MainApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC71396269D606300FCE5B0 /* MainApp.swift */; };
+		DBC713C1269D606400FCE5B0 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC71397269D606300FCE5B0 /* ContentView.swift */; };
+		DBC713C3269D606400FCE5B0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DBC71398269D606400FCE5B0 /* Assets.xcassets */; };
+		DBC713D5269D6AC300FCE5B0 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC713D4269D6AC300FCE5B0 /* WebViewController.swift */; };
+		DBC713D9269D6B2C00FCE5B0 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = DBC713D8269D6B2C00FCE5B0 /* SnapKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		DB4B053D2594640B001E907A /* PBXContainerItemProxy */ = {
+		DBC713AE269D606400FCE5B0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = DB4B051E25946404001E907A /* Project object */;
+			containerPortal = DBC71391269D606300FCE5B0 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = DB4B052525946404001E907A;
-			remoteInfo = cbetar2;
-		};
-		DB4B05482594640B001E907A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DB4B051E25946404001E907A /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = DB4B052525946404001E907A;
-			remoteInfo = cbetar2;
+			remoteGlobalIDString = DBC7139C269D606400FCE5B0;
+			remoteInfo = "cbetar2 (iOS)";
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		7B6D97948BFCB757099CEFD6 /* Pods_cbetar2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_cbetar2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		DB4B052625946404001E907A /* 電子佛典.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "電子佛典.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		DB4B052925946404001E907A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		DB4B052B25946404001E907A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		DB4B052D25946404001E907A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		DB4B053025946404001E907A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		DB4B05322594640A001E907A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		DB4B05352594640B001E907A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		DB4B05372594640B001E907A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		DB4B053C2594640B001E907A /* cbetar2Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = cbetar2Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		DB4B05402594640B001E907A /* cbetar2Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = cbetar2Tests.swift; sourceTree = "<group>"; };
-		DB4B05422594640B001E907A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		DB4B05472594640B001E907A /* cbetar2UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = cbetar2UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		DB4B054B2594640B001E907A /* cbetar2UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = cbetar2UITests.swift; sourceTree = "<group>"; };
-		DB4B054D2594640B001E907A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		DB4B05AF25956C82001E907A /* cbetar2.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = cbetar2.entitlements; sourceTree = "<group>"; };
+		DBC71396269D606300FCE5B0 /* MainApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainApp.swift; sourceTree = "<group>"; };
+		DBC71397269D606300FCE5B0 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		DBC71398269D606400FCE5B0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		DBC7139D269D606400FCE5B0 /* cbetar2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = cbetar2.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DBC713A0269D606400FCE5B0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DBC713AD269D606400FCE5B0 /* Tests iOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Tests iOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		DBC713B1269D606400FCE5B0 /* Tests_iOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests_iOS.swift; sourceTree = "<group>"; };
+		DBC713B3269D606400FCE5B0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DBC713BC269D606400FCE5B0 /* Tests_macOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests_macOS.swift; sourceTree = "<group>"; };
+		DBC713BE269D606400FCE5B0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DBC713D3269D608600FCE5B0 /* cbetar2.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = cbetar2.entitlements; sourceTree = "<group>"; };
+		DBC713D4269D6AC300FCE5B0 /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		DB4B052325946404001E907A /* Frameworks */ = {
+		DBC7139A269D606400FCE5B0 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				13F0E54D26CF783500698892 /* SnapKit in Frameworks */,
+				DBC713D9269D6B2C00FCE5B0 /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DB4B05392594640B001E907A /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		DB4B05442594640B001E907A /* Frameworks */ = {
+		DBC713AA269D606400FCE5B0 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -80,150 +59,132 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		C3CF6985895959E1A821B65A /* Frameworks */ = {
+		DBBD2A75269F1F42005363B8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				7B6D97948BFCB757099CEFD6 /* Pods_cbetar2.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		DB4B051D25946404001E907A = {
+		DBC71390269D606300FCE5B0 = {
 			isa = PBXGroup;
 			children = (
-				DB4B052825946404001E907A /* cbetar2 */,
-				DB4B053F2594640B001E907A /* cbetar2Tests */,
-				DB4B054A2594640B001E907A /* cbetar2UITests */,
-				DB4B052725946404001E907A /* Products */,
-				C3CF6985895959E1A821B65A /* Frameworks */,
+				DBC713D3269D608600FCE5B0 /* cbetar2.entitlements */,
+				DBC71395269D606300FCE5B0 /* Shared */,
+				DBC7139F269D606400FCE5B0 /* iOS */,
+				DBC713B0269D606400FCE5B0 /* Tests iOS */,
+				DBC713BB269D606400FCE5B0 /* Tests macOS */,
+				DBC7139E269D606400FCE5B0 /* Products */,
+				DBBD2A75269F1F42005363B8 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
-		DB4B052725946404001E907A /* Products */ = {
+		DBC71395269D606300FCE5B0 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
-				DB4B052625946404001E907A /* 電子佛典.app */,
-				DB4B053C2594640B001E907A /* cbetar2Tests.xctest */,
-				DB4B05472594640B001E907A /* cbetar2UITests.xctest */,
+				DBC71396269D606300FCE5B0 /* MainApp.swift */,
+				DBC71397269D606300FCE5B0 /* ContentView.swift */,
+				DBC713D4269D6AC300FCE5B0 /* WebViewController.swift */,
+				DBC71398269D606400FCE5B0 /* Assets.xcassets */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		DBC7139E269D606400FCE5B0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				DBC7139D269D606400FCE5B0 /* cbetar2.app */,
+				DBC713AD269D606400FCE5B0 /* Tests iOS.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		DB4B052825946404001E907A /* cbetar2 */ = {
+		DBC7139F269D606400FCE5B0 /* iOS */ = {
 			isa = PBXGroup;
 			children = (
-				DB4B05AF25956C82001E907A /* cbetar2.entitlements */,
-				DB4B052925946404001E907A /* AppDelegate.swift */,
-				DB4B052B25946404001E907A /* SceneDelegate.swift */,
-				DB4B052D25946404001E907A /* ViewController.swift */,
-				DB4B052F25946404001E907A /* Main.storyboard */,
-				DB4B05322594640A001E907A /* Assets.xcassets */,
-				DB4B05342594640B001E907A /* LaunchScreen.storyboard */,
-				DB4B05372594640B001E907A /* Info.plist */,
+				DBC713A0269D606400FCE5B0 /* Info.plist */,
 			);
-			path = cbetar2;
+			path = iOS;
 			sourceTree = "<group>";
 		};
-		DB4B053F2594640B001E907A /* cbetar2Tests */ = {
+		DBC713B0269D606400FCE5B0 /* Tests iOS */ = {
 			isa = PBXGroup;
 			children = (
-				DB4B05402594640B001E907A /* cbetar2Tests.swift */,
-				DB4B05422594640B001E907A /* Info.plist */,
+				DBC713B1269D606400FCE5B0 /* Tests_iOS.swift */,
+				DBC713B3269D606400FCE5B0 /* Info.plist */,
 			);
-			path = cbetar2Tests;
+			path = "Tests iOS";
 			sourceTree = "<group>";
 		};
-		DB4B054A2594640B001E907A /* cbetar2UITests */ = {
+		DBC713BB269D606400FCE5B0 /* Tests macOS */ = {
 			isa = PBXGroup;
 			children = (
-				DB4B054B2594640B001E907A /* cbetar2UITests.swift */,
-				DB4B054D2594640B001E907A /* Info.plist */,
+				DBC713BC269D606400FCE5B0 /* Tests_macOS.swift */,
+				DBC713BE269D606400FCE5B0 /* Info.plist */,
 			);
-			path = cbetar2UITests;
+			path = "Tests macOS";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		DB4B052525946404001E907A /* cbetar2 */ = {
+		DBC7139C269D606400FCE5B0 /* cbetar2 (iOS) */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = DB4B05502594640B001E907A /* Build configuration list for PBXNativeTarget "cbetar2" */;
+			buildConfigurationList = DBC713C7269D606400FCE5B0 /* Build configuration list for PBXNativeTarget "cbetar2 (iOS)" */;
 			buildPhases = (
-				DB4B052225946404001E907A /* Sources */,
-				DB4B052325946404001E907A /* Frameworks */,
-				DB4B052425946404001E907A /* Resources */,
+				DBC71399269D606400FCE5B0 /* Sources */,
+				DBC7139A269D606400FCE5B0 /* Frameworks */,
+				DBC7139B269D606400FCE5B0 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = cbetar2;
+			name = "cbetar2 (iOS)";
 			packageProductDependencies = (
-				13F0E54C26CF783500698892 /* SnapKit */,
+				DBC713D8269D6B2C00FCE5B0 /* SnapKit */,
 			);
-			productName = cbetar2;
-			productReference = DB4B052625946404001E907A /* 電子佛典.app */;
+			productName = "cbetar2 (iOS)";
+			productReference = DBC7139D269D606400FCE5B0 /* cbetar2.app */;
 			productType = "com.apple.product-type.application";
 		};
-		DB4B053B2594640B001E907A /* cbetar2Tests */ = {
+		DBC713AC269D606400FCE5B0 /* Tests iOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = DB4B05532594640B001E907A /* Build configuration list for PBXNativeTarget "cbetar2Tests" */;
+			buildConfigurationList = DBC713CD269D606400FCE5B0 /* Build configuration list for PBXNativeTarget "Tests iOS" */;
 			buildPhases = (
-				DB4B05382594640B001E907A /* Sources */,
-				DB4B05392594640B001E907A /* Frameworks */,
-				DB4B053A2594640B001E907A /* Resources */,
+				DBC713A9269D606400FCE5B0 /* Sources */,
+				DBC713AA269D606400FCE5B0 /* Frameworks */,
+				DBC713AB269D606400FCE5B0 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				DB4B053E2594640B001E907A /* PBXTargetDependency */,
+				DBC713AF269D606400FCE5B0 /* PBXTargetDependency */,
 			);
-			name = cbetar2Tests;
-			productName = cbetar2Tests;
-			productReference = DB4B053C2594640B001E907A /* cbetar2Tests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		DB4B05462594640B001E907A /* cbetar2UITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = DB4B05562594640B001E907A /* Build configuration list for PBXNativeTarget "cbetar2UITests" */;
-			buildPhases = (
-				DB4B05432594640B001E907A /* Sources */,
-				DB4B05442594640B001E907A /* Frameworks */,
-				DB4B05452594640B001E907A /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				DB4B05492594640B001E907A /* PBXTargetDependency */,
-			);
-			name = cbetar2UITests;
-			productName = cbetar2UITests;
-			productReference = DB4B05472594640B001E907A /* cbetar2UITests.xctest */;
+			name = "Tests iOS";
+			productName = "Tests iOS";
+			productReference = DBC713AD269D606400FCE5B0 /* Tests iOS.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		DB4B051E25946404001E907A /* Project object */ = {
+		DBC71391269D606300FCE5B0 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1230;
-				LastUpgradeCheck = 1230;
+				LastSwiftUpdateCheck = 1250;
+				LastUpgradeCheck = 1250;
 				TargetAttributes = {
-					DB4B052525946404001E907A = {
-						CreatedOnToolsVersion = 12.3;
+					DBC7139C269D606400FCE5B0 = {
+						CreatedOnToolsVersion = 12.5.1;
 					};
-					DB4B053B2594640B001E907A = {
-						CreatedOnToolsVersion = 12.3;
-						TestTargetID = DB4B052525946404001E907A;
-					};
-					DB4B05462594640B001E907A = {
-						CreatedOnToolsVersion = 12.3;
-						TestTargetID = DB4B052525946404001E907A;
+					DBC713AC269D606400FCE5B0 = {
+						CreatedOnToolsVersion = 12.5.1;
+						TestTargetID = DBC7139C269D606400FCE5B0;
 					};
 				};
 			};
-			buildConfigurationList = DB4B052125946404001E907A /* Build configuration list for PBXProject "cbetar2" */;
+			buildConfigurationList = DBC71394269D606300FCE5B0 /* Build configuration list for PBXProject "cbetar2" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -231,40 +192,30 @@
 				en,
 				Base,
 			);
-			mainGroup = DB4B051D25946404001E907A;
+			mainGroup = DBC71390269D606300FCE5B0;
 			packageReferences = (
-				13F0E54B26CF783500698892 /* XCRemoteSwiftPackageReference "SnapKit" */,
+				DBC713D7269D6B2C00FCE5B0 /* XCRemoteSwiftPackageReference "SnapKit" */,
 			);
-			productRefGroup = DB4B052725946404001E907A /* Products */;
+			productRefGroup = DBC7139E269D606400FCE5B0 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				DB4B052525946404001E907A /* cbetar2 */,
-				DB4B053B2594640B001E907A /* cbetar2Tests */,
-				DB4B05462594640B001E907A /* cbetar2UITests */,
+				DBC7139C269D606400FCE5B0 /* cbetar2 (iOS) */,
+				DBC713AC269D606400FCE5B0 /* Tests iOS */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		DB4B052425946404001E907A /* Resources */ = {
+		DBC7139B269D606400FCE5B0 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DB4B05362594640B001E907A /* LaunchScreen.storyboard in Resources */,
-				DB4B05332594640A001E907A /* Assets.xcassets in Resources */,
-				DB4B053125946404001E907A /* Main.storyboard in Resources */,
+				DBC713C3269D606400FCE5B0 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DB4B053A2594640B001E907A /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		DB4B05452594640B001E907A /* Resources */ = {
+		DBC713AB269D606400FCE5B0 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -274,68 +225,36 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		DB4B052225946404001E907A /* Sources */ = {
+		DBC71399269D606400FCE5B0 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DB4B052E25946404001E907A /* ViewController.swift in Sources */,
-				DB4B052A25946404001E907A /* AppDelegate.swift in Sources */,
-				DB4B052C25946404001E907A /* SceneDelegate.swift in Sources */,
+				DBC713C1269D606400FCE5B0 /* ContentView.swift in Sources */,
+				DBC713D5269D6AC300FCE5B0 /* WebViewController.swift in Sources */,
+				DBC713BF269D606400FCE5B0 /* MainApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DB4B05382594640B001E907A /* Sources */ = {
+		DBC713A9269D606400FCE5B0 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DB4B05412594640B001E907A /* cbetar2Tests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		DB4B05432594640B001E907A /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				DB4B054C2594640B001E907A /* cbetar2UITests.swift in Sources */,
+				DBC713B2269D606400FCE5B0 /* Tests_iOS.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		DB4B053E2594640B001E907A /* PBXTargetDependency */ = {
+		DBC713AF269D606400FCE5B0 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = DB4B052525946404001E907A /* cbetar2 */;
-			targetProxy = DB4B053D2594640B001E907A /* PBXContainerItemProxy */;
-		};
-		DB4B05492594640B001E907A /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = DB4B052525946404001E907A /* cbetar2 */;
-			targetProxy = DB4B05482594640B001E907A /* PBXContainerItemProxy */;
+			target = DBC7139C269D606400FCE5B0 /* cbetar2 (iOS) */;
+			targetProxy = DBC713AE269D606400FCE5B0 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
-/* Begin PBXVariantGroup section */
-		DB4B052F25946404001E907A /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				DB4B053025946404001E907A /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		DB4B05342594640B001E907A /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				DB4B05352594640B001E907A /* Base */,
-			);
-			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
-
 /* Begin XCBuildConfiguration section */
-		DB4B054E2594640B001E907A /* Debug */ = {
+		DBC713C5269D606400FCE5B0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -386,18 +305,15 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				TARGETED_DEVICE_FAMILY = "1,2,6";
 			};
 			name = Debug;
 		};
-		DB4B054F2594640B001E907A /* Release */ = {
+		DBC713C6269D606400FCE5B0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -442,186 +358,139 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				TARGETED_DEVICE_FAMILY = "1,2,6";
+			};
+			name = Release;
+		};
+		DBC713C8269D606400FCE5B0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = cbetar2.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 9;
+				DEVELOPMENT_TEAM = XU8X8HU5ST;
+				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = YES;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = iOS/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.2.1;
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.mrmyhuang.cbetar2;
+				PRODUCT_NAME = cbetar2;
+				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		DBC713C9269D606400FCE5B0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = cbetar2.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 9;
+				DEVELOPMENT_TEAM = XU8X8HU5ST;
+				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = YES;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = iOS/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.2.1;
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.mrmyhuang.cbetar2;
+				PRODUCT_NAME = cbetar2;
+				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
-		DB4B05512594640B001E907A /* Debug */ = {
+		DBC713CE269D606400FCE5B0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = cbetar2/cbetar2.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = XU8X8HU5ST;
-				INFOPLIST_FILE = cbetar2/Info.plist;
+				INFOPLIST_FILE = "Tests iOS/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2;
-				PRODUCT_BUNDLE_IDENTIFIER = io.github.mrmyhuang.cbetar2;
-				PRODUCT_NAME = "電子佛典";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				SUPPORTS_MACCATALYST = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.github.myhpwa.Tests-iOS";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,6";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "cbetar2 (iOS)";
 			};
 			name = Debug;
 		};
-		DB4B05522594640B001E907A /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = cbetar2/cbetar2.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
-				DEVELOPMENT_TEAM = XU8X8HU5ST;
-				INFOPLIST_FILE = cbetar2/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.2;
-				PRODUCT_BUNDLE_IDENTIFIER = io.github.mrmyhuang.cbetar2;
-				PRODUCT_NAME = "電子佛典";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				SUPPORTS_MACCATALYST = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,6";
-			};
-			name = Release;
-		};
-		DB4B05542594640B001E907A /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = XU8X8HU5ST;
-				INFOPLIST_FILE = cbetar2Tests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = io.github.mrmyhuang.cbetar2Tests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/cbetar2.app/cbetar2";
-			};
-			name = Debug;
-		};
-		DB4B05552594640B001E907A /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = XU8X8HU5ST;
-				INFOPLIST_FILE = cbetar2Tests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = io.github.mrmyhuang.cbetar2Tests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/cbetar2.app/cbetar2";
-			};
-			name = Release;
-		};
-		DB4B05572594640B001E907A /* Debug */ = {
+		DBC713CF269D606400FCE5B0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = XU8X8HU5ST;
-				INFOPLIST_FILE = cbetar2UITests/Info.plist;
+				INFOPLIST_FILE = "Tests iOS/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = io.github.mrmyhuang.cbetar2UITests;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.github.myhpwa.Tests-iOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = cbetar2;
-			};
-			name = Debug;
-		};
-		DB4B05582594640B001E907A /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = XU8X8HU5ST;
-				INFOPLIST_FILE = cbetar2UITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = io.github.mrmyhuang.cbetar2UITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = cbetar2;
+				TEST_TARGET_NAME = "cbetar2 (iOS)";
+				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		DB4B052125946404001E907A /* Build configuration list for PBXProject "cbetar2" */ = {
+		DBC71394269D606300FCE5B0 /* Build configuration list for PBXProject "cbetar2" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				DB4B054E2594640B001E907A /* Debug */,
-				DB4B054F2594640B001E907A /* Release */,
+				DBC713C5269D606400FCE5B0 /* Debug */,
+				DBC713C6269D606400FCE5B0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		DB4B05502594640B001E907A /* Build configuration list for PBXNativeTarget "cbetar2" */ = {
+		DBC713C7269D606400FCE5B0 /* Build configuration list for PBXNativeTarget "cbetar2 (iOS)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				DB4B05512594640B001E907A /* Debug */,
-				DB4B05522594640B001E907A /* Release */,
+				DBC713C8269D606400FCE5B0 /* Debug */,
+				DBC713C9269D606400FCE5B0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		DB4B05532594640B001E907A /* Build configuration list for PBXNativeTarget "cbetar2Tests" */ = {
+		DBC713CD269D606400FCE5B0 /* Build configuration list for PBXNativeTarget "Tests iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				DB4B05542594640B001E907A /* Debug */,
-				DB4B05552594640B001E907A /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		DB4B05562594640B001E907A /* Build configuration list for PBXNativeTarget "cbetar2UITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				DB4B05572594640B001E907A /* Debug */,
-				DB4B05582594640B001E907A /* Release */,
+				DBC713CE269D606400FCE5B0 /* Debug */,
+				DBC713CF269D606400FCE5B0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -629,7 +498,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		13F0E54B26CF783500698892 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+		DBC713D7269D6B2C00FCE5B0 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
 			requirement = {
@@ -640,12 +509,12 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		13F0E54C26CF783500698892 /* SnapKit */ = {
+		DBC713D8269D6B2C00FCE5B0 /* SnapKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 13F0E54B26CF783500698892 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			package = DBC713D7269D6B2C00FCE5B0 /* XCRemoteSwiftPackageReference "SnapKit" */;
 			productName = SnapKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
-	rootObject = DB4B051E25946404001E907A /* Project object */;
+	rootObject = DBC71391269D606300FCE5B0 /* Project object */;
 }

@@ -5,17 +5,27 @@
 //  Created by Roger Huang on 2020/12/24.
 //
 
+import SwiftUI
 import UIKit
 import WebKit
 import SnapKit
 
-class ViewController: UIViewController {
+struct WebViewControllerWrap: UIViewControllerRepresentable {
+    
+    func makeUIViewController(context: Context) -> some UIViewController {
+        return WebViewController()
+    }
+    
+    func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
+    }
+}
+
+class WebViewController: UIViewController {
     
     let jsonUriPrefix = "data:text/json;charset=utf-8,"
     #if DEBUG
-    let baseURL = URL(string: "http://localhost:3000")!
+    let baseURL = URL(string: "http://localhost:3000/")!
     #else
-    //let baseURL = URL(string: "https://mrrogerhuang.github.io")!
     let baseURL = URL(string: "https://mrmyhuang.github.io")!
     #endif
     
@@ -34,6 +44,7 @@ class ViewController: UIViewController {
         
         let webView = WKWebView(frame: .zero, configuration: configuration)
         webView.navigationDelegate = self
+        webView.uiDelegate = self
         webView.scrollView.contentInsetAdjustmentBehavior = .never
         
         let websiteDataTypes = NSSet(array: [WKWebsiteDataTypeDiskCache, WKWebsiteDataTypeMemoryCache])
@@ -75,13 +86,13 @@ class ViewController: UIViewController {
     }
 }
 
-extension ViewController: UIDocumentPickerDelegate {
+extension WebViewController: UIDocumentPickerDelegate {
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
         try? FileManager.default.removeItem(at: fileURL! )
     }
 }
 
-extension ViewController: WKScriptMessageHandler {
+extension WebViewController: WKScriptMessageHandler {
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         guard let dict = message.body as? Dictionary<String, Any> else { return }
         guard let event = dict["event"] as? String else { return }
@@ -93,13 +104,13 @@ extension ViewController: WKScriptMessageHandler {
     }
 }
 
-extension ViewController: WKNavigationDelegate {
+extension WebViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         if navigationAction.navigationType == .linkActivated  {
             if let url = navigationAction.request.url {
                 if url.absoluteString.contains(jsonUriPrefix) {
                     if let dataStr = url.absoluteString.replacingOccurrences(of: jsonUriPrefix, with: "").removingPercentEncoding {
-                        saveText(text: dataStr, file: "Settings.json")
+                        saveText(text: dataStr, file: "TfwcSettings.json")
                         decisionHandler(.cancel)
                         return
                     }
@@ -112,5 +123,14 @@ extension ViewController: WKNavigationDelegate {
         }
         
         decisionHandler(.allow)
+    }
+}
+
+extension WebViewController: WKUIDelegate {
+    func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
+        if let url = navigationAction.request.url {
+            UIApplication.shared.open(url)
+        }
+        return nil
     }
 }
