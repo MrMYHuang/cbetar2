@@ -121,7 +121,6 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
     this.setState({ showUpdateAllJuansDone: true });
   }
 
-  reportSubject = '';
   reportText = '';
   render() {
     return (
@@ -190,7 +189,6 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
               <IonIcon icon={bug} slot='start' />
               <IonLabel className='ion-text-wrap uiFont'>回報app異常記錄</IonLabel>
               <IonButton fill='outline' shape='round' slot='end' size='large' className='uiFont' onClick={e => {
-                this.reportSubject = `電子佛典異常記錄回報`;
                 this.reportText = "問題描述(建議填寫)：\n\n瀏覽器：" + navigator.userAgent + "\n\nApp版本：" + PackageInfos.pwaVersion + "\n\nApp設定：" + JSON.stringify(this.props.settings) + "\n\nLog：\n" + Globals.getLog();
                 this.setState({ showBugReportAlert: true });
               }}>回報</IonButton>
@@ -213,8 +211,8 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                     cssClass: 'primary uiFont',
                     handler: async (value) => {
                       try {
-                        await Globals.axiosInstance.post('https://vh6ud1o56g.execute-api.ap-northeast-1.amazonaws.com/bugReportMailer', {
-                          subject: this.reportSubject,
+                        await Globals.axiosInstance.post(Globals.bugReportApiUrl, {
+                          subject: `${PackageInfos.productName}異常記錄回報`,
                           text: `E-mail: ${value.name0}\n${this.reportText}`,
                         });
                         this.setState({ showBugReportAlert: false, showToast: true, toastMessage: `異常回報成功` });
