@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import Globals from '../Globals';
 import { helpCircle, text, documentText, refreshCircle, musicalNotes, colorPalette, bug, download, print, informationCircle } from 'ionicons/icons';
+
 import './SettingsPage.css';
 import PackageInfos from '../../package.json';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
@@ -14,6 +15,7 @@ interface StateProps {
   showFontLicense: boolean;
   juansDownloadedRatio: number;
   showUpdateAllJuansDone: boolean;
+  showBugReportAlert: boolean;
   showClearAlert: boolean;
   showToast: boolean;
   toastMessage: string;
@@ -38,6 +40,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
     this.state = {
       showFontLicense: false,
       juansDownloadedRatio: 0,
+      showBugReportAlert: false,
       showUpdateAllJuansDone: false,
       showClearAlert: false,
       showToast: false,
@@ -118,6 +121,8 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
     this.setState({ showUpdateAllJuansDone: true });
   }
 
+  reportSubject = '';
+  reportText = '';
   render() {
     return (
       <IonPage>
@@ -185,8 +190,48 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
               <IonIcon icon={bug} slot='start' />
               <IonLabel className='ion-text-wrap uiFont'>回報app異常記錄</IonLabel>
               <IonButton fill='outline' shape='round' slot='end' size='large' className='uiFont' onClick={e => {
-                window.open(`mailto:myh@live.com?subject=電子佛典異常記錄回報&body=${encodeURIComponent("問題描述(建議填寫)：\n\n瀏覽器：" + navigator.userAgent + "\n\nApp版本：" + PackageInfos.pwaVersion + "\n\nApp設定：" + JSON.stringify(this.props.settings) + "\n\nLog：\n" + Globals.getLog())}`);
+                this.reportSubject = `電子佛典異常記錄回報`;
+                this.reportText = "問題描述(建議填寫)：\n\n瀏覽器：" + navigator.userAgent + "\n\nApp版本：" + PackageInfos.pwaVersion + "\n\nApp設定：" + JSON.stringify(this.props.settings) + "\n\nLog：\n" + Globals.getLog();
+                this.setState({ showBugReportAlert: true });
               }}>回報</IonButton>
+              <IonAlert
+                cssClass='uiFont'
+                backdropDismiss={false}
+                isOpen={this.state.showBugReportAlert}
+                header={'異常回報'}
+                subHeader='輸入您的 E-mail，以後續聯絡'
+                inputs={[
+                  {
+                    name: 'name0',
+                    type: 'email',
+                    placeholder: '例：abc@example.com'
+                  },
+                ]}
+                buttons={[
+                  {
+                    text: '送出',
+                    cssClass: 'primary uiFont',
+                    handler: async (value) => {
+                      try {
+                        await Globals.axiosInstance.post('https://vh6ud1o56g.execute-api.ap-northeast-1.amazonaws.com/bugReportMailer', {
+                          subject: this.reportSubject,
+                          text: `E-mail: ${value.name0}\n${this.reportText}`,
+                        });
+                        this.setState({ showBugReportAlert: false, showToast: true, toastMessage: `異常回報成功` });
+                      } catch (error) {
+                        console.error(error);
+                        this.setState({ showBugReportAlert: false, showToast: true, toastMessage: `異常回報失敗` });
+                      }
+                    },
+                  },
+                  {
+                    text: '取消',
+                    role: 'cancel',
+                    cssClass: 'secondary uiFont',
+                    handler: () => this.setState({ showBugReportAlert: false }),
+                  },
+                ]}
+              />
             </IonItem>
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}

@@ -360,7 +360,7 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
             this.registrationNew?.installing?.postMessage({ type: 'SKIP_WAITING' });
             this.registrationNew?.waiting?.postMessage({ type: 'SKIP_WAITING' });
           }}
-          header={'請重啟 app!'}
+          header={'App 已更新，請重啟!'}
           buttons={[
             {
               text: '關閉',
