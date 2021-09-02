@@ -2,7 +2,7 @@
   "name": "cbetar2",
   "productName": "電子佛典",
   "pwaVersion": "4.24.0",
-  "version": "13.2.0",
+  "version": "13.2.2",
   "license": "MIT",
   "keywords": [
     "CBETA",
@@ -43,7 +43,7 @@
     "dist-mac": "npm run build-electron && electron-builder -m pkg -c electronBuilderConfigs/mac.json",
     "icons-mas": "cd buildElectron && iconutil -c icns icon.iconset",
     "dist-mas": "npm run build-electron-store && electron-builder -m mas --universal -c electronBuilderConfigs/mas.json",
-    "dist-mas-dev": "npm run build-electron-store && electron-builder -m mas-dev --universal -c electronBuilderConfigs/masDev.json"
+    "dist-mas-dev": "npm run build-electron-store && electron-builder -m mas-dev --arm64 -c electronBuilderConfigs/masDev.json"
   },
   "eslintConfig": {
     "extends": "react-app"

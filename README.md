@@ -240,6 +240,9 @@ https://github.com/MrMYHuang/cbetar2/releases/latest
 11. 合成語音選項在Android Chrome無效。( https://stackoverflow.com/a/61366224/631869 )
 
 ## <a id='history'>版本歷史</a>
+* MAS 13.2.2:
+  * 修正無法列印的 bug。
+
 * MAS 13.2.0:
   * 支援 Universal app。
 
