@@ -252,9 +252,9 @@ async function createWindow() {
 
         try {
           if (isDevMode()) {
-            await mainWindow!.loadURL('http://localhost:3000');
+            await mainWindow?.loadURL('http://localhost:3000');
           } else {
-            await mainWindow.loadURL('https://mrmyhuang.github.io');
+            await mainWindow?.loadURL('https://mrmyhuang.github.io');
           }
         } catch (error) {
           fail(error);

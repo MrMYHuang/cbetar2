@@ -12,7 +12,7 @@
   },
   "mas": {
     "type": "distribution",
-    "identity": "3rd Party Mac Developer",
+    "identity": "Meng-Yuan Huang",
     "artifactName": "${name}_${version}_mas64.${ext}",
     "category": "public.app-category.education",
     "minimumSystemVersion": "10.10",
