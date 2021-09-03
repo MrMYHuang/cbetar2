@@ -11,14 +11,14 @@ CBETA電子佛典閱讀器2(非官方) (Chinese Buddhist Electronic Text Associa
 
 * <a id='modular'>模組化程式</a>
 
-  cbetar2為一支模組化程式，由frontend app (PWA) + backend app (CBETA API or cbetar2 backend)組成。有兩種使用方式：
+  cbetar2為一支模組化程式，由 frontend app (PWA) + backend app (CBETA API or cbetar2 backend) 組成。有兩種使用方式：
 
   1. 連線DB版app：PWA + CBETA API
     * 此版本不須先下載CBETA離線經文資料檔，但要作離線瀏覽要把經文加至書籤。
     * 安裝方式：瀏覽器安裝、商店安裝。支援多種平台。
   2. 離線DB版app：PWA + cbetar2 backend
     * 此版本預設與連線版相同，多了離線DB的支援。要切為離線DB模式，要先下載、解壓<a href='http://www.cbeta.org/download/cbreader.htm'>CBETA離線經文資料檔</a>，可離線瀏覽目錄、經文。
-    * 安裝方式：下載安裝檔案安裝。支援Windows 7+, Linux, macOS 10.10+。
+    * 安裝方式：下載安裝檔案安裝。支援 Windows 7+, Linux, macOS 10.10+。
     * 設定：啟動app後，執行選單/檔案/設定Bookcase目錄。
 
 * <a id='search'>搜尋</a>
@@ -58,7 +58,7 @@ CBETA電子佛典閱讀器2(非官方) (Chinese Buddhist Electronic Text Associa
 
   <img src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/Text2SpeechRepeat.png' width='70%' />
 
-  6. 合成語音切換：可切換中國大陸腔、台灣腔、廣東腔，尚不支援Android, Linux。Windows 10使用者，請先至OS設定安裝各種語音檔，如圖所示：
+  6. 合成語音切換：可切換中國大陸腔、台灣腔、廣東腔，尚不支援 Android, Linux。Windows 10 使用者，請先至 OS 設定安裝各種語音檔，如圖所示：
 
   <img src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/InstalledVoicesWin10.png' width='70%' />
 
@@ -85,14 +85,13 @@ CBETA電子佛典閱讀器2(非官方) (Chinese Buddhist Electronic Text Associa
 * 經文分頁
   1. 經文可調整成單頁或分頁模式。單頁模式，使用滑動方式閱讀經文。分頁模式，可使用鍵盤方向鍵或螢幕方向鍵切換經文頁。
 * 字型調整
-  1. 考量視力不佳的同修，提供最大64px的經文字型設定。若有需要更大字型，請E-mail或GitHub聯絡開發者新增。
+  1. 考量視力不佳的同修，提供最大 64px 的經文字型設定。若有需要更大字型，請 E-mail 或 GitHub 聯絡開發者新增。
   2. 支援全字庫楷書字型。
 * 直排文字
   1. 傳統中文書的直排文字、由右至左排版。
-* <a id='shortcuts'>App捷徑</a>
+* <a id='shortcuts'>App 捷徑</a>
   1. Windows, Android的Chrome(建議最新版)使用者，滑鼠右鍵或長按app圖示，可存取app功能捷徑，目前有：(開啟)第1書籤、佛學詞典、萌典字典。
-  2. 不支援由Microsoft Store或Google Play Store下載的PWA!
-  3. 若由舊版app升級至 >= 4.3.0版，要作一次移除app(但可不刪app資料)，再重新安裝，此app捷徑選單才會出現。
+  2. 若由舊版app升級至 >= 4.3.0版，要作一次移除app(但可不刪app資料)，再重新安裝，此app捷徑選單才會出現。
 
   <img src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/AppShortcuts.png' width='50%' />
 
@@ -101,11 +100,11 @@ CBETA電子佛典閱讀器2(非官方) (Chinese Buddhist Electronic Text Associa
   2. 應用：可選擇印紙本或PDF檔。
   3. 調整：可至設定頁調整字型大小、橫/直排文字、黑體/楷書體，再作列印。
   4. 設定頁可設定"經文列印樣式"，目前支援"白底黑字"、"抄經本"。
-  5. 已在Chrome 87, Edge Chrome 87測過可用。Safari不支援!
+  5. 已在 Chrome 87, Edge Chrome 87 測過可用。Safari 不支援!
 
   <img src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/PrintManuscript.png' width='90%' />
 
-* App設定匯出/匯入
+* App 設定匯出/匯入
   1. 此功能位於設定頁。
   2. 匯出app設定，同時也會匯出書籤資訊，可作備分。
   3. 匯入設定後，會重新下載離線經文檔。
@@ -185,8 +184,6 @@ https://MrMYHuang.github.io
 <img width="auto" height='60px' alt='Google Play立即下載' src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/zh-tw_badge_web_generic.png'/>
 </a>
 
-(註：此種安裝渠道尚不支援"App捷徑"功能！)
-
 #### iOS 14.0+ (iPhone), iPadOS 14.0+ (iPad) - 使用 App Store
 <a href='https://apps.apple.com/app/id1546347689' target='_blank'>
 <img width="auto" height='60px' src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/Download_on_the_App_Store_Badge_CNTC_RGB_blk_100217.svg'/>
@@ -202,8 +199,7 @@ https://MrMYHuang.github.io
 <img width="auto" height='60px' src='https://developer.microsoft.com/store/badges/images/Chinese-Traditional_get-it-from-MS.png' alt='Chinese Traditional badge'/>
 </a>
 
-(註：此種安裝渠道尚不支援"App捷徑"功能！)
-#### Linux - 使用Snap Store
+#### Linux x86_64 & arm64 - 使用Snap Store
 <a href='https://snapcraft.io/cbetar2' target='_blank'>
 <img width="auto" height='60px' src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/[TW]-snap-store-black@2x.png' />
 </a>
