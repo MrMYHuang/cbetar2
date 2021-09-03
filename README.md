@@ -123,9 +123,10 @@ CBETA電子佛典閱讀器2(非官方) (Chinese Buddhist Electronic Text Associa
 * iPad 7 + Safari
 * iPhone 8 (模擬器) + Safari
 * Debian Linux 10 + Chrome
-* Macbook Air 2020 (M1) + UTM + Ubuntu 20.04 arm64 + Electron app (from Snap Store)
-* Raspberry Pi 4 + Ubuntu arm64
-* Firefly RK-3399 + Android 7.1 + Firefox
+* macOS 11.5.2 arm64 + Electron app (from Apple App Store)
+* macOS 11.5.2 arm64 host + Ubuntu 20.04 arm64 guest + Electron app (from Snap Store)
+* Raspberry Pi 4 + Ubuntu arm64 + Electron app (from Snap Store)
+* Firefly RK-3399 + Android 7.1 + Firefox 91 (from PWA)
 
 非上述環境仍可嘗試使用此app。若有<a href='#knownIssues'>已知問題</a>未描述的問題，可用<a href='#report'>異常回報</a>功能。
 
