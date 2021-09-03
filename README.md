@@ -118,12 +118,13 @@ CBETA電子佛典閱讀器2(非官方) (Chinese Buddhist Electronic Text Associa
 
 ## 支援平台
 已在這些環境作過安裝、測試:
-* Windows 10 + Edge Chrome
+* Windows 10 + Chrome
 * Android 9 + Chrome
-* macOS 11 + Edge Chrome
+* macOS 11 + Chrome
 * iPad 7 + Safari
 * iPhone 8 (模擬器) + Safari
 * Debian Linux 10 + Chrome
+* Raspberry Pi 4 Ubuntu arm64
 
 非上述環境仍可嘗試使用此app。若有<a href='#knownIssues'>已知問題</a>未描述的問題，可用<a href='#report'>異常回報</a>功能。
 
@@ -150,51 +151,51 @@ https://MrMYHuang.github.io
 <img width="auto" height='60px' src='https://user-images.githubusercontent.com/9122190/28998409-c5bf7362-7a00-11e7-9b63-db56694522e7.png'/>
 </a>
 
-此progressive web app (PWA)，可不安裝直接在網頁瀏覽器執行，或安裝至手機、平板、筆電、桌機。建議安裝，以避免瀏覽器定期清除快取，導致書籤資料不見！
+此 progressive web app (PWA)，可不安裝直接在網頁瀏覽器執行，或安裝至手機、平板、筆電、桌機。建議安裝，以避免瀏覽器定期清除快取，導致書籤資料不見！
 
-#### Windows, macOS, Linux, Android - 使用Chrome安裝
-使用Chrome瀏覧器（建議最新版）開啟上述PWA網址後，網址列會出現一個加號，如圖所示：
+#### Windows, macOS, Linux, Android - 使用 Chrome 安裝
+使用 Chrome 瀏覧器（建議最新版）開啟上述PWA網址後，網址列會出現一個加號，如圖所示：
 <img src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/ChromeInstall.png' width='50%' />
 
 點擊它，以完成安裝。安裝完後會在桌面出現"電子佛典"app圖示。
 
-#### iOS - 使用Safari安裝
-1. 使用Safari開啟web app網址，再點擊下方中間的"分享"圖示：
+#### iOS - 使用 Safari 安裝
+1. 使用 Safari 開啟 web app 網址，再點擊下方中間的"分享"圖示：
 
 <img src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/Safari/OpenAppUrl.png' width='50%' />
 
-1. 滑動頁面至下方，點選"加入主畫面"(Add to Home Screen)：
+1. 滑動頁面至下方，點選"加入主畫面" (Add to Home Screen)：
 
 <img src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/Safari/AddToHomeScreen.png' width='50%' />
 
-1. 點擊"新增"(Add)：
+1. 點擊"新增" (Add)：
 
 <img src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/Safari/AddToHomeScreen2.png' width='50%' />
 
-4. App安裝完，出現在主畫面的圖示：
+4. App 安裝完，出現在主畫面的圖示：
 
 <img src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/Safari/AppIcon.png' width='50%' />
 
-### <a id='storeApp'>從App商店安裝</a>
+### <a id='storeApp'>從 App 商店安裝</a>
 
-#### Android - 使用Google Play Store
+#### Android 4.4+ - 使用 Google Play Store
 <a href='https://play.google.com/store/apps/details?id=io.github.mrmyhuang.cbetar2' target='_blank'>
 <img width="auto" height='60px' alt='Google Play立即下載' src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/zh-tw_badge_web_generic.png'/>
 </a>
 
 (註：此種安裝渠道尚不支援"App捷徑"功能！)
 
-#### iOS 14.0+ (iPhone), iPadOS 14.0+ (iPad) - 使用App Store
+#### iOS 14.0+ (iPhone), iPadOS 14.0+ (iPad) - 使用 App Store
 <a href='https://apps.apple.com/app/id1546347689' target='_blank'>
 <img width="auto" height='60px' src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/Download_on_the_App_Store_Badge_CNTC_RGB_blk_100217.svg'/>
 </a>
 
-#### macOS 10.10+ - 使用App Store
+#### macOS 10.10+ (x86_64, arm64) - 使用 App Store
 <a href='https://apps.apple.com/app/id1546347689' target='_blank'>
 <img width="auto" height='60px' src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/Download_on_the_Mac_App_Store_Badge_CNTC_RGB_blk_100217.svg'/>
 </a>
 
-#### Windows 10 - 使用Microsoft Store
+#### Windows 10 - 使用 Microsoft Store
 <a href='//www.microsoft.com/store/apps/9P6TDQX46JJL' target='_blank'>
 <img width="auto" height='60px' src='https://developer.microsoft.com/store/badges/images/Chinese-Traditional_get-it-from-MS.png' alt='Chinese Traditional badge'/>
 </a>
@@ -209,7 +210,7 @@ https://MrMYHuang.github.io
 請至此頁面下載最新版安裝檔：
 https://github.com/MrMYHuang/cbetar2/releases/latest
 
-支援的64-bit作業系統如下(Android為連線DB版app，其他都是離線DB版app)：
+支援的 64-bit 作業系統如下(Android 為連線 DB app，其他都是離線 DB app)：
 
   1. Android (中國大陸使用者也能安裝)
   2. Linux DEB (Debian, Ubuntu, ...)
@@ -240,6 +241,9 @@ https://github.com/MrMYHuang/cbetar2/releases/latest
 11. 合成語音選項在Android Chrome無效。( https://stackoverflow.com/a/61366224/631869 )
 
 ## <a id='history'>版本歷史</a>
+* Linux 13.2.2:
+  * 支援 Linux ARM64 (如 Raspiberry Pi Ubuntu arm64).
+
 * MAS 13.2.2:
   * 修正無法列印的 bug。
 
