@@ -39,6 +39,7 @@
     "dist-deb": "npm run build-electron && electron-builder -l deb -c electronBuilderConfigs/deb.json",
     "dist-rpm": "npm run build-electron && electron-builder -l rpm -c electronBuilderConfigs/rpm.json",
     "dist-snap": "npm run build-electron && rm -f dist/*.snap && electron-builder -l snap -c electronBuilderConfigs/snap.json",
+    "dist-snap-arm64": "export SNAPCRAFT_BUILD_ENVIRONMENT=lxd && npm run build-electron-store && rm -f dist/*.snap && electron-builder -l snap -c electronBuilderConfigs/snap.json --arm64",
     "publish-snap": "snapcraft upload --release=stable dist/*.snap",
     "dist-mac": "npm run build-electron && electron-builder -m pkg -c electronBuilderConfigs/mac.json",
     "icons-mas": "cd buildElectron && iconutil -c icns icon.iconset",
@@ -52,7 +53,7 @@
     "@types/semver": "^7.3.8",
     "axios": "^0.21.1",
     "electron-window-state": "^5.0.3",
-    "libxslt-myh": "^0.9.8",
+    "libxslt-myh": "^0.9.9",
     "node-downloader-helper": "^1.0.18",
     "semver": "^7.3.5"
   },
