@@ -125,6 +125,7 @@ CBETA電子佛典閱讀器2(非官方) (Chinese Buddhist Electronic Text Associa
 * iPhone 8 (模擬器) + Safari
 * Debian Linux 10 + Chrome
 * Raspberry Pi 4 Ubuntu arm64
+* Firefly RK-3399 Android 7.1 + Firefox
 
 非上述環境仍可嘗試使用此app。若有<a href='#knownIssues'>已知問題</a>未描述的問題，可用<a href='#report'>異常回報</a>功能。
 
