@@ -38,6 +38,7 @@ class _BookmarkPage extends React.Component<PageProps, State> {
   }
 
   ionViewWillEnter() {
+    //console.log(`${this.props.match.url} will enter.`);
     let queryParams = queryString.parse(this.props.location.search) as any;
     if (queryParams.item && queryParams.item < this.props.bookmarks.length) {
       const bookmark = this.props.bookmarks[queryParams.item];
@@ -48,6 +49,37 @@ class _BookmarkPage extends React.Component<PageProps, State> {
     }
     //console.log( 'view will enter' );
   }
+
+  componentDidMount() {
+    console.log(`did mount: ${this.props.match.url}`);
+  }
+
+  /* */
+  ionViewDidEnter() {
+    console.log(`${this.props.match.url} did enter.`);
+    //console.log(this.props.history.length);
+  }
+
+  ionViewWillLeave() {
+    console.log(`${this.props.match.url} will leave.`);
+    //console.log(this.props.history.length);
+  }
+
+  ionViewDidLeave() {
+    console.log(`${this.props.match.url} did leave.`);
+    //console.log(this.props.history.length);
+  }
+
+  componentWillUnmount() {
+    console.log(`${this.props.match.url} unmount`);
+  }
+
+
+  componentWillReceiveProps(nextProps: any) {
+    console.log(`route changed: ${nextProps.match.url}`)
+  }
+
+  /**/
 
   get hasBookmark() {
     return this.props.bookmarks.length > 0;
@@ -105,13 +137,7 @@ class _BookmarkPage extends React.Component<PageProps, State> {
             }
 
             event.preventDefault();
-            this.props.history.push({
-              pathname: routeLink,
-              state: {
-                uuid: bookmark.uuid,
-              },
-              search: queryString.stringify(isHtmlNode ? { file: bookmark.fileName, title: bookmark.work?.title } : {}),
-            });
+            this.props.history.push(routeLink);
           }}>
             <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
             <IonLabel className='ion-text-wrap uiFont' key={`bookmarkItemLabel_` + i}>

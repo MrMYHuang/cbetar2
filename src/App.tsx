@@ -271,7 +271,7 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
       } else {
         console.error('navigator.wakeLock is undefined.');
       }
-    } catch (err) {
+    } catch (err: any) {
       // the wake lock request fails - usually system related, such low as battery
       console.log(`${err.name}, ${err.message}`);
       console.log(new Error().stack);
