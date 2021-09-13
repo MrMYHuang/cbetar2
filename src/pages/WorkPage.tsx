@@ -140,7 +140,7 @@ class _WorkPage extends React.Component<PageProps, State> {
   }
 
   get isTopPage() {
-    return this.props.match.url === '/catalog';
+    return this.props.match.url === `${Globals.pwaUrl}/catalog`;
   }
 
   get bookmark() {
@@ -157,7 +157,7 @@ class _WorkPage extends React.Component<PageProps, State> {
     const mulu = work?.mulu;
     let rows = Array<object>();
     for (let i = 0; i < (mulu?.length || -1); i++) {
-      let routeLink = `/catalog/juan/${work?.work}/${mulu![i].juan}`;
+      let routeLink = `${Globals.pwaUrl}/catalog/juan/${work?.work}/${mulu![i].juan}`;
       rows.push(
         <IonItem key={`chapterItem` + i} button={true} onClick={async event => {
           event.preventDefault();
@@ -181,7 +181,7 @@ class _WorkPage extends React.Component<PageProps, State> {
     let juans = work?.juan_list.split(',');
     for (let i = 0; i < (juans?.length || -1); i++) {
       //if (work.nodeType == 'html')
-      let routeLink = `/catalog/juan/${work?.work}/${juans![i]}`;
+      let routeLink = `${Globals.pwaUrl}/catalog/juan/${work?.work}/${juans![i]}`;
       rows.push(
         <IonItem key={`juanItem` + i} button={true} onClick={async event => {
           event.preventDefault();
@@ -230,7 +230,7 @@ class _WorkPage extends React.Component<PageProps, State> {
               <IonIcon icon={bookmark} slot='icon-only' />
             </IonButton>
 
-            <IonButton fill="clear" slot='end' onClick={e => this.props.history.push(`/${this.props.match.params.tab}`)}>
+            <IonButton fill="clear" slot='end' onClick={e => this.props.history.push(`${Globals.pwaUrl}/${this.props.match.params.tab}`)}>
               <IonIcon icon={home} slot='icon-only' />
             </IonButton>
 

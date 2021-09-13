@@ -68,7 +68,7 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
   }
 
   get isTopPage() {
-    return this.props.match.url === `/${this.props.match.params.tab}`;
+    return this.props.match.url === `${Globals.pwaUrl}/${this.props.match.params.tab}`;
   }
 
   async lookupDict(keyword: string) {
@@ -159,7 +159,7 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
             </IonButton>
 
             <IonButton fill='outline' shape='round' slot='start' onClick={ev => {
-              this.props.history.push(`/dictionary/search`);
+              this.props.history.push(`${Globals.pwaUrl}/dictionary/search`);
             }}>
               <span className='uiFont'>萌典字典</span>
             </IonButton>
@@ -202,7 +202,7 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
             >
               <IonList>
                 <IonItem button onClick={e => {
-                  this.props.history.push(`/${this.props.match.params.tab}/searchWord`);
+                  this.props.history.push(`${Globals.pwaUrl}/${this.props.match.params.tab}/searchWord`);
                   this.setState({ popover: { show: false, event: null } });
                 }}>
                   <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
@@ -227,7 +227,7 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
                     return;
                   }
 
-                  this.props.history.push(`/dictionary/search/${this.selectedTextBeforeIonPopover}`);
+                  this.props.history.push(`${Globals.pwaUrl}/dictionary/search/${this.selectedTextBeforeIonPopover}`);
                 }}>
                   <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
                   <IonIcon icon={book} slot='start' />
@@ -242,7 +242,7 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
                   }
 
                   this.props.history.push({
-                    pathname: `/dictionary/searchWord/${this.selectedTextBeforeIonPopover}`,
+                    pathname: `${Globals.pwaUrl}/dictionary/searchWord/${this.selectedTextBeforeIonPopover}`,
                   });
                 }}>
                   <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
@@ -269,7 +269,7 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
                     this.setState({ keyword: value });
                     this.lookupDict(value);
                   } else {
-                    this.props.history.push(`/dictionary/searchWord/${value}`);
+                    this.props.history.push(`${Globals.pwaUrl}/dictionary/searchWord/${value}`);
                   }
                 }
               }} />
@@ -292,7 +292,7 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
                           this.lookupDict(keyword);
                         }
                         else {
-                          this.props.history.push(`/dictionary/searchWord/${keyword}`);
+                          this.props.history.push(`${Globals.pwaUrl}/dictionary/searchWord/${keyword}`);
                         }
                       }}>
                         <IonLabel className='ion-text-wrap uiFont' key={`wordDictHistoryLabel_` + i}>

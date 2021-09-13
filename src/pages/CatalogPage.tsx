@@ -12,18 +12,18 @@ import queryString from 'query-string';
 import { TmpSettings } from '../models/TmpSettings';
 
 const famousJuans = [
-  { title: '般若波羅蜜多心經', url: '/catalog/juan/T0251/1' },
-  { title: '金剛般若波羅蜜經', url: '/catalog/juan/T0235/1' },
-  { title: '佛說阿彌陀經', url: '/catalog/juan/T0366/1' },
-  { title: '佛說無量壽經卷上', url: '/catalog/juan/T0360/1' },
-  { title: '佛說觀無量壽佛經', url: '/catalog/juan/T0365/1' },
-  { title: '藥師琉璃光如來本願功德經', url: '/catalog/juan/T0450/1' },
-  { title: '佛說觀彌勒菩薩上生兜率天經', url: '/catalog/juan/T0452/1' },
-  { title: '佛說彌勒下生成佛經', url: '/catalog/juan/T0454/1' },
-  { title: '地藏菩薩本願經', url: '/catalog/juan/T0412/1' },
-  { title: '妙法蓮華經觀世音菩薩普門品經', url: '/catalog/juan/T0262/7' },
-  { title: '大佛頂如來密因修證了義諸菩薩萬行首楞嚴經卷第一', url: '/catalog/juan/T0945/1' },
-  { title: '佛說法滅盡經', url: '/catalog/juan/T0396/1' },
+  { title: '般若波羅蜜多心經', url: `${Globals.pwaUrl}/catalog/juan/T0251/1` },
+  { title: '金剛般若波羅蜜經', url: `${Globals.pwaUrl}/catalog/juan/T0235/1` },
+  { title: '佛說阿彌陀經', url: `${Globals.pwaUrl}/catalog/juan/T0366/1` },
+  { title: '佛說無量壽經卷上', url: `${Globals.pwaUrl}/catalog/juan/T0360/1` },
+  { title: '佛說觀無量壽佛經', url: `${Globals.pwaUrl}/catalog/juan/T0365/1` },
+  { title: '藥師琉璃光如來本願功德經', url: `${Globals.pwaUrl}/catalog/juan/T0450/1` },
+  { title: '佛說觀彌勒菩薩上生兜率天經', url: `${Globals.pwaUrl}/catalog/juan/T0452/1` },
+  { title: '佛說彌勒下生成佛經', url: `${Globals.pwaUrl}/catalog/juan/T0454/1` },
+  { title: '地藏菩薩本願經', url: `${Globals.pwaUrl}/catalog/juan/T0412/1` },
+  { title: '妙法蓮華經觀世音菩薩普門品經', url: `${Globals.pwaUrl}/catalog/juan/T0262/7` },
+  { title: '大佛頂如來密因修證了義諸菩薩萬行首楞嚴經卷第一', url: `${Globals.pwaUrl}/catalog/juan/T0945/1` },
+  { title: '佛說法滅盡經', url: `${Globals.pwaUrl}/catalog/juan/T0396/1` },
 ];
 
 const electronBackendApi: any = (window as any).electronBackendApi;
@@ -66,9 +66,9 @@ class _CatalogPage extends React.Component<PageProps, State> {
     console.log(`${this.props.match.url} will enter.`);
     let topCatalogsType = -1;
     switch (this.props.match.url) {
-      case '/catalog': topCatalogsType = 0; break;
-      case '/catalog/volumes': topCatalogsType = 1; break;
-      case '/catalog/famous': topCatalogsType = 2; break;
+      case `${Globals.pwaUrl}/catalog`: topCatalogsType = 0; break;
+      case `${Globals.pwaUrl}/catalog/volumes`: topCatalogsType = 1; break;
+      case `${Globals.pwaUrl}/catalog/famous`: topCatalogsType = 2; break;
       default: topCatalogsType = -1; break;
     }
     this.setState({ topCatalogsType: topCatalogsType });
@@ -184,7 +184,7 @@ class _CatalogPage extends React.Component<PageProps, State> {
   }
 
   get isTopCatalog() {
-    return ['/catalog', '/catalog/volumes', '/catalog/famous'].reduce((prev, curr) => prev || curr === this.props.match.url, false);
+    return [`${Globals.pwaUrl}/catalog`, `${Globals.pwaUrl}/catalog/volumes`, `${Globals.pwaUrl}/catalog/famous`].reduce((prev, curr) => prev || curr === this.props.match.url, false);
   }
 
   parentPath(path: string) {
@@ -225,11 +225,11 @@ class _CatalogPage extends React.Component<PageProps, State> {
       let routeLink = '';
       const isHtmlNode = catalog.nodeType === 'html';
       if (isHtmlNode) {
-        routeLink = `/catalog/juan/${catalog.n}/1`;
+        routeLink = `${Globals.pwaUrl}/catalog/juan/${catalog.n}/1`;
       } else if (catalog.work == null) {
-        routeLink = `/catalog/catalog/${catalog.n}`;
+        routeLink = `${Globals.pwaUrl}/catalog/catalog/${catalog.n}`;
       } else {
-        routeLink = `/catalog/work/${catalog.work}`;
+        routeLink = `${Globals.pwaUrl}/catalog/work/${catalog.work}`;
       }
       rows.push(
         <IonItem key={`${catalog.n}item` + index} button={true} onClick={async event => {
@@ -291,9 +291,9 @@ class _CatalogPage extends React.Component<PageProps, State> {
                 const value = +e.detail.value;
                 let nextPage = '';
                 switch (value) {
-                  case 0: nextPage = '/catalog'; break;
-                  case 1: nextPage = '/catalog/volumes'; break;
-                  case 2: nextPage = '/catalog/famous'; break;
+                  case 0: nextPage = `${Globals.pwaUrl}/catalog`; break;
+                  case 1: nextPage = `${Globals.pwaUrl}/catalog/volumes`; break;
+                  case 2: nextPage = `${Globals.pwaUrl}/catalog/famous`; break;
                   case -1: nextPage = this.props.match.url; break;
                 }
                 if (this.props.match.url !== nextPage) {

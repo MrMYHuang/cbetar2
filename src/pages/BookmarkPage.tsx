@@ -7,6 +7,7 @@ import './WorkPage.css';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
 import { download, swapVertical } from 'ionicons/icons';
 import queryString from 'query-string';
+import Globals from '../Globals';
 
 interface Props {
   dispatch: Function;
@@ -42,10 +43,10 @@ class _BookmarkPage extends React.Component<PageProps, State> {
     let queryParams = queryString.parse(this.props.location.search) as any;
     if (queryParams.item && queryParams.item < this.props.bookmarks.length) {
       const bookmark = this.props.bookmarks[queryParams.item];
-      this.props.history.push(`/catalog/juan/${bookmark.work?.work}/${bookmark.work?.juan}`);
+      this.props.history.push(`${Globals.pwaUrl}/catalog/juan/${bookmark.work?.work}/${bookmark.work?.juan}`);
     } else if (!this.hasBookmark) {
       this.setState({ showToast: true, toastMessage: '無書籤！請從目錄頁新增書籤。' });
-      this.props.history.push(`/catalog/famous`);
+      this.props.history.push(`${Globals.pwaUrl}/catalog/famous`);
     }
     //console.log( 'view will enter' );
   }
@@ -86,7 +87,7 @@ class _BookmarkPage extends React.Component<PageProps, State> {
   }
 
   get isFamousPage() {
-    return this.props.match.url === `/catalog/famous`;
+    return this.props.match.url === `${Globals.pwaUrl}/catalog/famous`;
   }
 
   delBookmarkHandler(uuidStr: string) {
@@ -96,7 +97,7 @@ class _BookmarkPage extends React.Component<PageProps, State> {
     });
 
     if (!this.hasBookmark) {
-      this.props.history.push(`/catalog/famous`);
+      this.props.history.push(`${Globals.pwaUrl}/catalog/famous`);
     }
   }
 
@@ -117,15 +118,15 @@ class _BookmarkPage extends React.Component<PageProps, State> {
       let isHtmlNode = false;
       switch (bookmark.type) {
         case BookmarkType.CATALOG:
-          routeLink = `/catalog/catalog/${bookmark.uuid}`; break;
+          routeLink = `${Globals.pwaUrl}/catalog/catalog/${bookmark.uuid}`; break;
         case BookmarkType.WORK:
-          routeLink = `/catalog/work/${bookmark.uuid}`; break;
+          routeLink = `${Globals.pwaUrl}/catalog/work/${bookmark.uuid}`; break;
         case BookmarkType.JUAN:
-          routeLink = `/catalog/juan/${bookmark.work?.work}/${bookmark.work?.juan}`;
+          routeLink = `${Globals.pwaUrl}/catalog/juan/${bookmark.work?.work}/${bookmark.work?.juan}`;
           label = `${bookmark.work?.title}第${bookmark.work?.juan}卷 - ${label}`; break;
         case BookmarkType.HTML:
           isHtmlNode = true;
-          routeLink = `/catalog/juan/${bookmark.work?.work}/1`;
+          routeLink = `${Globals.pwaUrl}/catalog/juan/${bookmark.work?.work}/1`;
           label = `${bookmark.work?.title} - ${label}`; break;
       }
       rows.push(

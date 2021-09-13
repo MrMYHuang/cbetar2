@@ -79,7 +79,7 @@ class _SearchPage extends React.Component<PageProps, State> {
   }
 
   get isTopPage() {
-    return this.props.match.url === '/catalog';
+    return this.props.match.url === `${Globals.pwaUrl}/catalog`;
   }
 
   getRows() {
@@ -87,7 +87,7 @@ class _SearchPage extends React.Component<PageProps, State> {
     const searches = (this.state as any).searches as [FullTextSearch];
     searches.forEach((search, i) => {
       let label = `${search.title}卷${search.juan}\n作者:${search.creators}`;
-      let routeLink = `/catalog/juan/${search.work}/${search.juan}`;
+      let routeLink = `${Globals.pwaUrl}/catalog/juan/${search.work}/${search.juan}`;
       rows.push(
         <IonItem key={`searchItem_` + i} button={true} onClick={async event => {
           event.preventDefault();
@@ -120,7 +120,7 @@ class _SearchPage extends React.Component<PageProps, State> {
               <IonIcon icon={refreshCircle} slot='icon-only' />
             </IonButton>
 
-            <IonButton fill="clear" slot='end' onClick={e => this.props.history.push(`/${this.props.match.params.tab}`)}>
+            <IonButton fill="clear" slot='end' onClick={e => this.props.history.push(`${Globals.pwaUrl}/${this.props.match.params.tab}`)}>
               <IonIcon icon={home} slot='icon-only' />
             </IonButton>
 

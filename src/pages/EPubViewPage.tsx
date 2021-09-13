@@ -289,7 +289,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
   }
 
   get isTopPage() {
-    return this.props.match.url === '/catalog';
+    return this.props.match.url === `${Globals.pwaUrl}/catalog`;
   }
 
   get bookmark() {
@@ -1093,7 +1093,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
               <IonItem button onClick={e => {
                 this.setState({ popover: { show: false, event: null } });
-                this.props.history.push(`/catalog/work/${this.props.match.params.work}`);
+                this.props.history.push(`${Globals.pwaUrl}/catalog/work/${this.props.match.params.work}`);
               }}>
                 <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
                 <IonIcon icon={home} slot='start' />
@@ -1101,7 +1101,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
               </IonItem>
 
               <IonItem button onClick={e => {
-                this.props.history.push(`/${this.props.match.params.tab}`);
+                this.props.history.push(`${Globals.pwaUrl}/${this.props.match.params.tab}`);
                 this.setState({ popover: { show: false, event: null } });
               }}>
                 <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
@@ -1146,7 +1146,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
                 }
 
                 this.props.history.push({
-                  pathname: `/dictionary/search/${selectedText}`,
+                  pathname: `${Globals.pwaUrl}/dictionary/search/${selectedText}`,
                 });
               }}>
                 <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
@@ -1163,7 +1163,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
                 }
 
                 this.props.history.push({
-                  pathname: `/dictionary/searchWord/${selectedText}`,
+                  pathname: `${Globals.pwaUrl}/dictionary/searchWord/${selectedText}`,
                 });
               }}>
                 <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}

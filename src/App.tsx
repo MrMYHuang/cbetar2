@@ -303,8 +303,8 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
         query = decodeURIComponent(queryMatches[1]);
       }
       return <Redirect to={routeMatches[1] + query} />;
-    } else if (window.location.pathname === '/') {
-      return <Redirect to="/bookmarks" />;
+    } else if (window.location.pathname === `${Globals.pwaUrl}/` || window.location.pathname === `${Globals.pwaUrl}`) {
+      return <Redirect to={`${Globals.pwaUrl}/bookmarks`} />;
     }
   }
 
@@ -318,33 +318,33 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
           <IonTabs>
             <IonRouterOutlet animated={false}>
               {/* The following route is for backward compatibility. */}
-              <Route path="/:tab(catalog)/webview/:work/:path/:label" render={(props: any) => <EPubViewPage {...props} />} exact={true} />
-              <Route path="/:tab(catalog)/juan/:work/:path/" render={(props: any) => <EPubViewPage {...props} />} exact={true} />
+              <Route path={`${Globals.pwaUrl}/:tab(catalog)/webview/:work/:path/:label`} render={(props: any) => <EPubViewPage {...props} />} exact={true} />
+              <Route path={`${Globals.pwaUrl}/:tab(catalog)/juan/:work/:path/`} render={(props: any) => <EPubViewPage {...props} />} exact={true} />
               {/* The following route is for backward compatibility. */}
-              <Route path="/:tab(catalog)/work/:path/:label" render={(props: any) => <WorkPage {...props} />} exact={true} />
-              <Route path="/:tab(catalog)/work/:path" render={(props: any) => <WorkPage {...props} />} exact={true} />
-              <Route path="/:tab(catalog)/search/:keyword" render={props => <SearchPage {...props} />} exact={true} />
-              <Route path="/:tab(catalog)/fulltextsearch/:keyword" render={props => <FullTextSearchPage {...props} />} exact={true} />
+              <Route path={`${Globals.pwaUrl}/:tab(catalog)/work/:path/:label`} render={(props: any) => <WorkPage {...props} />} exact={true} />
+              <Route path={`${Globals.pwaUrl}/:tab(catalog)/work/:path`} render={(props: any) => <WorkPage {...props} />} exact={true} />
+              <Route path={`${Globals.pwaUrl}/:tab(catalog)/search/:keyword`} render={props => <SearchPage {...props} />} exact={true} />
+              <Route path={`${Globals.pwaUrl}/:tab(catalog)/fulltextsearch/:keyword`} render={props => <FullTextSearchPage {...props} />} exact={true} />
               {/* The following route is for backward compatibility. */}
-              <Route path="/:tab(catalog)/catalog/:path/:label" render={(props: any) => <CatalogPage {...props} />} exact={true} />
-              <Route path="/:tab(catalog)/:type(catalog|volumes|famous)?/:path?" render={(props: any) => <CatalogPage {...props} />} exact={true} />
-              <Route path="/:tab(bookmarks)" render={(props: any) => <BookmarkPage {...props} />} exact={true} />
-              <Route path={`/:tab(dictionary)/search/:keyword?`} render={(props: any) => <DictionaryPage {...props} />} exact={true} />
-              <Route path={`/:tab(dictionary)/searchWord/:keyword?`} render={(props: any) => <WordDictionaryPage {...props} />} exact={true} />
-              <Route path="/settings" render={(props: any) => <SettingsPage {...props} />} />
-              <Route path="/" render={() => { return this.routeByQueryString(); }} exact={true} />
+              <Route path={`${Globals.pwaUrl}/:tab(catalog)/catalog/:path/:label`} render={(props: any) => <CatalogPage {...props} />} exact={true} />
+              <Route path={`${Globals.pwaUrl}/:tab(catalog)/:type(catalog|volumes|famous)?/:path?`} render={(props: any) => <CatalogPage {...props} />} exact={true} />
+              <Route path={`${Globals.pwaUrl}/:tab(bookmarks)`} render={(props: any) => <BookmarkPage {...props} />} exact={true} />
+              <Route path={`${Globals.pwaUrl}/:tab(dictionary)/search/:keyword?`} render={(props: any) => <DictionaryPage {...props} />} exact={true} />
+              <Route path={`${Globals.pwaUrl}/:tab(dictionary)/searchWord/:keyword?`} render={(props: any) => <WordDictionaryPage {...props} />} exact={true} />
+              <Route path={`${Globals.pwaUrl}/settings`} render={(props: any) => <SettingsPage {...props} />} />
+              <Route path={`${Globals.pwaUrl}/`} render={() => { return this.routeByQueryString(); }} exact={true} />
             </IonRouterOutlet>
             <IonTabBar slot="bottom">
-              <IonTabButton tab="bookmarks" href="/bookmarks">
+              <IonTabButton tab="bookmarks" href={`${Globals.pwaUrl}/bookmarks`}>
                 <IonIcon icon={bookmark} />
               </IonTabButton>
-              <IonTabButton tab="catalog" href="/catalog">
+              <IonTabButton tab="catalog" href={`${Globals.pwaUrl}/catalog`}>
                 <IonIcon icon={library} />
               </IonTabButton>
-              <IonTabButton tab="dictionay" href="/dictionary/search">
+              <IonTabButton tab="dictionay" href={`${Globals.pwaUrl}/dictionary/search`}>
                 <IonIcon icon={book} />
               </IonTabButton>
-              <IonTabButton tab="settings" href="/settings">
+              <IonTabButton tab="settings" href={`${Globals.pwaUrl}/settings`}>
                 <IonIcon icon={settings} />
               </IonTabButton>
             </IonTabBar>
