@@ -180,7 +180,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
     if (logoArray.length === 0) {
       // Download book logo.
-      const res = await Globals.axiosInstance.get(`${window.location.origin}/assets/icon/icon.png`, {
+      const res = await Globals.axiosInstance.get(`${window.location.origin}/${Globals.pwaUrl}/assets/icon/icon.png`, {
         responseType: 'arraybuffer',
       });
       logoArray = new Uint8Array(res.data);

@@ -13,7 +13,7 @@ const cbetardb = 'cbetardb';
 const storeFile = 'Settings.json';
 const twKaiFontKey = 'twKaiFont';
 /* Font source: https://data.gov.tw/dataset/5961 */
-const twKaiFontPath = '/assets/TW-Kai-98_1.woff';
+const twKaiFontPath = `${pwaUrl}/assets/TW-Kai-98_1.woff`;
 let log = '';
 
 const axiosInstance = axios.create({
