@@ -202,7 +202,12 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                   {
                     name: 'name0',
                     type: 'email',
-                    placeholder: '例：abc@example.com'
+                    placeholder: 'abc@example.com'
+                  },
+                  {
+                    name: 'name1',
+                    type: 'textarea',
+                    placeholder: '請描述發生步驟'
                   },
                 ]}
                 buttons={[
@@ -210,10 +215,15 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                     text: '送出',
                     cssClass: 'primary uiFont',
                     handler: async (value) => {
+                      if (!/^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(value.name0)) {
+                        this.setState({ showBugReportAlert: false, showToast: true, toastMessage: `錯誤，E-mail 不符格式！` });
+                        return
+                      }
+
                       try {
                         await Globals.axiosInstance.post(Globals.bugReportApiUrl, {
                           subject: `${PackageInfos.productName}異常記錄回報`,
-                          text: `E-mail: ${value.name0}\n${this.reportText}`,
+                          text: `E-mail: ${value.name0}\n\n發生步驟: ${value.name1}\n\n${this.reportText}`,
                         });
                         this.setState({ showBugReportAlert: false, showToast: true, toastMessage: `異常回報成功` });
                       } catch (error) {

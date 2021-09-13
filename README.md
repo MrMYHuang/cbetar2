@@ -185,22 +185,22 @@ https://MrMYHuang.github.io
 <img width="auto" height='60px' alt='Google Play立即下載' src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/zh-tw_badge_web_generic.png'/>
 </a>
 
-#### iOS 14.0+ (iPhone), iPadOS 14.0+ (iPad) - 使用 App Store
+#### iOS 14.0+ (iPhone), iPadOS 14.0+ (iPad) - 使用 Apple App Store
 <a href='https://apps.apple.com/app/id1546347689' target='_blank'>
 <img width="auto" height='60px' src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/Download_on_the_App_Store_Badge_CNTC_RGB_blk_100217.svg'/>
 </a>
 
-#### macOS 10.10+ (x86_64, arm64) - 使用 App Store
+#### macOS 10.10+ (x86_64, arm64) - 使用 Apple App Store
 <a href='https://apps.apple.com/app/id1546347689' target='_blank'>
 <img width="auto" height='60px' src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/Download_on_the_Mac_App_Store_Badge_CNTC_RGB_blk_100217.svg'/>
 </a>
 
-#### Windows 10 - 使用 Microsoft Store
+#### Windows 10+ - 使用 Microsoft Store
 <a href='//www.microsoft.com/store/apps/9P6TDQX46JJL' target='_blank'>
 <img width="auto" height='60px' src='https://developer.microsoft.com/store/badges/images/Chinese-Traditional_get-it-from-MS.png' alt='Chinese Traditional badge'/>
 </a>
 
-#### Linux x86_64 & arm64 - 使用Snap Store
+#### Linux (x86_64 & arm64) - 使用Snap Store
 <a href='https://snapcraft.io/cbetar2' target='_blank'>
 <img width="auto" height='60px' src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/[TW]-snap-store-black@2x.png' />
 </a>
@@ -240,6 +240,11 @@ https://github.com/MrMYHuang/cbetar2/releases/latest
 11. 合成語音選項在Android Chrome無效。( https://stackoverflow.com/a/61366224/631869 )
 
 ## <a id='history'>版本歷史</a>
+* PWA 4.25.0:
+  * 更新 node packages。
+  * 錯誤回報功能作 E-mail 檢查。
+  * 錯誤回報功能支援填寫問題發生步驟。
+
 * Linux 13.2.2:
   * 支援 Linux ARM64 (如 Raspiberry Pi Ubuntu arm64).
 
