@@ -363,6 +363,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     this.bookCreated = true;
     this.epub = nodepub.document({
       id: '123-123456789',
+      cover: './logo.png',
       title: 'Title',
       series: '',
       sequence: 1,
@@ -378,7 +379,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       contents: this.state.workInfo.title,
       source: '',
       images: ['logo.png'],
-    }, 'logo.png');
+    });
 
     let htmlStrModifiedStyles = this.state.htmlStr!;
     if (this.props.rtlVerticalLayout) {
@@ -522,18 +523,15 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       display: ${this.props.showComments ? "block" : "none"};
     }
     `);
-    //await new Promise((ok, fail) => {
-    this.epub.writeEPUB(
-      (e: any) => {
-        console.log(`Error: ${e}`);
-      },
-      '.', 'temp',
-      async () => {
+
+    try {
+      await this.epub.writeEPUB('.', 'temp');
         let fs = require('fs');
         let tempEpubBuffer = fs.readFileSync('temp.epub');
         this.book = ePub(tempEpubBuffer.buffer, {
           openAs: 'binary',
         });
+
         this.rendition = this.book.renderTo('cbetarEPubView', {
           width: "100%", height: "100%",
           spread: 'none',
@@ -589,8 +587,9 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         }
 
         this.book?.locations.generate(150);
-      }
-    );
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   updateEPubIframe() {
@@ -1047,7 +1046,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         <IonToolbar>
           <IonTitle className='uiFont'></IonTitle>
 
-          <IonButton hidden={this.isTopPage} fill="clear" slot='start' onClick={e => this.props.history.back()}>
+          <IonButton hidden={this.isTopPage} fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
             <IonIcon icon={arrowBack} slot='icon-only' />
           </IonButton>
 

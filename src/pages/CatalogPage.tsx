@@ -277,7 +277,7 @@ class _CatalogPage extends React.Component<PageProps, State> {
       <IonPage>
         <IonHeader>
           <IonToolbar>
-            <IonButton hidden={this.isTopCatalog} fill="clear" slot='start' onClick={e => this.props.history.back()}>
+            <IonButton hidden={this.isTopCatalog} fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
               <IonIcon icon={arrowBack} slot='icon-only' />
             </IonButton>
 
@@ -288,7 +288,7 @@ class _CatalogPage extends React.Component<PageProps, State> {
               interface='popover'
               interfaceOptions={{ cssClass: 'cbetar2themes' }}
               onIonChange={e => {
-                const value = e.detail.value;
+                const value = +e.detail.value;
                 let nextPage = '';
                 switch (value) {
                   case 0: nextPage = '/catalog'; break;

@@ -332,7 +332,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                 interface='popover'
                 interfaceOptions={{ cssClass: 'cbetar2themes' }}
                 onIonChange={e => {
-                  const value = e.detail.value;
+                  const value = +e.detail.value;
                   // Important! Because it can results in rerendering of its parent component but
                   // store states of this component is not updated yet! And IonSelect value is changed
                   // back to the old value and onIonChange is triggered again!
@@ -400,7 +400,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                 interface='popover'
                 interfaceOptions={{ cssClass: 'uiFont' }}
                 onIonChange={e => {
-                  const value = e.detail.value;
+                  const value = +e.detail.value;
                   if (this.props.settings.scrollbarSize === value) {
                     return;
                   }
@@ -464,7 +464,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                     this.props.dispatch({
                       type: "SET_KEY_VAL",
                       key: 'uiFontSize',
-                      val: e.detail.value,
+                      val: +e.detail.value,
                     });
                     Globals.updateCssVars(this.props.settings);
                   }} />
@@ -496,7 +496,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                 interface='popover'
                 interfaceOptions={{ cssClass: 'cbetar2themes' }}
                 onIonChange={e => {
-                  const value = e.detail.value;
+                  const value = +e.detail.value;
                   if (this.props.settings.printStyle === value) {
                     return;
                   }

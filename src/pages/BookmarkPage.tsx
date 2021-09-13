@@ -54,7 +54,7 @@ class _BookmarkPage extends React.Component<PageProps, State> {
     console.log(`did mount: ${this.props.match.url}`);
   }
 
-  /* */
+  /* * /
   ionViewDidEnter() {
     console.log(`${this.props.match.url} did enter.`);
     //console.log(this.props.history.length);
@@ -137,7 +137,13 @@ class _BookmarkPage extends React.Component<PageProps, State> {
             }
 
             event.preventDefault();
-            this.props.history.push(routeLink);
+            this.props.history.push({
+              pathname: routeLink,
+              state: {
+                uuid: bookmark.uuid,
+              },
+              search: queryString.stringify(isHtmlNode ? { file: bookmark.fileName, title: bookmark.work?.title } : {}),
+            });
           }}>
             <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
             <IonLabel className='ion-text-wrap uiFont' key={`bookmarkItemLabel_` + i}>
