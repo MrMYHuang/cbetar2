@@ -14,22 +14,22 @@
       "purpose": "maskable"
     }
   ],
-  "scope": "/",
-  "start_url": "/",
+  "scope": "/cbetar2/",
+  "start_url": "/cbetar2/",
   "shortcuts": [
     {
       "name": "第1書籤",
-      "url": "/bookmarks?item=0",
+      "url": "/cbetar2/bookmarks?item=0",
       "icons": [{ "src": "assets/icon/icon.png", "sizes": "512x512" }]
     },
     {
       "name": "佛學詞典",
-      "url": "/dictionary",
+      "url": "/cbetar2/dictionary",
       "icons": [{ "src": "assets/icon/icon.png", "sizes": "512x512" }]
     },
     {
       "name": "萌典字典",
-      "url": "/dictionary/searchWord/",
+      "url": "/cbetar2/dictionary/searchWord/",
       "icons": [{ "src": "assets/icon/icon.png", "sizes": "512x512" }]
     }
   ],
