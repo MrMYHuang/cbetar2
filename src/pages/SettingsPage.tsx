@@ -189,7 +189,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
               <IonIcon icon={bug} slot='start' />
               <IonLabel className='ion-text-wrap uiFont'>回報app異常記錄</IonLabel>
               <IonButton fill='outline' shape='round' slot='end' size='large' className='uiFont' onClick={e => {
-                this.reportText = "問題描述(建議填寫)：\n\n瀏覽器：" + navigator.userAgent + "\n\nApp版本：" + PackageInfos.pwaVersion + "\n\nApp設定：" + JSON.stringify(this.props.settings) + "\n\nLog：\n" + Globals.getLog();
+                this.reportText = "瀏覽器：" + navigator.userAgent + "\n\nApp版本：" + PackageInfos.pwaVersion + "\n\nApp設定：" + JSON.stringify(this.props.settings) + "\n\nLog：\n" + Globals.getLog();
                 this.setState({ showBugReportAlert: true });
               }}>回報</IonButton>
               <IonAlert
