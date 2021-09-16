@@ -16,6 +16,11 @@
   ],
   "scope": "/",
   "start_url": "/",
+  "url_handlers": [
+    {
+      "origin": "https://mrmyhuang.github.io"
+    }
+  ],
   "shortcuts": [
     {
       "name": "第1書籤",
