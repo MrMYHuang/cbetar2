@@ -232,14 +232,17 @@ https://github.com/MrMYHuang/cbetar2/releases/latest
 3. 語音播放速度受限不同引擎、語音限制，可能無法達到指定速度。
 4. "避免螢幕自動鎖定"功能僅限部分較新Chrome瀏覽器才支援。
 5. iOS Safari 13.4以上才支援"分享此頁"功能。
-6. iOS上，經文頁"搜尋文字"視窗中，按下搜尋鈕後，要再點擊一次向前搜尋鈕，被搜尋文字才開始會上色。
-7. iOS不支援app捷徑。
-8. Safari不支援列印直排經文。( https://bugs.webkit.org/show_bug.cgi?id=220043 )
-9. iOS Safari選擇文字後，仍會閃爍彈出式選單才消失。
+6. iOS 14 以下，經文頁"搜尋文字"視窗中，按下搜尋鈕後，要再點擊一次向前搜尋鈕，被搜尋文字才開始會上色。iOS 15 被搜尋文字上色異常。
+7. iOS 不支援 ap p捷徑。
+8. Safari 不支援列印直排經文。( https://bugs.webkit.org/show_bug.cgi?id=220043 )
+9. iOS Safari 選擇文字後，仍會閃爍彈出式選單才消失。
 10. 合成語音選項濾掉非離線語音，以避開非離線語音單次播放最長字串過小的問題。
 11. 合成語音選項在Android Chrome無效。( https://stackoverflow.com/a/61366224/631869 )
 
 ## <a id='history'>版本歷史</a>
+* PWA 4.25.1:
+  * 修正 iOS 15 中，經文頁多個與所選文字相關之功能異常的問題。
+
 * PWA 4.25.0:
   * 更新 node packages。
   * 錯誤回報功能作 E-mail 檢查。
