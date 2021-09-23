@@ -950,6 +950,9 @@ class _EPubViewPage extends React.Component<PageProps, State> {
           if (this.epubcfiFromSelectedString !== '') {
             clearInterval(timer);
             this.rendition?.display(this.epubcfiFromSelectedString).then(() => {
+              this.rendition?.annotations.removeAll();
+              this.rendition?.annotations.highlight(this.epubcfiFromSelectedString, {}, (e: any) => {
+              })
             });
           }
         }, 100);
@@ -1190,7 +1193,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
                 <IonLabel className='ion-text-wrap uiFont'>查字典</IonLabel>
               </IonItem>
 
-              <IonItem hidden={Globals.isMacCatalyst()} button onClick={e => {
+              <IonItem button onClick={e => {
                 this.setState({ popover: { show: false, event: null } });
                 this.ePubIframe?.contentWindow?.print();
               }}>
