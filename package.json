@@ -54,7 +54,7 @@
     "@types/semver": "^7.3.8",
     "axios": "^0.21.4",
     "electron-window-state": "^5.0.3",
-    "libxslt-myh": "^0.9.10",
+    "libxslt-myh": "^0.9.12",
     "node-downloader-helper": "^1.0.18",
     "semver": "^7.3.5"
   },
