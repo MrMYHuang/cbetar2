@@ -48,7 +48,7 @@ async function setCbetaBookcase() {
         cbetaOfflineDb.init(settings.cbetaBookcaseDir, isDevMode());
         fs.writeFileSync(backendAppSettingsFile, JSON.stringify(settings));
         notifyFrontendCbetaOfflineDbMode();
-      } catch (error) {
+      } catch (error: any    ) {
         dialog.showErrorBox('錯誤', `${error.message}`);
       }
     } else {
@@ -197,7 +197,6 @@ async function createWindow() {
     'height': mainWindowState.height,
     webPreferences: {
       contextIsolation: true, // protect against prototype pollution
-      enableRemoteModule: false, // turn off remote
       preload: path.join(__dirname, 'preload.js'),
     }
   });

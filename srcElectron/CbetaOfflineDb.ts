@@ -66,7 +66,7 @@ export function fetchCatalogs(path: string) {
         });
         const catalogLabel = (catalogTypeIsBulei ? navDocBulei : navDocVol).get(`//nav/${catalogXPath}/../span`)?.text() || '';
         return { label: catalogLabel, results };
-    } catch (error) {
+    } catch (error: any) {
         error.message = `path = ${path}\n${error.message}`;
         throw (error);
     }
