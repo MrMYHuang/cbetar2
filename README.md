@@ -117,33 +117,34 @@ CBETA電子佛典閱讀器2(非官方) (Chinese Buddhist Electronic Text Associa
 
 ## 支援平台
 已在這些環境作過安裝、測試:
-* Windows 10 + Chrome
+* Windows 10 x86_64 + Chrome
+* Windows 11 on ARM + Chrome
 * Android 9 + Chrome
-* macOS 11 + Chrome
-* iPad 7 + Safari
-* iPhone 8 (模擬器) + Safari
-* Debian Linux 10 + Chrome
+* Firefly RK-3399 + Android 7.1 + Firefox 91 (from PWA)
+* macOS 11 x86_64 + Chrome
 * macOS 11.5.2 arm64 + Electron app (from Apple App Store)
 * macOS 11.5.2 arm64 host + Ubuntu 20.04 arm64 guest + Electron app (from Snap Store)
+* iPad 7 iPadOS 14-15 + Safari
+* iPhone 8 (模擬器) + Safari
+* Debian Linux 10 + Chrome
 * Raspberry Pi 4 + Ubuntu arm64 + Electron app (from Snap Store)
-* Firefly RK-3399 + Android 7.1 + Firefox 91 (from PWA)
 
-非上述環境仍可嘗試使用此app。若有<a href='#knownIssues'>已知問題</a>未描述的問題，可用<a href='#report'>異常回報</a>功能。
+非上述環境仍可嘗試使用此 app。若有<a href='#knownIssues'>已知問題</a>未描述的問題，可用<a href='#report'>異常回報</a>功能。
 
-建議OS與Chrome、Safari保持在最新版，以取得最佳app體驗。
+建議 OS 與 Chrome、Safari 保持在最新版，以取得最佳 app 體驗。
 
 ## <a id='install'>安裝</a>
 
-此app有3種取得、安裝方式：
+此 app 有3種取得、安裝方式：
 
-  1. 連線DB版app：Chrome、Safari網頁瀏覽器。
-  2. 連線DB版app：App商店。
-  3. 離線DB版app：下載安裝檔。
+  1. 連線 DB 版 app：Chrome, Safari 網頁瀏覽器。
+  2. 連線 DB 版 app：App 商店。
+  3. 離線 DB 版 app：下載安裝檔。
 
-建議採用第1種用瀏覽器安裝，以取得最完整的app功能體驗。3種安裝方法如下。
+建議採用第1種用瀏覽器安裝，以取得最完整的 app 功能體驗。3種安裝方法如下。
 
 ### <a id='web-app'>從瀏覽器開啟/安裝</a>
-請用Chrome (Windows, macOS, Linux, Android作業系統使用者)、Safari (iOS (iPhone, iPad)使用者)瀏覽器開啟以下網址：
+請用 Chrome (Windows, macOS, Linux, Android作業系統使用者)、Safari iOS (iPhone, iPad 使用者) 瀏覽器開啟以下網址：
 
 https://MrMYHuang.github.io
 
@@ -156,7 +157,7 @@ https://MrMYHuang.github.io
 此 progressive web app (PWA)，可不安裝直接在網頁瀏覽器執行，或安裝至手機、平板、筆電、桌機。建議安裝，以避免瀏覽器定期清除快取，導致書籤資料不見！
 
 #### Windows, macOS, Linux, Android - 使用 Chrome 安裝
-使用 Chrome 瀏覧器（建議最新版）開啟上述PWA網址後，網址列會出現一個加號，如圖所示：
+使用 Chrome 瀏覧器（建議最新版）開啟上述 PWA 網址後，網址列會出現一個加號，如圖所示：
 <img src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/ChromeInstall.png' width='50%' />
 
 點擊它，以完成安裝。安裝完後會在桌面出現"電子佛典"app圖示。
@@ -195,12 +196,12 @@ https://MrMYHuang.github.io
 <img width="auto" height='60px' src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/Download_on_the_Mac_App_Store_Badge_CNTC_RGB_blk_100217.svg'/>
 </a>
 
-#### Windows 10+ - 使用 Microsoft Store
+#### Windows 10+ (x86_64, arm64) - 使用 Microsoft Store
 <a href='//www.microsoft.com/store/apps/9P6TDQX46JJL' target='_blank'>
 <img width="auto" height='60px' src='https://developer.microsoft.com/store/badges/images/Chinese-Traditional_get-it-from-MS.png' alt='Chinese Traditional badge'/>
 </a>
 
-#### Linux (x86_64 & arm64) - 使用Snap Store
+#### Linux (x86_64, arm64) - 使用Snap Store
 <a href='https://snapcraft.io/cbetar2' target='_blank'>
 <img width="auto" height='60px' src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/[TW]-snap-store-black@2x.png' />
 </a>
@@ -218,7 +219,7 @@ https://github.com/MrMYHuang/cbetar2/releases/latest
   5. macOS 10.10+
 
 ## TODO
-1. 離線版app未完成或不支援功能：
+1. 離線版 app 未完成或不支援功能：
   1. 搜尋目錄
   2. 全文搜索
   3. 查字典
@@ -232,14 +233,19 @@ https://github.com/MrMYHuang/cbetar2/releases/latest
 3. 語音播放速度受限不同引擎、語音限制，可能無法達到指定速度。
 4. "避免螢幕自動鎖定"功能僅限部分較新Chrome瀏覽器才支援。
 5. iOS Safari 13.4以上才支援"分享此頁"功能。
-6. iOS上，經文頁"搜尋文字"視窗中，按下搜尋鈕後，要再點擊一次向前搜尋鈕，被搜尋文字才開始會上色。
-7. iOS不支援app捷徑。
-8. Safari不支援列印直排經文。( https://bugs.webkit.org/show_bug.cgi?id=220043 )
-9. iOS Safari選擇文字後，仍會閃爍彈出式選單才消失。
-10. 合成語音選項濾掉非離線語音，以避開非離線語音單次播放最長字串過小的問題。
-11. 合成語音選項在Android Chrome無效。( https://stackoverflow.com/a/61366224/631869 )
+6. iOS 不支援 app 捷徑。
+7. Safari 不支援列印直排經文。( https://bugs.webkit.org/show_bug.cgi?id=220043 )
+8. iOS Safari 選擇文字後，仍會閃爍彈出式選單才消失。
+9. 合成語音選項濾掉非離線語音，以避開非離線語音單次播放最長字串過小的問題。
+10. 合成語音選項在Android Chrome無效。( https://stackoverflow.com/a/61366224/631869 )
 
 ## <a id='history'>版本歷史</a>
+* PWA 4.26.0:
+  * 經文頁改用螢光標示搜尋文字，以解決 iOS 15 無法標示的問題。
+
+* PWA 4.25.1:
+  * 修正 iOS 15 中，經文頁多個與所選文字相關之功能異常的問題。
+
 * PWA 4.25.0:
   * 更新 node packages。
   * 錯誤回報功能作 E-mail 檢查。

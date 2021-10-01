@@ -233,15 +233,12 @@ function disableIosSafariCallout(this: Window, event: any) {
   }
 }
 
-const webkit = (window as any).webkit;
+//const webkit = (window as any).webkit;
 function copyToClipboard(text: string) {
-  if (isMacCatalyst()) {
-    (webkit as any).messageHandlers.swiftCallbackHandler.postMessage({
-      event: 'copy',
-      text
-    })
-  } else {
+  try {
     navigator.clipboard && navigator.clipboard.writeText(text);
+  } catch (error) {
+    console.error(error);
   }
 }
 

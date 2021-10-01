@@ -1,9 +1,10 @@
 import * as libxslt from 'libxslt-myh';
-import { Document as XmlDoc, Element as XmlEle } from 'libxmljs';
-const libxmljs = libxslt.libxmljs;
 import * as fs from 'fs';
+import { Document as XmlDoc, Element as XmlEle } from 'libxmljs';
+
 import * as Globals from './Globals';
 
+const libxmljs = libxslt.libxmljs;
 let navDocBulei: XmlDoc;
 let navDocVol: XmlDoc;
 let catalogs: any;
@@ -11,10 +12,13 @@ let spines: Array<any>;
 let cbetaBookcaseDir: string;
 let isDevMode: boolean = false;
 let gaijis: any;
+
+const resourcesPath = (process as any).resourcesPath;
+
 export function init(cbetaBookcaseDirIn: string, isDevModeIn: boolean) {
     isDevMode = isDevModeIn;
     cbetaBookcaseDir = cbetaBookcaseDirIn;
-    const stylesheetString = fs.readFileSync(`${isDevMode ? '.' : process.resourcesPath}/buildElectron/nav_fix.xsl`).toString();
+    const stylesheetString = fs.readFileSync(`${isDevMode ? '.' : resourcesPath}/buildElectron/nav_fix.xsl`).toString();
     const stylesheet = libxslt.parse(stylesheetString);
 
     let documentString = fs.readFileSync(`${cbetaBookcaseDir}/CBETA/bulei_nav.xhtml`).toString();
@@ -27,7 +31,7 @@ export function init(cbetaBookcaseDirIn: string, isDevModeIn: boolean) {
 
     const catalogsString = fs.readFileSync(`${cbetaBookcaseDir}/CBETA/catalog.txt`).toString();
     catalogs = catalogsString.split(/\r\n/);
-    catalogs = (<any>Object).fromEntries(
+    catalogs = (Object).fromEntries(
         catalogs.map((l: string) => {
             const f = l.split(/\s*,\s*/);
             const file = `${f[0]}${f[4]}`;
@@ -42,7 +46,7 @@ export function init(cbetaBookcaseDirIn: string, isDevModeIn: boolean) {
         return f[0];
     })
 
-    gaijis = JSON.parse(fs.readFileSync(`${isDevMode ? '.' : process.resourcesPath}/cbeta_gaiji/cbeta_gaiji.json`).toString());
+    gaijis = JSON.parse(fs.readFileSync(`${isDevMode ? '.' : resourcesPath}/cbeta_gaiji/cbeta_gaiji.json`).toString());
 }
 
 export function fetchCatalogs(path: string) {
@@ -66,7 +70,7 @@ export function fetchCatalogs(path: string) {
         });
         const catalogLabel = (catalogTypeIsBulei ? navDocBulei : navDocVol).get(`//nav/${catalogXPath}/../span`)?.text() || '';
         return { label: catalogLabel, results };
-    } catch (error) {
+    } catch (error: any) {
         error.message = `path = ${path}\n${error.message}`;
         throw (error);
     }
@@ -79,6 +83,7 @@ export function fetchWork(path: string) {
     let work = catalogs[path];
     // E.g. XML/I/I01/I01n0012_001.xml.
     const re = new RegExp(`${bookId}[^n]*n${sutra}`);
+    // eslint-disable-next-line no-useless-escape
     const juans = spines.filter(s => re.test(s)).map(s => +(new RegExp(`${bookId}[^n]*n${sutra}_(.*)\.xml`).exec(s)![1]));
     work.juan_list = juans.join(',');
     work.work = path;
@@ -87,7 +92,7 @@ export function fetchWork(path: string) {
 
 export function fetchJuan(work: string, juan: string) {
     const work_info = fetchWork(work).results[0];
-    const stylesheetString = fs.readFileSync(`${isDevMode ? '.' : process.resourcesPath}/buildElectron/tei.xsl`).toString();
+    const stylesheetString = fs.readFileSync(`${isDevMode ? '.' : resourcesPath}/buildElectron/tei.xsl`).toString();
     const documentString = fs.readFileSync(`${cbetaBookcaseDir}/CBETA/XML/${work_info.id}/${work_info.vol}/${work_info.vol}n${work_info.sutra}_${juan.toString().padStart(3, '0')}.xml`).toString();
 
     const stylesheet = libxslt.parse(stylesheetString);

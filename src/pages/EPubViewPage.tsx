@@ -14,6 +14,7 @@ import SearchAlert from '../components/SearchAlert';
 import ePub, { Book, Rendition, EVENTS } from 'epubjs-myh';
 import * as nodepub from 'nodepub';
 import { TmpSettings } from '../models/TmpSettings';
+import { clearTimeout } from 'timers';
 
 // Load TW-Kai font in iframe.
 async function loadTwKaiFont(this: any) {
@@ -259,7 +260,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
   epubcfiFromSelectedString = '';
   addBookmarkHandler() {
-    const selectedText = this.getSelectedString();
+    const selectedText = this.selectedString;
     if (selectedText === '') {
       this.setState({ showNoSelectedTextAlert: true });
       return;
@@ -526,67 +527,79 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
     try {
       await this.epub.writeEPUB('.', 'temp');
-        let fs = require('fs');
-        let tempEpubBuffer = fs.readFileSync('temp.epub');
-        this.book = ePub(tempEpubBuffer.buffer, {
-          openAs: 'binary',
-        });
+      let fs = require('fs');
+      let tempEpubBuffer = fs.readFileSync('temp.epub');
+      this.book = ePub(tempEpubBuffer.buffer, {
+        openAs: 'binary',
+      });
 
-        this.rendition = this.book.renderTo('cbetarEPubView', {
-          width: "100%", height: "100%",
-          spread: 'none',
-          flow: this.props.paginated ? 'paginated' : 'scrolled',
-          scrollbarWidth: Globals.scrollbarSizeIdToValue(this.props.scrollbarSize),
-          defaultDirection: this.props.rtlVerticalLayout ? 'rtl' : 'ltr',
-          // Improve scrolling performance in scrolled mode by
-          // avoiding too many EVENTS.MANAGERS.SCROLLED events to call Rendition.reportLocation.
-          // Set a large enough timeout to get good performance and small enough to make user interactions well with updated reportLocation!
-          afterScrolledTimeout: 500,
-        });
-        //this.rendition.on("keydown", this.keyListener.bind(this));
+      this.rendition = this.book.renderTo('cbetarEPubView', {
+        width: "100%", height: "100%",
+        spread: 'none',
+        flow: this.props.paginated ? 'paginated' : 'scrolled',
+        scrollbarWidth: Globals.scrollbarSizeIdToValue(this.props.scrollbarSize),
+        defaultDirection: this.props.rtlVerticalLayout ? 'rtl' : 'ltr',
+        // Improve scrolling performance in scrolled mode by
+        // avoiding too many EVENTS.MANAGERS.SCROLLED events to call Rendition.reportLocation.
+        // Set a large enough timeout to get good performance and small enough to make user interactions well with updated reportLocation!
+        afterScrolledTimeout: 500,
+      });
+      //this.rendition.on("keydown", this.keyListener.bind(this));
 
-        this.rendition.on("selected", (cfiRange: any, contents: any) => {
-          this.epubcfiFromSelectedString = cfiRange;
-          /*
-          this.rendition?.annotations.highlight(cfiRange, {}, (e: any) => {
-            console.log("highlight clicked", e.target);
-          });*/
-          //contents.window.getSelection().removeAllRanges();
-        });
+      this.rendition.on("selected", (cfiRange: any, contents: any) => {
+        this.epubcfiFromSelectedString = cfiRange;
+        const selectedStringTemp = this.setSelectedString();
+        const selectedRangeTemp = this.setSelectedRange();
 
-        this.rendition.on(EVENTS.RENDITION.DISPLAYED, () => {
-          //console.log(`EVENTS.RENDITION.DISPLAYED`);
-          this.updatePageInfos();
-        });
-
-        this.rendition.on(EVENTS.VIEWS.RENDERED, () => {
-          //console.log(`EVENTS.VIEWS.RENDERED`);
-          this.updateEPubIframe();
-        });
-
-        await this.rendition.display(this.props.paginated ? this.epubcfi : undefined);
-        // Navigate to the first work page.
-        if (!(this.props.paginated)) {
-          // Skip cover page.
-          await this.rendition?.next();
-          // Skip TOC page.
-          await this.rendition?.next();
-          this.updateEPubIframe();
+        if (selectedStringTemp === '') {
+          this.clearSelectedStringTimer = setTimeout(() => {
+            this.selectedString = selectedStringTemp;
+            this.selectedRange = selectedRangeTemp;
+          }, 500);
+        } else {
+          this.selectedString = selectedStringTemp;
+          this.selectedRange = selectedRangeTemp;
         }
-        if (this.lastPage !== 0 && this.bookmark == null && this.lastPage !== this.state.currentPage) {
-          this.jumpToPage(this.lastPage);
-        }
-        this.setState({ isLoading: false });
+        /*
+        this.rendition?.annotations.highlight(cfiRange, {}, (e: any) => {
+          console.log("highlight clicked", e.target);
+        });*/
+        //contents.window.getSelection().removeAllRanges();
+      });
 
-        if (this.hasBookmark) {
-          try {
-            this.rendition?.annotations.highlight(this.epubcfi);
-          } catch (e) {
-            console.error(e);
-          }
-        }
+      this.rendition.on(EVENTS.RENDITION.DISPLAYED, () => {
+        //console.log(`EVENTS.RENDITION.DISPLAYED`);
+        this.updatePageInfos();
+      });
 
-        this.book?.locations.generate(150);
+      this.rendition.on(EVENTS.VIEWS.RENDERED, () => {
+        //console.log(`EVENTS.VIEWS.RENDERED`);
+        this.updateEPubIframe();
+      });
+
+      await this.rendition.display(this.props.paginated ? this.epubcfi : undefined);
+      // Navigate to the first work page.
+      if (!(this.props.paginated)) {
+        // Skip cover page.
+        await this.rendition?.next();
+        // Skip TOC page.
+        await this.rendition?.next();
+        this.updateEPubIframe();
+      }
+      if (this.lastPage !== 0 && this.bookmark == null && this.lastPage !== this.state.currentPage) {
+        this.jumpToPage(this.lastPage);
+      }
+      this.setState({ isLoading: false });
+
+      if (this.hasBookmark) {
+        try {
+          this.rendition?.annotations.highlight(this.epubcfi);
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      this.book?.locations.generate(150);
     } catch (e) {
       console.log(e);
     }
@@ -656,17 +669,19 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     //console.log(`displayed ${displayed.page} / ${displayed.total}`);
   }
 
-  getSelectedString() {
+  selectedString = '';
+  clearSelectedStringTimer: any;
+  setSelectedString() {
     let selectedText = '';
     const sel = this.ePubIframe?.contentDocument?.getSelection();
     if ((sel?.rangeCount || 0) > 0 && sel!.getRangeAt(0).toString().length > 0) {
       selectedText = sel!.toString();
-      sel?.removeAllRanges();
     }
     return selectedText;
   }
 
-  getSelectedRange() {
+  selectedRange: Range | undefined;
+  setSelectedRange() {
     return this.ePubIframe?.contentDocument?.getSelection()?.getRangeAt(0);
   }
 
@@ -935,6 +950,9 @@ class _EPubViewPage extends React.Component<PageProps, State> {
           if (this.epubcfiFromSelectedString !== '') {
             clearInterval(timer);
             this.rendition?.display(this.epubcfiFromSelectedString).then(() => {
+              this.rendition?.annotations.removeAll();
+              this.rendition?.annotations.highlight(this.epubcfiFromSelectedString, {}, (e: any) => {
+              })
             });
           }
         }, 100);
@@ -1067,13 +1085,17 @@ class _EPubViewPage extends React.Component<PageProps, State> {
           </IonButton>
 
           <IonButton hidden={this.state.fetchError} fill="clear" slot='end' onClick={e => {
-            this.setState({ popover: { show: false, event: null } });
+            //this.setState({ popover: { show: false, event: null } });
+            clearTimeout(this.clearSelectedStringTimer);
             this.addBookmarkHandler();
           }}>
             <IonIcon icon={bookmark} slot='icon-only' />
           </IonButton>
 
-          <IonButton fill="clear" slot='end' onClick={e => this.setState({ popover: { show: true, event: e.nativeEvent } })}>
+          <IonButton fill="clear" slot='end' onClick={e => {
+            clearTimeout(this.clearSelectedStringTimer);
+            this.setState({ popover: { show: true, event: e.nativeEvent } });
+          }}>
             <IonIcon ios={ellipsisHorizontal} md={ellipsisVertical} slot='icon-only' />
           </IonButton>
 
@@ -1111,7 +1133,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
               <IonItem button onClick={e => {
                 this.setState({ popover: { show: false, event: null } });
-                const selectedText = this.getSelectedString();
+                const selectedText = this.selectedString;
                 Globals.copyToClipboard(selectedText);
                 this.setState({ showToast: true, toastMessage: `複製文字成功！` });
               }}>
@@ -1139,7 +1161,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
               <IonItem button onClick={e => {
                 this.setState({ popover: { show: false, event: null } });
-                const selectedText = this.getSelectedString();
+                const selectedText = this.selectedString;
                 if (selectedText === '') {
                   this.setState({ showNoSelectedTextAlert: true });
                   return;
@@ -1156,7 +1178,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
               <IonItem button onClick={e => {
                 this.setState({ popover: { show: false, event: null } });
-                const selectedText = this.getSelectedString();
+                const selectedText = this.selectedString;
                 if (selectedText === '') {
                   this.setState({ showNoSelectedTextAlert: true });
                   return;
@@ -1171,7 +1193,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
                 <IonLabel className='ion-text-wrap uiFont'>查字典</IonLabel>
               </IonItem>
 
-              <IonItem hidden={Globals.isMacCatalyst()} button onClick={e => {
+              <IonItem button onClick={e => {
                 this.setState({ popover: { show: false, event: null } });
                 this.ePubIframe?.contentWindow?.print();
               }}>
@@ -1191,31 +1213,31 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
               <IonItem button onClick={ev => {
                 this.setState({ popover: { show: false, event: null } });
-                const sel = this.ePubIframe?.contentDocument?.getSelection()!;
-                if ((sel.rangeCount || 0) > 0 && sel.getRangeAt(0).toString().length > 0) {
-                  const selectedText = sel!.toString();
-                  const range = sel.getRangeAt(0);
-                  let startLine = this.findCbetaHtmlLine(range.startContainer)?.getAttribute('l');
-                  let endLine = this.findCbetaHtmlLine(range.endContainer)?.getAttribute('l');
-                  sel?.removeAllRanges();
-                  if (startLine == null || endLine == null) {
-                    this.setState({ showToast: true, toastMessage: '所選文字無法引用！' });
-                    return;
-                  }
-                  const startLineMatches = /0*([1-9]*)([a-z])0*([1-9]*)/.exec(startLine!)!;
-                  const startLineModified = `${startLineMatches[1]}${startLineMatches[2]}${startLineMatches[3]}`;
-                  const endLineModified = /0*([1-9]*)([a-z])0*([1-9]*)/.exec(endLine!)![3];
-
-                  let lineInfo = `${startLineModified}`;
-                  if (startLine !== endLine) {
-                    lineInfo += `-${endLineModified}`;
-                  }
-                  const citation = `《${this.state.workInfo.title}》卷${this.props.match.params.path}：「${selectedText}」(CBETA, ${this.state.workInfo.vol}, no. ${+(/[^0-9]*(.*)/.exec(this.state.workInfo.work)![1])}, p. ${lineInfo})`;
-                  Globals.copyToClipboard(citation);
-                  this.setState({ showToast: true, toastMessage: '已複製到剪貼簿！' });
-                } else {
+                const selectedText = this.selectedString;
+                if (selectedText === '') {
                   this.setState({ showNoSelectedTextAlert: true });
+                  return;
                 }
+
+                const range = this.selectedRange!;
+                let startLine = this.findCbetaHtmlLine(range.startContainer)?.getAttribute('l');
+                let endLine = this.findCbetaHtmlLine(range.endContainer)?.getAttribute('l');
+                //sel?.removeAllRanges();
+                if (startLine == null || endLine == null) {
+                  this.setState({ showToast: true, toastMessage: '所選文字無法引用！' });
+                  return;
+                }
+                const startLineMatches = /0*([1-9]*)([a-z])0*([1-9]*)/.exec(startLine!)!;
+                const startLineModified = `${startLineMatches[1]}${startLineMatches[2]}${startLineMatches[3]}`;
+                const endLineModified = /0*([1-9]*)([a-z])0*([1-9]*)/.exec(endLine!)![3];
+
+                let lineInfo = `${startLineModified}`;
+                if (startLine !== endLine) {
+                  lineInfo += `-${endLineModified}`;
+                }
+                const citation = `《${this.state.workInfo.title}》卷${this.props.match.params.path}：「${selectedText}」(CBETA, ${this.state.workInfo.vol}, no. ${+(/[^0-9]*(.*)/.exec(this.state.workInfo.work)![1])}, p. ${lineInfo})`;
+                Globals.copyToClipboard(citation);
+                this.setState({ showToast: true, toastMessage: '已複製到剪貼簿！' });
               }}>
                 <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
                 <IonIcon icon={shareSocial} slot='start' />
@@ -1224,7 +1246,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
               <IonItem button onClick={ev => {
                 let sharedUrl = window.location.href.split('?')[0];
-                const selectedText = this.getSelectedString();
+                const selectedText = this.selectedString;
                 if (selectedText !== '') {
                   sharedUrl += `?bookmark=${this.epubcfiFromSelectedString}`;
                 }
@@ -1437,7 +1459,8 @@ class _EPubViewPage extends React.Component<PageProps, State> {
                 text: '確定',
                 role: 'ok',
                 handler: () => {
-                  this.speechRepeatStart = this.getSelectedRange();
+                  clearTimeout(this.clearSelectedStringTimer);
+                  this.speechRepeatStart = this.selectedRange;
                   this.setState({ showSpeechRepeatStart: false, showSpeechRepeatEnd: true });
                 }
               }
@@ -1454,7 +1477,8 @@ class _EPubViewPage extends React.Component<PageProps, State> {
                 text: '確定',
                 role: 'ok',
                 handler: () => {
-                  this.speechRepeatEnd = this.getSelectedRange();
+                  clearTimeout(this.clearSelectedStringTimer);
+                  this.speechRepeatEnd = this.selectedRange;
                   this.setState({ isSpeechRepeatMode: true, showSpeechRepeatEnd: false });
                   this.playText2Speech();
                 }

@@ -16,6 +16,11 @@
   ],
   "scope": "/cbetar2/",
   "start_url": "/cbetar2/",
+  "url_handlers": [
+    {
+      "origin": "https://myhpwa.github.io"
+    }
+  ],
   "shortcuts": [
     {
       "name": "第1書籤",
