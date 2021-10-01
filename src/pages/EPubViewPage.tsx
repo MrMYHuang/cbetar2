@@ -289,10 +289,6 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     return;
   }
 
-  get isTopPage() {
-    return this.props.match.url === `${Globals.pwaUrl}/catalog`;
-  }
-
   get bookmark() {
     return this.props.bookmarks.find(
       (e) => e.type === BookmarkType.JUAN && e.uuid === this.uuidStr);
@@ -1064,7 +1060,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         <IonToolbar>
           <IonTitle className='uiFont'></IonTitle>
 
-          <IonButton hidden={this.isTopPage} fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
+          <IonButton fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
             <IonIcon icon={arrowBack} slot='icon-only' />
           </IonButton>
 
@@ -1115,7 +1111,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
               <IonItem button onClick={e => {
                 this.setState({ popover: { show: false, event: null } });
-                this.props.history.push(`${Globals.pwaUrl}/catalog/work/${this.props.match.params.work}`);
+                this.props.history.push(`/catalog/work/${this.props.match.params.work}`);
               }}>
                 <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
                 <IonIcon icon={home} slot='start' />
@@ -1123,7 +1119,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
               </IonItem>
 
               <IonItem button onClick={e => {
-                this.props.history.push(`${Globals.pwaUrl}/${this.props.match.params.tab}`);
+                this.props.history.push(`/${this.props.match.params.tab}`);
                 this.setState({ popover: { show: false, event: null } });
               }}>
                 <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
@@ -1168,7 +1164,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
                 }
 
                 this.props.history.push({
-                  pathname: `${Globals.pwaUrl}/dictionary/search/${selectedText}`,
+                  pathname: `/dictionary/search/${selectedText}`,
                 });
               }}>
                 <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
@@ -1185,7 +1181,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
                 }
 
                 this.props.history.push({
-                  pathname: `${Globals.pwaUrl}/dictionary/searchWord/${selectedText}`,
+                  pathname: `/dictionary/searchWord/${selectedText}`,
                 });
               }}>
                 <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}

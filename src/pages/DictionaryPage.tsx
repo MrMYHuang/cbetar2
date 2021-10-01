@@ -136,7 +136,7 @@ class _DictionaryPage extends React.Component<PageProps, State> {
             </IonButton>
 
             <IonButton fill='outline' shape='round' slot='start' onClick={ev => {
-              this.props.history.push(`${Globals.pwaUrl}/dictionary/searchWord`);
+              this.props.history.push(`/dictionary/searchWord`);
             }}>
               <span className='uiFont' style={{ color: 'var(--color)' }}>佛學詞典</span>
             </IonButton>
@@ -179,7 +179,7 @@ class _DictionaryPage extends React.Component<PageProps, State> {
             >
               <IonList>
                 <IonItem button onClick={e => {
-                  this.props.history.push(`${Globals.pwaUrl}/${this.props.match.params.tab}/search`);
+                  this.props.history.push(`/${this.props.match.params.tab}/search`);
                   this.setState({ popover: { show: false, event: null } });
                 }}>
                   <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
@@ -205,7 +205,7 @@ class _DictionaryPage extends React.Component<PageProps, State> {
                   }
 
                   this.props.history.push({
-                    pathname: `${Globals.pwaUrl}/dictionary/search/${this.selectedTextBeforeIonPopover}`,
+                    pathname: `/dictionary/search/${this.selectedTextBeforeIonPopover}`,
                   });
                 }}>
                   <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
@@ -221,7 +221,7 @@ class _DictionaryPage extends React.Component<PageProps, State> {
                   }
 
                   this.props.history.push({
-                    pathname: `${Globals.pwaUrl}/dictionary/searchWord/${this.selectedTextBeforeIonPopover}`,
+                    pathname: `/dictionary/searchWord/${this.selectedTextBeforeIonPopover}`,
                   });
                 }}>
                   <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
@@ -247,7 +247,7 @@ class _DictionaryPage extends React.Component<PageProps, State> {
                   this.setState({ keyword: value });
                   this.lookupDict(value);
                 } else {
-                  this.props.history.push(`${Globals.pwaUrl}/dictionary/search/${value}`);
+                  this.props.history.push(`/dictionary/search/${value}`);
                 }
               }
             }} />
@@ -270,7 +270,7 @@ class _DictionaryPage extends React.Component<PageProps, State> {
                         this.lookupDict(keyword);
                       }
                       else {
-                        this.props.history.push(`${Globals.pwaUrl}/dictionary/search/${keyword}`);
+                        this.props.history.push(`/dictionary/search/${keyword}`);
                       }
                     }}>
                       <IonLabel className='ion-text-wrap uiFont' key={`dictHistoryLabel_` + i}>

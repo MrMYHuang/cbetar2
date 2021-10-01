@@ -295,7 +295,8 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
     // to pass the client side routes to this app by using query string.
     // After this app loads, it can use the query string to correctly redirect to
     // a client side route!
-    console.log(`path: ${window.location.pathname}, search ${window.location.search}`);    const routeMatches = /route=([^&]*)/.exec(window.location.search);
+    console.log(`path: ${window.location.pathname}, search ${window.location.search}`);
+    const routeMatches = /route=([^&]*)/.exec(window.location.search);
     const queryMatches = /query=([^&]*)/.exec(window.location.search);
     if (routeMatches !== null) {
       let query = ''
@@ -304,7 +305,7 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
       }
       return <Redirect to={routeMatches[1] + query} />;
     } else if (window.location.pathname === `${Globals.pwaUrl}/` || window.location.pathname === `${Globals.pwaUrl}`) {
-      return <Redirect to={`${Globals.pwaUrl}/bookmarks`} />;
+      return <Redirect to={`/bookmarks`} />;
     }
   }
 
@@ -314,37 +315,37 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
         // Without this, window height shrinks after Android soft keyboard poping up.
         Globals.isTouchDevice() ? { height: `${window.innerHeight}px` } : {}
       }>
-        <IonReactRouter>
+        <IonReactRouter basename={Globals.pwaUrl}>
           <IonTabs>
             <IonRouterOutlet animated={false}>
               {/* The following route is for backward compatibility. */}
-              <Route path={`${Globals.pwaUrl}/:tab(catalog)/webview/:work/:path/:label`} render={(props: any) => <EPubViewPage {...props} />} exact={true} />
-              <Route path={`${Globals.pwaUrl}/:tab(catalog)/juan/:work/:path/`} render={(props: any) => <EPubViewPage {...props} />} exact={true} />
+              <Route path={`/:tab(catalog)/webview/:work/:path/:label`} render={(props: any) => <EPubViewPage {...props} />} exact={true} />
+              <Route path={`/:tab(catalog)/juan/:work/:path/`} render={(props: any) => <EPubViewPage {...props} />} exact={true} />
               {/* The following route is for backward compatibility. */}
-              <Route path={`${Globals.pwaUrl}/:tab(catalog)/work/:path/:label`} render={(props: any) => <WorkPage {...props} />} exact={true} />
-              <Route path={`${Globals.pwaUrl}/:tab(catalog)/work/:path`} render={(props: any) => <WorkPage {...props} />} exact={true} />
-              <Route path={`${Globals.pwaUrl}/:tab(catalog)/search/:keyword`} render={props => <SearchPage {...props} />} exact={true} />
-              <Route path={`${Globals.pwaUrl}/:tab(catalog)/fulltextsearch/:keyword`} render={props => <FullTextSearchPage {...props} />} exact={true} />
+              <Route path={`/:tab(catalog)/work/:path/:label`} render={(props: any) => <WorkPage {...props} />} exact={true} />
+              <Route path={`/:tab(catalog)/work/:path`} render={(props: any) => <WorkPage {...props} />} exact={true} />
+              <Route path={`/:tab(catalog)/search/:keyword`} render={props => <SearchPage {...props} />} exact={true} />
+              <Route path={`/:tab(catalog)/fulltextsearch/:keyword`} render={props => <FullTextSearchPage {...props} />} exact={true} />
               {/* The following route is for backward compatibility. */}
-              <Route path={`${Globals.pwaUrl}/:tab(catalog)/catalog/:path/:label`} render={(props: any) => <CatalogPage {...props} />} exact={true} />
-              <Route path={`${Globals.pwaUrl}/:tab(catalog)/:type(catalog|volumes|famous)?/:path?`} render={(props: any) => <CatalogPage {...props} />} exact={true} />
-              <Route path={`${Globals.pwaUrl}/:tab(bookmarks)`} render={(props: any) => <BookmarkPage {...props} />} exact={true} />
-              <Route path={`${Globals.pwaUrl}/:tab(dictionary)/search/:keyword?`} render={(props: any) => <DictionaryPage {...props} />} exact={true} />
-              <Route path={`${Globals.pwaUrl}/:tab(dictionary)/searchWord/:keyword?`} render={(props: any) => <WordDictionaryPage {...props} />} exact={true} />
-              <Route path={`${Globals.pwaUrl}/settings`} render={(props: any) => <SettingsPage {...props} />} />
-              <Route path={`${Globals.pwaUrl}/`} render={() => { return this.routeByQueryString(); }} exact={true} />
+              <Route path={`/:tab(catalog)/catalog/:path/:label`} render={(props: any) => <CatalogPage {...props} />} exact={true} />
+              <Route path={`/:tab(catalog)/:type(catalog|volumes|famous)?/:path?`} render={(props: any) => <CatalogPage {...props} />} exact={true} />
+              <Route path={`/:tab(bookmarks)`} render={(props: any) => <BookmarkPage {...props} />} exact={true} />
+              <Route path={`/:tab(dictionary)/search/:keyword?`} render={(props: any) => <DictionaryPage {...props} />} exact={true} />
+              <Route path={`/:tab(dictionary)/searchWord/:keyword?`} render={(props: any) => <WordDictionaryPage {...props} />} exact={true} />
+              <Route path={`/settings`} render={(props: any) => <SettingsPage {...props} />} />
+              <Route path={`/`} render={() => { return this.routeByQueryString(); }} exact={true} />
             </IonRouterOutlet>
             <IonTabBar slot="bottom">
-              <IonTabButton tab="bookmarks" href={`${Globals.pwaUrl}/bookmarks`}>
+              <IonTabButton tab="bookmarks" href={`/bookmarks`}>
                 <IonIcon icon={bookmark} />
               </IonTabButton>
-              <IonTabButton tab="catalog" href={`${Globals.pwaUrl}/catalog`}>
+              <IonTabButton tab="catalog" href={`/catalog`}>
                 <IonIcon icon={library} />
               </IonTabButton>
-              <IonTabButton tab="dictionay" href={`${Globals.pwaUrl}/dictionary/search`}>
+              <IonTabButton tab="dictionay" href={`/dictionary/search`}>
                 <IonIcon icon={book} />
               </IonTabButton>
-              <IonTabButton tab="settings" href={`${Globals.pwaUrl}/settings`}>
+              <IonTabButton tab="settings" href={`/settings`}>
                 <IonIcon icon={settings} />
               </IonTabButton>
             </IonTabBar>
