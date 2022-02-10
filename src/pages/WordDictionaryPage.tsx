@@ -257,13 +257,12 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
           <div style={{ display: 'flex', flexFlow: 'column', height: '100%' }}>
             <IonSearchbar ref={this.searchBarRef} placeholder='請輸入字，再按鍵盤Enter鍵' value={this.state.keyword}
               onIonClear={ev => {
-                this.setState({ search: null });
+                this.setState({ search: null, keyword: '' });
               }}
               onKeyUp={(ev: any) => {
                 const value = ev.target.value;
-                this.setState({ keyword: value })
                 if (value === '') {
-                  this.setState({ search: null });
+                  this.setState({ search: null, keyword: value });
                 } else if (ev.key === 'Enter') {
                   if (value === this.props.match.params.keyword) {
                     this.setState({ keyword: value });
@@ -281,7 +280,7 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
             {this.state.fetchError ?
               Globals.fetchErrorContent
               :
-              (this.state.search?.length || 0) < 1 || (this.props.wordDictionaryHistory.length > 0 && (this.state.keyword === '' || this.state.keyword === undefined)) ?
+              (this.state.keyword === '' || this.state.keyword === undefined) ?
                 <>
                   <div className='uiFont' style={{ color: 'var(--ion-color-primary)' }}>搜尋歷史</div>
                   <IonList>
@@ -312,8 +311,10 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
                     }}>清除歷史</IonButton>
                   </div>
                 </>
-                :
-                dictView}
+                : (this.state.search?.length || 0) === 0 && !this.state.isLoading ?
+                  Globals.searchNoResultMessage
+                  :
+                  dictView}
 
             {/*
           <div style={{ fontSize: 'var(--ui-font-size)', textAlign: 'center' }}><a href="https://github.com/MrMYHuang/cbetar2#WordDictionary" target="_new">佛學詞典說明</a></div>

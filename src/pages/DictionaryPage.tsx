@@ -233,15 +233,14 @@ class _DictionaryPage extends React.Component<PageProps, State> {
           </IonToolbar>
         </IonHeader>
         <IonContent>
-          <IonSearchbar ref={this.searchBarRef} placeholder='請輸入字詞，再按鍵盤Enter鍵' value={this.state.keyword}
+          <IonSearchbar ref={this.searchBarRef} placeholder='輸入後按 Enter' value={this.state.keyword}
             onIonClear={ev => {
-              this.setState({ searches: [] });
+              this.setState({ searches: [], keyword: '' });
             }}
             onKeyUp={(ev: any) => {
               const value = ev.target.value;
-              this.setState({ keyword: value })
               if (value === '') {
-                this.setState({ searches: [] });
+                this.setState({ searches: [], keyword: value });
               } else if (ev.key === 'Enter') {
                 if (value === this.props.match.params.keyword) {
                   this.setState({ keyword: value });
@@ -259,7 +258,7 @@ class _DictionaryPage extends React.Component<PageProps, State> {
           {this.state.fetchError ?
             Globals.fetchErrorContent
             :
-            this.state.searches.length < 1 || (this.props.dictionaryHistory.length > 0 && (this.state.keyword === '' || this.state.keyword === undefined)) ?
+            (this.state.keyword === '' || this.state.keyword === undefined) ?
               <>
                 <div className='uiFont' style={{ color: 'var(--ion-color-primary)' }}>搜尋歷史</div>
                 <IonList>
@@ -290,10 +289,12 @@ class _DictionaryPage extends React.Component<PageProps, State> {
                   }}>清除歷史</IonButton>
                 </div>
               </>
-              :
-              <div style={{ display: 'table', tableLayout: 'fixed', width: '100%' }}>
-                {this.getRows()}
-              </div>
+              : this.state.searches.length === 0 && !this.state.isLoading ?
+                Globals.searchNoResultMessage
+                :
+                <div style={{ display: 'table', tableLayout: 'fixed', width: '100%' }}>
+                  {this.getRows()}
+                </div>
           }
 
           <div style={{ fontSize: 'var(--ui-font-size)', textAlign: 'center' }}><a href="https://github.com/MrMYHuang/cbetar2#dictionary" target="_new">佛學詞典說明</a></div>

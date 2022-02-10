@@ -66,6 +66,10 @@ class _SearchPage extends React.Component<PageProps, State> {
   getRows() {
     let rows = Array<object>();
     const searches = this.state.searches;
+    if (searches.length === 0 && !this.state.isLoading) {
+      return Globals.searchNoResultMessage;
+    }
+
     searches.forEach((search, i) => {
       const isCatalog = search.type === 'catalog';
       let label = isCatalog ? search.label : `${search.title}\n作者:${search.creators}`;
@@ -93,7 +97,7 @@ class _SearchPage extends React.Component<PageProps, State> {
       <IonPage>
         <IonHeader>
           <IonToolbar>
-            <IonTitle className='uiFont'>搜尋 - {this.props.match.params.keyword}</IonTitle>
+            <IonTitle className='uiFont'>搜尋</IonTitle>
             <IonButton fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
               <IonIcon icon={arrowBack} slot='icon-only' />
             </IonButton>
@@ -128,9 +132,13 @@ class _SearchPage extends React.Component<PageProps, State> {
           {
             this.state.fetchError ?
               Globals.fetchErrorContent :
-              <IonList>
-                {rows}
-              </IonList>
+              <>
+                <div className='uiFontX2' style={{ color: 'var(--ion-color-primary)' }}> {this.props.match.params.keyword}</div>
+
+                <IonList>
+                  {rows}
+                </IonList>
+              </>
           }
 
           <IonLoading

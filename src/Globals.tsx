@@ -1,8 +1,8 @@
 import axios from 'axios';
-import { isPlatform, IonLabel } from '@ionic/react';
-import React from 'react';
+import { isPlatform, IonLabel, IonIcon } from '@ionic/react';
 import { Work } from './models/Work';
 import { Bookmark } from './models/Bookmark';
+import { refreshCircle } from 'ionicons/icons';
 
 const pwaUrl = process.env.PUBLIC_URL || '';
 const bugReportApiUrl = 'https://vh6ud1o56g.execute-api.ap-northeast-1.amazonaws.com/bugReportMailer';
@@ -18,7 +18,7 @@ let log = '';
 
 const axiosInstance = axios.create({
   baseURL: cbetaApiUrl,
-  timeout: 5000,
+  timeout: 10000,
 });
 
 function scrollbarSizeIdToValue(id: number) {
@@ -314,11 +314,16 @@ const Globals = {
       <IonLabel>
         <div>
           <div>連線失敗!</div>
+          <div style={{ fontSize: 'var(--ui-font-size)', paddingTop: 24 }}>請試上方重新整理按鈕<IonIcon icon={refreshCircle} slot='icon-only' />。</div>
           <div style={{ fontSize: 'var(--ui-font-size)', paddingTop: 24 }}>如果問題持續發生，請執行<a href="/settings" target="_self">設定頁</a>的app異常回報功能。</div>
         </div>
       </IonLabel>
     </div>
   ),
+  searchNoResultMessage:
+    <IonLabel className='ion-text-wrap uiFont' key={`searchLabelNone`}>
+      查無結果。請確認輸入名稱是否正確。
+    </IonLabel>,
   updateApp: () => {
     return new Promise(async resolve => {
       navigator.serviceWorker.getRegistrations().then(async regs => {

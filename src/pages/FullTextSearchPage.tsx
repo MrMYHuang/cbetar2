@@ -54,7 +54,7 @@ class _SearchPage extends React.Component<PageProps, State> {
       this.page = 0;
       this.setState({ searches: [] });
     }
-    
+
     try {
       console.log(`Loading page ${this.page}`);
 
@@ -64,7 +64,8 @@ class _SearchPage extends React.Component<PageProps, State> {
       const data = JSON.parse(new TextDecoder().decode(res.data)).results as [any];
       const searches = data.map((json) => new FullTextSearch(json));
 
-      this.setState({ fetchError: false, isLoading: false, searches: [...this.state.searches, ...searches],
+      this.setState({
+        fetchError: false, isLoading: false, searches: [...this.state.searches, ...searches],
         isScrollOn: searches.length === this.rows,
       });
 
@@ -80,7 +81,11 @@ class _SearchPage extends React.Component<PageProps, State> {
 
   getRows() {
     let rows = Array<object>();
-    const searches = (this.state as any).searches as [FullTextSearch];
+    const searches = (this.state as any).searches as FullTextSearch[];
+    if (searches.length === 0 && !this.state.isLoading) {
+      return Globals.searchNoResultMessage;
+    }
+
     searches.forEach((search, i) => {
       let label = `${search.title}卷${search.juan}\n作者:${search.creators}`;
       let routeLink = `/catalog/juan/${search.work}/${search.juan}`;
@@ -107,7 +112,7 @@ class _SearchPage extends React.Component<PageProps, State> {
       <IonPage>
         <IonHeader>
           <IonToolbar>
-            <IonTitle className='uiFont'>全文檢索 - {this.props.match.params.keyword}</IonTitle>
+            <IonTitle className='uiFont'>全文檢索</IonTitle>
             <IonButton fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
               <IonIcon icon={arrowBack} slot='icon-only' />
             </IonButton>
@@ -142,19 +147,23 @@ class _SearchPage extends React.Component<PageProps, State> {
           {
             this.state.fetchError ?
               Globals.fetchErrorContent :
-              <IonList>
-                {rows}
-                <IonInfiniteScroll threshold="100px"
-                  disabled={!this.state.isScrollOn}
-                  onIonInfinite={(ev: CustomEvent<void>) => {
-                    this.search(this.props.match.params.keyword);
-                    (ev.target as HTMLIonInfiniteScrollElement).complete();
-                  }}>
-                  <IonInfiniteScrollContent
-                    loadingText="載入中...">
-                  </IonInfiniteScrollContent>
-                </IonInfiniteScroll>
-              </IonList>
+              <>
+                <div className='uiFontX2' style={{ color: 'var(--ion-color-primary)' }}> {this.props.match.params.keyword}</div>
+
+                <IonList>
+                  {rows}
+                  <IonInfiniteScroll threshold="100px"
+                    disabled={!this.state.isScrollOn}
+                    onIonInfinite={(ev: CustomEvent<void>) => {
+                      this.search(this.props.match.params.keyword);
+                      (ev.target as HTMLIonInfiniteScrollElement).complete();
+                    }}>
+                    <IonInfiniteScrollContent
+                      loadingText="載入中...">
+                    </IonInfiniteScrollContent>
+                  </IonInfiniteScroll>
+                </IonList>
+              </>
           }
 
           <IonLoading
