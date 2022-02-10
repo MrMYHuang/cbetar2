@@ -1,2 +1,2 @@
 #!/bin/bash
-cd ./pwa && rm -rf * && cp -r ../build/* . 
+cd ./MrMYHuang.github.io && rm -rf * && cp -r ../build/* . 
