@@ -304,7 +304,7 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
         query = decodeURIComponent(queryMatches[1]);
       }
       return <Redirect to={routeMatches[1] + query} />;
-    } else if (window.location.pathname === `${Globals.pwaUrl}/` || window.location.pathname === `${Globals.pwaUrl}`) {
+    } else if (window.location.pathname === `${Globals.pwaUrl}/` || window.location.pathname === `${Globals.pwaUrl}` || window.location.pathname === ``) {
       return <Redirect to={`/bookmarks`} />;
     }
   }

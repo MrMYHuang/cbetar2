@@ -4,7 +4,7 @@ import { Work } from './models/Work';
 import { Bookmark } from './models/Bookmark';
 import { refreshCircle } from 'ionicons/icons';
 
-const pwaUrl = process.env.PUBLIC_URL || '';
+const pwaUrl = process.env.PUBLIC_URL || '/';
 const bugReportApiUrl = 'https://vh6ud1o56g.execute-api.ap-northeast-1.amazonaws.com/bugReportMailer';
 const apiVersion = 'v1.2';
 const cbetaApiUrl = `https://cbdata.dila.edu.tw/${apiVersion}`;
