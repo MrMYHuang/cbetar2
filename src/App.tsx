@@ -1,7 +1,7 @@
 import React from 'react';
 import { Redirect, Route, RouteComponentProps, withRouter } from 'react-router-dom';
 import {
-  setupConfig,
+  setupIonicReact,
   IonApp,
   IonIcon,
   IonRouterOutlet,
@@ -69,7 +69,7 @@ class DebugRouter extends IonReactRouter {
 }
 */
 
-setupConfig({
+setupIonicReact({
   mode: 'md', // Use a consistent UI style across Android and iOS.
   swipeBackEnabled: false,
 });

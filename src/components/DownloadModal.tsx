@@ -29,7 +29,6 @@ class _DownloadModal extends React.Component<PageProps, State> {
     return (
       <IonModal
         isOpen={this.props.showModal}
-        cssClass='uiFont'
         backdropDismiss={false}
         swipeToClose={false}
       >

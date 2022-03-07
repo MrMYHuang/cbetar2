@@ -2,7 +2,7 @@
   "name": "cbetar2",
   "homepage": "/",
   "productName": "電子佛典",
-  "pwaVersion": "4.26.4",
+  "pwaVersion": "4.26.5",
   "version": "13.2.2",
   "license": "MIT",
   "keywords": [
@@ -59,8 +59,8 @@
     "semver": "^7.3.5"
   },
   "devDependencies": {
-    "@ionic/react": "^5.8.0",
-    "@ionic/react-router": "^5.8.0",
+    "@ionic/react": "^6.0.10",
+    "@ionic/react-router": "^6.0.10",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^12.1.0",
     "@testing-library/user-event": "^13.2.1",

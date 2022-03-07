@@ -50,7 +50,6 @@ class _ShareTextModal extends React.Component<PageProps, State> {
     return (
       <IonModal
         isOpen={this.props.showModal}
-        cssClass='uiFont'
         swipeToClose={true}
         //presentingElement={router || undefined}
         onWillPresent={() => {

@@ -240,6 +240,9 @@ https://github.com/MrMYHuang/cbetar2/releases/latest
 10. 合成語音選項在Android Chrome無效。( https://stackoverflow.com/a/61366224/631869 )
 
 ## <a id='history'>版本歷史</a>
+* PWA 4.26.5:
+  * [調整] 升級第3方套件 Ionic 至6版。
+
 * PWA 4.26.4:
   * [修正] 修正書籤頁在 Android 9 Chrome 98 顯示異常。
   
