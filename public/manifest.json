@@ -14,8 +14,8 @@
       "purpose": "maskable"
     }
   ],
-  "scope": "/cbetar2/",
-  "start_url": "/cbetar2/",
+  "scope": "/",
+  "start_url": "/",
   "url_handlers": [
     {
       "origin": "https://myhpwa.github.io"
