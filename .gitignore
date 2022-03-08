@@ -35,3 +35,6 @@ temp
 /.eslintcache
 Bookcase
 BackendAppSettings.json
+flatpak/.flatpak-builder/
+flatpak/build/
+flatpak/generated-sources.json
