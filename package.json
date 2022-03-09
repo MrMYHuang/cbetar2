@@ -42,7 +42,7 @@
     "dist-snap": "npm run build-electron && rm -f dist/*.snap && electron-builder -l snap -c electronBuilderConfigs/snap.json",
     "dist-snap-arm64": "export SNAPCRAFT_BUILD_ENVIRONMENT=lxd && npm run build-electron-store && rm -f dist/*.snap && electron-builder -l snap -c electronBuilderConfigs/snap.json --arm64",
     "publish-snap": "snapcraft upload --release=stable dist/*.snap",
-    "dist-flatpak": "electron-builder",
+    "dist-flatpak": "electron-builder -l --dir -c electronBuilderConfigs/flatpak.json",
     "dist-mac": "npm run build-electron && electron-builder -m pkg -c electronBuilderConfigs/mac.json",
     "icons-mas": "cd buildElectron && iconutil -c icns icon.iconset",
     "dist-mas": "npm run build-electron-store && electron-builder -m mas --universal -c electronBuilderConfigs/mas.json",
