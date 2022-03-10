@@ -2,7 +2,7 @@
 <component type="desktop-application">
   <id>io.github.mrmyhuang.cbetar2</id>
   <name>CBETA電子佛典閱讀器2(非官方)</name>
-  <summary>[中文] 此電子佛典閱讀器 app 使用 CBETA API 存取佛經資料。[EN] This electronic Buddhist text reader app get data from CBETA API.</summary>
+  <summary>[中文] 此 app 為一款電子佛典閱讀器，它從 CBETA APIs 存取佛經資料。[EN] This app is an electronic Buddhist text reader. It gets Buddhist text data from CBETA APIs.</summary>
   <metadata_license>MIT</metadata_license>
   <project_license>MIT</project_license>
   <description>
