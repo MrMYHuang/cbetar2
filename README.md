@@ -248,6 +248,9 @@ https://github.com/MrMYHuang/cbetar2/releases/latest
 10. 合成語音選項在Android Chrome無效。( https://stackoverflow.com/a/61366224/631869 )
 
 ## <a id='history'>版本歷史</a>
+* PWA 4.26.6:
+  * [修正] 分類選擇 UI 無法切換。
+
 * Linux Flathub 13.2.2:
   * 支援 x86_64 與 arm64.
 

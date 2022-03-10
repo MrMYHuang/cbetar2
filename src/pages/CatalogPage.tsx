@@ -289,6 +289,11 @@ class _CatalogPage extends React.Component<PageProps, State> {
               interfaceOptions={{ cssClass: 'cbetar2themes' }}
               onIonChange={e => {
                 const value = +e.detail.value;
+
+                if(value !== this.state.topCatalogsType) {
+                  this.setState({topCatalogsType: value});
+                }
+
                 let nextPage = '';
                 switch (value) {
                   case 0: nextPage = `/catalog`; break;
