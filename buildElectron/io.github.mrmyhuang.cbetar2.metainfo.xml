@@ -15,6 +15,7 @@
   </description>
   <url type="homepage">https://github.com/MrMYHuang/cbetar2</url>
   <launchable type="desktop-id">io.github.mrmyhuang.cbetar2.desktop</launchable>
+  <developer_name>Meng-Yuan Huang</developer_name>
   <screenshots>
     <screenshot type="default">
       <image>https://raw.githubusercontent.com/MrMYHuang/cbetar2/master/docs/images/Search.png</image>
