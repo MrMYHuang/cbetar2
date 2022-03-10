@@ -127,7 +127,10 @@ CBETA電子佛典閱讀器2(非官方) (Chinese Buddhist Electronic Text Associa
 * iPad 7 iPadOS 14-15 + Safari
 * iPhone 8 (模擬器) + Safari
 * Debian Linux 10 + Chrome
-* Raspberry Pi 4 + Ubuntu arm64 + Electron app (from Snap Store)
+* Raspberry Pi 4 + Ubuntu 20 arm64 + Electron app (from Snap Store)
+* Ubuntu 21 amd64 + Electron app (from Snap Store)
+* Ubuntu 21 amd64 + Electron app (from Flathub)
+* Fedora 21 arm64 + Electron app (from Flathub)
 
 非上述環境仍可嘗試使用此 app。若有<a href='#knownIssues'>已知問題</a>未描述的問題，可用<a href='#report'>異常回報</a>功能。
 
@@ -201,9 +204,14 @@ https://MrMYHuang.github.io
 <img width="auto" height='60px' src='https://developer.microsoft.com/store/badges/images/Chinese-Traditional_get-it-from-MS.png' alt='Chinese Traditional badge'/>
 </a>
 
-#### Linux (x86_64, arm64) - 使用Snap Store
+#### Linux (x86_64, arm64) - 使用 Snap Store
 <a href='https://snapcraft.io/cbetar2' target='_blank'>
 <img width="auto" height='60px' src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/[TW]-snap-store-black@2x.png' />
+</a>
+
+#### Linux (x86_64, arm64) - 使用 Flathub
+<a href='https://flathub.org/apps/details/io.github.mrmyhuang.cbetar2' target='_blank'>
+<img width="auto" height='60px' src='https://flathub.org/assets/badges/flathub-badge-en.png' />
 </a>
 
 ### 下載安裝檔
@@ -240,6 +248,9 @@ https://github.com/MrMYHuang/cbetar2/releases/latest
 10. 合成語音選項在Android Chrome無效。( https://stackoverflow.com/a/61366224/631869 )
 
 ## <a id='history'>版本歷史</a>
+* Linux Flathub 13.2.2:
+  * 支援 x86_64 與 arm64.
+
 * PWA 4.26.5:
   * [調整] 升級第3方套件 Ionic 至6版。
 
