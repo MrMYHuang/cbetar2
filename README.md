@@ -130,7 +130,7 @@ CBETA電子佛典閱讀器2(非官方) (Chinese Buddhist Electronic Text Associa
 * Raspberry Pi 4 + Ubuntu 20 arm64 + Electron app (from Snap Store)
 * Ubuntu 21 amd64 + Electron app (from Snap Store)
 * Ubuntu 21 amd64 + Electron app (from Flathub)
-* Fedora 21 arm64 + Electron app (from Flathub)
+* Fedora 35 arm64 + Electron app (from Flathub)
 
 非上述環境仍可嘗試使用此 app。若有<a href='#knownIssues'>已知問題</a>未描述的問題，可用<a href='#report'>異常回報</a>功能。
 
