@@ -6,20 +6,20 @@
 
 ## 說明
 
-CBETA電子佛典閱讀器2(非官方) (Chinese Buddhist Electronic Text Association Reader 2)，簡寫cbetar2，使用CBETA API存取電子佛經，支援以下功能
+CBETA 電子佛典閱讀器2(非官方) (Chinese Buddhist Electronic Text Association Reader 2)，簡寫cbetar2，使用 CBETA API 存取電子佛經，支援以下功能
 
 
 * <a id='modular'>模組化程式</a>
 
-  cbetar2為一支模組化程式，由 frontend app (PWA) + backend app (CBETA API or cbetar2 backend) 組成。有兩種使用方式：
+  cbetar2 為一支模組化程式，由 frontend app (PWA) + backend app (CBETA API or cbetar2 backend) 組成。有兩種使用方式：
 
-  1. 連線DB版app：PWA + CBETA API
-    * 此版本不須先下載CBETA離線經文資料檔，但要作離線瀏覽要把經文加至書籤。
+  1. 連線DB版 app：PWA + CBETA API
+    * 此版本不須先下載 CBETA 離線經文資料檔，但要作離線瀏覽要把經文加至書籤。
     * 安裝方式：瀏覽器安裝、商店安裝。支援多種平台。
-  2. 離線DB版app：PWA + cbetar2 backend
-    * 此版本預設與連線版相同，多了離線DB的支援。要切為離線DB模式，要先下載、解壓<a href='http://www.cbeta.org/download/cbreader.htm'>CBETA離線經文資料檔</a>，可離線瀏覽目錄、經文。
+  2. 離線DB版 app：PWA + cbetar2 backend
+    * 此版本預設與連線版相同，多了離線DB的支援。要切為離線DB模式，要先下載、解壓<a href='http://www.cbeta.org/download/cbreader.htm'>CBETA 離線經文資料檔</a>，可離線瀏覽目錄、經文。
     * 安裝方式：下載安裝檔案安裝。支援 Windows 7+, Linux, macOS 10.10+。
-    * 設定：啟動app後，執行選單/檔案/設定Bookcase目錄。
+    * 設定：啟動 app 後，執行選單/檔案/設定 Bookcase目錄。
 
 * <a id='search'>搜尋</a>
   1. 搜索目錄：在目錄頁，按下右上角放大鏡圖示。在對話框輸入經文部分(或全部)標題，按下"搜索目錄"後會列出相關經文。
@@ -34,10 +34,10 @@ CBETA電子佛典閱讀器2(非官方) (Chinese Buddhist Electronic Text Associa
 
   2. 刪除：至書籤頁，左滑項目即出現刪除鈕，再點擊。
 * <a id='shareAppLink'>網址分享</a>
-  1. 用瀏覽器開啟此app並開啟某卷經文後，可複製其網址分享給別人開啟。
+  1. 用瀏覽器開啟此 app 並開啟某卷經文後，可複製其網址分享給別人開啟。
   2. 也可以使用瀏覽器內建書籤功能儲存經文網址。與app書籤功能相比，可以依個人使習慣作選擇。
-  3. App內建"分享此頁"功能，可複製以下連結至作業系統剪貼簿或產生QR code，可分享給其他人：目錄、經、卷、目錄搜尋、全文檢索搜尋、詞典搜尋、app主頁
-  4. 分享網址可帶上部分app設定參數。
+  3. App 內建"分享此頁"功能，可複製以下連結至作業系統剪貼簿或產生 QR code，可分享給其他人：目錄、經、卷、目錄搜尋、全文檢索搜尋、詞典搜尋、app主頁
+  4. 分享網址可帶上部分 app 設定參數。
 
   <img src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/ShareAppUrlWithSettings.png' width='50%' />
   
@@ -85,13 +85,13 @@ CBETA電子佛典閱讀器2(非官方) (Chinese Buddhist Electronic Text Associa
 * 經文分頁
   1. 經文可調整成單頁或分頁模式。單頁模式，使用滑動方式閱讀經文。分頁模式，可使用鍵盤方向鍵或螢幕方向鍵切換經文頁。
 * 字型調整
-  1. 考量視力不佳的同修，提供最大 64px 的經文字型設定。若有需要更大字型，請 E-mail 或 GitHub 聯絡開發者新增。
+  1. 考量視力不佳的同修，提供最大 128 px 的經文字型設定。若有需要更大字型，請 E-mail 或 GitHub 聯絡開發者新增。
   2. 支援全字庫楷書字型。
 * 直排文字
   1. 傳統中文書的直排文字、由右至左排版。
 * <a id='shortcuts'>App 捷徑</a>
   1. Windows, Android的Chrome(建議最新版)使用者，滑鼠右鍵或長按app圖示，可存取app功能捷徑，目前有：(開啟)第1書籤、佛學詞典、萌典字典。
-  2. 若由舊版app升級至 >= 4.3.0版，要作一次移除app(但可不刪app資料)，再重新安裝，此app捷徑選單才會出現。
+  2. 若由舊版 app 升級至 >= 4.3.0版，要作一次移除app(但可不刪app資料)，再重新安裝，此app捷徑選單才會出現。
 
   <img src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/AppShortcuts.png' width='50%' />
 
@@ -194,22 +194,22 @@ https://MrMYHuang.github.io
 <img width="auto" height='60px' src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/Download_on_the_App_Store_Badge_CNTC_RGB_blk_100217.svg'/>
 </a>
 
-#### macOS 10.10+ (x86_64, arm64) - 使用 Apple App Store
+#### macOS 10.10+ (x86_64 & arm64) - 使用 Apple App Store
 <a href='https://apps.apple.com/app/id1546347689' target='_blank'>
 <img width="auto" height='60px' src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/Download_on_the_Mac_App_Store_Badge_CNTC_RGB_blk_100217.svg'/>
 </a>
 
-#### Windows 10+ (x86_64, arm64) - 使用 Microsoft Store
+#### Windows 10+ (x86_64 & arm64) - 使用 Microsoft Store
 <a href='//www.microsoft.com/store/apps/9P6TDQX46JJL' target='_blank'>
 <img width="auto" height='60px' src='https://developer.microsoft.com/store/badges/images/Chinese-Traditional_get-it-from-MS.png' alt='Chinese Traditional badge'/>
 </a>
 
-#### Linux (x86_64, arm64) - 使用 Snap Store
+#### Linux (x86_64 & arm64) - 使用 Snap Store
 <a href='https://snapcraft.io/cbetar2' target='_blank'>
 <img width="auto" height='60px' src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/[TW]-snap-store-black@2x.png' />
 </a>
 
-#### Linux (x86_64, arm64) - 使用 Flathub
+#### Linux (x86_64 & arm64) - 使用 Flathub
 <a href='https://flathub.org/apps/details/io.github.mrmyhuang.cbetar2' target='_blank'>
 <img width="auto" height='60px' src='https://flathub.org/assets/badges/flathub-badge-en.png' />
 </a>
@@ -233,19 +233,20 @@ https://github.com/MrMYHuang/cbetar2/releases/latest
   3. 查字典
   4. 查詞典
   5. 經文顯示缺字
-  6. 初次啟動app仍須網路連線(自動下載前端app)。
+  6. 初次啟動 app 仍須網路連線(自動下載前端 app)。
 
 ## <a id='knownIssues'>已知問題</a>
-1. iOS Safari在單頁模式下，捲軸無法顯示。
-2. 目前多數Chrome無法暫停合成語音播放，因此此app目前經文語音播放功能不支援暫停，只支援停止。
+1. iOS Safari 在單頁模式下，捲軸無法顯示。
+2. 目前多數 Chrome 無法暫停合成語音播放，因此此 app 目前經文語音播放功能不支援暫停，只支援停止。
 3. 語音播放速度受限不同引擎、語音限制，可能無法達到指定速度。
-4. "避免螢幕自動鎖定"功能僅限部分較新Chrome瀏覽器才支援。
-5. iOS Safari 13.4以上才支援"分享此頁"功能。
+4. "避免螢幕自動鎖定"功能僅限部分較新 Chrome 瀏覽器才支援。
+5. iOS Safari 13.4 以上才支援"分享此頁"功能。
 6. iOS 不支援 app 捷徑。
 7. Safari 不支援列印直排經文。( https://bugs.webkit.org/show_bug.cgi?id=220043 )
 8. iOS Safari 選擇文字後，仍會閃爍彈出式選單才消失。
 9. 合成語音選項濾掉非離線語音，以避開非離線語音單次播放最長字串過小的問題。
-10. 合成語音選項在Android Chrome無效。( https://stackoverflow.com/a/61366224/631869 )
+10. 合成語音選項在 Android Chrome無效。( https://stackoverflow.com/a/61366224/631869 )
+11. 合成語音在 Linux 無作用。
 
 ## <a id='history'>版本歷史</a>
 * PWA 4.26.6:
