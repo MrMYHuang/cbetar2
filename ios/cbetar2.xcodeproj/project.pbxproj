@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1368F7A627E20AD3001A6D07 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1368F7A527E20AD3001A6D07 /* AppDelegate.swift */; };
 		DBC713B2269D606400FCE5B0 /* Tests_iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC713B1269D606400FCE5B0 /* Tests_iOS.swift */; };
 		DBC713BF269D606400FCE5B0 /* MainApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC71396269D606300FCE5B0 /* MainApp.swift */; };
 		DBC713C1269D606400FCE5B0 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC71397269D606300FCE5B0 /* ContentView.swift */; };
@@ -26,6 +27,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1368F7A527E20AD3001A6D07 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DBC71396269D606300FCE5B0 /* MainApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainApp.swift; sourceTree = "<group>"; };
 		DBC71397269D606300FCE5B0 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		DBC71398269D606400FCE5B0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -86,6 +88,7 @@
 				DBC71397269D606300FCE5B0 /* ContentView.swift */,
 				DBC713D4269D6AC300FCE5B0 /* WebViewController.swift */,
 				DBC71398269D606400FCE5B0 /* Assets.xcassets */,
+				1368F7A527E20AD3001A6D07 /* AppDelegate.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -229,6 +232,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1368F7A627E20AD3001A6D07 /* AppDelegate.swift in Sources */,
 				DBC713C1269D606400FCE5B0 /* ContentView.swift in Sources */,
 				DBC713D5269D6AC300FCE5B0 /* WebViewController.swift in Sources */,
 				DBC713BF269D606400FCE5B0 /* MainApp.swift in Sources */,
@@ -382,7 +386,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.2;
+				MARKETING_VERSION = 1.2.3;
 				PRODUCT_BUNDLE_IDENTIFIER = io.github.mrmyhuang.cbetar2;
 				PRODUCT_NAME = cbetar2;
 				SDKROOT = iphoneos;
@@ -409,7 +413,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.2;
+				MARKETING_VERSION = 1.2.3;
 				PRODUCT_BUNDLE_IDENTIFIER = io.github.mrmyhuang.cbetar2;
 				PRODUCT_NAME = cbetar2;
 				SDKROOT = iphoneos;

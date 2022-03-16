@@ -10,6 +10,10 @@ import UIKit
 import WebKit
 import SnapKit
 
+let pwaOrigin = "mrmyhuang.github.io"
+
+var webViewShared: WKWebView?
+
 struct WebViewControllerWrap: UIViewControllerRepresentable {
     
     func makeUIViewController(context: Context) -> some UIViewController {
@@ -26,7 +30,7 @@ class WebViewController: UIViewController {
     #if DEBUG
     let baseURL = URL(string: "http://localhost:3000/")!
     #else
-    let baseURL = URL(string: "https://mrmyhuang.github.io")!
+    let baseURL = URL(string: "https://\(pwaOrigin)")!
     #endif
     
     let contentController = WKUserContentController();
@@ -52,6 +56,7 @@ class WebViewController: UIViewController {
         
         WKWebsiteDataStore.default().removeData(ofTypes: websiteDataTypes as! Set<String>, modifiedSince: date as Date, completionHandler:{ })
         
+        webViewShared = webView
         return webView
     }()
     
@@ -108,8 +113,8 @@ extension WebViewController: WKScriptMessageHandler {
 
 extension WebViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-        if navigationAction.navigationType == .linkActivated  {
-            if let url = navigationAction.request.url {
+        if let url = navigationAction.request.url {
+            if navigationAction.navigationType == .linkActivated {
                 if url.absoluteString.contains(jsonUriPrefix) {
                     if let dataStr = url.absoluteString.replacingOccurrences(of: jsonUriPrefix, with: "").removingPercentEncoding {
                         saveText(text: dataStr, file: "Settings.json")

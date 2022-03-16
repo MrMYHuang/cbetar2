@@ -45,6 +45,27 @@
 		<key>UIApplicationSupportsMultipleScenes</key>
 		<true/>
 	</dict>
+	<key>UIApplicationShortcutItems</key>
+	<array>
+		<dict>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>第1書籤</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>https://mrmyhuang.github.io/bookmarks?item=0</string>
+		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>佛學詞典</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>https://mrmyhuang.github.io/dictionary/search</string>
+		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>萌典字典</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>https://mrmyhuang.github.io/dictionary/searchWord/</string>
+		</dict>
+	</array>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchScreen</key>

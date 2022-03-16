@@ -255,6 +255,9 @@ https://github.com/MrMYHuang/cbetar2/releases/latest
 12. App Store iOS app 不支援列印。
 
 ## <a id='history'>版本歷史</a>
+* iOS 1.2.3:
+  * [修正] App Store app 支援 app 捷徑。
+
 * PWA 4.26.7:
   * [修正] App 捷徑開啟後為空白畫面。
 
