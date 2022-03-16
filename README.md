@@ -255,6 +255,9 @@ https://github.com/MrMYHuang/cbetar2/releases/latest
 12. App Store iOS app 不支援列印。
 
 ## <a id='history'>版本歷史</a>
+* iOS 1.2.2:
+  * [修正] 匯出設定預設檔名。
+
 * PWA 4.26.6:
   * [修正] 分類選擇 UI 無法切換。
 
