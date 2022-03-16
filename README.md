@@ -692,7 +692,7 @@ https://github.com/MrMYHuang/cbetar2/releases/latest
 
 ## <a href='https://github.com/MrMYHuang/cbetar2/raw/master/Development.md'>程式開發</a>
 
-## 隱私政策聲明
+## <a id='privacy'>隱私政策聲明</a>
 
 此app無收集使用者個人資訊，也無收集匿名資訊。
 
