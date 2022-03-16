@@ -243,7 +243,7 @@ function copyToClipboard(text: string) {
 }
 
 function isMacCatalyst() {
-  return isPlatform('ios') && navigator.platform === 'MacIntel';
+  return isPlatform('ios') && ((window as any).webkit);
 }
 
 function zhVoices() {

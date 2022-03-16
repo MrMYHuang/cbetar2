@@ -24,17 +24,17 @@
   "shortcuts": [
     {
       "name": "第1書籤",
-      "url": "/cbetar2/bookmarks?item=0",
+      "url": "/bookmarks?item=0",
       "icons": [{ "src": "assets/icon/icon.png", "sizes": "512x512" }]
     },
     {
       "name": "佛學詞典",
-      "url": "/cbetar2/dictionary",
+      "url": "/dictionary/search",
       "icons": [{ "src": "assets/icon/icon.png", "sizes": "512x512" }]
     },
     {
       "name": "萌典字典",
-      "url": "/cbetar2/dictionary/searchWord/",
+      "url": "/dictionary/searchWord",
       "icons": [{ "src": "assets/icon/icon.png", "sizes": "512x512" }]
     }
   ],

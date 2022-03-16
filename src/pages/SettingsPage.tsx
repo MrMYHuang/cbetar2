@@ -134,7 +134,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
           <IonList>
             {/*
             // Disable this for Apple App Store submissions!
-            <IonItem>
+            <IonItem hidden={Globals.isMacCatalyst()}>
               <IonIcon icon={shareSocial} slot='start' />
               <IonLabel className='ion-text-wrap uiFont' onClick={async e => {
                 const hasUpdate = await Globals.updateApp();
@@ -154,6 +154,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                 });
               }}>分享</IonButton>
             </IonItem>
+
             <IonItem hidden={!this.props.tmpSettings.mainVersion}>
               <IonIcon icon={informationCircle} slot='start' />
               <IonLabel className='ion-text-wrap uiFont'>Backend app版本: {this.props.tmpSettings.mainVersion}</IonLabel>
@@ -569,7 +570,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
               <div className='uiFont'>
                 <div>關於</div>
                 <div><a href="https://github.com/MrMYHuang/cbetar2" target="_new">操作說明</a></div>
-                <div>版本：{PackageInfos.pwaVersion}</div>
+                <div hidden={Globals.isMacCatalyst()}>版本：{PackageInfos.pwaVersion}</div>
                 <div>CBETA API 版本: {Globals.apiVersion}</div>
                 <div><a href="http://cbdata.dila.edu.tw/v1.2/" target="_new">CBETA API 參考文件</a></div>
                 <div><a href="http://glossaries.dila.edu.tw/?locale=zh-TW" target="_new">DILA 佛學術語字辭典</a></div>
