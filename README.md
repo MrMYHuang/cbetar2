@@ -252,6 +252,7 @@ https://github.com/MrMYHuang/cbetar2/releases/latest
 9. 合成語音選項濾掉非離線語音，以避開非離線語音單次播放最長字串過小的問題。
 10. 合成語音選項在 Android Chrome無效。( https://stackoverflow.com/a/61366224/631869 )
 11. 合成語音在 Linux 無作用。
+12. App Store iOS app 不支援列印。
 
 ## <a id='history'>版本歷史</a>
 * PWA 4.26.6:
