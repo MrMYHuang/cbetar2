@@ -44,7 +44,7 @@
     "publish-snap": "snapcraft upload --release=stable dist/*.snap",
     "prepare-flatpak": "./flatpak-node-generator.py --xdg-layout -o flatpak/generated-sources.json npm package-lock.json && flatpak run org.freedesktop.appstream-glib validate ./buildElectron/io.github.mrmyhuang.cbetar2.metainfo.xml",
     "dist-flatpak-local": "flatpak-builder build flatpak/io.github.mrmyhuang.cbetar2.yml --install --force-clean --user",
-    "dist-flatpak": "electron-builder -l --dir -c electronBuilderConfigs/flatpak.json",
+    "dist-flatpak": "npm run build-electron-store && electron-builder -l --dir -c electronBuilderConfigs/flatpak.json",
     "dist-mac": "npm run build-electron && electron-builder -m pkg -c electronBuilderConfigs/mac.json",
     "icons-mas": "cd buildElectron && iconutil -c icns icon.iconset",
     "dist-mas": "npm run build-electron-store && electron-builder -m mas --universal -c electronBuilderConfigs/mas.json",
