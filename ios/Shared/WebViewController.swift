@@ -97,10 +97,12 @@ extension WebViewController: WKScriptMessageHandler {
         guard let dict = message.body as? Dictionary<String, Any> else { return }
         guard let event = dict["event"] as? String else { return }
         
+        /*
         if(event == "copy") {
             let text = dict["text"] as? String ?? ""
             UIPasteboard.general.string = text
         }
+        */
     }
 }
 
@@ -110,7 +112,7 @@ extension WebViewController: WKNavigationDelegate {
             if let url = navigationAction.request.url {
                 if url.absoluteString.contains(jsonUriPrefix) {
                     if let dataStr = url.absoluteString.replacingOccurrences(of: jsonUriPrefix, with: "").removingPercentEncoding {
-                        saveText(text: dataStr, file: "TfwcSettings.json")
+                        saveText(text: dataStr, file: "Settings.json")
                         decisionHandler(.cancel)
                         return
                     }
