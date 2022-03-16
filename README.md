@@ -184,14 +184,19 @@ https://MrMYHuang.github.io
 
 ### <a id='storeApp'>從 App 商店安裝</a>
 
+#### iOS 14.0+ (iPhone), iPadOS 14.0+ (iPad) - 使用 Apple App Store
+<a href='https://apps.apple.com/app/id1546347689' target='_blank'>
+<img width="auto" height='60px' src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/Download_on_the_App_Store_Badge_CNTC_RGB_blk_100217.svg'/>
+</a>
+
 #### Android 4.4+ - 使用 Google Play Store
 <a href='https://play.google.com/store/apps/details?id=io.github.mrmyhuang.cbetar2' target='_blank'>
 <img width="auto" height='60px' alt='Google Play立即下載' src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/zh-tw_badge_web_generic.png'/>
 </a>
 
-#### iOS 14.0+ (iPhone), iPadOS 14.0+ (iPad) - 使用 Apple App Store
-<a href='https://apps.apple.com/app/id1546347689' target='_blank'>
-<img width="auto" height='60px' src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/Download_on_the_App_Store_Badge_CNTC_RGB_blk_100217.svg'/>
+#### Android 4.4+ - 使用 Galaxy Store
+<a href='https://galaxy.store/cbetar2' target='_blank'>
+<img width="auto" height='60px' src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/GalaxyStore_ChineseTraditional.png'/>
 </a>
 
 #### macOS 10.10+ (x86_64 & arm64) - 使用 Apple App Store
@@ -202,11 +207,6 @@ https://MrMYHuang.github.io
 #### Windows 10+ (x86_64 & arm64) - 使用 Microsoft Store
 <a href='//www.microsoft.com/store/apps/9P6TDQX46JJL' target='_blank'>
 <img width="auto" height='60px' src='https://developer.microsoft.com/store/badges/images/Chinese-Traditional_get-it-from-MS.png' alt='Chinese Traditional badge'/>
-</a>
-
-#### Android - 使用 Galaxy Store
-<a href='https://galaxy.store/cbetar2' target='_blank'>
-<img width="auto" height='60px' src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/GalaxyStore_ChineseTraditional.png'/>
 </a>
 
 #### Linux (x86_64 & arm64) - 使用 Snap Store
