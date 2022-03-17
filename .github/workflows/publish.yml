@@ -17,8 +17,8 @@ env:
   CSC_KEY_PASSWORD: ${{ secrets.MAC_CERTS_PASSWORD }}
 
 jobs:
-  publish-win:
-    runs-on: windows-2019
+  publish-win-x64:
+    runs-on: windows-latest
 
     steps:
       - name: Checkout code
@@ -32,8 +32,29 @@ jobs:
           node-version: 14
 
       - run: |
+          # For VS2022
+          npm i npm@8.5.0 -g
+          npm run dist-win -- -p always --x64
+
+  publish-win-arm64:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+
+      - name: Build and publish
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+
+      - run: |
+          # For VS2022
+          npm i npm@8.5.0 -g
           npm i
-          npm run dist-win -- -p always
+          npm run dist-win -- -p always --arm64
 
   publish-deb-x64:
     runs-on: ubuntu-latest

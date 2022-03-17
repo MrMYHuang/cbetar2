@@ -255,6 +255,9 @@ https://github.com/MrMYHuang/cbetar2/releases/latest
 12. App Store iOS app 不支援列印。
 
 ## <a id='history'>版本歷史</a>
+* Backend 14.0.0:
+  * [新增] Windows, Linux (deb & rpm), macOS 皆支援 x64 & arm64.
+
 * iOS 1.2.3:
   * [修正] App Store app 支援 app 捷徑。
 

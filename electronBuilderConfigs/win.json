@@ -29,7 +29,7 @@
   ],
   "icon": "buildElectron/icon.png",
   "win": {
-    "artifactName": "${name}_${version}_win64.${ext}"
+    "artifactName": "${name}_${version}_win_${arch}.${ext}"
   },
   "nsis": {
     "differentialPackage": false
