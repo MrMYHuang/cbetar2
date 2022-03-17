@@ -18,7 +18,7 @@ env:
 
 jobs:
   publish-win-x64:
-    runs-on: windows-latest
+    runs-on: windows-2019
 
     steps:
       - name: Checkout code
@@ -29,14 +29,14 @@ jobs:
       - name: Build and publish
         uses: actions/setup-node@v1
         with:
-          node-version: 16.14.1
+          node-version: 14
 
       - run: |
           npm i
           npm run dist-win -- -p always --x64
 
   publish-win-arm64:
-    runs-on: windows-latest
+    runs-on: windows-2019
 
     steps:
       - name: Checkout code
@@ -47,7 +47,7 @@ jobs:
       - name: Build and publish
         uses: actions/setup-node@v1
         with:
-          node-version: 16.14.1
+          node-version: 14
 
       - run: |
           npm i
