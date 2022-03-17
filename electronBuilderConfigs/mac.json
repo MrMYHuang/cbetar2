@@ -22,7 +22,7 @@
   "mac": {
     "publish": ["github"],
     "type": "distribution",
-    "artifactName": "${name}_${version}_macos64.${ext}",
+    "artifactName": "${name}_${version}_macos_${arch}.${ext}",
     "category": "public.app-category.education",
     "minimumSystemVersion": "10.10",
     "hardenedRuntime": true

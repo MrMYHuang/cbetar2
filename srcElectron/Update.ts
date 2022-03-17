@@ -3,6 +3,8 @@ import { dialog, BrowserWindow } from 'electron';
 import axios from 'axios';
 import { DownloaderHelper, Stats } from 'node-downloader-helper';
 import * as Globals from './Globals';
+
+const isX64 = process.arch === 'x64';
 const PackageInfos = require('../package.json');
 
 const axiosInstance = axios.create({
@@ -32,10 +34,10 @@ export async function check(browserWindow: BrowserWindow) {
 
     let packageSuffix = 'win64.exe';
     switch (Globals.backendAppPackageType()) {
-        case 'win': packageSuffix = 'win64.exe'; break;
-        case 'mac': packageSuffix = 'macos64.pkg'; break;
-        case 'rpm': packageSuffix = 'linux64.rpm'; break;
-        case 'deb': packageSuffix = 'linux64.deb'; break;
+        case 'win': packageSuffix = `win_${isX64 ? 'x64' : 'arm64'}.exe`; break;
+        case 'mac': packageSuffix = `macos_universal.pkg`; break;
+        case 'rpm': packageSuffix = `linux_${isX64 ? 'x86_64' : 'aarch64'}.rpm`; break;
+        case 'deb': packageSuffix = `linux_${isX64 ? 'amd64' : 'arm64'}.deb`; break;
         case 'snap': packageSuffix = 'linux64.snap'; break;
     }
 

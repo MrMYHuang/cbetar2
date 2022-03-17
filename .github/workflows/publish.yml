@@ -53,7 +53,7 @@ jobs:
           npm i
           npm run dist-win -- -p always --arm64 -c.publishAutoUpdate=false
 
-  publish-deb-x64:
+  publish-deb-amd64:
     runs-on: ubuntu-latest
 
     steps:
@@ -89,7 +89,7 @@ jobs:
           npm i
           npm run dist-deb -- -p always --arm64
 
-  publish-rpm-x64:
+  publish-rpm-x86_64:
     runs-on: ubuntu-latest
 
     steps:
@@ -107,7 +107,7 @@ jobs:
           npm i
           npm run dist-rpm -- -p always --x64
 
-  publish-rpm-arm64:
+  publish-rpm-aarch64:
     runs-on: ubuntu-latest
 
     steps:
@@ -125,7 +125,7 @@ jobs:
           npm i
           npm run dist-rpm -- -p always --arm64
           
-  publish-mac:
+  publish-mac-universal:
     runs-on: macos-latest
 
     steps:
