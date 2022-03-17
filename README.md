@@ -117,11 +117,11 @@ CBETA 電子佛典閱讀器2(非官方) (Chinese Buddhist Electronic Text Associ
 
 ## 支援平台
 已在這些環境作過安裝、測試:
-* Windows 10 x86_64 + Chrome
+* Windows 10 amd64 + Chrome
 * Windows 11 on ARM + Chrome
 * Android 9 + Chrome
 * Firefly RK-3399 + Android 7.1 + Firefox 91 (from PWA)
-* macOS 11 x86_64 + Chrome
+* macOS 11 amd64 + Chrome
 * macOS 11.5.2 arm64 + Electron app (from Apple App Store)
 * macOS 11.5.2 arm64 host + Ubuntu 20.04 arm64 guest + Electron app (from Snap Store)
 * iPad 7 iPadOS 14-15 + Safari
@@ -199,22 +199,22 @@ https://MrMYHuang.github.io
 <img width="auto" height='60px' src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/GalaxyStore_ChineseTraditional.png'/>
 </a>
 
-#### macOS 10.10+ (x86_64 & arm64) - 使用 Apple App Store
+#### macOS 10.10+ (amd64 & arm64) - 使用 Apple App Store
 <a href='https://apps.apple.com/app/id1546347689' target='_blank'>
 <img width="auto" height='60px' src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/Download_on_the_Mac_App_Store_Badge_CNTC_RGB_blk_100217.svg'/>
 </a>
 
-#### Windows 10+ (x86_64 & arm64) - 使用 Microsoft Store
+#### Windows 10+ (amd64 & arm64) - 使用 Microsoft Store
 <a href='//www.microsoft.com/store/apps/9P6TDQX46JJL' target='_blank'>
 <img width="auto" height='60px' src='https://developer.microsoft.com/store/badges/images/Chinese-Traditional_get-it-from-MS.png' alt='Chinese Traditional badge'/>
 </a>
 
-#### Linux (x86_64 & arm64) - 使用 Snap Store
+#### Linux (amd64 & arm64) - 使用 Snap Store
 <a href='https://snapcraft.io/cbetar2' target='_blank'>
 <img width="auto" height='60px' src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/[TW]-snap-store-black@2x.png' />
 </a>
 
-#### Linux (x86_64 & arm64) - 使用 Flathub
+#### Linux (amd64 & arm64) - 使用 Flathub
 <a href='https://flathub.org/apps/details/io.github.mrmyhuang.cbetar2' target='_blank'>
 <img width="auto" height='60px' src='https://flathub.org/assets/badges/flathub-badge-en.png' />
 </a>
@@ -223,13 +223,13 @@ https://MrMYHuang.github.io
 請至此頁面下載最新版安裝檔：
 https://github.com/MrMYHuang/cbetar2/releases/latest
 
-支援的 64-bit 作業系統如下(Android 為連線 DB app，其他都是離線 DB app)：
+支援的 amd64 & arm64 作業系統如下 (Android 為連線 DB app，其他都是離線 DB app)：
 
   1. Android (中國大陸使用者也能安裝)
   2. Linux DEB (Debian, Ubuntu, ...)
   3. Linux RPM (Fedora, ...)
   4. Windows 7+
-  5. macOS 10.10+
+  5. macOS 10.11+
 
 ## TODO
 1. 離線版 app 未完成或不支援功能：
@@ -271,7 +271,7 @@ https://github.com/MrMYHuang/cbetar2/releases/latest
   * [修正] 分類選擇 UI 無法切換。
 
 * Linux Flathub 13.2.2:
-  * 支援 x86_64 與 arm64.
+  * 支援 amd64 與 arm64.
 
 * PWA 4.26.5:
   * [調整] 升級第3方套件 Ionic 至6版。
