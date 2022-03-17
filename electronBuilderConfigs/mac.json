@@ -17,7 +17,7 @@
   "asarUnpack": [
     "node_modules/node1-libxmljsmt-myh/**/*"
   ],
-  "afterAllArtifactBuild": "electron-builder-notarize-pkg",
+  "afterAllArtifactBuild": "electron-builder-notarize-pkg-myh",
   "icon": "buildElectron/icon.icns",
   "mac": {
     "publish": ["github"],
