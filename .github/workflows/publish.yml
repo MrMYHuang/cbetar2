@@ -29,11 +29,10 @@ jobs:
       - name: Build and publish
         uses: actions/setup-node@v1
         with:
-          node-version: 14
+          node-version: 16.14.1
 
       - run: |
-          # For VS2022
-          npm i npm@8.5.0 -g
+          npm i
           npm run dist-win -- -p always --x64
 
   publish-win-arm64:
@@ -48,11 +47,9 @@ jobs:
       - name: Build and publish
         uses: actions/setup-node@v1
         with:
-          node-version: 14
+          node-version: 16.14.1
 
       - run: |
-          # For VS2022
-          npm i npm@8.5.0 -g
           npm i
           npm run dist-win -- -p always --arm64
 
