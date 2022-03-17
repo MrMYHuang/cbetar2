@@ -19,7 +19,7 @@
   ],
   "icon": "buildElectron/icon.png",
   "rpm": {
-    "artifactName": "${name}_${version}_linux_${arch).${ext}",
+    "artifactName": "${name}_${version}_linux_${arch}.${ext}",
     "category": "public.app-category.education"
   }
 }
