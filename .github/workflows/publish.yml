@@ -51,7 +51,7 @@ jobs:
 
       - run: |
           npm i
-          npm run dist-win -- -p always --arm64 -c.publishAutoUpdate=false
+          npm run dist-win -- -p always --arm64 "-c.win.publish.provider=github" "-c.win.publish.publishAutoUpdate=false"
 
   publish-deb-amd64:
     runs-on: ubuntu-latest
