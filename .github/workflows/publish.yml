@@ -34,7 +34,7 @@ jobs:
           npm i
           npm run dist-win -- -p always
 
-  publish-deb:
+  publish-deb-x64:
     runs-on: ubuntu-latest
 
     steps:
@@ -50,9 +50,9 @@ jobs:
 
       - run: |
           npm i
-          npm run dist-deb -- -p always
+          npm run dist-deb -- -p always --x64
 
-  publish-rpm:
+  publish-deb-arm64:
     runs-on: ubuntu-latest
 
     steps:
@@ -68,7 +68,43 @@ jobs:
 
       - run: |
           npm i
-          npm run dist-rpm -- -p always
+          npm run dist-deb -- -p always --arm64
+
+  publish-rpm-x64:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+
+      - name: Build and publish
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+
+      - run: |
+          npm i
+          npm run dist-rpm -- -p always --x64
+
+  publish-rpm-arm64:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+
+      - name: Build and publish
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+
+      - run: |
+          npm i
+          npm run dist-rpm -- -p always --arm64
           
   publish-mac:
     runs-on: macos-latest
@@ -86,4 +122,4 @@ jobs:
 
       - run: |
           npm i
-          npm run dist-mac -- -p always
+          npm run dist-mac -- -p always --universal

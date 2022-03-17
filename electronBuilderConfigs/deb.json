@@ -19,7 +19,7 @@
   ],
   "icon": "buildElectron/icon.png",
   "deb": {
-    "artifactName": "${name}_${version}_linux64.${ext}",
+    "artifactName": "${name}_${version}_linux_${arch).${ext}",
     "category": "public.app-category.education"
   }
 }
