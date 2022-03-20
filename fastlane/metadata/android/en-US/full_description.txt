@@ -1,0 +1,1 @@
+      CBETA Electronic Buddhist Text Reader 2 app features: search by categories, full text search, bookmarks, share by link, offline browsing, text to speech, Buddhism dictionary, themes, pagination, adjustable font size, Kai font, vertical text layout, Buddhist text printing, cross platforms, no ad, open source.
