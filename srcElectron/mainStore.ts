@@ -110,6 +110,7 @@ async function createWindow() {
     'width': mainWindowState.width,
     'height': mainWindowState.height,
     webPreferences: {
+      nativeWindowOpen: false,
       contextIsolation: true, // protect against prototype pollution
       preload: path.join(__dirname, 'preload.js'),
     }
