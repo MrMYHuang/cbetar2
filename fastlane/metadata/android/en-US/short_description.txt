@@ -1,1 +1,1 @@
-This app is an electronic Buddhist text reader. It gets Buddhist text data from CBETA APIs.
+An electronic Buddhist text reader. It gets Buddhist text data from CBETA APIs.
