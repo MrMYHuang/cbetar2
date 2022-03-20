@@ -1,0 +1,14 @@
+<shortcuts xmlns:android='http://schemas.android.com/apk/res/android'>
+    <shortcut android:shortcutId='shortcut0' android:enabled='true' android:icon='@drawable/shortcut_0' android:shortcutShortLabel='@string/shortcut_short_name_0' android:shortcutLongLabel='@string/shortcut_name_0'>
+        <intent android:action='android.intent.action.MAIN' android:targetPackage='io.github.mrmyhuang.cbetar2' android:targetClass='io.github.mrmyhuang.cbetar2.LauncherActivity' android:data='https://mrmyhuang.github.io/bookmarks?item=0' />
+        <categories android:name='android.intent.category.LAUNCHER' />
+    </shortcut>
+    <shortcut android:shortcutId='shortcut1' android:enabled='true' android:icon='@drawable/shortcut_1' android:shortcutShortLabel='@string/shortcut_short_name_1' android:shortcutLongLabel='@string/shortcut_name_1'>
+        <intent android:action='android.intent.action.MAIN' android:targetPackage='io.github.mrmyhuang.cbetar2' android:targetClass='io.github.mrmyhuang.cbetar2.LauncherActivity' android:data='https://mrmyhuang.github.io/dictionary/search' />
+        <categories android:name='android.intent.category.LAUNCHER' />
+    </shortcut>
+    <shortcut android:shortcutId='shortcut2' android:enabled='true' android:icon='@drawable/shortcut_2' android:shortcutShortLabel='@string/shortcut_short_name_2' android:shortcutLongLabel='@string/shortcut_name_2'>
+        <intent android:action='android.intent.action.MAIN' android:targetPackage='io.github.mrmyhuang.cbetar2' android:targetClass='io.github.mrmyhuang.cbetar2.LauncherActivity' android:data='https://mrmyhuang.github.io/dictionary/searchWord' />
+        <categories android:name='android.intent.category.LAUNCHER' />
+    </shortcut>
+</shortcuts>
