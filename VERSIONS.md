@@ -2,15 +2,6 @@
 * F-Droid 4.26.7 (4):
     * This is the first release on F-Droid.
 
-* F-Droid 4.26.7 (3):
-    * Test build.
-
-* F-Droid 4.26.7 (2):
-    * Test build.
-
-* F-Droid 4.26.7 (1):
-    * Test build.
-
 * Backend 14.0.0:
   * [新增] Windows, Linux (deb & rpm), macOS 皆支援 x64 & arm64.
 
