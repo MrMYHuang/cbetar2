@@ -1,10 +1,15 @@
-[{
-      "relation": ["delegate_permission/common.handle_all_urls"],
-      "target": {
-        "namespace": "android_app",
-        "package_name": "io.github.mrmyhuang.cbetar2",
-        "sha256_cert_fingerprints": [
-          "86:34:11:7E:8F:43:D9:FB:3A:57:02:C6:F8:9F:F3:92:16:C8:D8:3E:76:F4:F6:9B:79:3B:01:0A:D5:FE:52:95"
-        ]
-      }
-    }]
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "io.github.mrmyhuang.cbetar2",
+      "sha256_cert_fingerprints": [
+        "86:34:11:7E:8F:43:D9:FB:3A:57:02:C6:F8:9F:F3:92:16:C8:D8:3E:76:F4:F6:9B:79:3B:01:0A:D5:FE:52:95",
+        "DB:85:E2:F6:12:8E:18:30:02:24:5B:BF:B2:4E:4F:CD:6C:69:35:07:5D:49:96:01:35:51:2A:6D:B9:20:81:A5"
+      ]
+    }
+  }
+]
