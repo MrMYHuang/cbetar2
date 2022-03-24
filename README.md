@@ -21,12 +21,17 @@ CBETA 電子佛典閱讀器2(非官方) (Chinese Buddhist Electronic Text Associ
     * 安裝方式：下載安裝檔案安裝。支援 Windows 7+, Linux, macOS 10.10+。
     * 設定：啟動 app 後，執行選單/檔案/設定 Bookcase目錄。
 
-* <a id='search'>搜尋</a>
+* <a id='search'>搜尋、瀏覽</a>
   1. 搜索目錄：在目錄頁，按下右上角放大鏡圖示。在對話框輸入經文部分(或全部)標題，按下"搜索目錄"後會列出相關經文。
 
   <img src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/Search.png' width='50%' />
 
   2. 全文檢索：類似"搜索目錄"。但在對話框可輸入某卷經文內的一段文字，如"大水忽起卒至無期"。
+
+  3. 上下卷切換：在經文頁中，右下方半透明鈕按下會跳按鈕，可切換上下卷。
+
+  <img src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/JuanPrevNextButtons.png' width='50%' />
+
 * <a id='bookmark'>書籤</a>
   1. 開啟某經文後，(手機、平板)長按後選擇想標記為書籤的字串位置，按右上角書籤圖示，即新增一書籤，可至書籤頁查詢。加入書籤的經文可作離線瀏覽。
 
@@ -43,9 +48,11 @@ CBETA 電子佛典閱讀器2(非官方) (Chinese Buddhist Electronic Text Associ
   
   5. 經文文字連結功能：選取經文一段文字後、執行"分享此頁"功能，所產生的app連結開啟後會自動跳至選取文字頁面並標示選取文字。
   6. 文章引用：選取經文一段文字後、執行"文章引用"功能，引用文字即複製至作業系統剪貼簿。引用格式基於CBETA Online，例如："《長阿含經》卷1：「長阿含經」(CBETA, T01, no. 1, p. 1a02)"
+
 * 離線瀏覽
   1. 書籤頁包含的"經"或"卷"書籤都具有離線瀏覽的功能，並用圖示標示。
   2. 設定頁的"更新離線經文檔"按鈕用途為：當CBETA每季更新經文後，離線經文檔不會自動更新，必須手動執行此功能更新所有離線檔。
+
 * <a id='text2speech'>語音播放</a>
   1. 使用電腦語音合成技術 - text to speech，作唸經文功能，即所謂的"有聲書"。(注意，當代電腦語音合成技術與"真人發音"仍有落差。因此聽到的經文發音偶爾不正確是正常現象。)
   2. 播放步驟：開啟經文，按下右上方音符鈕，即可播放（如擷圖所示）

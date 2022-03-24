@@ -1,4 +1,7 @@
 # <a id='history'>版本歷史</a>
+* PWA 4.27.0:
+  * [新增] 經文頁新增上下卷切換鈕。 
+
 * F-Droid 4.26.7 (4):
     * This is the first release on F-Droid.
 

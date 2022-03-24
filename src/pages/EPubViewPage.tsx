@@ -1,13 +1,13 @@
 //import * as fs from 'fs';
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton, withIonLifeCycle, IonIcon, IonAlert, IonPopover, IonList, IonItem, IonLabel, IonFab, IonFabButton, IonToast, IonLoading, isPlatform, IonProgressBar } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton, withIonLifeCycle, IonIcon, IonAlert, IonPopover, IonList, IonItem, IonLabel, IonFab, IonFabButton, IonToast, IonLoading, isPlatform, IonProgressBar, IonFabList } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as uuid from 'uuid';
 import queryString from 'query-string';
 import './EPubViewPage.css';
 import Globals from '../Globals';
-import { bookmark, arrowBack, home, search, ellipsisHorizontal, ellipsisVertical, arrowForward, musicalNotes, stopCircle, book, shareSocial, print, refreshCircle, copy, arrowUp, arrowDown, musicalNote, link } from 'ionicons/icons';
+import { bookmark, arrowBack, home, search, ellipsisHorizontal, ellipsisVertical, arrowForward, musicalNotes, stopCircle, book, shareSocial, print, refreshCircle, copy, arrowUp, arrowDown, musicalNote, link, chevronUpOutline, playSkipForward, playSkipBack } from 'ionicons/icons';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
 import { Work } from '../models/Work';
 import SearchAlert from '../components/SearchAlert';
@@ -974,6 +974,40 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     }
   }
 
+  get currentJuan() {
+    return +this.props.match.params.path;
+  }
+
+  get juanList() {
+    return this.state.workInfo.juan_list.split(',').map(v => +v);
+  }
+
+  juanPrev() {
+    if (this.currentJuan > Math.min(...this.juanList)) {
+      const prevJuan = this.juanList[this.juanList.findIndex(v => v === this.currentJuan) - 1];
+      const routeLink = `/catalog/juan/${this.props.match.params.work}/${prevJuan}`;
+      this.ionViewWillLeave();
+      this.props.history.push({
+        pathname: routeLink,
+      });
+    } else {
+      this.setState({showToast: true, toastMessage: '已至首卷！'});
+    }
+  }
+
+  juanNext() {
+    if (this.currentJuan < Math.max(...this.juanList)) {
+      const nextJuan = this.juanList[this.juanList.findIndex(v => v === this.currentJuan) + 1];
+      const routeLink = `/catalog/juan/${this.props.match.params.work}/${nextJuan}`;
+      this.ionViewWillLeave();
+      this.props.history.push({
+        pathname: routeLink,
+      });
+    } else {
+      this.setState({showToast: true, toastMessage: '已至尾卷！'});
+    }
+  }
+
   findCbetaHtmlLine(node: Node) {
     let parent: HTMLElement | null | undefined = node.parentElement;
     do {
@@ -1308,6 +1342,37 @@ class _EPubViewPage extends React.Component<PageProps, State> {
           }}>
           <IonIcon icon={this.props.rtlVerticalLayout ? arrowForward : arrowDown} />
         </IonFabButton>
+      </IonFab>
+      <IonFab vertical='bottom' horizontal='end' slot='fixed'>
+        <IonFabButton style={{ opacity: fabButtonOpacity }}
+          onPointerDown={e => {
+            e.currentTarget.style.setProperty('opacity', '1');
+          }}
+          onPointerEnter={e => {
+            e.currentTarget.style.setProperty('opacity', '1');
+          }}
+          onPointerUp={e => {
+            if (Globals.isTouchDevice()) {
+              e.currentTarget.style.setProperty('opacity', `${fabButtonOpacity}`);
+            }
+          }}
+          onPointerLeave={e => {
+            e.currentTarget.style.setProperty('opacity', `${fabButtonOpacity}`);
+          }}>
+          <IonIcon icon={chevronUpOutline} />
+        </IonFabButton>
+        <IonFabList side='top'>
+          <IonFabButton onClick={e => {
+              this.juanNext();
+            }}>
+            <IonIcon style={this.props.rtlVerticalLayout ? {} : {transform: 'rotate(270deg)'}} icon={playSkipBack} color='dark'></IonIcon>
+          </IonFabButton>
+          <IonFabButton onClick={e => {
+              this.juanPrev();
+            }}>
+            <IonIcon style={this.props.rtlVerticalLayout ? {} : {transform: 'rotate(270deg)'}} icon={playSkipForward} color='dark'></IonIcon>
+          </IonFabButton>
+        </IonFabList>
       </IonFab>
     </>);
 
