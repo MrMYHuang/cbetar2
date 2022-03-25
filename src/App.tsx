@@ -228,7 +228,7 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
       var db = (event.target as any).result;
       db.createObjectStore('store');
     };
-    this.loadTwKaiFont();
+    this.loadTwKaiFonts();
   }
 
   restoreAppSettings() {
@@ -242,22 +242,53 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
     Globals.updateCssVars(this.props.settings);
   }
 
-  async loadTwKaiFont() {
+  async loadTwKaiFonts() {
+    let forceUpdate = false;
+    if (+(localStorage.getItem('twKaiFontVersion') ?? 1) < Globals.twKaiFontVersion) {
+      localStorage.setItem('twKaiFontVersion', Globals.twKaiFontVersion + "");
+      forceUpdate = true;
+    }
+
+    for (let i = 0; i < Globals.twKaiFonts.length; i++) {
+      this.loadTwKaiFont(
+        Globals.twKaiFonts[i],
+        Globals.twKaiFontKeys[i],
+        Globals.twKaiFontPaths[i],
+        forceUpdate,
+      )
+    }
+  }
+
+  async loadTwKaiFont(font: string, key: string, path: string, forceUpdate: boolean) {
     let fontData: any;
-    try {
-      fontData = await Globals.getFileFromIndexedDB(Globals.twKaiFontKey);
-    } catch (err) {
-      const res = await Globals.axiosInstance.get(`${window.location.origin}/${Globals.twKaiFontPath}`, {
+    let updateFont = () => {
+      return Globals.axiosInstance.get(`${window.location.origin}/${path}`, {
         responseType: 'arraybuffer',
         timeout: 0,
+      }).then(res => {
+        fontData = res.data;
+        Globals.saveFileToIndexedDB(key, fontData);
       });
-      fontData = res.data;
-      Globals.saveFileToIndexedDB(Globals.twKaiFontKey, fontData);
+    };
+
+    let updateFontOrNot;
+    if (!forceUpdate) {
+      updateFontOrNot = Globals.getFileFromIndexedDB(key).then(data => {
+        fontData = data;
+      }).catch(err => {
+        return updateFont();
+      });
+    } else {
+      updateFontOrNot = updateFont();
     }
-    const fontFace = new (window as any).FontFace('Kai', fontData);
-    await fontFace.load();
-    (document as any).fonts.add(fontFace);
-    console.log('[Main] TW-Kai font loading success!');
+
+    updateFontOrNot.then(() => {
+      const fontFace = new (window as any).FontFace(font, fontData);
+      return fontFace.load() as Promise<any>;
+    }).then((fontFace) => {
+      (document as any).fonts.add(fontFace);
+      console.log(`[Main] ${font} font loading success!`);
+    });
   }
 
   // Prevent device from sleeping.

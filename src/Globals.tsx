@@ -11,9 +11,13 @@ const cbetaApiUrl = `https://cbdata.dila.edu.tw/${apiVersion}`;
 const dilaDictApiUrl = `https://glossaries.dila.edu.tw/search.json`;
 const cbetardb = 'cbetardb';
 const storeFile = 'Settings.json';
-const twKaiFontKey = 'twKaiFont';
+const twKaiFontVersion = 2;
+// Disable problematic fonts.
+const twKaiFonts = ['Kai'];
+//const twKaiFonts = ['Kai', 'KaiExtB', 'KaiPlus'];
+const twKaiFontKeys = ['twKaiFont', 'twKaiExtBFont', 'twKaiPlusFont', ];
 /* Font source: https://data.gov.tw/dataset/5961 */
-const twKaiFontPath = `${pwaUrl}/assets/TW-Kai-98_1.woff`;
+const twKaiFontPaths = [`${pwaUrl}/assets/TW-Kai-98_1.woff`, `${pwaUrl}/assets/TW-Kai-Ext-B-98_1.woff`, `${pwaUrl}/assets/TW-Kai-Plus-98_1.woff`, ];
 let log = '';
 
 const axiosInstance = axios.create({
@@ -263,8 +267,10 @@ const Globals = {
   apiVersion,
   cbetaApiUrl,
   dilaDictApiUrl,
-  twKaiFontKey,
-  twKaiFontPath,
+  twKaiFontVersion,
+  twKaiFonts,
+  twKaiFontKeys,
+  twKaiFontPaths,
   axiosInstance,
   topCatalogsByCat: {
     "CBETA": "CBETA 部類",
@@ -337,7 +343,7 @@ const Globals = {
   scrollbarSizeIdToValue,
   updateCssVars: (settings: any) => {
     let scrollbarSize = scrollbarSizeIdToValue(settings.scrollbarSize);
-    document.documentElement.style.cssText = `--ion-font-family: ${settings.useFontKai ? 'Times, HeitiScoped, Kai' : 'Times, Heiti TC, Noto Sans CJK TC'}; --scrollbar-size: ${scrollbarSize}px; --ui-font-size: ${settings.uiFontSize}px; --text-font-size: ${settings.fontSize}px`
+    document.documentElement.style.cssText = `--ion-font-family: ${settings.useFontKai ? `Times, HeitiScoped, ${twKaiFonts.join(', ')}` : 'Times, Heiti TC, Noto Sans CJK TC'}; --scrollbar-size: ${scrollbarSize}px; --ui-font-size: ${settings.uiFontSize}px; --text-font-size: ${settings.fontSize}px`
   },
   isMacCatalyst,
   isTouchDevice: () => {

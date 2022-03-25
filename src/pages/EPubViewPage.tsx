@@ -17,11 +17,22 @@ import { TmpSettings } from '../models/TmpSettings';
 import { clearTimeout } from 'timers';
 
 // Load TW-Kai font in iframe.
-async function loadTwKaiFont(this: any) {
-  const fontData = await Globals.getFileFromIndexedDB(Globals.twKaiFontKey);
-  const fontFace = new (window as any).FontFace('Kai', fontData);
-  await fontFace.load();
-  (this.document as any).fonts.add(fontFace);
+async function loadTwKaiFonts(this: any) {
+  for (let i = 0; i < Globals.twKaiFonts.length; i++) {
+    loadTwKaiFont(
+      Globals.twKaiFonts[i],
+      Globals.twKaiFontKeys[i],
+    ).then(fontFace => {
+      (this.document as any).fonts.add(fontFace);
+    });
+  }
+}
+
+async function loadTwKaiFont(font: string, key: string) {
+  return Globals.getFileFromIndexedDB(key).then(fontData => {
+    const fontFace = new (window as any).FontFace(font, fontData);
+    return fontFace.load();
+  })
 }
 
 function addCbetaLineBreaks(this: any) {
@@ -613,8 +624,8 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         (ePubIframeWindow as Window).document.ontouchend = Globals.disableIosSafariCallout.bind(ePubIframeWindow);
       }
       if (this.props.useFontKai) {
-        ePubIframeWindow.loadTwKaiFont = loadTwKaiFont;
-        ePubIframeWindow.loadTwKaiFont();
+        ePubIframeWindow.loadTwKaiFonts = loadTwKaiFonts;
+        ePubIframeWindow.loadTwKaiFonts();
       }
       ePubIframeWindow.addCbetaLineBreaks = addCbetaLineBreaks;
       ePubIframeWindow.addCbetaLineBreaks();
@@ -991,7 +1002,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         pathname: routeLink,
       });
     } else {
-      this.setState({showToast: true, toastMessage: '已至首卷！'});
+      this.setState({ showToast: true, toastMessage: '已至首卷！' });
     }
   }
 
@@ -1004,7 +1015,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         pathname: routeLink,
       });
     } else {
-      this.setState({showToast: true, toastMessage: '已至尾卷！'});
+      this.setState({ showToast: true, toastMessage: '已至尾卷！' });
     }
   }
 
@@ -1363,14 +1374,14 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         </IonFabButton>
         <IonFabList side='top'>
           <IonFabButton onClick={e => {
-              this.juanNext();
-            }}>
-            <IonIcon style={this.props.rtlVerticalLayout ? {} : {transform: 'rotate(270deg)'}} icon={playSkipBack} color='dark'></IonIcon>
+            this.juanNext();
+          }}>
+            <IonIcon style={this.props.rtlVerticalLayout ? {} : { transform: 'rotate(270deg)' }} icon={playSkipBack} color='dark'></IonIcon>
           </IonFabButton>
           <IonFabButton onClick={e => {
-              this.juanPrev();
-            }}>
-            <IonIcon style={this.props.rtlVerticalLayout ? {} : {transform: 'rotate(270deg)'}} icon={playSkipForward} color='dark'></IonIcon>
+            this.juanPrev();
+          }}>
+            <IonIcon style={this.props.rtlVerticalLayout ? {} : { transform: 'rotate(270deg)' }} icon={playSkipForward} color='dark'></IonIcon>
           </IonFabButton>
         </IonFabList>
       </IonFab>
