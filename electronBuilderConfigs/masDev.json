@@ -17,6 +17,7 @@
     "minimumSystemVersion": "10.10",
     "hardenedRuntime": false,
     "entitlements": "buildElectron/entitlements.mas.plist",
-    "entitlementsInherit": "buildElectron/entitlements.mas.inherit.plist"
+    "entitlementsInherit": "buildElectron/entitlements.mas.inherit.plist",
+    "provisioningProfile": "cbetar2Dev.provisionprofile"
   }
 }

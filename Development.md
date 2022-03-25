@@ -17,17 +17,19 @@ npm run start
 ### Mac Store App
 0. Generate and install the following certificates from https://developer.apple.com/account/resources/certificates/list
    1. Apple Development
-   2. Apple Distribution
-   3. Mac Developer
+   2. Apple Distribution (for dist-mas)
+   3. Mac Developer (for dist-mas-dev)
    4. 3rd Party Mac Developer Application
-   5. 3rd Party Mac Developer Installer
-   6. Developer ID Application
-   7. Developer ID Installer
+   5. 3rd Party Mac Developer Installer (for dist-mas)
+   6. Developer ID Application (for dist-mac)
+   7. Developer ID Installer (for dist-mac)
+   8. Development provisionprofile with cert Mac Development (for dist-mas-dev)
+   9. App Store provisionprofile with cert Apple Distribution (for dist-mas)
 1. Run Shell script:
 ```
 cd electronApps
 npm i
-npm run build-mas-dev
+npm run dist-mas-dev
 ```
 2. Open dist/mas-dev/foo.app
 
@@ -60,7 +62,7 @@ Note: The Mac Catalyst app in this section has limited functions. It is recommen
 
 0. Required software:
     1. CocoaPods: https://guides.cocoapods.org/using/getting-started.html
-    2. Xcode 12
+    2. Xcode 13
 1. Run Shell script:
 ```
 cd ios
@@ -69,21 +71,16 @@ pod install
 2. Open cbetar2.xcworkspace by Xcode...
 
 ### Mac App Store
-0. Generate and install the following certificates from https://developer.apple.com/account/resources/certificates/list
-   1. Mac Developer
 1. Run Shell script:
 ```
 cd electronApps
 npm i
-npm run dist_mas
+npm run dist-mas
 ```
 2. Upload dist/mas/foo.pkg to App Store Connect by Transporter:
 https://apps.apple.com/tw/app/transporter/id1450874784
 
 ### Mac PKG
-0. Generate and install the following certificates from https://developer.apple.com/account/resources/certificates/list
-   1. Developer ID Application
-   2. Developer ID Installer
 1. Run Shell script:
 ```
 export APPLE_ID=your@email.domain
@@ -91,7 +88,7 @@ export APPLE_ID=your@email.domain
 export APPLE_ID_PASSWORD=yourAppleIdAppPassword
 cd electronApps
 npm i
-npm run dist_mac
+npm run dist-mac
 ```
 
 ### Linux Snap Store
@@ -107,7 +104,7 @@ npm run dist_mac
 ```
 cd electronApps
 npm i
-npm run dist_snap
+npm run dist-snap
 ```
 2. Upload by this example command:
 ```
