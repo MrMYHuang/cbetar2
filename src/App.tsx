@@ -188,11 +188,30 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
     }
     Globals.updateCssVars(this.props.settings);
 
+    let showToastInit = false;
+    let toastMessageInit = '';
+    if(Globals.twKaiFontNeedUpgrade() && this.props.settings.useFontKai) {
+      (this.props as any).dispatch({
+        type: "SET_KEY_VAL",
+        key: 'useFontKai',
+        val: false
+      });
+      localStorage.setItem('twKaiFontVersion', "0");
+      let settingsTemp = this.props.settings;
+      settingsTemp.useFontKai = false;
+      Globals.updateCssVars(settingsTemp);
+
+      showToastInit = true;
+      toastMessageInit = '楷書字型已更新，請至設定頁開啟楷書！';
+    } else if (this.props.settings.useFontKai) {
+      Globals.loadTwKaiFonts();
+    }
+
     this.state = {
       showUpdateAlert: false,
       showRestoreAppSettingsToast: (queryParams.settings != null && this.originalAppSettingsStr != null) || false,
-      showToast: false,
-      toastMessage: '',
+      showToast: showToastInit,
+      toastMessage: toastMessageInit,
       downloadModal: { progress: 0, show: false }
     };
 
@@ -228,7 +247,6 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
       var db = (event.target as any).result;
       db.createObjectStore('store');
     };
-    this.loadTwKaiFonts();
   }
 
   restoreAppSettings() {
@@ -240,55 +258,6 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
     document.body.classList.toggle(`theme${this.props.settings.theme}`, true);
     document.body.classList.toggle(`print${this.props.settings.printStyle}`, true);
     Globals.updateCssVars(this.props.settings);
-  }
-
-  async loadTwKaiFonts() {
-    let forceUpdate = false;
-    if (+(localStorage.getItem('twKaiFontVersion') ?? 1) < Globals.twKaiFontVersion) {
-      localStorage.setItem('twKaiFontVersion', Globals.twKaiFontVersion + "");
-      forceUpdate = true;
-    }
-
-    for (let i = 0; i < Globals.twKaiFonts.length; i++) {
-      this.loadTwKaiFont(
-        Globals.twKaiFonts[i],
-        Globals.twKaiFontKeys[i],
-        Globals.twKaiFontPaths[i],
-        forceUpdate,
-      )
-    }
-  }
-
-  async loadTwKaiFont(font: string, key: string, path: string, forceUpdate: boolean) {
-    let fontData: any;
-    let updateFont = () => {
-      return Globals.axiosInstance.get(`${window.location.origin}/${path}`, {
-        responseType: 'arraybuffer',
-        timeout: 0,
-      }).then(res => {
-        fontData = res.data;
-        Globals.saveFileToIndexedDB(key, fontData);
-      });
-    };
-
-    let updateFontOrNot;
-    if (!forceUpdate) {
-      updateFontOrNot = Globals.getFileFromIndexedDB(key).then(data => {
-        fontData = data;
-      }).catch(err => {
-        return updateFont();
-      });
-    } else {
-      updateFontOrNot = updateFont();
-    }
-
-    updateFontOrNot.then(() => {
-      const fontFace = new (window as any).FontFace(font, fontData);
-      return fontFace.load() as Promise<any>;
-    }).then((fontFace) => {
-      (document as any).fonts.add(fontFace);
-      console.log(`[Main] ${font} font loading success!`);
-    });
   }
 
   // Prevent device from sleeping.

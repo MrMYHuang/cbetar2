@@ -11,19 +11,76 @@ const cbetaApiUrl = `https://cbdata.dila.edu.tw/${apiVersion}`;
 const dilaDictApiUrl = `https://glossaries.dila.edu.tw/search.json`;
 const cbetardb = 'cbetardb';
 const storeFile = 'Settings.json';
-const twKaiFontVersion = 2;
+const twKaiFontVersion = 3;
 // Disable problematic fonts.
-const twKaiFonts = ['Kai'];
-//const twKaiFonts = ['Kai', 'KaiExtB', 'KaiPlus'];
-const twKaiFontKeys = ['twKaiFont', 'twKaiExtBFont', 'twKaiPlusFont', ];
+//const twKaiFonts = ['Kai'];
+const twKaiFonts = ['Kai', 'Kai', 'Kai', 'KaiExtB', 'KaiExtB', 'KaiExtB', 'KaiPlus', 'KaiPlus'];
+const twKaiFontKeys = ['twKaiFont-1', 'twKaiFont-2', 'twKaiFont-3', 'twKaiExtBFont-1', 'twKaiExtBFont-2', 'twKaiExtBFont-3', 'twKaiPlusFont-1', 'twKaiPlusFont-2', ];
 /* Font source: https://data.gov.tw/dataset/5961 */
-const twKaiFontPaths = [`${pwaUrl}/assets/TW-Kai-98_1.woff`, `${pwaUrl}/assets/TW-Kai-Ext-B-98_1.woff`, `${pwaUrl}/assets/TW-Kai-Plus-98_1.woff`, ];
+//const twKaiFontPaths = [`${pwaUrl}/assets/TW-Kai-98_1.woff`, `${pwaUrl}/assets/TW-Kai-Ext-B-98_1.woff`, `${pwaUrl}/assets/TW-Kai-Plus-98_1.woff`, ];
+const twKaiFontPaths = [`${pwaUrl}/assets/TW-Kai-98_1-1.woff2`, `${pwaUrl}/assets/TW-Kai-98_1-2.woff2`, `${pwaUrl}/assets/TW-Kai-98_1-3.woff2`, `${pwaUrl}/assets/TW-Kai-Ext-B-98_1-1.woff2`, `${pwaUrl}/assets/TW-Kai-Ext-B-98_1-2.woff2`, `${pwaUrl}/assets/TW-Kai-Ext-B-98_1-3.woff2`, `${pwaUrl}/assets/TW-Kai-Plus-98_1-1.woff2`, `${pwaUrl}/assets/TW-Kai-Plus-98_1-2.woff2`, ];
 let log = '';
 
 const axiosInstance = axios.create({
   baseURL: cbetaApiUrl,
   timeout: 10000,
 });
+
+function twKaiFontNeedUpgrade() {
+  return +(localStorage.getItem('twKaiFontVersion') ?? 1) < twKaiFontVersion;
+}
+
+async function loadTwKaiFonts() {
+  let forceUpdate = false;
+  if (twKaiFontNeedUpgrade()) {
+    localStorage.setItem('twKaiFontVersion', twKaiFontVersion + "");
+    forceUpdate = true;
+  }
+
+  let load: Promise<any>[] = [];
+  for (let i = 0; i < twKaiFonts.length; i++) {
+    load.push(loadTwKaiFont(
+      twKaiFonts[i],
+      twKaiFontKeys[i],
+      twKaiFontPaths[i],
+      forceUpdate,
+    ));
+  }
+  return Promise.all(load);
+}
+
+async function loadTwKaiFont(font: string, key: string, path: string, forceUpdate: boolean) {
+  let fontData: any;
+  let updateFont = () => {
+    return axiosInstance.get(`${window.location.origin}/${path}`, {
+      responseType: 'arraybuffer',
+      timeout: 0,
+    }).then(res => {
+      fontData = res.data;
+      saveFileToIndexedDB(key, fontData);
+      localStorage.setItem('twKaiFontVersion', twKaiFontVersion + "");
+    });
+  };
+
+  let updateFontOrNot;
+  if (!forceUpdate) {
+    updateFontOrNot = getFileFromIndexedDB(key).then(data => {
+      fontData = data;
+    }).catch(err => {
+      return updateFont();
+    });
+  } else {
+    updateFontOrNot = updateFont();
+  }
+
+  return updateFontOrNot.then(() => {
+    const fontFace = new (window as any).FontFace(font, fontData);
+    return fontFace.load() as Promise<any>;
+  }).then((fontFace) => {
+    (document as any).fonts.add(fontFace);
+    console.log(`[Main] ${font} font loading success!`);
+  });
+}
 
 function scrollbarSizeIdToValue(id: number) {
   switch (id) {
@@ -267,10 +324,11 @@ const Globals = {
   apiVersion,
   cbetaApiUrl,
   dilaDictApiUrl,
-  twKaiFontVersion,
+  twKaiFontNeedUpgrade,
   twKaiFonts,
   twKaiFontKeys,
-  twKaiFontPaths,
+  twKaiFontVersion,
+  loadTwKaiFonts,
   axiosInstance,
   topCatalogsByCat: {
     "CBETA": "CBETA 部類",

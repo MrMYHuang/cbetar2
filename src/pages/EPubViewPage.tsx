@@ -470,11 +470,17 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         unicode-range: U+0-007F;
     }
 
-    /* Workaround parenthesis orientation problem of TW-Kai-98_1 on iOS Safari. */
+    /* Workaround parenthesis orientation problem of TW-Kai-98_1 on iOS Safari.
     @font-face {
-        font-family: HeitiScoped;
+        font-family: 'HeitiScoped';
         src: local('Heiti TC');
         unicode-range: U+3008-301B, U+FF01-FF60;
+    }
+    */
+
+    /* Workaround HeitiScoped not working on Chrome 99 */
+    .pc {
+      font-family: 'HeitiScoped'
     }
 
     .lb {

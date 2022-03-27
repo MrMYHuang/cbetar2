@@ -8,7 +8,7 @@ export class Settings {
     paginated: boolean = true;
     rtlVerticalLayout: boolean = true;
     scrollbarSize = 0;
-    useFontKai = true;
+    useFontKai = false;
     fontSize = 32;
     uiFontSize: number = 24;
     showComments = false;

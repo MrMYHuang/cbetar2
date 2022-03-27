@@ -16,6 +16,7 @@ interface StateProps {
   juansDownloadedRatio: number;
   showUpdateAllJuansDone: boolean;
   showBugReportAlert: boolean;
+  showDownloadKaiFontAlert: boolean;
   showClearAlert: boolean;
   showToast: boolean;
   toastMessage: string;
@@ -42,6 +43,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
       juansDownloadedRatio: 0,
       showBugReportAlert: false,
       showUpdateAllJuansDone: false,
+      showDownloadKaiFontAlert: false,
       showClearAlert: false,
       showToast: false,
       toastMessage: '',
@@ -450,10 +452,20 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={text} slot='start' />
               <IonLabel className='ion-text-wrap uiFont'>{Globals.appSettings['useFontKai']}</IonLabel>
-              <IonToggle slot='end' checked={this.props.settings.useFontKai} onIonChange={e => {
+              <IonToggle slot='end' checked={this.props.settings.useFontKai} onIonChange={async e => {
                 const isChecked = e.detail.checked;
 
                 if (this.props.settings.useFontKai === isChecked) {
+                  return;
+                }
+
+                try {
+                  if (isChecked) {
+                    await Globals.getFileFromIndexedDB(Globals.twKaiFontKeys[0]);
+                    Globals.loadTwKaiFonts();
+                  }
+                } catch (error) {
+                  this.setState({ showDownloadKaiFontAlert: true });
                   return;
                 }
 
@@ -465,6 +477,46 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                 Globals.updateCssVars(this.props.settings);
               }} />
             </IonItem>
+            <IonAlert
+              cssClass='uiFont'
+              isOpen={this.state.showDownloadKaiFontAlert}
+              backdropDismiss={false}
+              onDidPresent={(ev) => {
+              }}
+              header={'使用楷書字型將下載 44 MB 字型檔。繼續？'}
+              buttons={[
+                {
+                  text: '取消',
+                  cssClass: 'primary uiFont',
+                  handler: (value) => {
+                    this.setState({
+                      showDownloadKaiFontAlert: false,
+                    });
+
+                    (this.props as any).dispatch({
+                      type: "SET_KEY_VAL",
+                      key: 'useFontKai',
+                      val: false
+                    });
+                  },
+                },
+                {
+                  text: '繼續',
+                  cssClass: 'secondary uiFont',
+                  handler: async (value) => {
+                    this.setState({ showDownloadKaiFontAlert: false, showToast: true, toastMessage: "楷書字型背景下載中..." });
+                    Globals.loadTwKaiFonts().then(v => {
+                      (this.props as any).dispatch({
+                        type: "SET_KEY_VAL",
+                        key: 'useFontKai',
+                        val: true
+                      });
+                      Globals.updateCssVars(this.props.settings);
+                    })
+                  },
+                }
+              ]}
+            />
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={text} slot='start' />
