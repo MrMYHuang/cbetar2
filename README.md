@@ -279,7 +279,7 @@ https://electron-store.org/
 2. <a href="http://glossaries.dila.edu.tw/?locale=zh-TW" target="_new">DILA 佛學術語字辭典</a>
 3. 全字庫字型 ( https://data.gov.tw/dataset/5961 )
 
-    此app使用的全字庫字型(2020-08-18版)由國家發展委員會提供。此開放資料依政府資料開放授權條款 (Open Government Data License) 進行公眾釋出，使用者於遵守本條款各項規定之前提下，得利用之。政府資料開放授權條款：https://data.gov.tw/license
+    此 app 使用的全字庫字型(2022-01-07版)由國家發展委員會提供。此開放資料依政府資料開放授權條款 (Open Government Data License) 進行公眾釋出，使用者於遵守本條款各項規定之前提下，得利用之。政府資料開放授權條款：https://data.gov.tw/license
 4. <a href="https://github.com/g0v/moedict-webkit" target="_new">萌典字典</a>
 
 ## <a id='contributors'>App相關貢獻者 (依姓名英、中排序)</a>
