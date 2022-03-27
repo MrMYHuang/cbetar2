@@ -27,7 +27,7 @@ def splitFontFile(originalFile):
             if not(gMin <= g and g < gMax):
                 glyph.clear()
             g = g + 1
-        # Use this to check generated ttf sizes.
+        # Use this to check uncompressed font file sizes.
         #font.generate(f'{filename}-{f+1}.ttf')
         # Use this for compressed outputs.
         font.generate(f'{filename}-{f+1}.woff2')
