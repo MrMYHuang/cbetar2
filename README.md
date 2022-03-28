@@ -258,12 +258,12 @@ https://electron-store.org/
 3. 語音播放速度受限不同引擎、語音限制，可能無法達到指定速度。
 4. "避免螢幕自動鎖定"功能僅限部分較新 Chrome 瀏覽器才支援。
 5. iOS Safari 13.4 以上才支援"分享此頁"功能。
-6. iOS 不支援 app 捷徑。
-7. Safari 不支援列印直排經文。( https://bugs.webkit.org/show_bug.cgi?id=220043 )
+6. iOS Safari 不支援 app 捷徑 (App Store iOS app 支援)。
+7. Safari, iOS Safari 不支援列印直排經文。( https://bugs.webkit.org/show_bug.cgi?id=220043 )
 8. iOS Safari 選擇文字後，仍會閃爍彈出式選單才消失。
 9. 合成語音選項濾掉非離線語音，以避開非離線語音單次播放最長字串過小的問題。
-10. 合成語音選項在 Android Chrome無效。( https://stackoverflow.com/a/61366224/631869 )
-11. 合成語音在 Linux 無作用。
+10. 合成語音選項在 Android Chrome 無效。( https://stackoverflow.com/a/61366224/631869 )
+11. 合成語音功能在 Linux 無作用。
 12. App Store iOS app 不支援列印。
 
 ## <a id='history'></a><a href='https://github.com/MrMYHuang/cbetar2/raw/master/VERSIONS.md'>版本歷史</a>
