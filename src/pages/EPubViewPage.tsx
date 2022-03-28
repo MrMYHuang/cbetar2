@@ -1360,37 +1360,6 @@ class _EPubViewPage extends React.Component<PageProps, State> {
           <IonIcon icon={this.props.rtlVerticalLayout ? arrowForward : arrowDown} />
         </IonFabButton>
       </IonFab>
-      <IonFab vertical='bottom' horizontal='end' slot='fixed'>
-        <IonFabButton style={{ opacity: fabButtonOpacity }}
-          onPointerDown={e => {
-            e.currentTarget.style.setProperty('opacity', '1');
-          }}
-          onPointerEnter={e => {
-            e.currentTarget.style.setProperty('opacity', '1');
-          }}
-          onPointerUp={e => {
-            if (Globals.isTouchDevice()) {
-              e.currentTarget.style.setProperty('opacity', `${fabButtonOpacity}`);
-            }
-          }}
-          onPointerLeave={e => {
-            e.currentTarget.style.setProperty('opacity', `${fabButtonOpacity}`);
-          }}>
-          <IonIcon icon={chevronUpOutline} />
-        </IonFabButton>
-        <IonFabList side='top'>
-          <IonFabButton onClick={e => {
-            this.juanNext();
-          }}>
-            <IonIcon style={this.props.rtlVerticalLayout ? {} : { transform: 'rotate(270deg)' }} icon={playSkipBack} color='dark'></IonIcon>
-          </IonFabButton>
-          <IonFabButton onClick={e => {
-            this.juanPrev();
-          }}>
-            <IonIcon style={this.props.rtlVerticalLayout ? {} : { transform: 'rotate(270deg)' }} icon={playSkipForward} color='dark'></IonIcon>
-          </IonFabButton>
-        </IonFabList>
-      </IonFab>
     </>);
 
     if (!this.bookCreated && this.state.htmlStr != null) {
@@ -1402,6 +1371,38 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         {header}
         <IonContent>
           {this.props.paginated || this.state.showSearchTextToast ? navButtons : <></>}
+          
+          <IonFab vertical='bottom' horizontal='end' slot='fixed'>
+            <IonFabButton style={{ opacity: fabButtonOpacity }}
+              onPointerDown={e => {
+                e.currentTarget.style.setProperty('opacity', '1');
+              }}
+              onPointerEnter={e => {
+                e.currentTarget.style.setProperty('opacity', '1');
+              }}
+              onPointerUp={e => {
+                if (Globals.isTouchDevice()) {
+                  e.currentTarget.style.setProperty('opacity', `${fabButtonOpacity}`);
+                }
+              }}
+              onPointerLeave={e => {
+                e.currentTarget.style.setProperty('opacity', `${fabButtonOpacity}`);
+              }}>
+              <IonIcon icon={chevronUpOutline} />
+            </IonFabButton>
+            <IonFabList side='top'>
+              <IonFabButton onClick={e => {
+                this.juanNext();
+              }}>
+                <IonIcon style={this.props.rtlVerticalLayout ? {} : { transform: 'rotate(270deg)' }} icon={playSkipBack} color='dark'></IonIcon>
+              </IonFabButton>
+              <IonFabButton onClick={e => {
+                this.juanPrev();
+              }}>
+                <IonIcon style={this.props.rtlVerticalLayout ? {} : { transform: 'rotate(270deg)' }} icon={playSkipForward} color='dark'></IonIcon>
+              </IonFabButton>
+            </IonFabList>
+          </IonFab>
 
           <IonLoading
             cssClass='uiFont'
