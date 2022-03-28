@@ -15,10 +15,10 @@ const twKaiFontVersion = 3;
 // Disable problematic fonts.
 //const twKaiFonts = ['Kai'];
 const twKaiFonts = ['Kai', 'Kai', 'Kai', 'KaiExtB', 'KaiExtB', 'KaiExtB', 'KaiPlus', 'KaiPlus'];
-const twKaiFontKeys = ['twKaiFont-1', 'twKaiFont-2', 'twKaiFont-3', 'twKaiExtBFont-1', 'twKaiExtBFont-2', 'twKaiExtBFont-3', 'twKaiPlusFont-1', 'twKaiPlusFont-2', ];
+const twKaiFontKeys = ['twKaiFont-1', 'twKaiFont-2', 'twKaiFont-3', 'twKaiExtBFont-1', 'twKaiExtBFont-2', 'twKaiExtBFont-3', 'twKaiPlusFont-1', 'twKaiPlusFont-2',];
 /* Font source: https://data.gov.tw/dataset/5961 */
 //const twKaiFontPaths = [`${pwaUrl}/assets/TW-Kai-98_1.woff`, `${pwaUrl}/assets/TW-Kai-Ext-B-98_1.woff`, `${pwaUrl}/assets/TW-Kai-Plus-98_1.woff`, ];
-const twKaiFontPaths = [`${pwaUrl}/assets/TW-Kai-98_1-1.woff2`, `${pwaUrl}/assets/TW-Kai-98_1-2.woff2`, `${pwaUrl}/assets/TW-Kai-98_1-3.woff2`, `${pwaUrl}/assets/TW-Kai-Ext-B-98_1-1.woff2`, `${pwaUrl}/assets/TW-Kai-Ext-B-98_1-2.woff2`, `${pwaUrl}/assets/TW-Kai-Ext-B-98_1-3.woff2`, `${pwaUrl}/assets/TW-Kai-Plus-98_1-1.woff2`, `${pwaUrl}/assets/TW-Kai-Plus-98_1-2.woff2`, ];
+const twKaiFontPaths = [`${pwaUrl}/assets/TW-Kai-98_1-1.woff2`, `${pwaUrl}/assets/TW-Kai-98_1-2.woff2`, `${pwaUrl}/assets/TW-Kai-98_1-3.woff2`, `${pwaUrl}/assets/TW-Kai-Ext-B-98_1-1.woff2`, `${pwaUrl}/assets/TW-Kai-Ext-B-98_1-2.woff2`, `${pwaUrl}/assets/TW-Kai-Ext-B-98_1-3.woff2`, `${pwaUrl}/assets/TW-Kai-Plus-98_1-1.woff2`, `${pwaUrl}/assets/TW-Kai-Plus-98_1-2.woff2`,];
 let log = '';
 
 const axiosInstance = axios.create({
@@ -287,9 +287,11 @@ function disableIosSafariCallout(this: Window, event: any) {
   const s = this.getSelection();
   if ((s?.rangeCount || 0) > 0) {
     const r = s?.getRangeAt(0);
-    s?.removeAllRanges();
     setTimeout(() => {
-      s?.addRange(r!);
+      s?.removeAllRanges();
+      setTimeout(() => {
+        s?.addRange(r!);
+      }, 50);
     }, 50);
   }
 }
