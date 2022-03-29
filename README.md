@@ -206,7 +206,7 @@ https://MrMYHuang.github.io
 <img width="auto" height='60px' src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/GalaxyStore_ChineseTraditional.png'/>
 </a>
 
-#### Android 4.4+ - 使用 Amazon appstore
+#### Android 4.4+ - 使用 Amazon Appstore
 <a href='https://www.amazon.com/gp/product/B09VNGZQG6' target='_blank'>
 <img width="auto" height='60px' src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/amazon-appstore-badge-english-black.png'/>
 </a>
