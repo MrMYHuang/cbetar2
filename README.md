@@ -211,7 +211,7 @@ https://MrMYHuang.github.io
 <img width="auto" height='60px' src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/amazon-appstore-badge-english-black.png'/>
 </a>
 
-#### macOS 10.10+ (amd64 & arm64) - 使用 Apple App Store
+#### macOS 10.11+ (amd64 & arm64) - 使用 Apple App Store
 <a href='https://apps.apple.com/app/id1546347689' target='_blank'>
 <img width="auto" height='60px' src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/Download_on_the_Mac_App_Store_Badge_CNTC_RGB_blk_100217.svg'/>
 </a>
