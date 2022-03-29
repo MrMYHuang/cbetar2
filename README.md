@@ -201,9 +201,14 @@ https://MrMYHuang.github.io
 <img width="auto" height='60px' alt='Google Play立即下載' src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/zh-tw_badge_web_generic.png'/>
 </a>
 
-#### Android 4.4+ - 使用 Galaxy Store
+#### Android 4.4+ - 使用 Samsung Galaxy Store
 <a href='https://galaxy.store/cbetar2' target='_blank'>
 <img width="auto" height='60px' src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/GalaxyStore_ChineseTraditional.png'/>
+</a>
+
+#### Android 4.4+ - 使用 Amazon appstore
+<a href='https://www.amazon.com/gp/product/B09VNGZQG6' target='_blank'>
+<img width="auto" height='60px' src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/amazon-appstore-badge-english-black.png'/>
 </a>
 
 #### macOS 10.10+ (amd64 & arm64) - 使用 Apple App Store
