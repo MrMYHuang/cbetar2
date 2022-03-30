@@ -245,13 +245,13 @@ https://MrMYHuang.github.io
   4. Windows 7+
   5. macOS 10.11+
 
-請至此頁面下載最新版安裝檔：
-https://www.electronjs.org/apps/cbetar2
-或
-https://github.com/MrMYHuang/cbetar2/releases/latest
+請開啟任一頁面，下載最新版安裝檔：
 
-也可安裝 Electron App Store，搜尋 "cbeta" 找到此 app 安裝檔:
-https://electron-store.org/
+  * https://www.electronjs.org/apps/cbetar2
+  * https://github.com/MrMYHuang/cbetar2/releases/latest
+
+也可以至此安裝 Electron App Store，搜尋 "cbeta" 找到此 app 安裝檔:
+  * https://electron-store.org/
 
 ## TODO
 1. 離線版 app 未完成或不支援功能：
