@@ -45,7 +45,10 @@ class _BookmarkPage extends React.Component<PageProps, State> {
       this.props.history.push(`/catalog/juan/${bookmark.work?.work}/${bookmark.work?.juan}`);
     } else if (!this.hasBookmark) {
       this.setState({ showToast: true, toastMessage: '無書籤！請從目錄頁新增書籤。' });
-      this.props.history.push(`/catalog/famous`);
+
+      setTimeout(() => {
+        this.props.history.push(`/catalog/famous`);
+      }, 100);
     }
     //console.log( 'view will enter' );
   }

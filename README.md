@@ -201,14 +201,19 @@ https://MrMYHuang.github.io
 <img width="auto" height='60px' alt='Google Play立即下載' src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/zh-tw_badge_web_generic.png'/>
 </a>
 
+#### Android 4.4+ - 使用 Amazon Appstore
+<a href='https://www.amazon.com/gp/product/B09VNGZQG6' target='_blank'>
+<img width="auto" height='60px' src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/amazon-appstore-badge-english-black.png'/>
+</a>
+
 #### Android 4.4+ - 使用 Samsung Galaxy Store
 <a href='https://galaxy.store/cbetar2' target='_blank'>
 <img width="auto" height='60px' src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/GalaxyStore_ChineseTraditional.png'/>
 </a>
 
-#### Android 4.4+ - 使用 Amazon Appstore
-<a href='https://www.amazon.com/gp/product/B09VNGZQG6' target='_blank'>
-<img width="auto" height='60px' src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/amazon-appstore-badge-english-black.png'/>
+#### Android 4.4+ - 使用 Huawei AppGallery (未過審中國大陸)
+<a href='https://appgallery.huawei.com/app/C105837365' target='_blank'>
+<img width="auto" height='60px' src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/HuaweiAppGallery.png'/>
 </a>
 
 #### macOS 10.11+ (amd64 & arm64) - 使用 Apple App Store
