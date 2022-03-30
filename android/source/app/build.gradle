@@ -56,8 +56,8 @@ android {
         applicationId "io.github.mrmyhuang.cbetar2"
         minSdkVersion 19
         targetSdkVersion 31
-        versionCode 4
-        versionName "4.26.7"
+        versionCode 5
+        versionName "5.0.0"
 
         // The name for the application
         resValue "string", "appName", twaManifest.name
