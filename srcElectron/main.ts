@@ -1,13 +1,13 @@
 // Modules to control application life and create native browser window
 import { app, BrowserWindow, ipcMain, Menu, MenuItem, dialog, protocol, shell } from 'electron';
-const windowStateKeeper = require('electron-window-state');
-const path = require('path');
 import * as fs from 'fs';
 import * as os from 'os';
-const PackageInfos = require('../package.json');
 import * as update from './Update';
 import * as cbetaOfflineDb from './CbetaOfflineDb';
 import * as Globals from './Globals';
+const windowStateKeeper = require('electron-window-state');
+const path = require('path');
+const PackageInfos = require('../package.json');
 
 const cbetar2SettingsPath = `${os.homedir()}/.cbetar2`;
 const backendAppSettingsFile = `${cbetar2SettingsPath}/BackendAppSettings.json`;
@@ -48,7 +48,7 @@ async function setCbetaBookcase() {
         cbetaOfflineDb.init(settings.cbetaBookcaseDir, isDevMode());
         fs.writeFileSync(backendAppSettingsFile, JSON.stringify(settings));
         notifyFrontendCbetaOfflineDbMode();
-      } catch (error: any    ) {
+      } catch (error: any) {
         dialog.showErrorBox('錯誤', `${error.message}`);
       }
     } else {
@@ -83,9 +83,9 @@ function loadSettings() {
 
 async function checkUpdate() {
   const latestVersion = await update.lookupLatestVersion();
-  update.check(mainWindow!);
   settings.lastCheckedVersion = latestVersion;
   fs.writeFileSync(backendAppSettingsFile, JSON.stringify(settings));
+  update.check(mainWindow!);
 }
 
 const template = [
@@ -196,7 +196,6 @@ async function createWindow() {
     'width': mainWindowState.width,
     'height': mainWindowState.height,
     webPreferences: {
-      nativeWindowOpen: false,
       contextIsolation: true, // protect against prototype pollution
       preload: path.join(__dirname, 'preload.js'),
     }
@@ -275,10 +274,10 @@ async function createWindow() {
   }
 
   // Open web link by external browser.
-  mainWindow?.webContents.on('new-window', function(event, url) {
-    event.preventDefault();
-    shell.openExternal(url);
- });
+  mainWindow?.webContents.setWindowOpenHandler((detail) => {
+    shell.openExternal(detail.url);
+    return { action: 'deny' };
+  });
 }
 
 // This method will be called when Electron has finished

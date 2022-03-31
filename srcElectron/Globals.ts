@@ -1,6 +1,7 @@
-export const localFileProtocolName = 'safe-file-protocol'; 
-export const latestDownloadUrl = 'https://github.com/MrMYHuang/cbetar2/releases/latest/download';
 import * as fs from 'fs';
+const PackageInfos = require('../package.json');
+export const localFileProtocolName = 'safe-file-protocol'; 
+export const latestDownloadUrl = `${PackageInfos.repository}/releases/latest/download`;
 export function backendAppPackageType() {
     if (fs.existsSync(`${process.resourcesPath}/IsWin.txt`)) return 'win';
     if (fs.existsSync(`${process.resourcesPath}/IsMac.txt`)) return 'mac';

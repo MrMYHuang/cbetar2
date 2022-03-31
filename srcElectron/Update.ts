@@ -1,11 +1,11 @@
 import * as semver from 'semver';
-import { dialog, BrowserWindow } from 'electron';
+import { dialog, BrowserWindow, shell } from 'electron';
 import axios from 'axios';
-import { DownloaderHelper, Stats } from 'node-downloader-helper';
+import { DownloaderHelper, ErrorStats, Stats } from 'node-downloader-helper';
 import * as Globals from './Globals';
+const PackageInfos = require('../package.json');
 
 const isX64 = process.arch === 'x64';
-const PackageInfos = require('../package.json');
 
 const axiosInstance = axios.create({
     timeout: 5000,
@@ -72,6 +72,20 @@ export async function check(browserWindow: BrowserWindow) {
                     message: '新版後端app安裝程式下載完成！請關閉app，手動執行安裝程式。'
                 });
             });
+            dl.on('error', (stats: ErrorStats) => {
+                dl.removeAllListeners();
+                browserWindow.webContents.send('fromMain', { event: 'DownloadingBackendDone' });
+
+                const clickedButtonId = dialog.showMessageBoxSync(browserWindow, {
+                    type: 'question',
+                    message: `下載失敗！是否開啟安裝檔下載網頁？`,
+                    buttons: ['否', '是'],
+                });
+
+                if (clickedButtonId) {
+                    shell.openExternal(`${PackageInfos.repository}/releases/latest`);
+                }
+            })
             dl.start();
         }
     }

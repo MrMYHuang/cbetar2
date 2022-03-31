@@ -110,7 +110,6 @@ async function createWindow() {
     'width': mainWindowState.width,
     'height': mainWindowState.height,
     webPreferences: {
-      nativeWindowOpen: false,
       contextIsolation: true, // protect against prototype pollution
       preload: path.join(__dirname, 'preload.js'),
     }
@@ -174,10 +173,10 @@ async function createWindow() {
   }
 
   // Open web link by external browser.
-  mainWindow?.webContents.on('new-window', function(event, url) {
-    event.preventDefault();
-    shell.openExternal(url);
- });
+  mainWindow?.webContents.setWindowOpenHandler((detail) => {
+    shell.openExternal(detail.url);
+    return { action: 'deny' };
+  });
 }
 
 // This method will be called when Electron has finished
