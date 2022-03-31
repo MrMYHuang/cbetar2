@@ -14,7 +14,7 @@
     "type": "development",
     "artifactName": "${name}_${version}_macos64.${ext}",
     "category": "public.app-category.education",
-    "minimumSystemVersion": "10.10",
+    "minimumSystemVersion": "10.11",
     "hardenedRuntime": false,
     "entitlements": "buildElectron/entitlements.mas.plist",
     "entitlementsInherit": "buildElectron/entitlements.mas.inherit.plist",
