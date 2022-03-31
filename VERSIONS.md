@@ -1,6 +1,6 @@
 # <a id='history'>版本歷史</a>
-* Installer apps 18.0.0:
-  * [更新] 使用 Electron 18.0.1.
+* Installer apps 17.0.0:
+  * [更新] 使用 Electron 17.3.1.
 
 * Huawei 5.0.0:
  * [新增] 上架 Huawei AppGallery (未過審中國大陸).
