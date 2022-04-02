@@ -1,0 +1,45 @@
+name: Publish
+
+on:
+  push:
+    branches:
+      - "!*"
+    tags:
+      - "t[0-9]+.[0-9]+.[0-9]+"
+
+env:
+  DEFAULT_BRANCH: master
+  GH_TOKEN: ${{ secrets.GH_TOKEN }}
+  APPLE_ID: ${{ secrets.APPLE_ID }}
+  APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
+  APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+  CSC_LINK: ${{ secrets.MAC_CERTS }}
+  CSC_KEY_PASSWORD: ${{ secrets.MAC_CERTS_PASSWORD }}
+
+jobs:
+  publish-snap-amd64:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+
+      - name: Build and publish
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+
+      - id: build
+        run: |
+          npm i
+          npm run dist-snap
+          SNAP=$(ls dist/*.snap)
+          echo "::set-output name=snap::${SNAP}"
+
+      - uses: snapcore/action-publish@v1
+        with:
+          store_login: ${{ secrets.STORE_LOGIN }}
+          snap: ${{ steps.build.outputs.snap }}
+          release: stable
