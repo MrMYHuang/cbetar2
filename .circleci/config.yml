@@ -1,0 +1,58 @@
+defaults: &defaults
+  working_directory: ~/workspace
+  machine:
+    image: ubuntu-2004:202101-01
+  resouce_class: arm.medium
+
+version: 2
+jobs:
+  publish:
+    <<: *defaults
+    steps:
+      - checkout
+
+      - run:
+          name: Update index
+          command: apt update
+
+      - run:
+          name: Update index
+          command: |
+            apt update
+            apt install snap -y
+            snap install snapcraft
+
+      - run:
+          name: Build snap
+          command: npm run dist-snap-arm64
+
+      - run:
+          name: Install prerequisites
+          command: |
+            sudo apt update
+            apt install -y openssl
+
+      - run:
+          name: Decrypt credentials
+          command: |
+            openssl aes-256-cbc -d \
+              -in .circleci/credentials.enc \
+              -out credentials \
+              -k $SNAPCRAFT_CREDENTIALS_KEY
+
+      - run:
+          name: Authenticate snapcraft
+          command: snapcraft login --with credentials
+
+      - run:
+          name: Push/release snap
+          command: snapcraft push dist/*.snap --release stable
+
+workflows:
+  version: 2
+  commit:
+    jobs:
+      - build:
+          filters:
+            tags:
+              only: /^c[0-9]+.[0-9]+.[0-9]+$/
