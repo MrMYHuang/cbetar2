@@ -74,7 +74,7 @@ jobs:
 
       - run:
           name: Push/release snap
-          command: snapcraft push *.snap --release stable
+          command: snapcraft push dist/*.snap --release stable
 
 workflows:
   version: 2
