@@ -52,6 +52,7 @@ jobs:
           paths: ['dist/*.snap']
 
   publish:
+    <<: *defaults
     machine:
       image: ubuntu-2004:202101-01
     steps:
