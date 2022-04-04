@@ -75,7 +75,7 @@ jobs:
 
       - run:
           name: Push/release snap
-          command: snapcraft push dist/*.snap --release stable
+          command: find dist -name "*.snap" | xargs -I {} snapcraft upload {}
 
 workflows:
   version: 2
@@ -85,10 +85,14 @@ workflows:
           filters:
             tags:
               only: /^v[0-9]+.[0-9]+.[0-9]+$/
+            branches:
+              ignore: /.*/
       - build-arm64:
           filters:
             tags:
               only: /^v[0-9]+.[0-9]+.[0-9]+$/
+            branches:
+              ignore: /.*/
       - publish:
           requires:
             - build-amd64
