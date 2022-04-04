@@ -19,7 +19,7 @@ jobs:
       - run:
           name: Build snap
           command: |
-            npm i --ignore-scripts
+            npm i
             npm run dist-snap-arm64
 
       - run:
