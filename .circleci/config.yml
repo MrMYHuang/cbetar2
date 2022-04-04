@@ -15,12 +15,16 @@ jobs:
           name: Install prerequisites
           command: |
             sudo apt update
-            sudo apt install -y openssl snap
+            sudo apt install -y openssl snap curl
             sudo snap install snapcraft
+            curl https://nodejs.org/dist/v16.14.2/node-v16.14.2-linux-arm64.tar.gz | tar zx
+            sudo cp -r node-v16.14.2-linux-arm64/* /usr/local
 
       - run:
           name: Build snap
-          command: npm run dist-snap-arm64
+          command: |
+            npm i
+            npm run dist-snap-arm64
 
       - run:
           name: Decrypt credentials
