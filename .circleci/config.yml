@@ -1,13 +1,9 @@
-defaults: &defaults
-  working_directory: ~/workspace
-  machine:
-    image: ubuntu-2004:202101-01
-  resouce_class: arm.medium
-
-version: 2
+version: 2.1
 jobs:
   publish:
-    <<: *defaults
+    machine:
+      image: ubuntu-2004:202101-01
+    resource_class: arm.medium
     steps:
       - checkout
 
@@ -23,7 +19,7 @@ jobs:
       - run:
           name: Build snap
           command: |
-            npm i
+            npm i --ignore-scripts
             npm run dist-snap-arm64
 
       - run:
