@@ -1,6 +1,34 @@
 version: 2.1
+
+defaults: &defaults
+  working_directory: ~/workspace
+  
 jobs:
-  publish:
+  build-amd64:
+    <<: *defaults
+    machine:
+      image: ubuntu-2004:202101-01
+    steps:
+      - checkout
+
+      - run:
+          name: Install prerequisites
+          command: |
+            curl https://nodejs.org/dist/v16.14.2/node-v16.14.2-linux-x64.tar.gz | tar zx
+            sudo cp -r node-v16.14.2-linux-x64/* /usr/local
+
+      - run:
+          name: Build snap
+          command: |
+            npm i
+            npm run dist-snap
+
+      - persist_to_workspace:
+          root: ~/workspace
+          paths: ['dist/*.snap']
+
+  build-arm64:
+    <<: *defaults
     machine:
       image: ubuntu-2004:202101-01
     resource_class: arm.medium
@@ -10,9 +38,6 @@ jobs:
       - run:
           name: Install prerequisites
           command: |
-            sudo apt update
-            sudo apt install -y openssl snap curl
-            sudo snap install snapcraft
             curl https://nodejs.org/dist/v16.14.2/node-v16.14.2-linux-arm64.tar.gz | tar zx
             sudo cp -r node-v16.14.2-linux-arm64/* /usr/local
 
@@ -21,6 +46,19 @@ jobs:
           command: |
             npm i
             npm run dist-snap-arm64
+
+      - persist_to_workspace:
+          root: ~/workspace
+          paths: ['dist/*.snap']
+
+  publish:
+    machine:
+      image: ubuntu-2004:202101-01
+    steps:
+      - checkout
+
+      - attach_workspace:
+          at: ~/workspace
 
       - run:
           name: Decrypt credentials
@@ -36,13 +74,21 @@ jobs:
 
       - run:
           name: Push/release snap
-          command: snapcraft push dist/*.snap --release stable
+          command: snapcraft push *.snap --release stable
 
 workflows:
   version: 2
-  commit:
+  snap:
     jobs:
-      - publish:
+      - build-amd64:
           filters:
             tags:
-              only: /^c[0-9]+.[0-9]+.[0-9]+$/
+              only: /^v[0-9]+.[0-9]+.[0-9]+$/
+      - build-arm64:
+          filters:
+            tags:
+              only: /^v[0-9]+.[0-9]+.[0-9]+$/
+      - publish:
+          requires:
+            - build-amd64
+            - build-arm64

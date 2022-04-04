@@ -124,33 +124,6 @@ jobs:
       - run: |
           npm i
           npm run dist-rpm -- -p always --arm64
-
-  publish-snap-amd64:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-        with:
-          submodules: 'recursive'
-
-      - name: Build and publish
-        uses: actions/setup-node@v1
-        with:
-          node-version: 14
-
-      - id: build
-        run: |
-          npm i
-          npm run dist-snap
-          SNAP=$(ls dist/*.snap)
-          echo "::set-output name=snap::${SNAP}"
-
-      - uses: snapcore/action-publish@v1
-        with:
-          store_login: ${{ secrets.STORE_LOGIN }}
-          snap: ${{ steps.build.outputs.snap }}
-          release: stable
           
   publish-mac-universal:
     runs-on: macos-latest
