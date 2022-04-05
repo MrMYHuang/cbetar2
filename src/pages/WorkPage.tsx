@@ -1,11 +1,11 @@
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonToolbar, IonList, IonItem, IonLabel, withIonLifeCycle, IonButton, IonIcon, IonToast, IonLoading } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonToolbar, IonList, IonItem, IonLabel, withIonLifeCycle, IonButton, IonIcon, IonToast, IonLoading, IonPopover } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import './WorkPage.css';
 import { Work, WorkChapter, WorkListType } from '../models/Work';
 import Globals from '../Globals';
-import { bookmark, arrowBack, home, search, shareSocial, refreshCircle } from 'ionicons/icons';
+import { bookmark, arrowBack, home, search, shareSocial, refreshCircle, ellipsisVertical, ellipsisHorizontal } from 'ionicons/icons';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
 import SearchAlert from '../components/SearchAlert';
 import { TmpSettings } from '../models/TmpSettings';
@@ -26,6 +26,7 @@ interface PageProps extends Props, RouteComponentProps<{
 
 interface State {
   work: Work | null;
+  popover: any;
   showSearchAlert: boolean;
   showAddBookmarkDone: boolean;
   isLoading: boolean;
@@ -37,6 +38,10 @@ class _WorkPage extends React.Component<PageProps, State> {
     super(props);
     this.state = {
       work: null,
+      popover: {
+        show: false,
+        event: null,
+      },
       showSearchAlert: false,
       showAddBookmarkDone: false,
       isLoading: false,
@@ -148,6 +153,17 @@ class _WorkPage extends React.Component<PageProps, State> {
     return this.bookmark != null;
   }
 
+  shareByLink() {
+    this.props.dispatch({
+      type: 'TMP_SET_KEY_VAL',
+      key: 'shareTextModal',
+      val: {
+        show: true,
+        text: decodeURIComponent(window.location.href),
+      },
+    });
+  }
+
   getRowsByChapter() {
     let work = this.state.work;
     const mulu = work?.mulu;
@@ -226,26 +242,58 @@ class _WorkPage extends React.Component<PageProps, State> {
               <IonIcon icon={bookmark} slot='icon-only' />
             </IonButton>
 
-            <IonButton fill="clear" slot='end' onClick={e => this.props.history.push(`/${this.props.match.params.tab}`)}>
+            <IonButton className='narrowScreenHide' fill="clear" slot='end' onClick={e => this.props.history.push(`/${this.props.match.params.tab}`)}>
               <IonIcon icon={home} slot='icon-only' />
             </IonButton>
 
-            <IonButton fill="clear" slot='end' onClick={e => this.setState({ showSearchAlert: true })}>
+            <IonButton className='narrowScreenHide' fill='clear' slot='end' onClick={e => this.setState({ showSearchAlert: true })}>
               <IonIcon icon={search} slot='icon-only' />
             </IonButton>
 
-            <IonButton fill="clear" slot='end' onClick={e => {
-              this.props.dispatch({
-                type: "TMP_SET_KEY_VAL",
-                key: 'shareTextModal',
-                val: {
-                  show: true,
-                  text: decodeURIComponent(window.location.href),
-                },
-              });
-            }}>
+            <IonButton className='narrowScreenHide' fill='clear' slot='end' onClick={e => this.shareByLink}>
               <IonIcon icon={shareSocial} slot='icon-only' />
             </IonButton>
+
+            <IonButton className='narrowScreenShow' fill="clear" slot='end' onClick={e => {
+              this.setState({ popover: { show: true, event: e.nativeEvent } });
+            }}>
+              <IonIcon ios={ellipsisHorizontal} md={ellipsisVertical} slot='icon-only' />
+            </IonButton>
+            <IonPopover
+              isOpen={this.state.popover.show}
+              event={this.state.popover.event}
+              onDidDismiss={e => { this.setState({ popover: { show: false, event: null } }) }}
+            >
+              <IonList>
+                <IonItem button onClick={e => {
+                  this.props.history.push(`/${this.props.match.params.tab}`);
+                  this.setState({ popover: { show: false, event: null } });
+                }}>
+
+                  <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
+                  <IonIcon icon={home} slot='start' />
+                  <IonLabel className='ion-text-wrap uiFont'>回首頁</IonLabel>
+                </IonItem>
+
+                <IonItem button onClick={e => {
+                  this.setState({ popover: { show: false, event: null } });
+                  this.setState({ showSearchAlert: true });
+                }}>
+                  <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
+                  <IonIcon icon={search} slot='start' />
+                  <IonLabel className='ion-text-wrap uiFont'>搜尋經書</IonLabel>
+                </IonItem>
+
+                <IonItem button onClick={ev => {
+                  this.setState({ popover: { show: false, event: null } });
+                  this.shareByLink();
+                }}>
+                  <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
+                  <IonIcon icon={shareSocial} slot='start' />
+                  <IonLabel className='ion-text-wrap uiFont'>分享此頁</IonLabel>
+                </IonItem>
+              </IonList>
+            </IonPopover>
           </IonToolbar>
         </IonHeader>
         <IonContent>

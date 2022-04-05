@@ -1,0 +1,11 @@
+@media only screen and (max-width: 427px) {
+    .narrowScreenHide {
+        display: none;
+    }
+}
+
+@media only screen and (min-width: 428px) {
+    .narrowScreenShow {
+        display: none;
+    }
+}

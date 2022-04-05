@@ -1,4 +1,7 @@
 # <a id='history'>版本歷史</a>
+* PWA 5.0.4:
+  * [優化] 經目錄頁工具列，支援窄螢幕。
+  
 * Installer apps 17.0.0:
   * [更新] 使用 Electron 17.3.1.
 
