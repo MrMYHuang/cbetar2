@@ -2,7 +2,7 @@
   "name": "cbetar2",
   "homepage": "/",
   "productName": "電子佛典",
-  "pwaVersion": "5.0.5",
+  "pwaVersion": "5.0.6",
   "version": "17.0.0",
   "license": "MIT",
   "keywords": [
@@ -83,7 +83,7 @@
     "electron": "^17.3.1",
     "electron-builder": "22.14.13",
     "electron-builder-notarize-pkg-myh": "^1.3.0",
-    "epubjs-myh": "^0.3.113",
+    "epubjs-myh": "^0.3.114",
     "history": "^4.10.1",
     "ionicons": "^5.5.3",
     "memfs": "^3.2.4",
