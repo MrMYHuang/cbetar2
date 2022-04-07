@@ -309,8 +309,9 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     return this.epubcfiFromUrl !== '' || this.bookmark != null;
   }
 
+  epubcfiFirstPage = 'epubcfi(/6/6[s1]!/4/4/2/6[body]/6,/1:0,/1:1)';
   get epubcfi() {
-    return this.epubcfiFromUrl !== '' ? this.epubcfiFromUrl : this.bookmark != null ? this.bookmark!.epubcfi : 'epubcfi(/6/6[s1]!/4/4/2/6[body]/6,/1:0,/1:1)';
+    return this.epubcfiFromUrl !== '' ? this.epubcfiFromUrl : this.bookmark != null ? this.bookmark!.epubcfi : this.epubcfiFirstPage;
   }
 
   pagePrev(n: number = 1) {
@@ -590,7 +591,13 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         this.updateEPubIframe();
       });
 
-      await this.rendition.display(this.props.paginated ? this.epubcfi : undefined);
+      try {
+        await this.rendition.display(this.props.paginated ? this.epubcfi : undefined);
+      } catch (error) {
+        console.error(error);
+        await this.rendition.display(this.epubcfiFirstPage);
+      }
+
       // Navigate to the first work page.
       if (!(this.props.paginated)) {
         // Skip cover page.
