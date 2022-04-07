@@ -599,7 +599,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         // For !paginated.
         const pagestoSkipCoverToc = 2;
         // Jump to epubcfi or the content pages.
-        (this.rendition as any)._display(this.props.paginated ? this.epubcfi : pagestoSkipCoverToc);
+        await (this.rendition as any)._display(this.props.paginated ? this.epubcfi : pagestoSkipCoverToc);
       } catch (error) {
         console.error(error);
       }
