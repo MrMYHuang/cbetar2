@@ -27,7 +27,6 @@ npm run start
    9. App Store provisionprofile with cert Apple Distribution (for dist-mas)
 1. Run Shell script:
 ```
-cd electronApps
 npm i
 npm run dist-mas-dev
 ```
@@ -73,7 +72,6 @@ pod install
 ### Mac App Store
 1. Run Shell script:
 ```
-cd electronApps
 npm i
 npm run dist-mas
 ```
@@ -86,12 +84,13 @@ https://apps.apple.com/tw/app/transporter/id1450874784
 export APPLE_ID=your@email.domain
 # An app-specific password. You can create one at appleid.apple.com.
 export APPLE_ID_PASSWORD=yourAppleIdAppPassword
-cd electronApps
+# Found at https://developer.apple.com/account/#!/membership
+export APPLE_TEAM_ID=yourTeamId
 npm i
 npm run dist-mac
 ```
 
-### Linux Snap Store
+### Snap Store (Linux)
 0. Required software:
     1. snapd: https://snapcraft.io/docs/installing-snapd
     2. snapcraft:
@@ -102,11 +101,50 @@ npm run dist-mac
 
 1. Run Shell script:
 ```
-cd electronApps
 npm i
 npm run dist-snap
 ```
 2. Upload by this example command:
 ```
-snapcraft upload --release=stable dist/foo.snap
+npm run publish-snap
 ```
+
+### Flathub (Linux) built on local
+0. Required software:
+    1. flatpak:
+    ```
+    sudo apt install flatpak
+    ```
+
+1. Run shell script :
+```
+npm i
+npm run prepare-flatpak
+npm run dist-flatpak-dev
+```
+
+### Flathub (Linux) built by Flathub CI/CD
+0. Required software:
+    1. flatpak:
+    ```
+    sudo apt install flatpak
+    ```
+
+1. Update package.json version to x.y.z. Then, commit it and tag with x.y.z.
+
+2. Run shell script :
+```
+npm i
+npm run prepare-flatpak
+cd flatpak
+git add *
+git commit -m "* Version x.y.z"
+git push
+```
+
+### Build by GitHub Actions and CircleCI
+0. CI/CD setting files:
+    GitHub Actions: .github/workflows/publish.yml
+    CircleCI: .circleci/config.yml
+
+1. Tag one commit with format vx.y.z
