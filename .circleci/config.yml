@@ -75,7 +75,7 @@ jobs:
 
       - run:
           name: Push/release snap
-          command: find dist -name "*.snap" | xargs -I {} snapcraft upload {}
+          command: find dist -name "*.snap" | xargs -I {} snapcraft upload {} --release stable
 
 workflows:
   version: 2
