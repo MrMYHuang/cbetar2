@@ -1,4 +1,7 @@
 # <a id='history'>版本歷史</a>
+* Installer apps 18.0.0:
+  * [更新] 使用 Electron 18.0.3.
+
 * PWA 5.0.7:
   * [修正] 開啟經文頁，讀取動畫過早消失的問題。
 
