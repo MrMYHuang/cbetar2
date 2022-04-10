@@ -21,7 +21,7 @@ jobs:
           name: Build snap
           command: |
             npm i
-            npm run dist-snap
+            npm run dist-snap -- -p never
 
       - persist_to_workspace:
           root: ~/workspace
@@ -45,7 +45,7 @@ jobs:
           name: Build snap
           command: |
             npm i
-            npm run dist-snap-arm64
+            npm run dist-snap-arm64 -- -p never
 
       - persist_to_workspace:
           root: ~/workspace
