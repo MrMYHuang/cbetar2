@@ -3,7 +3,8 @@
   "appId": "io.github.mrmyhuang.cbetar2",
   "files": [
     "buildElectron/**/*",
-    "package.json"
+    "package.json",
+    "!**/node_modules/**/*.{mk,a,h,cpp}"
   ],
   "extraResources": [
     {
