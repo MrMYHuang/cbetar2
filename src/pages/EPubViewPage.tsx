@@ -23,14 +23,14 @@ async function loadTwKaiFonts(this: any) {
       Globals.twKaiFonts[i],
       Globals.twKaiFontKeys[i],
     ).then(fontFace => {
-      (this.document as any).fonts.add(fontFace);
+      this.document.fonts.add(fontFace);
     });
   }
 }
 
 async function loadTwKaiFont(font: string, key: string) {
   return Globals.getFileFromIndexedDB(key).then(fontData => {
-    const fontFace = new (window as any).FontFace(font, fontData);
+    const fontFace = new window.FontFace(font, fontData as Buffer);
     return fontFace.load();
   })
 }
@@ -634,7 +634,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       } else if (isPlatform('ios')) {
         (ePubIframeWindow as Window).document.ontouchend = Globals.disableIosSafariCallout.bind(ePubIframeWindow);
       }
-      if (this.props.useFontKai) {
+      if (this.props.useFontKai && ePubIframeWindow.loadTwKaiFonts == null) {
         ePubIframeWindow.loadTwKaiFonts = loadTwKaiFonts;
         ePubIframeWindow.loadTwKaiFonts();
       }

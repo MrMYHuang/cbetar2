@@ -74,10 +74,10 @@ async function loadTwKaiFont(font: string, key: string, path: string, forceUpdat
   }
 
   return updateFontOrNot.then(() => {
-    const fontFace = new (window as any).FontFace(font, fontData);
+    const fontFace = new window.FontFace(font, fontData);
     return fontFace.load() as Promise<any>;
   }).then((fontFace) => {
-    (document as any).fonts.add(fontFace);
+    document.fonts.add(fontFace);
     console.log(`[Main] ${font} font loading success!`);
   });
 }
