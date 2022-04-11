@@ -114,6 +114,7 @@ npm run publish-snap
     1. flatpak:
     ```
     sudo apt install flatpak
+    flatpak install org.freedesktop.appstream-glib
     ```
 
 1. Run shell script :
@@ -128,6 +129,7 @@ npm run dist-flatpak-dev
     1. flatpak:
     ```
     sudo apt install flatpak
+    flatpak install org.freedesktop.appstream-glib
     ```
 
 1. Update package.json version to x.y.z. Then, commit it and tag with x.y.z.
