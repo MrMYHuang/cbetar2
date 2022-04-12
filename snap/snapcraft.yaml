@@ -1,0 +1,50 @@
+name: cbetar2
+base: core20
+confinement: strict
+grade: stable
+adopt-info: cbetar2
+
+apps:
+  cbetar2:
+    command: cbetar2/cbetar2 --no-sandbox
+    extensions: [gnome-3-38]
+    slots: [cbetar2-dbus]
+    plugs:
+    - desktop
+    - desktop-legacy
+    - wayland
+    - browser-support
+    - network
+    - network-bind
+    environment:
+      # Correct the TMPDIR path for Chromium Framework/Electron to ensure
+      # libappindicator has readable resources.
+      TMPDIR: $XDG_RUNTIME_DIR
+
+parts:
+  cbetar2:
+    plugin: nil
+    source: .
+    parse-info: [buildElectron/io.github.mrmyhuang.cbetar2.metainfo.xml]
+    override-build: |
+        npm i
+        npm run build-electron
+        npx electron-builder install-app-deps
+        npx electron-packager . cbetar2 --overwrite --prune=true --asar.unpackDir node_modules/node1-libxmljsmt-myh --ignore '^\/(?!(package\.json|node_modules|buildElectron))' --icon buildElectron/icon.png
+        electronPackagePath=$(echo ./cbetar2-linux-*)
+        cp electronBuilderConfigs/IsSnap.txt ${electronPackagePath}/resources
+        cp --parent -v buildElectron/*.xsl cbeta_gaiji/cbeta_gaiji.json ${electronPackagePath}/resources
+        cp -rv ${electronPackagePath} $SNAPCRAFT_PART_INSTALL/cbetar2
+    build-snaps:
+    - node/16/stable
+    build-packages:
+    - unzip
+    stage-packages:
+    - libnss3
+    - libnspr4
+
+slots:
+  cbetar2-dbus:
+    interface: dbus
+    bus: session
+    name: io.github.mrmyhuang.cbetar2
