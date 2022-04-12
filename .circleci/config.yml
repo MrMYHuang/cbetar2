@@ -10,6 +10,8 @@ jobs:
       image: ubuntu-2004:202101-01
     steps:
       - checkout
+      - run: git submodule sync
+      - run: git submodule update --init
 
       - run:
           name: Build snap
@@ -27,6 +29,8 @@ jobs:
     resource_class: arm.medium
     steps:
       - checkout
+      - run: git submodule sync
+      - run: git submodule update --init
 
       - run:
           name: Build snap
@@ -61,7 +65,7 @@ jobs:
 
       - run:
           name: Push/release snap
-          command: find dist -name "*.snap" | xargs -I {} snapcraft upload {} --release stable
+          command: find dist -name "*.snap" | xargs -I {} snapcraft upload {} --release beta
 
 workflows:
   version: 2
