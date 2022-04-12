@@ -480,11 +480,6 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     }
     */
 
-    /* Workaround HeitiScoped not working on Chrome 99 */
-    .pc {
-      font-family: 'HeitiScoped'
-    }
-
     .lb {
       display: none
     }

@@ -11,7 +11,7 @@ const cbetaApiUrl = `https://cbdata.dila.edu.tw/${apiVersion}`;
 const dilaDictApiUrl = `https://glossaries.dila.edu.tw/search.json`;
 const cbetardb = 'cbetardb';
 const storeFile = 'Settings.json';
-const twKaiFontVersion = 3;
+const twKaiFontVersion = 4;
 // Disable problematic fonts.
 //const twKaiFonts = ['Kai'];
 const twKaiFonts = ['Kai', 'Kai', 'Kai', 'KaiExtB', 'KaiExtB', 'KaiExtB', 'KaiPlus', 'KaiPlus'];

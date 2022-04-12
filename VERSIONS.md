@@ -1,4 +1,7 @@
 # <a id='history'>版本歷史</a>
+* PWA 5.0.8:
+  * [修正] 直排文字括號方向不正確。
+
 * Installer apps 19.0.0:
   * [修正] 降級 Electron 至 16，改善選單效能問題。
 
