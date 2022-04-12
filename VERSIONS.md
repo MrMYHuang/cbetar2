@@ -1,4 +1,7 @@
 # <a id='history'>版本歷史</a>
+* Installer apps 19.0.0:
+  * [修正] 降級 Electron 至 16，改善選單效能問題。
+
 * Installer apps 18.0.0:
   * [更新] 使用 Electron 18.0.3.
 
