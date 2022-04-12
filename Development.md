@@ -113,8 +113,8 @@ npm run publish-snap
 0. Required software:
     1. flatpak:
     ```
-    sudo apt install flatpak
-    flatpak install org.freedesktop.appstream-glib
+    sudo apt install flatpak flatpak-builder
+    flatpak install org.freedesktop.appstream-glib org.freedesktop.Sdk//21.08 org.electronjs.Electron2.BaseApp//21.08 org.freedesktop.Sdk.Extension.node14//21.08
     ```
 
 1. Run shell script :
