@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=電子佛典
+GenericName=CBETA 電子佛典 2
+Exec=cbetar2/cbetar2 --no-sandbox
+Icon=${SNAP}/meta/gui/icon.png
+Type=Application
+Terminal=false
+Categories=Education;
