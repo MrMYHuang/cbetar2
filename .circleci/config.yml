@@ -12,16 +12,9 @@ jobs:
       - checkout
 
       - run:
-          name: Install prerequisites
-          command: |
-            curl https://nodejs.org/dist/v16.14.2/node-v16.14.2-linux-x64.tar.gz | tar zx
-            sudo cp -r node-v16.14.2-linux-x64/* /usr/local
-
-      - run:
           name: Build snap
           command: |
-            npm i
-            npm run dist-snap -- -p never
+            npm run dist-snap
 
       - persist_to_workspace:
           root: ~/workspace
@@ -36,16 +29,9 @@ jobs:
       - checkout
 
       - run:
-          name: Install prerequisites
-          command: |
-            curl https://nodejs.org/dist/v16.14.2/node-v16.14.2-linux-arm64.tar.gz | tar zx
-            sudo cp -r node-v16.14.2-linux-arm64/* /usr/local
-
-      - run:
           name: Build snap
           command: |
-            npm i
-            npm run dist-snap-arm64 -- -p never
+            npm run dist-snap
 
       - persist_to_workspace:
           root: ~/workspace

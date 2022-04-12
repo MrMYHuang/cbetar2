@@ -9,7 +9,6 @@ apps:
     command: cbetar2/cbetar2 --no-sandbox
     desktop: cbetar2/io.github.mrmyhuang.cbetar2.desktop
     extensions: [gnome-3-38]
-    slots: [cbetar2-dbus]
     plugs:
     - desktop
     - desktop-legacy
@@ -38,15 +37,9 @@ parts:
         cp --parent -v buildElectron/*.xsl cbeta_gaiji/cbeta_gaiji.json ${electronPackagePath}/resources
         cp -rv ${electronPackagePath} $SNAPCRAFT_PART_INSTALL/cbetar2
     build-snaps:
-    - node/16/stable
+    - node/14/stable
     build-packages:
     - unzip
     stage-packages:
     - libnss3
     - libnspr4
-
-slots:
-  cbetar2-dbus:
-    interface: dbus
-    bus: session
-    name: io.github.mrmyhuang.cbetar2
