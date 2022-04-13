@@ -834,6 +834,15 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     this.visibleChars = [];
     this.isPageSearched = [];
     let node: Node | null;
+
+    // Skip the leading line with "No. ".
+    while ((node = textNodesWalker.nextNode()) != null) {
+      let node2 = node!;
+      if ('t' === node2.parentElement?.className && /No\. .*/.test(node2.textContent!)) {
+        break;
+      }
+    }
+
     while ((node = textNodesWalker.nextNode()) != null) {
       let node2 = node!;
       if (['t', 'pc', 'gaijiAnchor'].reduce((prev, curr) => prev && curr !== node2.parentElement?.className, true)) {
@@ -1058,7 +1067,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     }
 
     //const remainingWorkText = this.getRemainingWorkTextFromSelectedRange();
-    const workText = texts || this.ePubIframe?.contentDocument?.getElementById('body')?.innerText || '無法取得經文內容';
+    const workText = texts || this.ePubIframe?.contentDocument?.getElementById('body')?.innerText?.replace(new RegExp('No. .*'), '') || '無法取得經文內容';
 
     this.workTexts = [];
     for (let i = 0; i < Math.ceil(workText.length / this.maxCharsPerUtterance); i++) {
