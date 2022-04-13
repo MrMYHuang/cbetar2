@@ -1121,7 +1121,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         <IonToolbar>
           <IonTitle className='uiFont'></IonTitle>
 
-          <IonButton fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
+          <IonButton fill="clear" slot='start' onClick={e => this.props.history.back()}>
             <IonIcon icon={arrowBack} slot='icon-only' />
           </IonButton>
 

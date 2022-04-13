@@ -278,7 +278,7 @@ class _CatalogPage extends React.Component<PageProps, State> {
       <IonPage>
         <IonHeader>
           <IonToolbar>
-            <IonButton hidden={this.isTopCatalog} fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
+            <IonButton hidden={this.isTopCatalog} fill="clear" slot='start' onClick={e => this.props.history.back()}>
               <IonIcon icon={arrowBack} slot='icon-only' />
             </IonButton>
 
