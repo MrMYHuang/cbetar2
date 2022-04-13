@@ -80,7 +80,7 @@ class _SearchPage extends React.Component<PageProps, State> {
   }
 
   getRows() {
-    let rows = Array<object>();
+    let rows = Array<JSX.Element>();
     const searches = (this.state as any).searches as FullTextSearch[];
     if (searches.length === 0 && !this.state.isLoading) {
       return Globals.searchNoResultMessage;

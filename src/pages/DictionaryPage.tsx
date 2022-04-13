@@ -110,7 +110,7 @@ class _DictionaryPage extends React.Component<PageProps, State> {
 
   getRows() {
     const data = this.state.searches as [DictItem];
-    let rows = Array<object>();
+    let rows = Array<JSX.Element>();
     data.forEach((item: DictItem, index: number) => {
       rows.push(
         <div style={{ display: 'table-row' }} key={`dictItem` + index}>

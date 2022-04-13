@@ -220,7 +220,7 @@ class _CatalogPage extends React.Component<PageProps, State> {
   }
 
   getRows() {
-    let rows = Array<object>();
+    let rows = Array<JSX.Element>();
     this.state.catalogs.forEach((catalog: Catalog, index: number) => {
       let routeLink = '';
       const isHtmlNode = catalog.nodeType === 'html';
@@ -250,7 +250,7 @@ class _CatalogPage extends React.Component<PageProps, State> {
   }
 
   getFamousJuanRows() {
-    let rows = Array<object>();
+    let rows = Array<JSX.Element>();
     famousJuans.forEach(({ title, url }, i) => {
       rows.push(
         <IonItem key={`famousJuanItem_` + i} button={true} onClick={async event => {
