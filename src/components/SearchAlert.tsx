@@ -1,6 +1,7 @@
 import React from 'react';
 import { IonAlert } from '@ionic/react';
-import { RouteComponentProps } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { RouteComponentProps } from '../models/Prop';
 
 interface Props {
   showSearchAlert: boolean;
@@ -38,7 +39,7 @@ class SearchAlert extends React.Component<PageProps> {
             cssClass: 'primary uiFont',
             handler: (value) => {
               this.props.finish();
-              this.props.history.push(`/catalog/search/${value.name0}`);
+              this.props.navigate(`/catalog/search/${value.name0}`);
             },
           },
           {
@@ -46,7 +47,7 @@ class SearchAlert extends React.Component<PageProps> {
             cssClass: 'primary uiFont',
             handler: (value) => {
               this.props.finish();
-              this.props.history.push(`/catalog/fulltextsearch/${value.name0}`);
+              this.props.navigate(`/catalog/fulltextsearch/${value.name0}`);
             },
           },
           {

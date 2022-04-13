@@ -1,5 +1,6 @@
 import React from 'react';
-import { Redirect, Route, RouteComponentProps, withRouter } from 'react-router-dom';
+import { Navigate, Route } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import {
   setupIonicReact,
   IonApp,
@@ -50,6 +51,7 @@ import WordDictionaryPage from './pages/WordDictionaryPage';
 import DownloadModal from './components/DownloadModal';
 import { TmpSettings } from './models/TmpSettings';
 import { Settings } from './models/Settings';
+import { RouteComponentProps } from './models/Prop';
 
 const electronBackendApi: any = (window as any).electronBackendApi;
 
@@ -190,7 +192,7 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
 
     let showToastInit = false;
     let toastMessageInit = '';
-    if(Globals.twKaiFontNeedUpgrade() && this.props.settings.useFontKai) {
+    if (Globals.twKaiFontNeedUpgrade() && this.props.settings.useFontKai) {
       (this.props as any).dispatch({
         type: "SET_KEY_VAL",
         key: 'useFontKai',
@@ -303,9 +305,9 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
       if (queryMatches !== null) {
         query = decodeURIComponent(queryMatches[1]);
       }
-      return <Redirect to={routeMatches[1] + query} />;
+      return <Navigate to={routeMatches[1] + query} />;
     } else if (window.location.pathname === `${Globals.pwaUrl}/` || window.location.pathname === `${Globals.pwaUrl}` || window.location.pathname === ``) {
-      return <Redirect to={`/bookmarks`} />;
+      return <Navigate to={`/bookmarks`} />;
     }
   }
 
@@ -319,21 +321,21 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
           <IonTabs>
             <IonRouterOutlet animated={false}>
               {/* The following route is for backward compatibility. */}
-              <Route path={`/:tab(catalog)/webview/:work/:path/:label`} render={(props: any) => <EPubViewPage {...props} />} exact={true} />
-              <Route path={`/:tab(catalog)/juan/:work/:path/`} render={(props: any) => <EPubViewPage {...props} />} exact={true} />
+              <Route path={`/:tab(catalog)/webview/:work/:path/:label`} children={<EPubViewPage />}/>
+              <Route path={`/:tab(catalog)/juan/:work/:path/`} children={<EPubViewPage />} />
               {/* The following route is for backward compatibility. */}
-              <Route path={`/:tab(catalog)/work/:path/:label`} render={(props: any) => <WorkPage {...props} />} exact={true} />
-              <Route path={`/:tab(catalog)/work/:path`} render={(props: any) => <WorkPage {...props} />} exact={true} />
-              <Route path={`/:tab(catalog)/search/:keyword`} render={props => <SearchPage {...props} />} exact={true} />
-              <Route path={`/:tab(catalog)/fulltextsearch/:keyword`} render={props => <FullTextSearchPage {...props} />} exact={true} />
+              <Route path={`/:tab(catalog)/work/:path/:label`} children={<WorkPage />} />
+              <Route path={`/:tab(catalog)/work/:path`} children={<WorkPage />} />
+              <Route path={`/:tab(catalog)/search/:keyword`} children={<SearchPage />} />
+              <Route path={`/:tab(catalog)/fulltextsearch/:keyword`} children={<FullTextSearchPage />} />
               {/* The following route is for backward compatibility. */}
-              <Route path={`/:tab(catalog)/catalog/:path/:label`} render={(props: any) => <CatalogPage {...props} />} exact={true} />
-              <Route path={`/:tab(catalog)/:type(catalog|volumes|famous)?/:path?`} render={(props: any) => <CatalogPage {...props} />} exact={true} />
-              <Route path={`/:tab(bookmarks)`} render={(props: any) => <BookmarkPage {...props} />} exact={true} />
-              <Route path={`/:tab(dictionary)/search/:keyword?`} render={(props: any) => <DictionaryPage {...props} />} exact={true} />
-              <Route path={`/:tab(dictionary)/searchWord/:keyword?`} render={(props: any) => <WordDictionaryPage {...props} />} exact={true} />
-              <Route path={`/settings`} render={(props: any) => <SettingsPage {...props} />} />
-              <Route path={`/`} render={() => { return this.routeByQueryString(); }} exact={true} />
+              <Route path={`/:tab(catalog)/catalog/:path/:label`} children={<CatalogPage />} />
+              <Route path={`/:tab(catalog)/:type(catalog|volumes|famous)?/:path?`} children={<CatalogPage />} />
+              <Route path={`/:tab(bookmarks)`} children={<BookmarkPage />} />
+              <Route path={`/:tab(dictionary)/search/:keyword?`} children={<DictionaryPage />} />
+              <Route path={`/:tab(dictionary)/searchWord/:keyword?`} children={<WordDictionaryPage />} />
+              <Route path={`/settings`} children={<SettingsPage />} />
+              <Route path={`/`} children={this.routeByQueryString()} />
             </IonRouterOutlet>
             <IonTabBar slot="bottom">
               <IonTabButton tab="bookmarks" href={`/bookmarks`}>
@@ -439,6 +441,10 @@ const AppOrig = connect(
 )(_AppOrig);
 
 
-const App = withRouter(_App);
+const App = (props: any) => <_App {...props}
+  params={useParams()}
+  navigate={useNavigate()}
+  location={useLocation()}
+  />;
 
 export default App;

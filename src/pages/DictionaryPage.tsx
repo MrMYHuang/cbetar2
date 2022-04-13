@@ -1,10 +1,11 @@
 import React from 'react';
 import { IonContent, IonHeader, IonPage, IonToolbar, withIonLifeCycle, IonButton, IonIcon, IonSearchbar, IonAlert, IonPopover, IonList, IonItem, IonLabel, IonLoading, IonToast } from '@ionic/react';
-import { RouteComponentProps } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Globals from '../Globals';
 import { home, shareSocial, book, ellipsisHorizontal, ellipsisVertical, refreshCircle, copy, arrowBack } from 'ionicons/icons';
 import { DictItem } from '../models/DictItem';
+import { RouteComponentProps } from '../models/Prop';
 
 interface Props {
   dispatch: Function;
@@ -32,6 +33,7 @@ class _DictionaryPage extends React.Component<PageProps, State> {
   searchBarRef: React.RefObject<HTMLIonSearchbarElement>;
   constructor(props: any) {
     super(props);
+
     this.state = {
       keyword: '',
       searches: [],
@@ -49,10 +51,10 @@ class _DictionaryPage extends React.Component<PageProps, State> {
   }
 
   ionViewWillEnter() {
-    //console.log(`${this.props.match.url} will enter`);
-    this.setState({ keyword: this.props.match.params.keyword });
-    if (this.props.match.params.keyword) {
-      this.lookupDict(this.props.match.params.keyword);
+    //console.log(`${this.props.location.pathname} will enter`);
+    this.setState({ keyword: this.props.params.keyword });
+    if (this.props.params.keyword) {
+      this.lookupDict(this.props.params.keyword);
     } else {
       this.setState({ searches: [] });
     }
@@ -60,11 +62,11 @@ class _DictionaryPage extends React.Component<PageProps, State> {
 
   /*
   componentDidMount() {
-    //console.log(`did mount: ${this.props.match.url}`);
+    //console.log(`did mount: ${this.props.location.pathname}`);
   }
   
   componentWillUnmount() {
-    console.log(`${this.props.match.url} unmount`);
+    console.log(`${this.props.location.pathname} unmount`);
   }
 
   ionViewWillLeave() {
@@ -72,7 +74,7 @@ class _DictionaryPage extends React.Component<PageProps, State> {
   */
 
   get isTopPage() {
-    return this.props.match.params.keyword === undefined;
+    return this.props.params.keyword === undefined;
   }
 
   async lookupDict(keyword: string) {
@@ -131,17 +133,17 @@ class _DictionaryPage extends React.Component<PageProps, State> {
       <IonPage>
         <IonHeader>
           <IonToolbar>
-            <IonButton hidden={this.isTopPage} fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
+            <IonButton hidden={this.isTopPage} fill="clear" slot='start' onClick={e => this.props.navigate(-1)}>
               <IonIcon icon={arrowBack} slot='icon-only' />
             </IonButton>
 
             <IonButton fill='outline' shape='round' slot='start' onClick={ev => {
-              this.props.history.push(`/dictionary/searchWord`);
+              this.props.navigate(`/dictionary/searchWord`);
             }}>
               <span className='uiFont' style={{ color: 'var(--color)' }}>佛學詞典</span>
             </IonButton>
 
-            <IonButton hidden={!this.state.fetchError} fill="clear" slot='end' onClick={e => this.lookupDict(this.props.match.params.keyword)}>
+            <IonButton hidden={!this.state.fetchError} fill="clear" slot='end' onClick={e => this.lookupDict(this.props.params.keyword)}>
               <IonIcon icon={refreshCircle} slot='icon-only' />
             </IonButton>
 
@@ -179,7 +181,7 @@ class _DictionaryPage extends React.Component<PageProps, State> {
             >
               <IonList>
                 <IonItem button onClick={e => {
-                  this.props.history.push(`/${this.props.match.params.tab}/search`);
+                  this.props.navigate(`/${this.props.params.tab}/search`);
                   this.setState({ popover: { show: false, event: null } });
                 }}>
                   <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
@@ -204,7 +206,7 @@ class _DictionaryPage extends React.Component<PageProps, State> {
                     return;
                   }
 
-                  this.props.history.push({
+                  this.props.navigate({
                     pathname: `/dictionary/search/${this.selectedTextBeforeIonPopover}`,
                   });
                 }}>
@@ -220,7 +222,7 @@ class _DictionaryPage extends React.Component<PageProps, State> {
                     return;
                   }
 
-                  this.props.history.push({
+                  this.props.navigate({
                     pathname: `/dictionary/searchWord/${this.selectedTextBeforeIonPopover}`,
                   });
                 }}>
@@ -242,11 +244,11 @@ class _DictionaryPage extends React.Component<PageProps, State> {
               if (value === '') {
                 this.setState({ searches: [], keyword: value });
               } else if (ev.key === 'Enter') {
-                if (value === this.props.match.params.keyword) {
+                if (value === this.props.params.keyword) {
                   this.setState({ keyword: value });
                   this.lookupDict(value);
                 } else {
-                  this.props.history.push(`/dictionary/search/${value}`);
+                  this.props.navigate(`/dictionary/search/${value}`);
                 }
               }
             }} />
@@ -264,12 +266,12 @@ class _DictionaryPage extends React.Component<PageProps, State> {
                 <IonList>
                   {this.props.dictionaryHistory.map((keyword, i) =>
                     <IonItem key={`dictHistoryItem_${i}`} button={true} onClick={async event => {
-                      if (keyword === this.props.match.params.keyword) {
+                      if (keyword === this.props.params.keyword) {
                         this.setState({ keyword });
                         this.lookupDict(keyword);
                       }
                       else {
-                        this.props.history.push(`/dictionary/search/${keyword}`);
+                        this.props.navigate(`/dictionary/search/${keyword}`);
                       }
                     }}>
                       <IonLabel className='ion-text-wrap uiFont' key={`dictHistoryLabel_` + i}>
@@ -339,6 +341,11 @@ class _DictionaryPage extends React.Component<PageProps, State> {
 };
 
 const DictionaryPage = withIonLifeCycle(_DictionaryPage);
+const DictionaryPageFun = (props: any) => <DictionaryPage {...props}
+  params={useParams()}
+  navigate={useNavigate()}
+  location={useLocation()}
+  />;
 
 const mapStateToProps = (state: any /*, ownProps*/) => {
   return {
@@ -350,4 +357,4 @@ const mapStateToProps = (state: any /*, ownProps*/) => {
 
 export default connect(
   mapStateToProps,
-)(DictionaryPage);
+)(DictionaryPageFun);

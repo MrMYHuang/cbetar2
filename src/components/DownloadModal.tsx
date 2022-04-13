@@ -1,8 +1,9 @@
 import React from 'react';
 import { IonContent, IonLabel, IonModal, IonProgressBar } from '@ionic/react';
-import { RouteComponentProps } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Globals from '../Globals';
+import { RouteComponentProps } from '../models/Prop';
 
 interface Props {
   showModal: boolean;

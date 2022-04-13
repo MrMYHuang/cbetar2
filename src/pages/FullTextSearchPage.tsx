@@ -1,11 +1,12 @@
 import React from 'react';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonLabel, withIonLifeCycle, IonButton, IonIcon, IonLoading, IonInfiniteScroll, IonInfiniteScrollContent } from '@ionic/react';
-import { RouteComponentProps } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Globals from '../Globals';
 import SearchAlert from '../components/SearchAlert';
 import { home, search, arrowBack, shareSocial, refreshCircle } from 'ionicons/icons';
 import { FullTextSearch } from '../models/FullTextSearch';
+import { RouteComponentProps } from '../models/Prop';
 
 interface Props {
   dispatch: Function;
@@ -29,6 +30,7 @@ interface State {
 class _SearchPage extends React.Component<PageProps, State> {
   constructor(props: any) {
     super(props);
+
     this.state = {
       showSearchAlert: false,
       searches: [],
@@ -40,7 +42,7 @@ class _SearchPage extends React.Component<PageProps, State> {
 
   ionViewWillEnter() {
     //console.log( 'view will enter' );
-    this.search(this.props.match.params.keyword, true);
+    this.search(this.props.params.keyword, true);
   }
 
   componentDidMount() {
@@ -92,7 +94,7 @@ class _SearchPage extends React.Component<PageProps, State> {
       rows.push(
         <IonItem key={`searchItem_` + i} button={true} onClick={async event => {
           event.preventDefault();
-          this.props.history.push({
+          this.props.navigate({
             pathname: routeLink,
           });
         }}>
@@ -113,15 +115,15 @@ class _SearchPage extends React.Component<PageProps, State> {
         <IonHeader>
           <IonToolbar>
             <IonTitle className='uiFont'>全文檢索</IonTitle>
-            <IonButton fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
+            <IonButton fill="clear" slot='start' onClick={e => this.props.navigate(-1)}>
               <IonIcon icon={arrowBack} slot='icon-only' />
             </IonButton>
 
-            <IonButton hidden={!this.state.fetchError} fill="clear" slot='end' onClick={e => this.search(this.props.match.params.keyword)}>
+            <IonButton hidden={!this.state.fetchError} fill="clear" slot='end' onClick={e => this.search(this.props.params.keyword)}>
               <IonIcon icon={refreshCircle} slot='icon-only' />
             </IonButton>
 
-            <IonButton fill="clear" slot='end' onClick={e => this.props.history.push(`/${this.props.match.params.tab}`)}>
+            <IonButton fill="clear" slot='end' onClick={e => this.props.navigate(`/${this.props.params.tab}`)}>
               <IonIcon icon={home} slot='icon-only' />
             </IonButton>
 
@@ -148,14 +150,14 @@ class _SearchPage extends React.Component<PageProps, State> {
             this.state.fetchError ?
               Globals.fetchErrorContent :
               <>
-                <div className='uiFontX2' style={{ color: 'var(--ion-color-primary)' }}> {this.props.match.params.keyword}</div>
+                <div className='uiFontX2' style={{ color: 'var(--ion-color-primary)' }}> {this.props.params.keyword}</div>
 
                 <IonList>
                   {rows}
                   <IonInfiniteScroll threshold="100px"
                     disabled={!this.state.isScrollOn}
                     onIonInfinite={(ev: CustomEvent<void>) => {
-                      this.search(this.props.match.params.keyword);
+                      this.search(this.props.params.keyword);
                       (ev.target as HTMLIonInfiniteScrollElement).complete();
                     }}>
                     <IonInfiniteScrollContent
@@ -186,6 +188,11 @@ class _SearchPage extends React.Component<PageProps, State> {
 };
 
 const SearchPage = withIonLifeCycle(_SearchPage);
+const SearchPageFun = (props: any) => <SearchPage {...props}
+  params={useParams()}
+  navigate={useNavigate()}
+  location={useLocation()}
+  />;
 
 const mapStateToProps = (state: any /*, ownProps*/) => {
   return {
@@ -196,4 +203,4 @@ const mapStateToProps = (state: any /*, ownProps*/) => {
 
 export default connect(
   mapStateToProps,
-)(SearchPage);
+)(SearchPageFun);

@@ -1,7 +1,7 @@
 //import * as fs from 'fs';
 import React from 'react';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton, withIonLifeCycle, IonIcon, IonAlert, IonPopover, IonList, IonItem, IonLabel, IonFab, IonFabButton, IonToast, IonLoading, isPlatform, IonProgressBar, IonFabList } from '@ionic/react';
-import { RouteComponentProps } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as uuid from 'uuid';
 import queryString from 'query-string';
@@ -15,6 +15,7 @@ import ePub, { Book, Rendition, EVENTS } from 'epubjs-myh';
 import * as nodepub from 'nodepub';
 import { TmpSettings } from '../models/TmpSettings';
 import { clearTimeout } from 'timers';
+import { RouteComponentProps } from '../models/Prop';
 
 // Load TW-Kai font in iframe.
 async function loadTwKaiFonts(this: any) {
@@ -117,6 +118,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
   constructor(props: any) {
     super(props);
+
     this.state = {
       isLoading: false,
       fetchError: false,
@@ -204,7 +206,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
   }
 
   get workJuanId() {
-    return `${this.props.match.params.work}/${this.props.match.params.path}`;
+    return `${this.props.params.work}/${this.props.params.path}`;
   }
 
   currentWork = '';
@@ -242,8 +244,8 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
   get fileName() {
     return Globals.getFileName(
-      this.props.match.params.work,
-      this.props.match.params.path
+      this.props.params.work,
+      this.props.params.path
     );
   }
 
@@ -251,8 +253,8 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     this.setState({ isLoading: true });
     try {
       const res = await Globals.fetchJuan(
-        this.props.match.params.work,
-        this.props.match.params.path,
+        this.props.params.work,
+        this.props.params.path,
         this.htmlFile,
         false,
         this.props.tmpSettings.cbetaOfflineDbMode,
@@ -288,10 +290,10 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         uuid: uuidStr,
         selectedText: selectedText,
         epubcfi: this.epubcfiFromSelectedString,
-        fileName: this.props.tmpSettings.cbetaOfflineDbMode ? null : this.htmlFile || `${this.props.match.params.work}_juan${this.props.match.params.path}.html`,
+        fileName: this.props.tmpSettings.cbetaOfflineDbMode ? null : this.htmlFile || `${this.props.params.work}_juan${this.props.params.path}.html`,
         work: Object.assign(this.state.workInfo, {
           title: this.htmlFile ? this.htmlTitle : this.state.workInfo.title,
-          juan: this.props.match.params.path,
+          juan: this.props.params.path,
         }
         ),
       }),
@@ -992,7 +994,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
   }
 
   get currentJuan() {
-    return +this.props.match.params.path;
+    return +this.props.params.path;
   }
 
   get juanList() {
@@ -1002,9 +1004,9 @@ class _EPubViewPage extends React.Component<PageProps, State> {
   juanPrev() {
     if (this.currentJuan > Math.min(...this.juanList)) {
       const prevJuan = this.juanList[this.juanList.findIndex(v => v === this.currentJuan) - 1];
-      const routeLink = `/catalog/juan/${this.props.match.params.work}/${prevJuan}`;
+      const routeLink = `/catalog/juan/${this.props.params.work}/${prevJuan}`;
       this.ionViewWillLeave();
-      this.props.history.push({
+      this.props.navigate({
         pathname: routeLink,
       });
     } else {
@@ -1015,9 +1017,9 @@ class _EPubViewPage extends React.Component<PageProps, State> {
   juanNext() {
     if (this.currentJuan < Math.max(...this.juanList)) {
       const nextJuan = this.juanList[this.juanList.findIndex(v => v === this.currentJuan) + 1];
-      const routeLink = `/catalog/juan/${this.props.match.params.work}/${nextJuan}`;
+      const routeLink = `/catalog/juan/${this.props.params.work}/${nextJuan}`;
       this.ionViewWillLeave();
-      this.props.history.push({
+      this.props.navigate({
         pathname: routeLink,
       });
     } else {
@@ -1111,7 +1113,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         <IonToolbar>
           <IonTitle className='uiFont'></IonTitle>
 
-          <IonButton fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
+          <IonButton fill="clear" slot='start' onClick={e => this.props.navigate(-1)}>
             <IonIcon icon={arrowBack} slot='icon-only' />
           </IonButton>
 
@@ -1162,7 +1164,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
               <IonItem button onClick={e => {
                 this.setState({ popover: { show: false, event: null } });
-                this.props.history.push(`/catalog/work/${this.props.match.params.work}`);
+                this.props.navigate(`/catalog/work/${this.props.params.work}`);
               }}>
                 <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
                 <IonIcon icon={home} slot='start' />
@@ -1170,7 +1172,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
               </IonItem>
 
               <IonItem button onClick={e => {
-                this.props.history.push(`/${this.props.match.params.tab}`);
+                this.props.navigate(`/${this.props.params.tab}`);
                 this.setState({ popover: { show: false, event: null } });
               }}>
                 <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
@@ -1214,7 +1216,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
                   return;
                 }
 
-                this.props.history.push({
+                this.props.navigate({
                   pathname: `/dictionary/search/${selectedText}`,
                 });
               }}>
@@ -1231,7 +1233,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
                   return;
                 }
 
-                this.props.history.push({
+                this.props.navigate({
                   pathname: `/dictionary/searchWord/${selectedText}`,
                 });
               }}>
@@ -1251,7 +1253,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
               <IonItem button onClick={e => {
                 this.setState({ popover: { show: false, event: null } });
-                window.open(`https://cbetaonline.dila.edu.tw/zh/${this.props.match.params.work}_${this.props.match.params.path.padStart(3, '0')}`, '_bank');
+                window.open(`https://cbetaonline.dila.edu.tw/zh/${this.props.params.work}_${this.props.params.path.padStart(3, '0')}`, '_bank');
               }}>
                 <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
                 <IonIcon icon={link} slot='start' />
@@ -1282,7 +1284,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
                 if (startLine !== endLine) {
                   lineInfo += `-${endLineModified}`;
                 }
-                const citation = `《${this.state.workInfo.title}》卷${this.props.match.params.path}：「${selectedText}」(CBETA, ${this.state.workInfo.vol}, no. ${+(/[^0-9]*(.*)/.exec(this.state.workInfo.work)![1])}, p. ${lineInfo})`;
+                const citation = `《${this.state.workInfo.title}》卷${this.props.params.path}：「${selectedText}」(CBETA, ${this.state.workInfo.vol}, no. ${+(/[^0-9]*(.*)/.exec(this.state.workInfo.work)![1])}, p. ${lineInfo})`;
                 Globals.copyToClipboard(citation);
                 this.setState({ showToast: true, toastMessage: '已複製到剪貼簿！' });
               }}>
@@ -1371,7 +1373,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         {header}
         <IonContent>
           {this.props.paginated || this.state.showSearchTextToast ? navButtons : <></>}
-          
+
           <IonFab vertical='bottom' horizontal='end' slot='fixed'>
             <IonFabButton style={{ opacity: fabButtonOpacity }}
               onPointerDown={e => {
@@ -1595,7 +1597,12 @@ const mapStateToProps = (state: any /*, ownProps*/) => {
 };
 
 const EPubViewPage = withIonLifeCycle(_EPubViewPage);
+const EPubViewPageFun = (props: any) => <EPubViewPage {...props}
+  params={useParams()}
+  navigate={useNavigate()}
+  location={useLocation()}
+  />;
 
 export default connect(
   mapStateToProps,
-)(EPubViewPage);
+)(EPubViewPageFun);

@@ -1,6 +1,6 @@
 import React from 'react';
 import { IonContent, IonHeader, IonPage, IonToolbar, IonList, IonItem, IonLabel, withIonLifeCycle, IonButton, IonIcon, IonToast, IonLoading, IonPopover } from '@ionic/react';
-import { RouteComponentProps } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
 import './WorkPage.css';
 import { Work, WorkChapter, WorkListType } from '../models/Work';
@@ -9,6 +9,7 @@ import { bookmark, arrowBack, home, search, shareSocial, refreshCircle, ellipsis
 import { Bookmark, BookmarkType } from '../models/Bookmark';
 import SearchAlert from '../components/SearchAlert';
 import { TmpSettings } from '../models/TmpSettings';
+import { RouteComponentProps } from '../models/Prop';
 
 const electronBackendApi: any = (window as any).electronBackendApi;
 
@@ -36,6 +37,7 @@ interface State {
 class _WorkPage extends React.Component<PageProps, State> {
   constructor(props: any) {
     super(props);
+
     this.state = {
       work: null,
       popover: {
@@ -50,8 +52,8 @@ class _WorkPage extends React.Component<PageProps, State> {
   }
 
   ionViewWillEnter() {
-    //console.log( `${this.props.match.params} will enter` );
-    this.fetchWork(this.props.match.params.path);
+    //console.log( `${this.props.params} will enter` );
+    this.fetchWork(this.props.params.path);
   }
 
   componentDidMount() {
@@ -128,7 +130,7 @@ class _WorkPage extends React.Component<PageProps, State> {
       type: "ADD_BOOKMARK",
       bookmark: new Bookmark({
         type: BookmarkType.WORK,
-        uuid: this.props.match.params.path,
+        uuid: this.props.params.path,
         selectedText: this.state.work!.title,
         epubcfi: '',
         fileName: '',
@@ -140,13 +142,13 @@ class _WorkPage extends React.Component<PageProps, State> {
   delBookmarkHandler() {
     this.props.dispatch({
       type: "DEL_BOOKMARK",
-      uuid: this.props.match.params.path,
+      uuid: this.props.params.path,
     });
   }
 
   get bookmark() {
     return this.props.bookmarks.find(
-      (e) => e.type === BookmarkType.WORK && e.uuid === this.props.match.params.path);
+      (e) => e.type === BookmarkType.WORK && e.uuid === this.props.params.path);
   }
 
   get hasBookmark() {
@@ -173,7 +175,7 @@ class _WorkPage extends React.Component<PageProps, State> {
       rows.push(
         <IonItem key={`chapterItem` + i} button={true} onClick={async event => {
           event.preventDefault();
-          this.props.history.push({
+          this.props.navigate({
             pathname: routeLink,
           });
         }}>
@@ -197,7 +199,7 @@ class _WorkPage extends React.Component<PageProps, State> {
       rows.push(
         <IonItem key={`juanItem` + i} button={true} onClick={async event => {
           event.preventDefault();
-          this.props.history.push({
+          this.props.navigate({
             pathname: routeLink,
           });
         }}>
@@ -219,7 +221,7 @@ class _WorkPage extends React.Component<PageProps, State> {
       <IonPage>
         <IonHeader>
           <IonToolbar>
-            <IonButton fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
+            <IonButton fill="clear" slot='start' onClick={e => this.props.navigate(-1)}>
               <IonIcon icon={arrowBack} slot='icon-only' />
             </IonButton>
 
@@ -234,7 +236,7 @@ class _WorkPage extends React.Component<PageProps, State> {
               <span className='uiFont' style={{ color: 'var(--color)' }}>{this.workListType === WorkListType.BY_CHAPTER ? '分品' : '分卷'}</span>
             </IonButton>
 
-            <IonButton hidden={!this.state.fetchError} fill="clear" slot='end' onClick={e => this.fetchWork(this.props.match.params.path)}>
+            <IonButton hidden={!this.state.fetchError} fill="clear" slot='end' onClick={e => this.fetchWork(this.props.params.path)}>
               <IonIcon icon={refreshCircle} slot='icon-only' />
             </IonButton>
 
@@ -242,7 +244,7 @@ class _WorkPage extends React.Component<PageProps, State> {
               <IonIcon icon={bookmark} slot='icon-only' />
             </IonButton>
 
-            <IonButton className='narrowScreenHide' fill="clear" slot='end' onClick={e => this.props.history.push(`/${this.props.match.params.tab}`)}>
+            <IonButton className='narrowScreenHide' fill="clear" slot='end' onClick={e => this.props.navigate(`/${this.props.params.tab}`)}>
               <IonIcon icon={home} slot='icon-only' />
             </IonButton>
 
@@ -266,7 +268,7 @@ class _WorkPage extends React.Component<PageProps, State> {
             >
               <IonList>
                 <IonItem button onClick={e => {
-                  this.props.history.push(`/${this.props.match.params.tab}`);
+                  this.props.navigate(`/${this.props.params.tab}`);
                   this.setState({ popover: { show: false, event: null } });
                 }}>
 
@@ -333,6 +335,11 @@ class _WorkPage extends React.Component<PageProps, State> {
 };
 
 const WorkPage = withIonLifeCycle(_WorkPage);
+const WorkPageFun = (props: any) => <WorkPage {...props}
+  params={useParams()}
+  navigate={useNavigate()}
+  location={useLocation()}
+  />;
 
 const mapStateToProps = (state: any /*, ownProps*/) => {
   return {
@@ -345,4 +352,4 @@ const mapStateToProps = (state: any /*, ownProps*/) => {
 
 export default connect(
   mapStateToProps,
-)(WorkPage);
+)(WorkPageFun);

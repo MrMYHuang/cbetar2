@@ -1,12 +1,13 @@
 import React from 'react';
 import { IonContent, IonHeader, IonPage, IonToolbar, withIonLifeCycle, IonButton, IonIcon, IonSearchbar, IonAlert, IonPopover, IonList, IonItem, IonLabel, IonLoading, IonToast } from '@ionic/react';
-import { RouteComponentProps } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as uuid from 'uuid';
 import Globals from '../Globals';
 import { home, shareSocial, book, ellipsisHorizontal, ellipsisVertical, refreshCircle, copy, arrowBack } from 'ionicons/icons';
 import { DictWordDefItem, DictWordItem, WordType } from '../models/DictWordItem';
 import { AxiosError } from 'axios';
+import { RouteComponentProps } from '../models/Prop';
 
 interface Props {
   dispatch: Function;
@@ -34,6 +35,7 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
   searchBarRef: React.RefObject<HTMLIonSearchbarElement>;
   constructor(props: any) {
     super(props);
+
     this.state = {
       keyword: '',
       search: null,
@@ -52,23 +54,23 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
 
   ionViewWillEnter() {
     //console.log( 'view will enter' );
-    //console.log(this.props.match.url);
+    //console.log(this.props.location.pathname);
     //console.log(this.props.history.length);
-    if (this.props.match.params.keyword) {
-      this.setState({ keyword: this.props.match.params.keyword });
-      this.lookupDict(this.props.match.params.keyword);
+    if (this.props.params.keyword) {
+      this.setState({ keyword: this.props.params.keyword });
+      this.lookupDict(this.props.params.keyword);
     }
   }
 
   componentDidMount() {
-    //console.log(`did mount: ${this.props.match.url}`);
+    //console.log(`did mount: ${this.props.location.pathname}`);
   }
 
   ionViewWillLeave() {
   }
 
   get isTopPage() {
-    return this.props.match.url === `/${this.props.match.params.tab}`;
+    return this.props.location.pathname === `/${this.props.params.tab}`;
   }
 
   async lookupDict(keyword: string) {
@@ -128,7 +130,7 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
   selectedTextBeforeIonPopover = '';
   render() {
     let dictView: any = [];
-    if (this.props.match.params.keyword) {
+    if (this.props.params.keyword) {
       this.state.search?.forEach((data) => {
         const nouns = data?.definitions.filter((d) => d.type === WordType.NOUN);
         const verbs = data?.definitions.filter((d) => d.type === WordType.VERB);
@@ -140,7 +142,7 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
 
         dictView.push(
           <div key={uuid.v4()} className='textFont textSelectable' style={{ padding: '0 5px' }}>
-            <div key={uuid.v4()} className='textFontX3'>{this.props.match.params.keyword.substring(0, 1)}</div>
+            <div key={uuid.v4()} className='textFontX3'>{this.props.params.keyword.substring(0, 1)}</div>
             {data?.bopomofo ? <div>注音：{data?.bopomofo}</div> : null}
             {data?.pinyin ? <div>拼音：{data?.pinyin}</div> : null}
             {nounsView}
@@ -154,17 +156,17 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
       <IonPage>
         <IonHeader>
           <IonToolbar>
-            <IonButton fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
+            <IonButton fill="clear" slot='start' onClick={e => this.props.navigate(-1)}>
               <IonIcon icon={arrowBack} slot='icon-only' />
             </IonButton>
 
             <IonButton fill='outline' shape='round' slot='start' onClick={ev => {
-              this.props.history.push(`/dictionary/search`);
+              this.props.navigate(`/dictionary/search`);
             }}>
               <span className='uiFont'>萌典字典</span>
             </IonButton>
 
-            <IonButton hidden={!this.state.fetchError} fill="clear" slot='end' onClick={e => this.lookupDict(this.props.match.params.keyword)}>
+            <IonButton hidden={!this.state.fetchError} fill="clear" slot='end' onClick={e => this.lookupDict(this.props.params.keyword)}>
               <IonIcon icon={refreshCircle} slot='icon-only' />
             </IonButton>
 
@@ -202,7 +204,7 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
             >
               <IonList>
                 <IonItem button onClick={e => {
-                  this.props.history.push(`/${this.props.match.params.tab}/searchWord`);
+                  this.props.navigate(`/${this.props.params.tab}/searchWord`);
                   this.setState({ popover: { show: false, event: null } });
                 }}>
                   <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
@@ -227,7 +229,7 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
                     return;
                   }
 
-                  this.props.history.push(`/dictionary/search/${this.selectedTextBeforeIonPopover}`);
+                  this.props.navigate(`/dictionary/search/${this.selectedTextBeforeIonPopover}`);
                 }}>
                   <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
                   <IonIcon icon={book} slot='start' />
@@ -241,7 +243,7 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
                     return;
                   }
 
-                  this.props.history.push({
+                  this.props.navigate({
                     pathname: `/dictionary/searchWord/${this.selectedTextBeforeIonPopover}`,
                   });
                 }}>
@@ -264,11 +266,11 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
                 if (value === '') {
                   this.setState({ search: null, keyword: value });
                 } else if (ev.key === 'Enter') {
-                  if (value === this.props.match.params.keyword) {
+                  if (value === this.props.params.keyword) {
                     this.setState({ keyword: value });
                     this.lookupDict(value);
                   } else {
-                    this.props.history.push(`/dictionary/searchWord/${value}`);
+                    this.props.navigate(`/dictionary/searchWord/${value}`);
                   }
                 }
               }} />
@@ -286,12 +288,12 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
                   <IonList>
                     {this.props.wordDictionaryHistory.map((keyword, i) =>
                       <IonItem key={`wordDictHistoryItem_${i}`} button={true} onClick={async event => {
-                        if (keyword === this.props.match.params.keyword) {
+                        if (keyword === this.props.params.keyword) {
                           this.setState({ keyword });
                           this.lookupDict(keyword);
                         }
                         else {
-                          this.props.history.push(`/dictionary/searchWord/${keyword}`);
+                          this.props.navigate(`/dictionary/searchWord/${keyword}`);
                         }
                       }}>
                         <IonLabel className='ion-text-wrap uiFont' key={`wordDictHistoryLabel_` + i}>
@@ -361,6 +363,11 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
 };
 
 const WordDictionaryPage = withIonLifeCycle(_WordDictionaryPage);
+const WordDictionaryPageFun = (props: any) => <WordDictionaryPage {...props}
+  params={useParams()}
+  navigate={useNavigate()}
+  location={useLocation()}
+  />;
 
 const mapStateToProps = (state: any /*, ownProps*/) => {
   return {
@@ -372,4 +379,4 @@ const mapStateToProps = (state: any /*, ownProps*/) => {
 
 export default connect(
   mapStateToProps,
-)(WordDictionaryPage);
+)(WordDictionaryPageFun);

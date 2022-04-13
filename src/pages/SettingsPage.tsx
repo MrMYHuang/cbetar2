@@ -1,7 +1,7 @@
 import React from 'react';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonRange, IonIcon, IonLabel, IonToggle, IonButton, IonAlert, IonSelect, IonSelectOption, IonProgressBar, IonToast, withIonLifeCycle } from '@ionic/react';
 import { connect } from 'react-redux';
-import { RouteComponentProps } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import Globals from '../Globals';
 import { helpCircle, text, documentText, refreshCircle, musicalNotes, colorPalette, bug, download, print, informationCircle } from 'ionicons/icons';
 
@@ -10,6 +10,7 @@ import PackageInfos from '../../package.json';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
 import { Settings } from '../models/Settings';
 import { TmpSettings } from '../models/TmpSettings';
+import { RouteComponentProps } from '../models/Prop';
 
 interface StateProps {
   showFontLicense: boolean;
@@ -685,7 +686,12 @@ const mapStateToProps = (state: any /*, ownProps*/) => {
 };
 
 const SettingsPage = withIonLifeCycle(_SettingsPage);
+const SettingsPageFun = (props: any) => <SettingsPage {...props}
+  params={useParams()}
+  navigate={useNavigate()}
+  location={useLocation()}
+  />;
 
 export default connect(
   mapStateToProps,
-)(SettingsPage);
+)(SettingsPageFun);

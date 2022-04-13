@@ -1,9 +1,10 @@
 import React from 'react';
 import { IonButton, IonContent, IonItem, IonLabel, IonList, IonModal, IonToggle } from '@ionic/react';
-import { RouteComponentProps } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Globals from '../Globals';
 import * as qrcode from 'qrcode';
+import { RouteComponentProps } from '../models/Prop';
 
 interface Props {
   showModal: boolean;

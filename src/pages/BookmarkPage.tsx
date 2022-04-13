@@ -1,12 +1,13 @@
 import React from 'react';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonReorderGroup, IonReorder, IonItem, IonLabel, withIonLifeCycle, IonItemSliding, IonItemOptions, IonItemOption, IonIcon, IonButton, IonToast } from '@ionic/react';
 import { ItemReorderEventDetail } from '@ionic/core';
-import { RouteComponentProps } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
 import './WorkPage.css';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
 import { download, swapVertical } from 'ionicons/icons';
 import queryString from 'query-string';
+import { RouteComponentProps } from '../models/Prop';
 
 interface Props {
   dispatch: Function;
@@ -29,6 +30,7 @@ class _BookmarkPage extends React.Component<PageProps, State> {
   bookmarkListRef: React.RefObject<HTMLIonListElement>;
   constructor(props: any) {
     super(props);
+
     this.state = {
       reorder: false,
       showToast: false,
@@ -38,48 +40,48 @@ class _BookmarkPage extends React.Component<PageProps, State> {
   }
 
   ionViewWillEnter() {
-    //console.log(`${this.props.match.url} will enter.`);
+    //console.log(`${this.props.location.pathname} will enter.`);
     let queryParams = queryString.parse(this.props.location.search) as any;
     if (queryParams.item && queryParams.item < this.props.bookmarks.length) {
       const bookmark = this.props.bookmarks[queryParams.item];
-      this.props.history.push(`/catalog/juan/${bookmark.work?.work}/${bookmark.work?.juan}`);
+      this.props.navigate(`/catalog/juan/${bookmark.work?.work}/${bookmark.work?.juan}`);
     } else if (!this.hasBookmark) {
       this.setState({ showToast: true, toastMessage: '無書籤！請從目錄頁新增書籤。' });
 
       setTimeout(() => {
-        this.props.history.push(`/catalog/famous`);
+        this.props.navigate(`/catalog/famous`);
       }, 100);
     }
     //console.log( 'view will enter' );
   }
 
   componentDidMount() {
-    console.log(`did mount: ${this.props.match.url}`);
+    console.log(`did mount: ${this.props.location.pathname}`);
   }
 
   /* * /
   ionViewDidEnter() {
-    console.log(`${this.props.match.url} did enter.`);
+    console.log(`${this.props.location.pathname} did enter.`);
     //console.log(this.props.history.length);
   }
 
   ionViewWillLeave() {
-    console.log(`${this.props.match.url} will leave.`);
+    console.log(`${this.props.location.pathname} will leave.`);
     //console.log(this.props.history.length);
   }
 
   ionViewDidLeave() {
-    console.log(`${this.props.match.url} did leave.`);
+    console.log(`${this.props.location.pathname} did leave.`);
     //console.log(this.props.history.length);
   }
 
   componentWillUnmount() {
-    console.log(`${this.props.match.url} unmount`);
+    console.log(`${this.props.location.pathname} unmount`);
   }
 
 
   componentWillReceiveProps(nextProps: any) {
-    console.log(`route changed: ${nextProps.match.url}`)
+    console.log(`route changed: ${nextProps.location.pathname}`)
   }
 
   /**/
@@ -89,7 +91,7 @@ class _BookmarkPage extends React.Component<PageProps, State> {
   }
 
   get isFamousPage() {
-    return this.props.match.url === `/catalog/famous`;
+    return this.props.location.pathname === `/catalog/famous`;
   }
 
   delBookmarkHandler(uuidStr: string) {
@@ -99,7 +101,7 @@ class _BookmarkPage extends React.Component<PageProps, State> {
     });
 
     if (!this.hasBookmark) {
-      this.props.history.push(`/catalog/famous`);
+      this.props.navigate(`/catalog/famous`);
     }
   }
 
@@ -140,7 +142,7 @@ class _BookmarkPage extends React.Component<PageProps, State> {
             }
 
             event.preventDefault();
-            this.props.history.push({
+            this.props.navigate({
               pathname: routeLink,
               state: {
                 uuid: bookmark.uuid,
@@ -222,7 +224,12 @@ const mapStateToProps = (state: any /*, ownProps*/) => {
 //const mapDispatchToProps = {};
 
 const BookmarkPage = withIonLifeCycle(_BookmarkPage);
+const BookmarkPageFun = (props: any) => <BookmarkPage {...props}
+  params={useParams()}
+  navigate={useNavigate()}
+  location={useLocation()}
+  />;
 
 export default connect(
   mapStateToProps,
-)(BookmarkPage);
+)(BookmarkPageFun);

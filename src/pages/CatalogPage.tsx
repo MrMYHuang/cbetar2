@@ -1,6 +1,6 @@
 import React from 'react';
 import { IonContent, IonHeader, IonPage, IonToolbar, IonList, IonItem, IonLabel, IonButton, IonIcon, withIonLifeCycle, IonLoading, IonSelectOption, IonSelect } from '@ionic/react';
-import { RouteComponentProps } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
 import './CatalogPage.css';
 import { Catalog } from '../models/Catalog';
@@ -10,6 +10,7 @@ import { bookmark, arrowBack, home, search, shareSocial, refreshCircle } from 'i
 import SearchAlert from '../components/SearchAlert';
 import queryString from 'query-string';
 import { TmpSettings } from '../models/TmpSettings';
+import { RouteComponentProps } from '../models/Prop';
 
 const famousJuans = [
   { title: '般若波羅蜜多心經', url: `/catalog/juan/T0251/1` },
@@ -52,6 +53,7 @@ interface State {
 class _CatalogPage extends React.Component<PageProps, State> {
   constructor(props: any) {
     super(props);
+
     this.state = {
       topCatalogsType: 0,
       fetchError: false,
@@ -63,9 +65,9 @@ class _CatalogPage extends React.Component<PageProps, State> {
   }
 
   ionViewWillEnter() {
-    console.log(`${this.props.match.url} will enter.`);
+    console.log(`${this.props.location.pathname} will enter.`);
     let topCatalogsType = -1;
-    switch (this.props.match.url) {
+    switch (this.props.location.pathname) {
       case `/catalog`: topCatalogsType = 0; break;
       case `/catalog/volumes`: topCatalogsType = 1; break;
       case `/catalog/famous`: topCatalogsType = 2; break;
@@ -73,36 +75,36 @@ class _CatalogPage extends React.Component<PageProps, State> {
     }
     this.setState({ topCatalogsType: topCatalogsType });
     //console.log(this.props.history.length);
-    this.fetchData(this.props.match.params.path);
+    this.fetchData(this.props.params.path);
   }
 
   /* * /
 
   componentDidMount() {
-    console.log(`did mount: ${this.props.match.url}`);
+    console.log(`did mount: ${this.props.location.pathname}`);
   }
     ionViewDidEnter() {
-    console.log(`${this.props.match.url} did enter.`);
+    console.log(`${this.props.location.pathname} did enter.`);
     //console.log(this.props.history.length);
   }
 
   ionViewWillLeave() {
-    console.log(`${this.props.match.url} will leave.`);
+    console.log(`${this.props.location.pathname} will leave.`);
     //console.log(this.props.history.length);
   }
 
   ionViewDidLeave() {
-    console.log(`${this.props.match.url} did leave.`);
+    console.log(`${this.props.location.pathname} did leave.`);
     //console.log(this.props.history.length);
   }
 
   componentWillUnmount() {
-    console.log(`${this.props.match.url} unmount`);
+    console.log(`${this.props.location.pathname} unmount`);
   }
 
 
   componentWillReceiveProps(nextProps: any) {
-    console.log(`route changed: ${nextProps.match.url}`)
+    console.log(`route changed: ${nextProps.location.pathname}`)
   }
 
   /**/
@@ -184,7 +186,7 @@ class _CatalogPage extends React.Component<PageProps, State> {
   }
 
   get isTopCatalog() {
-    return [`/catalog`, `/catalog/volumes`, `/catalog/famous`].reduce((prev, curr) => prev || curr === this.props.match.url, false);
+    return [`/catalog`, `/catalog/volumes`, `/catalog/famous`].reduce((prev, curr) => prev || curr === this.props.location.pathname, false);
   }
 
   parentPath(path: string) {
@@ -198,7 +200,7 @@ class _CatalogPage extends React.Component<PageProps, State> {
       type: "ADD_BOOKMARK",
       bookmark: new Bookmark({
         type: BookmarkType.CATALOG,
-        uuid: this.props.match.params.path,
+        uuid: this.props.params.path,
         selectedText: this.state.pathLabel,
         epubcfi: '',
         fileName: '',
@@ -210,13 +212,13 @@ class _CatalogPage extends React.Component<PageProps, State> {
   delBookmarkHandler() {
     this.props.dispatch({
       type: "DEL_BOOKMARK",
-      uuid: this.props.match.params.path,
+      uuid: this.props.params.path,
     });
   }
 
   get hasBookmark() {
     return this.props.bookmarks.find(
-      (e) => e.type === BookmarkType.CATALOG && e.uuid === this.props.match.params.path) != null;
+      (e) => e.type === BookmarkType.CATALOG && e.uuid === this.props.params.path) != null;
   }
 
   getRows() {
@@ -234,7 +236,7 @@ class _CatalogPage extends React.Component<PageProps, State> {
       rows.push(
         <IonItem key={`${catalog.n}item` + index} button={true} onClick={async event => {
           event.preventDefault();
-          this.props.history.push({
+          this.props.navigate({
             pathname: routeLink,
             search: queryString.stringify(isHtmlNode ? { file: catalog.file!, title: catalog.label } : {}),
           });
@@ -254,7 +256,7 @@ class _CatalogPage extends React.Component<PageProps, State> {
     famousJuans.forEach(({ title, url }, i) => {
       rows.push(
         <IonItem key={`famousJuanItem_` + i} button={true} onClick={async event => {
-          this.props.history.push(url);
+          this.props.navigate(url);
         }}>
           <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
           <IonLabel className='ion-text-wrap uiFont' key={`famousItemLabel_` + i}>
@@ -267,7 +269,7 @@ class _CatalogPage extends React.Component<PageProps, State> {
   }
 
   render() {
-    //console.log(`${this.props.match.url} render`)
+    //console.log(`${this.props.location.pathname} render`)
 
     let list = <IonList>
       {this.state.topCatalogsType === 2 ? this.getFamousJuanRows() : this.getRows()}
@@ -277,7 +279,7 @@ class _CatalogPage extends React.Component<PageProps, State> {
       <IonPage>
         <IonHeader>
           <IonToolbar>
-            <IonButton hidden={this.isTopCatalog} fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
+            <IonButton hidden={this.isTopCatalog} fill="clear" slot='start' onClick={e => this.props.navigate(-1)}>
               <IonIcon icon={arrowBack} slot='icon-only' />
             </IonButton>
 
@@ -299,10 +301,10 @@ class _CatalogPage extends React.Component<PageProps, State> {
                   case 0: nextPage = `/catalog`; break;
                   case 1: nextPage = `/catalog/volumes`; break;
                   case 2: nextPage = `/catalog/famous`; break;
-                  case -1: nextPage = this.props.match.url; break;
+                  case -1: nextPage = this.props.location.pathname; break;
                 }
-                if (this.props.match.url !== nextPage) {
-                  this.props.history.push(nextPage);
+                if (this.props.location.pathname !== nextPage) {
+                  this.props.navigate(nextPage);
                 }
               }}>
               <IonSelectOption className='uiFont' value={0}>部分類</IonSelectOption>
@@ -310,7 +312,7 @@ class _CatalogPage extends React.Component<PageProps, State> {
               <IonSelectOption className='uiFont' value={2}>知名經典</IonSelectOption>
             </IonSelect>
 
-            <IonButton hidden={!this.state.fetchError} fill="clear" slot='end' onClick={e => this.fetchData(this.props.match.params.path)}>
+            <IonButton hidden={!this.state.fetchError} fill="clear" slot='end' onClick={e => this.fetchData(this.props.params.path)}>
               <IonIcon icon={refreshCircle} slot='icon-only' />
             </IonButton>
 
@@ -318,7 +320,7 @@ class _CatalogPage extends React.Component<PageProps, State> {
               <IonIcon icon={bookmark} slot='icon-only' />
             </IonButton>
 
-            <IonButton hidden={this.isTopCatalog} fill="clear" slot='end' onClick={e => this.props.history.push(`/${this.props.match.params.tab}`)}>
+            <IonButton hidden={this.isTopCatalog} fill="clear" slot='end' onClick={e => this.props.navigate(`/${this.props.params.tab}`)}>
               <IonIcon icon={home} slot='icon-only' />
             </IonButton>
 
@@ -381,7 +383,12 @@ const mapStateToProps = (state: any /*, ownProps*/) => {
 //const mapDispatchToProps = {};
 
 const CatalogPage = withIonLifeCycle(_CatalogPage);
+const CatalogPageFun = (props: any) => <CatalogPage {...props}
+  params={useParams()}
+  navigate={useNavigate()}
+  location={useLocation()}
+  />;
 
 export default connect(
   mapStateToProps,
-)(CatalogPage);
+)(CatalogPageFun);
