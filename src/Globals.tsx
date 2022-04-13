@@ -403,7 +403,7 @@ const Globals = {
   scrollbarSizeIdToValue,
   updateCssVars: (settings: any) => {
     let scrollbarSize = scrollbarSizeIdToValue(settings.scrollbarSize);
-    document.documentElement.style.cssText = `--ion-font-family: ${settings.useFontKai ? `Times, HeitiScoped, ${twKaiFonts.join(', ')}` : 'Times, Heiti TC, Noto Sans CJK TC'}; --scrollbar-size: ${scrollbarSize}px; --ui-font-size: ${settings.uiFontSize}px; --text-font-size: ${settings.fontSize}px`
+    document.documentElement.style.cssText = `--ion-font-family: ${settings.useFontKai ? `Times, ${twKaiFonts.join(', ')}, Noto Sans CJK TC` : 'Times, Heiti TC, Noto Sans CJK TC'}; --scrollbar-size: ${scrollbarSize}px; --ui-font-size: ${settings.uiFontSize}px; --text-font-size: ${settings.fontSize}px`
   },
   isMacCatalyst,
   isTouchDevice: () => {
