@@ -52,7 +52,7 @@ class _SearchPage extends React.Component<PageProps, State> {
     this.setState({ isLoading: true });
     if (newSearch) {
       this.page = 0;
-      this.setState({ searches: [] });
+      await new Promise<void>(ok => this.setState({ searches: [] }, ok));
     }
 
     try {

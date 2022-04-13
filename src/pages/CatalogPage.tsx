@@ -71,9 +71,10 @@ class _CatalogPage extends React.Component<PageProps, State> {
       case `/catalog/famous`: topCatalogsType = 2; break;
       default: topCatalogsType = -1; break;
     }
-    this.setState({ topCatalogsType: topCatalogsType });
-    //console.log(this.props.history.length);
-    this.fetchData(this.props.match.params.path);
+    this.setState({ topCatalogsType: topCatalogsType }, () => {
+      //console.log(this.props.history.length);
+      this.fetchData(this.props.match.params.path);
+    });
   }
 
   /* * /
@@ -290,8 +291,8 @@ class _CatalogPage extends React.Component<PageProps, State> {
               onIonChange={e => {
                 const value = +e.detail.value;
 
-                if(value !== this.state.topCatalogsType) {
-                  this.setState({topCatalogsType: value});
+                if (value !== this.state.topCatalogsType) {
+                  this.setState({ topCatalogsType: value });
                 }
 
                 let nextPage = '';

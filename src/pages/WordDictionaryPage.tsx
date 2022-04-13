@@ -55,8 +55,9 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
     //console.log(this.props.match.url);
     //console.log(this.props.history.length);
     if (this.props.match.params.keyword) {
-      this.setState({ keyword: this.props.match.params.keyword });
-      this.lookupDict(this.props.match.params.keyword);
+      this.setState({ keyword: this.props.match.params.keyword }, () => {
+        this.lookupDict(this.props.match.params.keyword);
+      });
     }
   }
 

@@ -171,11 +171,12 @@ class _EPubViewPage extends React.Component<PageProps, State> {
           this.pageNext();
           this.findTextsInPageAndChunking();
         } else {
-          this.setState({ speechState: SpeechState.UNINITIAL });
-          console.log(`Stop work text to speech.`);
-          if (this.state.isSpeechRepeatMode) {
-            this.playText2Speech();
-          }
+          this.setState({ speechState: SpeechState.UNINITIAL }, () => {
+            console.log(`Stop work text to speech.`);
+            if (this.state.isSpeechRepeatMode) {
+              this.playText2Speech();
+            }
+          });
           return;
         }
         texts = this.workTexts[this.workTextsIndex];
@@ -1371,7 +1372,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         {header}
         <IonContent>
           {this.props.paginated || this.state.showSearchTextToast ? navButtons : <></>}
-          
+
           <IonFab vertical='bottom' horizontal='end' slot='fixed'>
             <IonFabButton style={{ opacity: fabButtonOpacity }}
               onPointerDown={e => {
@@ -1558,8 +1559,9 @@ class _EPubViewPage extends React.Component<PageProps, State> {
                 handler: () => {
                   clearTimeout(this.clearSelectedStringTimer);
                   this.speechRepeatEnd = this.selectedRange;
-                  this.setState({ isSpeechRepeatMode: true, showSpeechRepeatEnd: false });
-                  this.playText2Speech();
+                  this.setState({ isSpeechRepeatMode: true, showSpeechRepeatEnd: false }, () => {
+                    this.playText2Speech();
+                  });
                 }
               }
             ]}

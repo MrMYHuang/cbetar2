@@ -50,12 +50,13 @@ class _DictionaryPage extends React.Component<PageProps, State> {
 
   ionViewWillEnter() {
     //console.log(`${this.props.match.url} will enter`);
-    this.setState({ keyword: this.props.match.params.keyword });
-    if (this.props.match.params.keyword) {
-      this.lookupDict(this.props.match.params.keyword);
-    } else {
-      this.setState({ searches: [] });
-    }
+    this.setState({ keyword: this.props.match.params.keyword }, () => {
+      if (this.props.match.params.keyword) {
+        this.lookupDict(this.props.match.params.keyword);
+      } else {
+        this.setState({ searches: [] });
+      }
+    });
   }
 
   /*
