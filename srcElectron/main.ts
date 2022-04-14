@@ -132,19 +132,6 @@ const template = [
     ]
   }),
   new MenuItem({
-    label: '顯示',
-    submenu: [
-      {
-        role: 'togglefullscreen',
-        label: '全螢幕',
-      },
-      {
-        role: 'toggleDevTools',
-        label: '開發者工具',
-      },
-    ]
-  }),
-  new MenuItem({
     label: '執行',
     submenu: [
       {
@@ -155,11 +142,28 @@ const template = [
         label: '檢查後端app更新',
         click: checkUpdate,
       } : null,
+      {
+        role: 'toggleDevTools',
+        label: '開發者工具',
+        visible: false,
+      },
     ].filter(v => v != null) as any
   }),
   new MenuItem({
     label: '視窗',
     submenu: [
+      {
+        role: 'togglefullscreen',
+        label: '全螢幕',
+      },
+      {
+        label: '離開全螢幕',
+        accelerator: 'Esc',
+        visible: false,
+        click: (item, win) => {
+          win?.setFullScreen(false);
+        },
+      },
       {
         label: '最小化',
         role: 'minimize'
