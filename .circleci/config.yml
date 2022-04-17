@@ -80,6 +80,7 @@ jobs:
       - run:
           name: Build deb
           command: |
+            sudo apt update
             sudo apt -y install ruby ruby-dev
             sudo gem install fpm
             npm i
@@ -98,6 +99,7 @@ jobs:
       - run:
           name: Build rpm
           command: |
+            sudo apt update
             sudo apt -y install ruby ruby-dev
             sudo gem install fpm
             npm i
