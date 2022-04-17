@@ -4,7 +4,9 @@
   "files": [
     "buildElectron/**/*",
     "package.json",
-    "!**/node_modules/**/*.{mk,a,h,cpp}"
+    "!**/node_modules/**/*.{mk,a,h,cpp}",
+    "!**/node_modules/node1-libxmljsmt-myh/**/*",
+    "!**/node_modules/libxslt-myh/**/*"
   ],
   "icon": "buildElectron/icon.icns",
   "mac": {
