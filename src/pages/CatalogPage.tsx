@@ -71,9 +71,10 @@ class _CatalogPage extends React.Component<PageProps, State> {
       case `/catalog/famous`: topCatalogsType = 2; break;
       default: topCatalogsType = -1; break;
     }
-    this.setState({ topCatalogsType: topCatalogsType });
-    //console.log(this.props.history.length);
-    this.fetchData(this.props.match.params.path);
+    this.setState({ topCatalogsType: topCatalogsType }, () => {
+      //console.log(this.props.history.length);
+      this.fetchData(this.props.match.params.path);
+    });
   }
 
   /* * /
@@ -220,7 +221,7 @@ class _CatalogPage extends React.Component<PageProps, State> {
   }
 
   getRows() {
-    let rows = Array<object>();
+    let rows = Array<JSX.Element>();
     this.state.catalogs.forEach((catalog: Catalog, index: number) => {
       let routeLink = '';
       const isHtmlNode = catalog.nodeType === 'html';
@@ -250,7 +251,7 @@ class _CatalogPage extends React.Component<PageProps, State> {
   }
 
   getFamousJuanRows() {
-    let rows = Array<object>();
+    let rows = Array<JSX.Element>();
     famousJuans.forEach(({ title, url }, i) => {
       rows.push(
         <IonItem key={`famousJuanItem_` + i} button={true} onClick={async event => {
@@ -277,7 +278,7 @@ class _CatalogPage extends React.Component<PageProps, State> {
       <IonPage>
         <IonHeader>
           <IonToolbar>
-            <IonButton hidden={this.isTopCatalog} fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
+            <IonButton hidden={this.isTopCatalog} fill="clear" slot='start' onClick={e => this.props.history.back()}>
               <IonIcon icon={arrowBack} slot='icon-only' />
             </IonButton>
 
@@ -290,8 +291,8 @@ class _CatalogPage extends React.Component<PageProps, State> {
               onIonChange={e => {
                 const value = +e.detail.value;
 
-                if(value !== this.state.topCatalogsType) {
-                  this.setState({topCatalogsType: value});
+                if (value !== this.state.topCatalogsType) {
+                  this.setState({ topCatalogsType: value });
                 }
 
                 let nextPage = '';

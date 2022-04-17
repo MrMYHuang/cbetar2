@@ -171,11 +171,12 @@ class _EPubViewPage extends React.Component<PageProps, State> {
           this.pageNext();
           this.findTextsInPageAndChunking();
         } else {
-          this.setState({ speechState: SpeechState.UNINITIAL });
-          console.log(`Stop work text to speech.`);
-          if (this.state.isSpeechRepeatMode) {
-            this.playText2Speech();
-          }
+          this.setState({ speechState: SpeechState.UNINITIAL }, () => {
+            console.log(`Stop work text to speech.`);
+            if (this.state.isSpeechRepeatMode) {
+              this.playText2Speech();
+            }
+          });
           return;
         }
         texts = this.workTexts[this.workTextsIndex];
@@ -472,6 +473,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         unicode-range: U+0-007F;
     }
 
+    // Not work on Chrome 99.
     /* Workaround parenthesis orientation problem of TW-Kai-98_1 on iOS Safari.
     @font-face {
         font-family: 'HeitiScoped';
@@ -833,6 +835,15 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     this.visibleChars = [];
     this.isPageSearched = [];
     let node: Node | null;
+
+    // Skip the leading line with "No. ".
+    while ((node = textNodesWalker.nextNode()) != null) {
+      let node2 = node!;
+      if ('t' === node2.parentElement?.className && /No\. .*/.test(node2.textContent!)) {
+        break;
+      }
+    }
+
     while ((node = textNodesWalker.nextNode()) != null) {
       let node2 = node!;
       if (['t', 'pc', 'gaijiAnchor'].reduce((prev, curr) => prev && curr !== node2.parentElement?.className, true)) {
@@ -1057,7 +1068,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     }
 
     //const remainingWorkText = this.getRemainingWorkTextFromSelectedRange();
-    const workText = texts || this.ePubIframe?.contentDocument?.getElementById('body')?.innerText || '無法取得經文內容';
+    const workText = texts || this.ePubIframe?.contentDocument?.getElementById('body')?.innerText?.replace(new RegExp('No. .*'), '') || '無法取得經文內容';
 
     this.workTexts = [];
     for (let i = 0; i < Math.ceil(workText.length / this.maxCharsPerUtterance); i++) {
@@ -1111,7 +1122,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         <IonToolbar>
           <IonTitle className='uiFont'></IonTitle>
 
-          <IonButton fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
+          <IonButton fill="clear" slot='start' onClick={e => this.props.history.back()}>
             <IonIcon icon={arrowBack} slot='icon-only' />
           </IonButton>
 
@@ -1371,7 +1382,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         {header}
         <IonContent>
           {this.props.paginated || this.state.showSearchTextToast ? navButtons : <></>}
-          
+
           <IonFab vertical='bottom' horizontal='end' slot='fixed'>
             <IonFabButton style={{ opacity: fabButtonOpacity }}
               onPointerDown={e => {
@@ -1558,8 +1569,9 @@ class _EPubViewPage extends React.Component<PageProps, State> {
                 handler: () => {
                   clearTimeout(this.clearSelectedStringTimer);
                   this.speechRepeatEnd = this.selectedRange;
-                  this.setState({ isSpeechRepeatMode: true, showSpeechRepeatEnd: false });
-                  this.playText2Speech();
+                  this.setState({ isSpeechRepeatMode: true, showSpeechRepeatEnd: false }, () => {
+                    this.playText2Speech();
+                  });
                 }
               }
             ]}

@@ -167,7 +167,7 @@ class _WorkPage extends React.Component<PageProps, State> {
   getRowsByChapter() {
     let work = this.state.work;
     const mulu = work?.mulu;
-    let rows = Array<object>();
+    let rows = Array<JSX.Element>();
     for (let i = 0; i < (mulu?.length || -1); i++) {
       let routeLink = `/catalog/juan/${work?.work}/${mulu![i].juan}`;
       rows.push(
@@ -189,7 +189,7 @@ class _WorkPage extends React.Component<PageProps, State> {
 
   getRowsByJuan() {
     let work = this.state.work;
-    let rows = Array<object>();
+    let rows = Array<JSX.Element>();
     let juans = work?.juan_list.split(',');
     for (let i = 0; i < (juans?.length || -1); i++) {
       //if (work.nodeType == 'html')
@@ -219,7 +219,7 @@ class _WorkPage extends React.Component<PageProps, State> {
       <IonPage>
         <IonHeader>
           <IonToolbar>
-            <IonButton fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
+            <IonButton fill="clear" slot='start' onClick={e => this.props.history.back()}>
               <IonIcon icon={arrowBack} slot='icon-only' />
             </IonButton>
 

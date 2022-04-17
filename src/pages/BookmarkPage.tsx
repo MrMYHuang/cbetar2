@@ -113,7 +113,7 @@ class _BookmarkPage extends React.Component<PageProps, State> {
 
   getBookmarkRows() {
     let bookmarks = this.props.bookmarks;
-    let rows = Array<object>();
+    let rows = Array<JSX.Element>();
     bookmarks.forEach((bookmark, i) => {
       let routeLink = ``;
       let label = `${bookmark.selectedText}`;

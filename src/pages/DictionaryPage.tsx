@@ -50,12 +50,13 @@ class _DictionaryPage extends React.Component<PageProps, State> {
 
   ionViewWillEnter() {
     //console.log(`${this.props.match.url} will enter`);
-    this.setState({ keyword: this.props.match.params.keyword });
-    if (this.props.match.params.keyword) {
-      this.lookupDict(this.props.match.params.keyword);
-    } else {
-      this.setState({ searches: [] });
-    }
+    this.setState({ keyword: this.props.match.params.keyword }, () => {
+      if (this.props.match.params.keyword) {
+        this.lookupDict(this.props.match.params.keyword);
+      } else {
+        this.setState({ searches: [] });
+      }
+    });
   }
 
   /*
@@ -110,7 +111,7 @@ class _DictionaryPage extends React.Component<PageProps, State> {
 
   getRows() {
     const data = this.state.searches as [DictItem];
-    let rows = Array<object>();
+    let rows = Array<JSX.Element>();
     data.forEach((item: DictItem, index: number) => {
       rows.push(
         <div style={{ display: 'table-row' }} key={`dictItem` + index}>
@@ -131,7 +132,7 @@ class _DictionaryPage extends React.Component<PageProps, State> {
       <IonPage>
         <IonHeader>
           <IonToolbar>
-            <IonButton hidden={this.isTopPage} fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
+            <IonButton hidden={this.isTopPage} fill="clear" slot='start' onClick={e => this.props.history.back()}>
               <IonIcon icon={arrowBack} slot='icon-only' />
             </IonButton>
 

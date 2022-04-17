@@ -52,7 +52,7 @@ class _SearchPage extends React.Component<PageProps, State> {
     this.setState({ isLoading: true });
     if (newSearch) {
       this.page = 0;
-      this.setState({ searches: [] });
+      await new Promise<void>(ok => this.setState({ searches: [] }, ok));
     }
 
     try {
@@ -80,7 +80,7 @@ class _SearchPage extends React.Component<PageProps, State> {
   }
 
   getRows() {
-    let rows = Array<object>();
+    let rows = Array<JSX.Element>();
     const searches = (this.state as any).searches as FullTextSearch[];
     if (searches.length === 0 && !this.state.isLoading) {
       return Globals.searchNoResultMessage;
@@ -113,7 +113,7 @@ class _SearchPage extends React.Component<PageProps, State> {
         <IonHeader>
           <IonToolbar>
             <IonTitle className='uiFont'>全文檢索</IonTitle>
-            <IonButton fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
+            <IonButton fill="clear" slot='start' onClick={e => this.props.history.back()}>
               <IonIcon icon={arrowBack} slot='icon-only' />
             </IonButton>
 
