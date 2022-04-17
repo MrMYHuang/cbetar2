@@ -38,7 +38,7 @@
     "start-electron": "npm run build-electron && electron .",
     "dist-win": "npm run build-electron && electron-builder -w -c electronBuilderConfigs/win.json",
     "dist-deb": "npm run build-electron && electron-builder -l deb -c electronBuilderConfigs/deb.json",
-    "dist-rpm": "npm run build-electron && electron-builder -l rpm -c electronBuilderConfigs/rpm.json",
+    "dist-rpm": "export USE_SYSTEM_FPM=true && npm run build-electron && electron-builder -l rpm -c electronBuilderConfigs/rpm.json",
     "eb-dist-snap": "npm run build-electron && rm -f dist/*.snap && electron-builder -l snap -c electronBuilderConfigs/snap.json",
     "eb-dist-snap-arm64": "export SNAPCRAFT_BUILD_ENVIRONMENT=lxd && npm run build-electron-store && rm -f dist/*.snap && electron-builder -l snap -c electronBuilderConfigs/snap.json --arm64",
     "dist-snap": "mkdir -p dist && snapcraft snap --use-lxd -o dist",
