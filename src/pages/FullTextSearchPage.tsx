@@ -113,7 +113,7 @@ class _SearchPage extends React.Component<PageProps, State> {
         <IonHeader>
           <IonToolbar>
             <IonTitle className='uiFont'>全文檢索</IonTitle>
-            <IonButton fill="clear" slot='start' onClick={e => this.props.history.back()}>
+            <IonButton fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
               <IonIcon icon={arrowBack} slot='icon-only' />
             </IonButton>
 

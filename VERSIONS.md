@@ -1,4 +1,7 @@
 # <a id='history'>版本歷史</a>
+* PWA 6.0.1:
+  * [修正] 降級 workbox 至 v5，解決 MAS app 啟動失敗問題。
+
 * Installer apps 19.1.0:
   * [新增] Esc 鍵離開全螢幕。
   
