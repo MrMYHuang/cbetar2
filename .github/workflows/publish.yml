@@ -68,6 +68,8 @@ jobs:
           node-version: 14
 
       - run: |
+          sudo apt -y install ruby ruby-dev
+          sudo gem install fpm
           npm i
           npm run dist-deb -- -p always --x64
 

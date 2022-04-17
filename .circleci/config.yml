@@ -80,6 +80,8 @@ jobs:
       - run:
           name: Build deb
           command: |
+            sudo apt -y install ruby ruby-dev
+            sudo gem install fpm
             npm i
             GH_TOKEN=${GH_TOKEN} npm run dist-deb -- -p always --arm64
 
