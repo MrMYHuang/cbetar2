@@ -75,7 +75,7 @@ const template = [
         label: '離開全螢幕',
         accelerator: 'Esc',
         visible: false,
-        click: (item, win) => {
+        click: (item: MenuItem, win: (BrowserWindow) | (undefined)) => {
           win?.setFullScreen(false);
         },
       },
