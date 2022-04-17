@@ -104,7 +104,7 @@ jobs:
           node-version: 14
 
       - run: |
-          sudo apt -y install ruby ruby-devel
+          sudo apt -y install ruby ruby-dev
           sudo gem install fpm s
           npm i
           npm run dist-rpm -- -p always --x64
@@ -124,7 +124,7 @@ jobs:
           node-version: 14
 
       - run: |
-          sudo apt -y install ruby ruby-devel
+          sudo apt -y install ruby ruby-dev
           sudo gem install fpm s
           npm i
           npm run dist-rpm -- -p always --arm64
