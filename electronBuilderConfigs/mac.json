@@ -4,7 +4,8 @@
   "files": [
     "buildElectron/**/*",
     "package.json",
-    "!**/node_modules/**/*.{mk,a,h,cpp}"
+    "!**/node_modules/**/*.{mk,a,h,cpp}",
+    "!**/node_modules/libxslt-myh/deps/**/*"
   ],
   "extraResources": [
     {
