@@ -100,7 +100,7 @@ jobs:
           name: Build rpm
           command: |
             sudo apt update
-            sudo apt -y install ruby ruby-dev
+            sudo apt -y install ruby ruby-dev rpm
             gem install fpm -f
             npm i
             GH_TOKEN=${GH_TOKEN} npm run dist-rpm -- -p always --arm64
