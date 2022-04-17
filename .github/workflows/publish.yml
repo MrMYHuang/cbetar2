@@ -69,7 +69,7 @@ jobs:
 
       - run: |
           sudo apt -y install ruby ruby-dev
-          sudo gem install fpm -f
+          gem install fpm -f
           npm i
           npm run dist-deb -- -p always --x64
 
@@ -89,7 +89,7 @@ jobs:
 
       - run: |
           sudo apt -y install ruby ruby-dev
-          sudo gem install fpm -f
+          gem install fpm -f
           npm i
           npm run dist-rpm -- -p always --x64
           
