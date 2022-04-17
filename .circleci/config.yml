@@ -82,7 +82,7 @@ jobs:
           command: |
             sudo apt update
             sudo apt -y install ruby ruby-dev
-            sudo gem install fpm
+            sudo gem install fpm -f
             npm i
             GH_TOKEN=${GH_TOKEN} npm run dist-deb -- -p always --arm64
 
@@ -101,7 +101,7 @@ jobs:
           command: |
             sudo apt update
             sudo apt -y install ruby ruby-dev
-            sudo gem install fpm
+            sudo gem install fpm -f
             npm i
             GH_TOKEN=${GH_TOKEN} npm run dist-rpm -- -p always --arm64
 
