@@ -1,5 +1,5 @@
 {
-  "appId": "com.github.mrmyhuang.cbetar2",
+  "appId": "io.github.mrmyhuang.cbetar2",
   "appName": "cbetar2",
   "bundledWebRuntime": false,
   "npmClient": "npm",
