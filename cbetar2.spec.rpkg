@@ -2,10 +2,10 @@
 
 Name:       {{{ git_dir_name }}}
 Version:    19.1.0
-Release:    1%{?dist}
+Release:    2%{?dist}
 Summary:    A Buddhist text reader using CBETA APIs.
-License:    MIT
 URL:        https://github.com/MrMYHuang/cbetar2
+License: MIT
 
 # Detailed information about the source Git repository and the source commit
 # for the created rpm package
@@ -17,6 +17,7 @@ BuildRequires: wget
 BuildRequires: make
 BuildRequires: python3
 BuildRequires: gcc-c++
+BuildRequires: desktop-file-utils
 Requires: at-spi2-core
 Requires: gtk3
 Requires: libXScrnSaver
@@ -44,7 +45,7 @@ cd cbetar2
 npm i
 npm run build-electron
 #npx electron-builder install-app-deps
-npx electron-packager . cbetar2 --overwrite --prune=true --asar.unpackDir node_modules/node1-libxmljsmt-myh --ignore '^\/(?!(package\.json|node_modules|buildElectron))' --icon buildElectron/icon.png
+npx electron-packager . cbetar2 --overwrite --prune=true --asar.unpackDir node_modules/node1-libxmljsmt-myh --ignore '^\/(?!(package\.json|node_modules(?!(.*\.(h|cc|cpp|c|mk|a)))|buildElectron))' --icon buildElectron/icon.png
 electronPackagePath=$(ls -d ./cbetar2-linux-*)
 cp --parent -v buildElectron/*.xsl cbeta_gaiji/cbeta_gaiji.json ${electronPackagePath}/resources
 
@@ -63,13 +64,13 @@ mv cbetar2/buildElectron/io.github.mrmyhuang.cbetar2.metainfo.xml %{buildroot}/u
 mkdir -p %{buildroot}/usr/share/applications
 mv cbetar2/buildElectron/io.github.mrmyhuang.cbetar2.desktop %{buildroot}/usr/share/applications
 
+desktop-file-validate %{buildroot}/%{_datadir}/applications/io.github.mrmyhuang.cbetar2.desktop
+
 mkdir -p %{buildroot}/usr/share/icons
 cp cbetar2/buildElectron/icon.png %{buildroot}/usr/share/icons/cbetar2.png
 
 sed -i 's#^Exec=.*$#Exec=/usr/bin/cbetar2 --no-sandbox#' %{buildroot}/usr/share/applications/io.github.mrmyhuang.cbetar2.desktop
 sed -i 's#^Icon=.*$#Icon=/usr/share/icons/cbetar2.png#' %{buildroot}/usr/share/applications/io.github.mrmyhuang.cbetar2.desktop
-
-%license LICENSE.txt
 
 # This lists all the files that are included in the rpm package and that
 # are going to be installed into target system where the rpm is installed.
@@ -79,6 +80,7 @@ sed -i 's#^Icon=.*$#Icon=/usr/share/icons/cbetar2.png#' %{buildroot}/usr/share/a
 /usr/share/metainfo/io.github.mrmyhuang.cbetar2.metainfo.xml
 /usr/share/applications/io.github.mrmyhuang.cbetar2.desktop
 /usr/share/icons/cbetar2.png
+%license cbetar2/LICENSE.txt
 
 # Finally, changes from the latest release of your application are generated from
 # your project's Git history. It will be empty until you make first annotated Git tag.
