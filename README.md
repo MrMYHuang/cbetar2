@@ -236,6 +236,13 @@ https://MrMYHuang.github.io
 <img width="auto" height='60px' src='https://flathub.org/assets/badges/flathub-badge-en.png' />
 </a>
 
+### RHEL 8 & 9 / CentOS 8 & 9 / Fedora Linux 34-36 (amd64 & arm64) - 使用 Copr
+Shell script:
+```
+sudo dnf copr enable mrmyh/cbetar2
+sudo dnf install cbetar2
+```
+
 ### 下載安裝檔
 支援的 amd64 & arm64 作業系統如下 (Android 為連線 DB app，其他都是離線 DB app)：
 
