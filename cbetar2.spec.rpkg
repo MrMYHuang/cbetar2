@@ -52,34 +52,34 @@ cp --parent -v buildElectron/*.xsl cbeta_gaiji/cbeta_gaiji.json ${electronPackag
 %install
 electronPackagePath=$(ls -d ./cbetar2/cbetar2-linux-*)
 
-mkdir -p %{buildroot}/usr/cbetar2
-cp -a ${electronPackagePath}/. %{buildroot}/usr/cbetar2
+mkdir -p %{buildroot}/%{_usr}/cbetar2
+cp -a ${electronPackagePath}/. %{buildroot}/%{_usr}/cbetar2
 
 mkdir -p %{buildroot}/%{_bindir}
-ln -s ../cbetar2/cbetar2 %{buildroot}/%{_bindir}
+ln -s ${_usr}/cbetar2/cbetar2 %{buildroot}/%{_bindir}
 
-mkdir -p %{buildroot}/usr/share/metainfo
-mv cbetar2/buildElectron/io.github.mrmyhuang.cbetar2.metainfo.xml %{buildroot}/usr/share/metainfo
+mkdir -p %{buildroot}/%{_metainfodir}
+mv cbetar2/buildElectron/io.github.mrmyhuang.cbetar2.metainfo.xml %{buildroot}/%{_metainfodir}
 
-mkdir -p %{buildroot}/usr/share/applications
-mv cbetar2/buildElectron/io.github.mrmyhuang.cbetar2.desktop %{buildroot}/usr/share/applications
+mkdir -p %{buildroot}/%{_datadir}/applications
+mv cbetar2/buildElectron/io.github.mrmyhuang.cbetar2.desktop %{buildroot}/%{_datadir}/applications
 
 desktop-file-validate %{buildroot}/%{_datadir}/applications/io.github.mrmyhuang.cbetar2.desktop
 
-mkdir -p %{buildroot}/usr/share/icons
-cp cbetar2/buildElectron/icon.png %{buildroot}/usr/share/icons/cbetar2.png
+mkdir -p %{buildroot}/%{_datadir}/icons
+cp cbetar2/buildElectron/icon.png %{buildroot}/%{_datadir}/icons/cbetar2.png
 
-sed -i 's#^Exec=.*$#Exec=/usr/bin/cbetar2 --no-sandbox#' %{buildroot}/usr/share/applications/io.github.mrmyhuang.cbetar2.desktop
-sed -i 's#^Icon=.*$#Icon=/usr/share/icons/cbetar2.png#' %{buildroot}/usr/share/applications/io.github.mrmyhuang.cbetar2.desktop
+sed -i 's#^Exec=.*$#Exec=%{_bindir}/cbetar2 --no-sandbox#' %{buildroot}/%{_datadir}/applications/io.github.mrmyhuang.cbetar2.desktop
+sed -i 's#^Icon=.*$#Icon=%{_datadir}/icons/cbetar2.png#' %{buildroot}/%{_datadir}/applications/io.github.mrmyhuang.cbetar2.desktop
 
 # This lists all the files that are included in the rpm package and that
 # are going to be installed into target system where the rpm is installed.
 %files
-/usr/cbetar2
+%{_usr}/cbetar2
 %{_bindir}/cbetar2
-/usr/share/metainfo/io.github.mrmyhuang.cbetar2.metainfo.xml
-/usr/share/applications/io.github.mrmyhuang.cbetar2.desktop
-/usr/share/icons/cbetar2.png
+%{_metainfodir}/io.github.mrmyhuang.cbetar2.metainfo.xml
+%{_datadir}/applications/io.github.mrmyhuang.cbetar2.desktop
+%{_datadir}/icons/cbetar2.png
 %license cbetar2/LICENSE.txt
 
 # Finally, changes from the latest release of your application are generated from
