@@ -5,7 +5,7 @@ on:
     branches:
       - "!*"
     tags:
-      - "v[0-9]+.[0-9]+.[0-9]+"
+      - "[vh][0-9]+.[0-9]+.[0-9]+"
 
 env:
   DEFAULT_BRANCH: master
@@ -68,26 +68,10 @@ jobs:
           node-version: 14
 
       - run: |
+          sudo apt -y install ruby ruby-dev
+          sudo gem install fpm -f
           npm i
           npm run dist-deb -- -p always --x64
-
-  publish-deb-arm64:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-        with:
-          submodules: 'recursive'
-
-      - name: Build and publish
-        uses: actions/setup-node@v1
-        with:
-          node-version: 14
-
-      - run: |
-          npm i
-          npm run dist-deb -- -p always --arm64
 
   publish-rpm-x86_64:
     runs-on: ubuntu-latest
@@ -104,30 +88,10 @@ jobs:
           node-version: 14
 
       - run: |
-          sudo apt -y install ruby ruby-dev
-          sudo gem install fpm s
+          sudo apt -y install ruby ruby-dev rpm
+          sudo gem install fpm -f
           npm i
           npm run dist-rpm -- -p always --x64
-
-  publish-rpm-aarch64:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-        with:
-          submodules: 'recursive'
-
-      - name: Build and publish
-        uses: actions/setup-node@v1
-        with:
-          node-version: 14
-
-      - run: |
-          sudo apt -y install ruby ruby-dev
-          sudo gem install fpm s
-          npm i
-          npm run dist-rpm -- -p always --arm64
           
   publish-mac-universal:
     runs-on: macos-latest

@@ -4,7 +4,7 @@ defaults: &defaults
   working_directory: ~/workspace
   
 jobs:
-  build-amd64:
+  build-snap-amd64:
     <<: *defaults
     machine:
       image: ubuntu-2004:202101-01
@@ -22,7 +22,7 @@ jobs:
           root: ~/workspace
           paths: ['dist/*.snap']
 
-  build-arm64:
+  build-snap-arm64:
     <<: *defaults
     machine:
       image: ubuntu-2004:202101-01
@@ -67,28 +67,82 @@ jobs:
           name: Push/release snap
           command: find dist -name "*.snap" | xargs -I {} snapcraft upload {} --release beta
 
+  build-deb-arm64:
+    <<: *defaults
+    machine:
+      image: ubuntu-2004:202101-01
+    resource_class: arm.medium
+    steps:
+      - checkout
+      - run: git submodule sync
+      - run: git submodule update --init
+
+      - run:
+          name: Build deb
+          command: |
+            sudo apt update
+            sudo apt -y install ruby ruby-dev
+            gem install fpm -f
+            npm i
+            GH_TOKEN=${GH_TOKEN} npm run dist-deb -- -p always --arm64
+
+  build-rpm-aarch64:
+    <<: *defaults
+    machine:
+      image: ubuntu-2004:202101-01
+    resource_class: arm.medium
+    steps:
+      - checkout
+      - run: git submodule sync
+      - run: git submodule update --init
+
+      - run:
+          name: Build rpm
+          command: |
+            sudo apt update
+            sudo apt -y install ruby ruby-dev rpm
+            gem install fpm -f
+            npm i
+            GH_TOKEN=${GH_TOKEN} npm run dist-rpm -- -p always --arm64
+
 workflows:
   version: 2
   snap:
     jobs:
-      - build-amd64:
+      - build-snap-amd64:
           filters:
             tags:
-              only: /^[vt][0-9]+.[0-9]+.[0-9]+$/
+              only: /^[vc][0-9]+.[0-9]+.[0-9]+$/
             branches:
               ignore: /.*/
-      - build-arm64:
+      - build-snap-arm64:
           filters:
             tags:
-              only: /^[vt][0-9]+.[0-9]+.[0-9]+$/
+              only: /^[vc][0-9]+.[0-9]+.[0-9]+$/
             branches:
               ignore: /.*/
       - publish:
           requires:
-            - build-amd64
-            - build-arm64
+            - build-snap-amd64
+            - build-snap-arm64
           filters:
             tags:
-              only: /^[vt][0-9]+.[0-9]+.[0-9]+$/
+              only: /^[vc][0-9]+.[0-9]+.[0-9]+$/
+            branches:
+              ignore: /.*/
+  deb:
+    jobs:
+      - build-deb-arm64:
+          filters:
+            tags:
+              only: /^([vc][0-9]+.[0-9]+.[0-9]+|deb-arm64)$/
+            branches:
+              ignore: /.*/
+  rpm:
+    jobs:
+      - build-rpm-aarch64:
+          filters:
+            tags:
+              only: /^([vc][0-9]+.[0-9]+.[0-9]+|rpm-aarch64)$/
             branches:
               ignore: /.*/
