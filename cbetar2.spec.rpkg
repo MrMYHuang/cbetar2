@@ -69,6 +69,8 @@ cp cbetar2/buildElectron/icon.png %{buildroot}/usr/share/icons/cbetar2.png
 sed -i 's#^Exec=.*$#Exec=/usr/bin/cbetar2 --no-sandbox#' %{buildroot}/usr/share/applications/io.github.mrmyhuang.cbetar2.desktop
 sed -i 's#^Icon=.*$#Icon=/usr/share/icons/cbetar2.png#' %{buildroot}/usr/share/applications/io.github.mrmyhuang.cbetar2.desktop
 
+%license LICENSE.txt
+
 # This lists all the files that are included in the rpm package and that
 # are going to be installed into target system where the rpm is installed.
 %files
