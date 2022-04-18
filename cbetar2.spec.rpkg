@@ -1,0 +1,84 @@
+# vim: syntax=spec
+
+Name:       {{{ git_dir_name }}}
+Version:    19.1.0
+Release:    1%{?dist}
+Summary:    A Buddhist text reader using CBETA APIs.
+License:    MIT
+URL:        https://github.com/MrMYHuang/cbetar2
+
+# Detailed information about the source Git repository and the source commit
+# for the created rpm package
+VCS:        {{{ git_dir_vcs }}}
+Source0:    {{{ git_dir_pack }}}
+Source1:    {{{ git_pack path=cbeta_gaiji dir_name=cbeta_gaiji }}}
+
+BuildRequires: wget
+BuildRequires: make
+BuildRequires: python3
+BuildRequires: gcc-c++
+Requires: at-spi2-core
+Requires: gtk3
+Requires: libXScrnSaver
+Requires: libXtst
+Requires: libnotify
+Requires: libuuid
+Requires: nss
+Requires: rpm-libs
+Requires: xdg-utils
+
+%description
+CBETA Electronic Buddhist Text Reader 2 app features: search by categories, full text search, bookmarks, share by link, offline browsing, text to speech, Buddhism dictionary, themes, pagination, adjustable font size, Kai font, vertical text layout, Buddhist text printing, cross platforms, no ad, open source.
+
+# The following four sections already describe the rpm build process itself.
+# prep will extract the tarball defined as Source above and descend into it.
+%prep
+tar zxf %{SOURCE0}
+tar zxf %{SOURCE1} -C cbetar2
+
+%build
+wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+. ~/.nvm/nvm.sh
+nvm install 14
+cd cbetar2
+npm i
+npm run build-electron
+#npx electron-builder install-app-deps
+npx electron-packager . cbetar2 --overwrite --prune=true --asar.unpackDir node_modules/node1-libxmljsmt-myh --ignore '^\/(?!(package\.json|node_modules|buildElectron))' --icon buildElectron/icon.png
+electronPackagePath=$(ls -d ./cbetar2-linux-*)
+cp --parent -v buildElectron/*.xsl cbeta_gaiji/cbeta_gaiji.json ${electronPackagePath}/resources
+
+%install
+electronPackagePath=$(ls -d ./cbetar2/cbetar2-linux-*)
+
+mkdir -p %{buildroot}/usr/cbetar2
+cp -a ${electronPackagePath}/. %{buildroot}/usr/cbetar2
+
+mkdir -p %{buildroot}/%{_bindir}
+ln -s ../cbetar2/cbetar2 %{buildroot}/%{_bindir}
+
+mkdir -p %{buildroot}/usr/share/metainfo
+mv cbetar2/buildElectron/io.github.mrmyhuang.cbetar2.metainfo.xml %{buildroot}/usr/share/metainfo
+
+mkdir -p %{buildroot}/usr/share/applications
+mv cbetar2/buildElectron/io.github.mrmyhuang.cbetar2.desktop %{buildroot}/usr/share/applications
+
+mkdir -p %{buildroot}/usr/share/icons
+cp cbetar2/buildElectron/icon.png %{buildroot}/usr/share/icons/cbetar2.png
+
+sed -i 's#^Exec=.*$#Exec=/usr/bin/cbetar2 --no-sandbox#' %{buildroot}/usr/share/applications/io.github.mrmyhuang.cbetar2.desktop
+sed -i 's#^Icon=.*$#Icon=/usr/share/icons/cbetar2.png#' %{buildroot}/usr/share/applications/io.github.mrmyhuang.cbetar2.desktop
+
+# This lists all the files that are included in the rpm package and that
+# are going to be installed into target system where the rpm is installed.
+%files
+/usr/cbetar2
+%{_bindir}/cbetar2
+/usr/share/metainfo/io.github.mrmyhuang.cbetar2.metainfo.xml
+/usr/share/applications/io.github.mrmyhuang.cbetar2.desktop
+/usr/share/icons/cbetar2.png
+
+# Finally, changes from the latest release of your application are generated from
+# your project's Git history. It will be empty until you make first annotated Git tag.
+%changelog
+{{{ git_dir_changelog }}}
