@@ -56,7 +56,7 @@ mkdir -p %{buildroot}/%{_usr}/cbetar2
 cp -a ${electronPackagePath}/. %{buildroot}/%{_usr}/cbetar2
 
 mkdir -p %{buildroot}/%{_bindir}
-ln -s ${_usr}/cbetar2/cbetar2 %{buildroot}/%{_bindir}
+ln -s %{_usr}/cbetar2/cbetar2 %{buildroot}/%{_bindir}
 
 mkdir -p %{buildroot}/%{_metainfodir}
 mv cbetar2/buildElectron/io.github.mrmyhuang.cbetar2.metainfo.xml %{buildroot}/%{_metainfodir}
@@ -75,12 +75,12 @@ sed -i 's#^Icon=.*$#Icon=%{_datadir}/icons/cbetar2.png#' %{buildroot}/%{_datadir
 # This lists all the files that are included in the rpm package and that
 # are going to be installed into target system where the rpm is installed.
 %files
+%license cbetar2/LICENSE.txt
 %{_usr}/cbetar2
 %{_bindir}/cbetar2
 %{_metainfodir}/io.github.mrmyhuang.cbetar2.metainfo.xml
 %{_datadir}/applications/io.github.mrmyhuang.cbetar2.desktop
 %{_datadir}/icons/cbetar2.png
-%license cbetar2/LICENSE.txt
 
 # Finally, changes from the latest release of your application are generated from
 # your project's Git history. It will be empty until you make first annotated Git tag.
