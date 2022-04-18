@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=電子佛典
-GenericName=CBETA電子佛典2
+GenericName=CBETA 電子佛典 2
 Exec=run.sh
 Icon=io.github.mrmyhuang.cbetar2
 Type=Application
