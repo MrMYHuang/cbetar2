@@ -18,6 +18,7 @@ BuildRequires: make
 BuildRequires: python3
 BuildRequires: gcc-c++
 BuildRequires: desktop-file-utils
+BuildRequires: libappstream-glib
 Requires: at-spi2-core
 Requires: gtk3
 Requires: libXScrnSaver
@@ -72,6 +73,9 @@ cp cbetar2/buildElectron/icon.png %{buildroot}/%{_datadir}/icons/cbetar2.png
 sed -i 's#^Exec=.*$#Exec=%{_bindir}/cbetar2 --no-sandbox#' %{buildroot}/%{_datadir}/applications/io.github.mrmyhuang.cbetar2.desktop
 sed -i 's#^Icon=.*$#Icon=%{_datadir}/icons/cbetar2.png#' %{buildroot}/%{_datadir}/applications/io.github.mrmyhuang.cbetar2.desktop
 
+%check
+appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/*.metainfo.xml
+
 # This lists all the files that are included in the rpm package and that
 # are going to be installed into target system where the rpm is installed.
 %files
@@ -82,7 +86,6 @@ sed -i 's#^Icon=.*$#Icon=%{_datadir}/icons/cbetar2.png#' %{buildroot}/%{_datadir
 %{_datadir}/applications/io.github.mrmyhuang.cbetar2.desktop
 %{_datadir}/icons/cbetar2.png
 
-# Finally, changes from the latest release of your application are generated from
-# your project's Git history. It will be empty until you make first annotated Git tag.
 %changelog
-{{{ git_dir_changelog }}}
+* Wed Apr 20 2022 Meng-Yuan Huang <myh@live.com> 19.1.0-2
+- 19.1.0: Initial release on COPR.
