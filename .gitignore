@@ -40,3 +40,5 @@ BackendAppSettings.json
 flatpak/.flatpak-builder/
 flatpak/build/
 flatpak/generated-sources.json
+*.xcbkptlist
+*.apk
