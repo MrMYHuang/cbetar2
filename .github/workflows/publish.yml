@@ -5,7 +5,10 @@ on:
     branches:
       - "!*"
     tags:
-      - "[vh][0-9]+.[0-9]+.[0-9]+"
+      - "v[0-9]+.[0-9]+.[0-9]+"
+  workflow_dispatch:
+    branches:
+      - "*"
 
 env:
   DEFAULT_BRANCH: master

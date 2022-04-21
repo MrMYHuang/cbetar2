@@ -1,11 +1,9 @@
 name: Publish
 
 on:
-  push:
+  workflow_dispatch:
     branches:
-      - "!*"
-    tags:
-      - "g[0-9]+.[0-9]+.[0-9]+"
+      - "*"
 
 env:
   DEFAULT_BRANCH: master
