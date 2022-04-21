@@ -1,4 +1,7 @@
 # <a id='history'>版本歷史</a>
+* COPR apps 19.2.0:
+  * [更新] 使用 Electron 18.1.0.
+
 * PWA 6.0.1:
   * [修正] 降級 workbox 至 v5，解決 MAS app 啟動失敗問題。
 

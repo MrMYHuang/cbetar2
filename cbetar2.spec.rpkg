@@ -1,10 +1,10 @@
 # vim: syntax=spec
 
 Name:       {{{ git_dir_name }}}
-Version:    19.1.0
-Release:    2%{?dist}
+Version:    19.2.0
+Release:    1%{?dist}
 Summary:    A Buddhist text reader using CBETA APIs.
-URL:        https://github.com/MrMYHuang/cbetar2
+URL:        https://github.com/MrMYHuang/%{name}
 License: MIT
 
 # Detailed information about the source Git repository and the source commit
@@ -36,42 +36,42 @@ CBETA Electronic Buddhist Text Reader 2 app features: search by categories, full
 # prep will extract the tarball defined as Source above and descend into it.
 %prep
 tar zxf %{SOURCE0}
-tar zxf %{SOURCE1} -C cbetar2
+tar zxf %{SOURCE1} -C %{name}
 
 %build
 wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 . ~/.nvm/nvm.sh
 nvm install 14
-cd cbetar2
+cd %{name}
 npm i
 npm run build-electron
 #npx electron-builder install-app-deps
-npx electron-packager . cbetar2 --overwrite --prune=true --asar.unpackDir node_modules/node1-libxmljsmt-myh --ignore '^\/(?!(package\.json|node_modules(?!(.*\.(h|cc|cpp|c|mk|a)))|buildElectron))' --icon buildElectron/icon.png
-electronPackagePath=$(ls -d ./cbetar2-linux-*)
+npx electron-packager . %{name} --overwrite --prune=true --asar.unpackDir node_modules/node1-libxmljsmt-myh --ignore '^\/(?!(package\.json|node_modules(?!(.*\.(h|cc|cpp|c|mk|a)))|buildElectron))' --icon buildElectron/icon.png
+electronPackagePath=$(ls -d ./%{name}-linux-*)
 cp --parent -v buildElectron/*.xsl cbeta_gaiji/cbeta_gaiji.json ${electronPackagePath}/resources
 
 %install
-electronPackagePath=$(ls -d ./cbetar2/cbetar2-linux-*)
+electronPackagePath=$(ls -d ./%{name}/%{name}-linux-*)
 
-mkdir -p %{buildroot}/%{_usr}/cbetar2
-cp -a ${electronPackagePath}/. %{buildroot}/%{_usr}/cbetar2
+mkdir -p %{buildroot}/%{_usr}/%{name}
+cp -a ${electronPackagePath}/. %{buildroot}/%{_usr}/%{name}
 
 mkdir -p %{buildroot}/%{_bindir}
-ln -s %{_usr}/cbetar2/cbetar2 %{buildroot}/%{_bindir}
+ln -s %{_usr}/%{name}/%{name} %{buildroot}/%{_bindir}
 
 mkdir -p %{buildroot}/%{_metainfodir}
-mv cbetar2/buildElectron/io.github.mrmyhuang.cbetar2.metainfo.xml %{buildroot}/%{_metainfodir}
+mv %{name}/buildElectron/io.github.mrmyhuang.%{name}.metainfo.xml %{buildroot}/%{_metainfodir}
 
 mkdir -p %{buildroot}/%{_datadir}/applications
-mv cbetar2/buildElectron/io.github.mrmyhuang.cbetar2.desktop %{buildroot}/%{_datadir}/applications
+mv %{name}/buildElectron/io.github.mrmyhuang.%{name}.desktop %{buildroot}/%{_datadir}/applications
 
-desktop-file-validate %{buildroot}/%{_datadir}/applications/io.github.mrmyhuang.cbetar2.desktop
+desktop-file-validate %{buildroot}/%{_datadir}/applications/io.github.mrmyhuang.%{name}.desktop
 
 mkdir -p %{buildroot}/%{_datadir}/icons
-cp cbetar2/buildElectron/icon.png %{buildroot}/%{_datadir}/icons/cbetar2.png
+cp %{name}/buildElectron/icon.png %{buildroot}/%{_datadir}/icons/%{name}.png
 
-sed -i 's#^Exec=.*$#Exec=%{_bindir}/cbetar2 --no-sandbox#' %{buildroot}/%{_datadir}/applications/io.github.mrmyhuang.cbetar2.desktop
-sed -i 's#^Icon=.*$#Icon=%{_datadir}/icons/cbetar2.png#' %{buildroot}/%{_datadir}/applications/io.github.mrmyhuang.cbetar2.desktop
+sed -i 's#^Exec=.*$#Exec=%{_bindir}/%{name} --no-sandbox#' %{buildroot}/%{_datadir}/applications/io.github.mrmyhuang.%{name}.desktop
+sed -i 's#^Icon=.*$#Icon=%{_datadir}/icons/%{name}.png#' %{buildroot}/%{_datadir}/applications/io.github.mrmyhuang.%{name}.desktop
 
 %check
 appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/*.metainfo.xml
@@ -79,13 +79,16 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/*.metainfo.xml
 # This lists all the files that are included in the rpm package and that
 # are going to be installed into target system where the rpm is installed.
 %files
-%license cbetar2/LICENSE.txt
-%{_usr}/cbetar2
-%{_bindir}/cbetar2
-%{_metainfodir}/io.github.mrmyhuang.cbetar2.metainfo.xml
-%{_datadir}/applications/io.github.mrmyhuang.cbetar2.desktop
-%{_datadir}/icons/cbetar2.png
+%license %{name}/LICENSE.txt
+%{_usr}/%{name}
+%{_bindir}/%{name}
+%{_metainfodir}/io.github.mrmyhuang.%{name}.metainfo.xml
+%{_datadir}/applications/io.github.mrmyhuang.%{name}.desktop
+%{_datadir}/icons/%{name}.png
 
 %changelog
+* Wed Apr 21 2022 Meng-Yuan Huang <myh@live.com> 19.2.0-1
+- 19.2.0: Update Electron to 18.1.0.
+
 * Wed Apr 20 2022 Meng-Yuan Huang <myh@live.com> 19.1.0-2
 - 19.1.0: Initial release on COPR.
