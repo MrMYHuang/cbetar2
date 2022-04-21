@@ -138,8 +138,8 @@ const template = [
         role: 'forceReload',
         label: '強制重新載入',
       },
-      Globals.backendAppPackageType() !== 'snap' ? {
-        label: '檢查後端app更新',
+      Globals.hasUpdater() ? {
+        label: '檢查後端 app 更新',
         click: checkUpdate,
       } : null,
       {
@@ -216,7 +216,7 @@ async function createWindow() {
         loadSettings();
         const latestVersion = await update.lookupLatestVersion();
         // Ask for updating for each new version once.
-        if (settings.lastCheckedVersion !== latestVersion && Globals.backendAppPackageType() !== 'snap') {
+        if (settings.lastCheckedVersion !== latestVersion && Globals.hasUpdater()) {
           checkUpdate();
         }
         mainWindow?.webContents.send('fromMain', { event: 'version', version: PackageInfos.version });

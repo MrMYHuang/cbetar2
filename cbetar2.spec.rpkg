@@ -48,6 +48,7 @@ npm run build-electron
 #npx electron-builder install-app-deps
 npx electron-packager . %{name} --overwrite --prune=true --asar.unpackDir node_modules/node1-libxmljsmt-myh --ignore '^\/(?!(package\.json|node_modules(?!(.*\.(h|cc|cpp|c|mk|a)))|buildElectron))' --icon buildElectron/icon.png
 electronPackagePath=$(ls -d ./%{name}-linux-*)
+cp -v electronBuilderConfigs/IsNoUpdater.txt ${electronPackagePath}/resources
 cp --parent -v buildElectron/*.xsl cbeta_gaiji/cbeta_gaiji.json ${electronPackagePath}/resources
 
 %install
