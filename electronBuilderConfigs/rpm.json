@@ -17,9 +17,12 @@
   "asarUnpack": [
     "node_modules/node1-libxmljsmt-myh/**/*"
   ],
-  "icon": "buildElectron/icon.png",
+  "icon": "buildElectron/icon.icns",
   "rpm": {
     "artifactName": "${name}_${version}_linux_${arch}.${ext}",
-    "category": "public.app-category.education"
+    "category": "public.app-category.education",
+    "desktop" : {
+      "Name": "電子佛典"
+    }
   }
 }

@@ -1,7 +1,6 @@
 {
   "name": "cbetar2",
   "homepage": "/",
-  "productName": "電子佛典",
   "pwaVersion": "6.0.1",
   "version": "19.2.0",
   "license": "MIT",
@@ -85,7 +84,7 @@
     "@types/semver": "^7.3.9",
     "@types/uuid": "^8.3.4",
     "customize-cra": "^1.0.0",
-    "electron": "^18.1.0",
+    "electron": "^16",
     "electron-builder": "^23.0.4",
     "electron-builder-notarize-pkg-myh": "^1.3.0",
     "electron-packager": "^15.4.0",
