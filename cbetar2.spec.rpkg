@@ -13,6 +13,7 @@ VCS:        {{{ git_dir_vcs }}}
 Source0:    {{{ git_dir_pack }}}
 Source1:    {{{ git_pack path=cbeta_gaiji dir_name=cbeta_gaiji }}}
 
+BuildRequires: jq
 BuildRequires: wget
 BuildRequires: make
 BuildRequires: python3
@@ -43,9 +44,13 @@ wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 . ~/.nvm/nvm.sh
 nvm install 14
 cd %{name}
+cat package.json | jq '.name="io.github.mrmyhuang.cbetar2"' > temp
+mv temp package.json
 npm i
 npm run build-electron
 #npx electron-builder install-app-deps
+cat package.json | jq '.name="io.github.mrmyhuang.cbetar2"' > temp
+mv temp package.json
 npx electron-packager . %{name} --overwrite --prune=true --asar.unpackDir node_modules/node1-libxmljsmt-myh --ignore '^\/(?!(package\.json|node_modules(?!(.*\.(h|cc|cpp|c|mk|a)))|buildElectron))' --icon buildElectron/icon.png
 electronPackagePath=$(ls -d ./%{name}-linux-*)
 cp -v electronBuilderConfigs/IsNoUpdater.txt ${electronPackagePath}/resources
@@ -89,7 +94,7 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/*.metainfo.xml
 
 %changelog
 * Wed Apr 21 2022 Meng-Yuan Huang <myh@live.com> 19.2.0-1
-- 19.2.0: Update Electron to 18.1.0.
+- 19.2.0: Fix Gnome Shell app menu name and icon.
 
 * Wed Apr 20 2022 Meng-Yuan Huang <myh@live.com> 19.1.0-2
 - 19.1.0: Initial release on COPR.
