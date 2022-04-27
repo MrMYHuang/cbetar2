@@ -20,6 +20,7 @@
     "node_modules/node1-libxmljsmt-myh/**/*"
   ],
   "afterAllArtifactBuild": "electron-builder-notarize-pkg-myh",
+  "productName": "電子佛典",
   "icon": "buildElectron/icon.icns",
   "mac": {
     "publish": ["github"],

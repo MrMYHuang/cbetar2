@@ -17,6 +17,7 @@
   "asarUnpack": [
     "node_modules/node1-libxmljsmt-myh/**/*"
   ],
+  "productName": "電子佛典",
   "icon": "buildElectron/icon.png",
   "snap": {
     "artifactName": "${name}_${version}_linux_${arch}.${ext}",
