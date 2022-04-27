@@ -20,7 +20,7 @@
   "icon": "buildElectron/icon.icns",
   "deb": {
     "artifactName": "${name}_${version}_linux_${arch}.${ext}",
-    "category": "public.app-category.education",
+    "category": "Education",
     "desktop" : {
       "Name": "電子佛典"
     }

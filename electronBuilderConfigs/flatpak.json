@@ -9,6 +9,6 @@
   "icon": "buildElectron/icon.png",
   "rpm": {
     "artifactName": "${name}_${version}_linux64.${ext}",
-    "category": "public.app-category.education"
+    "category": "Education"
   }
 }

@@ -21,6 +21,6 @@
   "icon": "buildElectron/icon.png",
   "snap": {
     "artifactName": "${name}_${version}_linux_${arch}.${ext}",
-    "category": "public.app-category.education"
+    "category": "Education"
   }
 }
