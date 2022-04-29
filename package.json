@@ -36,6 +36,7 @@
     "build-electron-store": "tsc -b tsconfigElectron.json && mv buildElectron/mainStore.js buildElectron/main.js",
     "start-electron": "npm run build-electron && electron .",
     "dist-win": "npm run build-electron && electron-builder -w -c electronBuilderConfigs/win.json",
+    "dist-appImage": "npm run build-electron && electron-builder -l AppImage -c electronBuilderConfigs/appImage.json",
     "dist-deb": "export USE_SYSTEM_FPM=true && npm run build-electron && electron-builder -l deb -c electronBuilderConfigs/deb.json",
     "dist-rpm": "export USE_SYSTEM_FPM=true && npm run build-electron && electron-builder -l rpm -c electronBuilderConfigs/rpm.json",
     "eb-dist-snap": "npm run build-electron && rm -f dist/*.snap && electron-builder -l snap -c electronBuilderConfigs/snap.json",
