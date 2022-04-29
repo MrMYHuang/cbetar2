@@ -5,7 +5,6 @@
     "buildElectron/**/*",
     "package.json"
   ],
-  "productName": "電子佛典",
   "icon": "buildElectron/icon.icns",
   "mac": {
     "type": "development",

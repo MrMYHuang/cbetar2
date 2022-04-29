@@ -4,6 +4,11 @@ const windowStateKeeper = require('electron-window-state');
 const path = require('path');
 const PackageInfos = require('../package.json');
 
+// Workaround an issue of Linux wmclass not supporting the UTF-8 productName in package.json.
+if (process.platform === 'linux') {
+  app.setName(PackageInfos.name);
+}
+
 app.commandLine.appendSwitch('ignore-certificate-errors', 'true');
 let mainWindow: BrowserWindow | null | undefined;
 

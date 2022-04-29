@@ -5,7 +5,6 @@
     "buildElectron/**/*",
     "package.json"
   ],
-  "productName": "電子佛典",
   "icon": "buildElectron/icon.png",
   "rpm": {
     "artifactName": "${name}_${version}_linux64.${ext}",

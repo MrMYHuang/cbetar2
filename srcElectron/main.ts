@@ -9,6 +9,11 @@ const windowStateKeeper = require('electron-window-state');
 const path = require('path');
 const PackageInfos = require('../package.json');
 
+// Workaround an issue of Linux wmclass not supporting the UTF-8 productName in package.json.
+if (process.platform === 'linux') {
+  app.setName(PackageInfos.name);
+}
+
 const cbetar2SettingsPath = `${os.homedir()}/.cbetar2`;
 const backendAppSettingsFile = `${cbetar2SettingsPath}/BackendAppSettings.json`;
 

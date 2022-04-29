@@ -27,7 +27,6 @@
   "asarUnpack": [
     "node_modules/node1-libxmljsmt-myh/**/*"
   ],
-  "productName": "電子佛典",
   "icon": "buildElectron/icon.png",
   "win": {
     "artifactName": "${name}_${version}_win_${arch}.${ext}"
