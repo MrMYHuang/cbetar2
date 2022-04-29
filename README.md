@@ -247,10 +247,11 @@ sudo dnf install cbetar2
 支援的 amd64 & arm64 作業系統如下 (Android 為連線 DB app，其他都是離線 DB app)：
 
   1. Android (中國大陸使用者也能安裝)
-  2. Linux DEB (Debian, Ubuntu, ...)
-  3. Linux RPM (Fedora, ...)
-  4. Windows 7+
-  5. macOS 10.11+
+  2. Linux AppImage (Ubuntu)
+  3. Linux DEB (Debian, Ubuntu, ...)
+  4. Linux RPM (Fedora, ...)
+  5. Windows 7+
+  6. macOS 10.11+
 
 請開啟任一頁面，下載最新版安裝檔：
 

@@ -1,4 +1,7 @@
 # <a id='history'>版本歷史</a>
+* AppImage apps 19.2.0:
+  * [新增] Linux AppImage apps 19.2.0.
+
 * DEB, RPM, COPR apps 19.2.0:
   * [修正] Gnome Shell 選單名稱與 app 圖示。 
 
