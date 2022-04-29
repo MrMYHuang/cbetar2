@@ -36,6 +36,7 @@ export async function check(browserWindow: BrowserWindow) {
     switch (Globals.backendAppPackageType()) {
         case 'win': packageSuffix = `win_${isX64 ? 'x64' : 'arm64'}.exe`; break;
         case 'mac': packageSuffix = `macos_universal.pkg`; break;
+        case 'appImage': packageSuffix = `linux_${isX64 ? 'x86_64' : 'aarch64'}.AppImage`; break;
         case 'rpm': packageSuffix = `linux_${isX64 ? 'x86_64' : 'aarch64'}.rpm`; break;
         case 'deb': packageSuffix = `linux_${isX64 ? 'amd64' : 'arm64'}.deb`; break;
         case 'snap': packageSuffix = 'linux64.snap'; break;
