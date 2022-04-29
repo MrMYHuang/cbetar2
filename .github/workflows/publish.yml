@@ -56,6 +56,24 @@ jobs:
           npm i
           npm run dist-win -- -p always --arm64 "-c.win.publish.provider=github" "-c.win.publish.publishAutoUpdate=false"
 
+  publish-appImage-x86_64:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+
+      - name: Build and publish
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+
+      - run: |
+          npm i
+          npm run dist-appImage -- -p always --x64
+
   publish-deb-amd64:
     runs-on: ubuntu-latest
 

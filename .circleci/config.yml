@@ -67,6 +67,22 @@ jobs:
           name: Push/release snap
           command: find dist -name "*.snap" | xargs -I {} snapcraft upload {} --release beta
 
+  build-appImage-arm64:
+    <<: *defaults
+    machine:
+      image: ubuntu-2004:202101-01
+    resource_class: arm.medium
+    steps:
+      - checkout
+      - run: git submodule sync
+      - run: git submodule update --init
+
+      - run:
+          name: Build AppImage
+          command: |
+            npm i
+            GH_TOKEN=${GH_TOKEN} npm run dist-appImage -- -p always --arm64
+
   build-deb-arm64:
     <<: *defaults
     machine:
@@ -130,6 +146,15 @@ workflows:
               only: /^[vc][0-9]+.[0-9]+.[0-9]+$/
             branches:
               ignore: /.*/
+  appImage:
+    jobs:
+      - build-appImage-arm64:
+          filters:
+            tags:
+              only: /^([vc][0-9]+.[0-9]+.[0-9]+|appImage-arm64)$/
+            branches:
+              ignore: /.*/
+
   deb:
     jobs:
       - build-deb-arm64:
