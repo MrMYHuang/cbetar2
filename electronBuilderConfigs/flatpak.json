@@ -5,8 +5,20 @@
     "buildElectron/**/*",
     "package.json"
   ],
-  "icon": "buildElectron/icon.png",
-  "rpm": {
+  "extraResources": [
+    {
+      "from": "electronBuilderConfigs",
+      "to": ".",
+      "filter": ["IsNoUpdater.txt"]
+    },
+    "buildElectron/*.xsl",
+    "cbeta_gaiji/cbeta_gaiji.json"
+  ],
+  "asarUnpack": [
+    "node_modules/node1-libxmljsmt-myh/**/*"
+  ],
+  "icon": "buildElectron/icon.icns",
+  "flatpak": {
     "artifactName": "${name}_${version}_linux64.${ext}",
     "category": "Education"
   }
