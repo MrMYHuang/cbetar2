@@ -41,7 +41,7 @@
     "dist-deb": "export USE_SYSTEM_FPM=true && npm run build-electron && electron-builder -l deb -c electronBuilderConfigs/deb.json",
     "dist-rpm": "export USE_SYSTEM_FPM=true && npm run build-electron && electron-builder -l rpm -c electronBuilderConfigs/rpm.json",
     "eb-dist-snap": "npm run build-electron && rm -f dist/*.snap && electron-builder -l snap -c electronBuilderConfigs/snap.json",
-    "eb-dist-snap-arm64": "export SNAPCRAFT_BUILD_ENVIRONMENT=lxd && npm run build-electron-store && rm -f dist/*.snap && electron-builder -l snap -c electronBuilderConfigs/snap.json --arm64",
+    "eb-dist-snap-arm64": "export SNAPCRAFT_BUILD_ENVIRONMENT=lxd && npm run build-electron && rm -f dist/*.snap && electron-builder -l snap -c electronBuilderConfigs/snap.json --arm64",
     "dist-snap": "mkdir -p dist && snapcraft snap --use-lxd -o dist",
     "publish-snap": "snapcraft upload --release=stable dist/*.snap",
     "prepare-flatpak": "tools/prepareFlatpak.sh",
@@ -51,9 +51,9 @@
     "dist-copr": "rpkg build cbetar2",
     "dist-mac": "npm run build-electron && electron-builder -m pkg -c electronBuilderConfigs/mac.json",
     "icons-mas": "cd buildElectron && iconutil -c icns icon.iconset",
-    "dist-mas": "npm run build-electron-store && electron-builder -m mas --universal -c electronBuilderConfigs/mas.json",
-    "dist-mas-arm64": "npm run build-electron-store && electron-builder -m mas --arm64 -c electronBuilderConfigs/mas.json",
-    "dist-mas-dev": "npm run build-electron-store && electron-builder -m mas-dev --arm64 -c electronBuilderConfigs/masDev.json"
+    "dist-mas": "npm run build-electron && electron-builder -m mas --universal -c electronBuilderConfigs/mas.json",
+    "dist-mas-arm64": "npm run build-electron && electron-builder -m mas --arm64 -c electronBuilderConfigs/mas.json",
+    "dist-mas-dev": "npm run build-electron && electron-builder -m mas-dev --arm64 -c electronBuilderConfigs/masDev.json"
   },
   "eslintConfig": {
     "extends": [

@@ -26,12 +26,6 @@ export async function check(browserWindow: BrowserWindow) {
         return
     }
 
-    const clickedButtonId = dialog.showMessageBoxSync(browserWindow, {
-        type: 'question',
-        message: `發現新版cbetar2 ${lastestVersion}後端app，是否下載安裝檔？`,
-        buttons: ['取消', '下載'],
-    });
-
     let packageSuffix = 'win64.exe';
     switch (Globals.backendAppPackageType()) {
         case 'win': packageSuffix = `win_${isX64 ? 'x64' : 'arm64'}.exe`; break;
@@ -40,7 +34,14 @@ export async function check(browserWindow: BrowserWindow) {
         case 'rpm': packageSuffix = `linux_${isX64 ? 'x86_64' : 'aarch64'}.rpm`; break;
         case 'deb': packageSuffix = `linux_${isX64 ? 'amd64' : 'arm64'}.deb`; break;
         case 'snap': packageSuffix = 'linux64.snap'; break;
+        default: return;
     }
+
+    const clickedButtonId = dialog.showMessageBoxSync(browserWindow, {
+        type: 'question',
+        message: `發現新版 cbetar2 ${lastestVersion} 後端 app，是否下載安裝檔？`,
+        buttons: ['取消', '下載'],
+    });
 
     if (clickedButtonId) {
         const path = dialog.showOpenDialogSync(browserWindow, {
@@ -70,7 +71,7 @@ export async function check(browserWindow: BrowserWindow) {
                 browserWindow.webContents.send('fromMain', { event: 'DownloadingBackendDone' });
                 dialog.showMessageBox({
                     type: 'info',
-                    message: '新版後端app安裝程式下載完成！請關閉app，手動執行安裝程式。'
+                    message: '新版後端 app 安裝程式下載完成！請關閉 app，手動執行安裝程式。'
                 });
             });
             dl.on('error', (stats: ErrorStats) => {

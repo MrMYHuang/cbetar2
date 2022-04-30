@@ -1,4 +1,7 @@
 # <a id='history'>版本歷史</a>
+* MAS 19.2.0:
+  * [新增] 支援 CBETA 離線 DB (Bookcase)。
+
 * AppImage apps 19.2.0:
   * [新增] Linux AppImage apps 19.2.0.
 

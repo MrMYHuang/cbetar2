@@ -1,5 +1,5 @@
 // Modules to control application life and create native browser window
-import { app, BrowserWindow, ipcMain, Menu, MenuItem, dialog, protocol, shell } from 'electron';
+import { app, BrowserWindow, dialog, ipcMain, Menu, MenuItem, protocol, shell } from 'electron';
 import * as fs from 'fs';
 import * as os from 'os';
 import * as update from './Update';
@@ -73,8 +73,7 @@ function loadSettings() {
     settings = JSON.parse(settingsStr);
     if (settings.cbetaBookcaseDir === undefined) {
       // Do nothing.
-    }
-    else if (fs.existsSync(`${settings.cbetaBookcaseDir}/CBETA`)) {
+    } else if (fs.existsSync(`${settings.cbetaBookcaseDir}/CBETA`)) {
       cbetaOfflineDb.init(settings.cbetaBookcaseDir, isDevMode());
       notifyFrontendCbetaOfflineDbMode();
     } else {
@@ -255,6 +254,7 @@ async function createWindow() {
           ok('');
         });
         mainWindow?.webContents.once('did-fail-load', (event, errorCode, errorDescription) => {
+          clearListeners();
           fail(`Error ${errorCode}: ${errorDescription}`);
         });
 

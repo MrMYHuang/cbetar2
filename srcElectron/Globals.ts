@@ -14,5 +14,5 @@ export function backendAppPackageType() {
 }
 
 export function hasUpdater() {
-    return !(['snap', 'noUpdater'].some(v => v === backendAppPackageType()));
+    return !(['snap', 'noUpdater', 'unknown'].some(v => v === backendAppPackageType()));
 }

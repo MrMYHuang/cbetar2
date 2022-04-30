@@ -5,6 +5,18 @@
     "buildElectron/**/*",
     "package.json"
   ],
+  "extraResources": [
+    {
+      "from": "electronBuilderConfigs",
+      "to": ".",
+      "filter": ["IsMas.txt"]
+    },
+    "buildElectron/*.xsl",
+    "cbeta_gaiji/cbeta_gaiji.json"
+  ],
+  "asarUnpack": [
+    "node_modules/node1-libxmljsmt-myh/**/*"
+  ],
   "icon": "buildElectron/icon.icns",
   "mac": {
     "type": "development",
