@@ -2,7 +2,7 @@
 version=$(jq -r .version package.json)
 
 # Update flatpak source.
-file=v${version}.tar.gz
+file=${version}.tar.gz
 flatpakFile=flatpak/io.github.mrmyhuang.cbetar2.yml
 
 wget https://github.com/MrMYHuang/cbetar2/archive/${file}
