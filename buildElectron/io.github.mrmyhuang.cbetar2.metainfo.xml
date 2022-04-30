@@ -29,7 +29,7 @@
     <release version="19.2.0" date="2022-04-30">
       <description>
         <ul>
-          <li>支援 CBETA 離線 DB (Bookcase)</li>
+          <li>支援 CBETA 離線 DB (Bookcase).</li>
         </ul>
       </description>
     </release>

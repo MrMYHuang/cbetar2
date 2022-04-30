@@ -1,1 +1,0 @@
-docker run -it -v /run -v /run/lock --device /dev/fuse -v /sys -v /sys/fs/cgroup:/sys/fs/cgroup:ro --security-opt apparmor:unconfined --cap-add SYS_ADMIN --privileged 2c8c1b 

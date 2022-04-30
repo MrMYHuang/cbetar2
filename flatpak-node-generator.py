@@ -9,7 +9,6 @@ from typing import *  # pyright: reportWildcardImportFromLibrary=false
 from typing import cast, IO
 
 from pathlib import Path
-from distutils.version import StrictVersion
 
 import argparse
 import asyncio
@@ -17,6 +16,7 @@ import base64
 import binascii
 import collections
 import contextlib
+import functools
 import hashlib
 import json
 import os
@@ -65,6 +65,68 @@ GIT_URL_PATTERNS = [
 GIT_URL_HOSTS = ['github.com', 'gitlab.com', 'bitbucket.com', 'bitbucket.org']
 
 NPM_MIRROR = 'https://unpkg.com/'
+
+
+class SemVer(NamedTuple):
+    # Note that we ignore the metadata part, since all we do is version
+    # comparisons.
+    _SEMVER_RE = re.compile(r'(\d+)\.(\d+)\.(\d+)(?:-(?P<prerelease>[^+]+))?')
+
+    @functools.total_ordering
+    class Prerelease:
+        def __init__(self, parts: Tuple[Union[str, int]]) -> None:
+            self._parts = parts
+
+        @staticmethod
+        def parse(rel: str) -> Optional['SemVer.Prerelease']:
+            if not rel:
+                return None
+
+            parts: List[Union[str, int]] = []
+
+            for part in rel.split('.'):
+                try:
+                    part = int(part)
+                except ValueError:
+                    pass
+
+                parts.append(part)
+
+            return SemVer.Prerelease(tuple(parts))
+
+        @property
+        def parts(self) -> Tuple[Union[str, int]]:
+            return self._parts
+
+        def __lt__(self, other: 'SemVer.Prerelease'):
+            for our_part, other_part in zip(self._parts, other._parts):
+                if type(our_part) == type(other_part):
+                    if our_part < other_part:  # type: ignore
+                        return True
+                # Number parts are always less than strings.
+                elif isinstance(our_part, int):
+                    return True
+
+            return len(self._parts) < len(other._parts)
+
+        def __repr__(self) -> str:
+            return f'Prerelease(parts={self.parts})'
+
+    major: int
+    minor: int
+    patch: int
+    prerelease: Optional[Prerelease] = None
+
+    @staticmethod
+    def parse(version: str) -> 'SemVer':
+        match = SemVer._SEMVER_RE.match(version)
+        if match is None:
+            raise ValueError(f'Invalid semver version: {version}')
+
+        major, minor, patch = map(int, match.groups()[:3])
+        prerelease = SemVer.Prerelease.parse(match.group('prerelease'))
+
+        return SemVer(major, minor, patch, prerelease)
 
 
 class Cache:
@@ -372,10 +434,6 @@ except ImportError:
     pass
 
 
-class CachedRequests(Requests):
-    pass
-
-
 class Integrity(NamedTuple):
     algorithm: str
     digest: str
@@ -530,7 +588,10 @@ class NodeHeaders(NamedTuple):
     disturl: str
 
     @classmethod
-    def with_defaults(cls, target: str, runtime: str = None, disturl: str = None):
+    def with_defaults(cls,
+                      target: str,
+                      runtime: Optional[str] = None,
+                      disturl: Optional[str] = None):
         if runtime is None:
             runtime = 'node'
         if disturl is None:
@@ -553,7 +614,7 @@ class NodeHeaders(NamedTuple):
         return "9"
 
 
-class ManifestGenerator(contextlib.AbstractContextManager):
+class ManifestGenerator(ContextManager['ManifestGenerator']):
     MAX_GITHUB_SIZE = 49 * 1000 * 1000
     JSON_INDENT = 4
 
@@ -668,7 +729,7 @@ class ManifestGenerator(contextlib.AbstractContextManager):
         else:
             assert isinstance(data, str)
             source = {
-                'type': 'inline', 
+                'type': 'inline',
                 'contents': data,
             }
         self._add_source_with_destination(source, destination, is_dir=False)
@@ -733,8 +794,9 @@ class RCFileProvider:
     def parse_rcfile(self, rcfile: Path) -> Dict[str, str]:
         with open(rcfile, 'r') as r:
             rcfile_text = r.read()
-        parser_re = re.compile(r'^(?!#|;)(\S+)(?:\s+|\s*=\s*)(?:"(.+)"|(\S+))$', re.MULTILINE)
-        result = {}
+        parser_re = re.compile(r'^(?!#|;)(\S+)(?:\s+|\s*=\s*)(?:"(.+)"|(\S+))$',
+                               re.MULTILINE)
+        result: Dict[str, str] = {}
         for key, quoted_val, val in parser_re.findall(rcfile_text):
             result[key] = quoted_val or val
         return result
@@ -746,10 +808,13 @@ class RCFileProvider:
         target = rc_data['target']
         runtime = rc_data.get('runtime')
         disturl = rc_data.get('disturl')
+
+        assert isinstance(runtime, str) and isinstance(disturl, str)
+
         return NodeHeaders.with_defaults(target, runtime, disturl)
 
 
-class ModuleProvider(contextlib.AbstractContextManager):
+class ModuleProvider(ContextManager['ModuleProvider']):
     async def generate_package(self, package: Package) -> None:
         raise NotImplementedError()
 
@@ -830,6 +895,7 @@ class SpecialSourceProvider:
         node_chromedriver_from_electron: str
         electron_ffmpeg: str
         electron_node_headers: bool
+        electron_from_rcfile: bool
         nwjs_version: str
         nwjs_node_headers: bool
         nwjs_ffmpeg: bool
@@ -840,6 +906,7 @@ class SpecialSourceProvider:
         self.node_chromedriver_from_electron = options.node_chromedriver_from_electron
         self.electron_ffmpeg = options.electron_ffmpeg
         self.electron_node_headers = options.electron_node_headers
+        self.electron_bins_for_headers = options.electron_from_rcfile
         self.nwjs_version = options.nwjs_version
         self.nwjs_node_headers = options.nwjs_node_headers
         self.nwjs_ffmpeg = options.nwjs_ffmpeg
@@ -892,8 +959,8 @@ class SpecialSourceProvider:
             self.gen.add_url_source(integrity_file.url, integrity_file.integrity,
                                     electron_cache_dir / integrity_file.filename)
 
-    async def _handle_electron(self, package: Package) -> None:
-        manager = await ElectronBinaryManager.for_version(package.version)
+    async def __add_electron(self, version: str) -> None:
+        manager = await ElectronBinaryManager.for_version(version)
         self._add_electron_cache_downloads(manager, 'electron')
 
         if self.electron_ffmpeg is not None:
@@ -911,15 +978,19 @@ class SpecialSourceProvider:
             else:
                 assert False, self.electron_ffmpeg
 
+    async def _handle_electron(self, package: Package) -> None:
+        await self.__add_electron(package.version)
+
     def _handle_gulp_atom_electron(self, package: Package) -> None:
         # Versions after 1.22.0 use @electron/get and don't need this
-        if StrictVersion(package.version) <= StrictVersion('1.22.0'):
+        if SemVer.parse(package.version) <= SemVer.parse('1.22.0'):
             cache_path = self.gen.data_root / 'tmp' / 'gulp-electron-cache' / 'atom' / 'electron'
             self.gen.add_command(f'mkdir -p "{cache_path.parent}"')
             self.gen.add_command(f'ln -sfTr "{self.electron_cache_dir}" "{cache_path}"')
 
     async def _handle_electron_headers(self, package: Package) -> None:
-        node_headers = NodeHeaders.with_defaults(runtime='electron', target=package.version)
+        node_headers = NodeHeaders.with_defaults(runtime='electron',
+                                                 target=package.version)
         if self.xdg_layout:
             node_gyp_headers_dir = self.gen.data_root / 'cache' / 'node-gyp' / package.version
         else:
@@ -929,7 +1000,8 @@ class SpecialSourceProvider:
     async def _get_chromedriver_binary_version(self, package: Package) -> str:
         # Note: node-chromedriver seems to not have tagged all releases on GitHub, so
         # just use unpkg instead.
-        url = urllib.parse.urljoin(NPM_MIRROR, f'chromedriver@{package.version}/lib/chromedriver')
+        url = urllib.parse.urljoin(NPM_MIRROR,
+                                   f'chromedriver@{package.version}/lib/chromedriver')
         js = await Requests.instance.read_all(url, cachable=True)
         # XXX: a tad ugly
         match = re.search(r"exports\.version = '([^']+)'", js.decode())
@@ -1000,7 +1072,8 @@ class SpecialSourceProvider:
 
             if self.nwjs_ffmpeg:
                 ffmpeg_dl_url = f'{ffmpeg_dl_base}/{version}/{version}-{nwjs_arch}.zip'
-                ffmpeg_metadata = await RemoteUrlMetadata.get(ffmpeg_dl_url, cachable=True)
+                ffmpeg_metadata = await RemoteUrlMetadata.get(ffmpeg_dl_url,
+                                                              cachable=True)
                 self.gen.add_archive_source(ffmpeg_dl_url,
                                             ffmpeg_metadata.integrity,
                                             destination=dest,
@@ -1064,7 +1137,7 @@ class SpecialSourceProvider:
 
     async def _handle_playwright(self, package: Package) -> None:
         base_url = f'https://github.com/microsoft/playwright/raw/v{package.version}/'
-        if StrictVersion(package.version) >= StrictVersion('1.16.0'):
+        if SemVer.parse(package.version) >= SemVer.parse('1.16.0'):
             browsers_json_url = base_url + 'packages/playwright-core/browsers.json'
         else:
             browsers_json_url = base_url + 'browsers.json'
@@ -1160,17 +1233,19 @@ class SpecialSourceProvider:
 
         self.gen.add_script_source(script, destination)
 
-    async def generate_node_headers(self, node_headers: NodeHeaders, dest: Path = None):
+    async def generate_node_headers(self,
+                                    node_headers: NodeHeaders,
+                                    dest: Optional[Path] = None):
         url = node_headers.url
         install_version = node_headers.install_version
         if dest is None:
             dest = self.gyp_dir / node_headers.target
         metadata = await RemoteUrlMetadata.get(url, cachable=True)
-        self.gen.add_archive_source(url,
-                                    metadata.integrity,
-                                    destination=dest)
-        self.gen.add_data_source(install_version,
-                                 destination=dest / 'installVersion')
+        self.gen.add_archive_source(url, metadata.integrity, destination=dest)
+        self.gen.add_data_source(install_version, destination=dest / 'installVersion')
+
+        if self.electron_bins_for_headers and node_headers.runtime == "electron":
+            await self.__add_electron(node_headers.target)
 
     async def generate_special_sources(self, package: Package) -> None:
         if isinstance(Requests.instance, StubRequests):
@@ -1202,6 +1277,8 @@ class SpecialSourceProvider:
 
 
 class NpmLockfileProvider(LockfileProvider):
+    _ALIAS_RE = re.compile(r'^npm:(.[^@]*)@(.*)$')
+
     class Options(NamedTuple):
         no_devel: bool
 
@@ -1218,6 +1295,9 @@ class NpmLockfileProvider(LockfileProvider):
                 continue
 
             version: str = info['version']
+            alias_match = self._ALIAS_RE.match(version)
+            if alias_match is not None:
+                name, version = alias_match.groups()
 
             source: PackageSource
             if info.get('from'):
@@ -1279,7 +1359,9 @@ class NpmModuleProvider(ModuleProvider):
     def __exit__(self, exc_type: Optional[Type[BaseException]],
                  exc_value: Optional[BaseException],
                  tb: Optional[types.TracebackType]) -> None:
-        self._finalize()
+        # Don't bother finalizing if an exception was thrown.
+        if exc_type is None:
+            self._finalize()
 
     def get_cacache_integrity_path(self, integrity: Integrity) -> Path:
         digest = integrity.digest
@@ -1671,7 +1753,7 @@ class YarnProviderFactory(ProviderFactory):
         return YarnModuleProvider(gen, special)
 
 
-class GeneratorProgress(contextlib.AbstractContextManager):
+class GeneratorProgress(ContextManager['GeneratorProgress']):
     def __init__(self, packages: Collection[Package],
                  module_provider: ModuleProvider) -> None:
         self.finished = 0
@@ -1720,8 +1802,18 @@ class GeneratorProgress(contextlib.AbstractContextManager):
 
     async def run(self) -> None:
         self._update()
-        await asyncio.wait(
-            [asyncio.create_task(self._generate(pkg)) for pkg in self.packages])
+
+        tasks = [asyncio.create_task(self._generate(pkg)) for pkg in self.packages]
+        for coro in asyncio.as_completed(tasks):
+            try:
+                await coro
+            except:
+                # If an exception occurred, make sure to cancel all the other
+                # tasks.
+                for task in tasks:
+                    task.cancel()
+
+                raise
 
 
 def scan_for_lockfiles(base: Path, patterns: List[str]) -> Iterator[Path]:
@@ -1790,12 +1882,17 @@ async def main() -> None:
     parser.add_argument('--electron-node-headers',
                         action='store_true',
                         help='Download the electron node headers')
+    parser.add_argument('--electron-from-rcfile',
+                        action='store_true',
+                        help='Download electron version corresponding to '
+                        'the node headers version(s) from .yarnrc/.npmrc')
     parser.add_argument('--nwjs-version',
                         help='Specify NW.js version (will use latest otherwise)')
     parser.add_argument('--nwjs-node-headers',
                         action='store_true',
                         help='Download the NW.js node headers')
-    parser.add_argument('--nwjs-ffmpeg', action='store_true',
+    parser.add_argument('--nwjs-ffmpeg',
+                        action='store_true',
                         help='Download prebuilt ffmpeg for current NW.js version')
     parser.add_argument('--xdg-layout',
                         action='store_true',
@@ -1857,7 +1954,7 @@ async def main() -> None:
     for lockfile in lockfiles:
         lockfile_provider = provider_factory.create_lockfile_provider()
         rcfile_providers = provider_factory.create_rcfile_providers()
- 
+
         packages.update(lockfile_provider.process_lockfile(lockfile))
 
         for rcfile_provider in rcfile_providers:
@@ -1879,7 +1976,8 @@ async def main() -> None:
             nwjs_ffmpeg=args.nwjs_ffmpeg,
             xdg_layout=args.xdg_layout,
             electron_ffmpeg=args.electron_ffmpeg,
-            electron_node_headers=args.electron_node_headers)
+            electron_node_headers=args.electron_node_headers,
+            electron_from_rcfile=args.electron_from_rcfile)
         special = SpecialSourceProvider(gen, options)
 
         with provider_factory.create_module_provider(gen, special) as module_provider:
