@@ -26,10 +26,10 @@
   </screenshots>
   <content_rating type="oars-1.1"/>
   <releases>
-    <release version="19.2.0" date="2022-04-26">
+    <release version="19.2.0" date="2022-04-30">
       <description>
         <ul>
-          <li>Electron 更新至 18.1.0。</li>
+          <li>支援 CBETA 離線 DB (Bookcase)</li>
         </ul>
       </description>
     </release>
