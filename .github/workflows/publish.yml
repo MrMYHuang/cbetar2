@@ -27,7 +27,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
         with:
-          submodules: 'recursive'
+          submodules: "recursive"
 
       - name: Build and publish
         uses: actions/setup-node@v1
@@ -35,7 +35,7 @@ jobs:
           node-version: 14
 
       - run: |
-          npm i
+          npm i --ignore-scripts
           npm run dist-win -- -p always --x64
 
   publish-win-arm64:
@@ -45,7 +45,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
         with:
-          submodules: 'recursive'
+          submodules: "recursive"
 
       - name: Build and publish
         uses: actions/setup-node@v1
@@ -53,7 +53,7 @@ jobs:
           node-version: 14
 
       - run: |
-          npm i
+          npm i --ignore-scripts
           npm run dist-win -- -p always --arm64 "-c.win.publish.provider=github" "-c.win.publish.publishAutoUpdate=false"
 
   publish-appImage-x86_64:
@@ -63,7 +63,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
         with:
-          submodules: 'recursive'
+          submodules: "recursive"
 
       - name: Build and publish
         uses: actions/setup-node@v1
@@ -71,7 +71,7 @@ jobs:
           node-version: 14
 
       - run: |
-          npm i
+          npm i --ignore-scripts
           npm run dist-appImage -- -p always --x64
 
   publish-deb-amd64:
@@ -81,7 +81,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
         with:
-          submodules: 'recursive'
+          submodules: "recursive"
 
       - name: Build and publish
         uses: actions/setup-node@v1
@@ -91,7 +91,7 @@ jobs:
       - run: |
           sudo apt -y install ruby ruby-dev
           sudo gem install fpm -f
-          npm i
+          npm i --ignore-scripts
           npm run dist-deb -- -p always --x64
 
   publish-rpm-x86_64:
@@ -101,7 +101,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
         with:
-          submodules: 'recursive'
+          submodules: "recursive"
 
       - name: Build and publish
         uses: actions/setup-node@v1
@@ -111,9 +111,9 @@ jobs:
       - run: |
           sudo apt -y install ruby ruby-dev rpm
           sudo gem install fpm -f
-          npm i
+          npm i --ignore-scripts
           npm run dist-rpm -- -p always --x64
-          
+
   publish-mac-universal:
     runs-on: macos-latest
 
@@ -121,7 +121,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
         with:
-          submodules: 'recursive'
+          submodules: "recursive"
 
       - name: Build and publish
         uses: actions/setup-node@v1
@@ -129,5 +129,5 @@ jobs:
           node-version: 14
 
       - run: |
-          npm i
+          npm i --ignore-scripts
           npm run dist-mac -- -p always --universal

@@ -80,7 +80,7 @@ jobs:
       - run:
           name: Build AppImage
           command: |
-            npm i
+            npm i --ignore-scripts
             GH_TOKEN=${GH_TOKEN} npm run dist-appImage -- -p always --arm64
 
   build-deb-arm64:
@@ -99,7 +99,7 @@ jobs:
             sudo apt update
             sudo apt -y install ruby ruby-dev
             gem install fpm -f
-            npm i
+            npm i --ignore-scripts
             GH_TOKEN=${GH_TOKEN} npm run dist-deb -- -p always --arm64
 
   build-rpm-aarch64:
@@ -118,7 +118,7 @@ jobs:
             sudo apt update
             sudo apt -y install ruby ruby-dev rpm
             gem install fpm -f
-            npm i
+            npm i --ignore-scripts
             GH_TOKEN=${GH_TOKEN} npm run dist-rpm -- -p always --arm64
 
 workflows:

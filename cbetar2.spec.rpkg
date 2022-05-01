@@ -44,13 +44,9 @@ wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 . ~/.nvm/nvm.sh
 nvm install 14
 cd %{name}
-cat package.json | jq '.name="io.github.mrmyhuang.cbetar2"' > temp
-mv temp package.json
-npm i
+npm i --ignore-scripts
 npm run build-electron
-#npx electron-builder install-app-deps
-cat package.json | jq '.name="io.github.mrmyhuang.cbetar2"' > temp
-mv temp package.json
+npm run rebuild-native-for-electron
 npx electron-packager . %{name} --overwrite --prune=true --asar.unpackDir node_modules/node1-libxmljsmt-myh --ignore '^\/(?!(package\.json|node_modules(?!(.*\.(h|cc|cpp|c|mk|a)))|buildElectron))' --icon buildElectron/icon.png
 electronPackagePath=$(ls -d ./%{name}-linux-*)
 cp -v electronBuilderConfigs/IsNoUpdater.txt ${electronPackagePath}/resources
