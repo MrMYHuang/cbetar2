@@ -1,4 +1,7 @@
 # <a id='history'>版本歷史</a>
+* PWA 6.0.2:
+  * [修正] 某些經文頁起頭無編號，無法執行語音播放的問題。
+
 * Git repo 20220430:
   * [變更] 移除 flatpak submodule，避免新版 flatpak manifest, io.github.mrmyhuang.cbetar2.yml, 在 Flathub CI/CD 時不必要的下載。
 

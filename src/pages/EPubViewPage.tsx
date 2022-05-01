@@ -836,14 +836,6 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     this.isPageSearched = [];
     let node: Node | null;
 
-    // Skip the leading line with "No. ".
-    while ((node = textNodesWalker.nextNode()) != null) {
-      let node2 = node!;
-      if ('t' === node2.parentElement?.className && /No\. .*/.test(node2.textContent!)) {
-        break;
-      }
-    }
-
     while ((node = textNodesWalker.nextNode()) != null) {
       let node2 = node!;
       if (['t', 'pc', 'gaijiAnchor'].reduce((prev, curr) => prev && curr !== node2.parentElement?.className, true)) {

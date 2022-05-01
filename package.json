@@ -2,7 +2,7 @@
   "name": "cbetar2",
   "productName": "電子佛典",
   "homepage": "/",
-  "pwaVersion": "6.0.1",
+  "pwaVersion": "6.0.2",
   "version": "19.2.0",
   "license": "MIT",
   "keywords": [
@@ -15,7 +15,7 @@
     "Buddhist Canon",
     "Buddhist text"
   ],
-  "description": "CBETA電子佛典閱讀器2(非官方)，使用CBETA API存取電子佛經。",
+  "description": "CBETA 電子佛典閱讀器2(非官方)，使用 CBETA API 存取電子佛經。",
   "repository": "https://github.com/MrMYHuang/cbetar2",
   "author": {
     "name": "Meng-Yuan Huang",
@@ -50,9 +50,9 @@
     "dist-copr": "rpkg build cbetar2",
     "dist-mac": "npm run build-electron && electron-builder -m pkg -c electronBuilderConfigs/mac.json",
     "icons-mas": "cd buildElectron && iconutil -c icns icon.iconset",
-    "dist-mas": "npm run build-electron && electron-builder -m mas --universal -c electronBuilderConfigs/mas.json",
     "dist-mas-arm64": "npm run build-electron && electron-builder -m mas --arm64 -c electronBuilderConfigs/mas.json",
-    "dist-mas-dev": "npm run build-electron && electron-builder -m mas-dev --arm64 -c electronBuilderConfigs/masDev.json"
+    "dist-mas-dev": "npm run build-electron && electron-builder -m mas-dev --arm64 -c electronBuilderConfigs/masDev.json",
+    "dist-mas": "npm run build-electron && electron-builder -m mas --universal -c electronBuilderConfigs/mas.json"
   },
   "eslintConfig": {
     "extends": [
