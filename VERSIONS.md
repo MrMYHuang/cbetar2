@@ -1,4 +1,7 @@
 # <a id='history'>版本歷史</a>
+* Git repo 20220430:
+  * [變更] 移除 flatpak submodule，避免新版 flatpak manifest, io.github.mrmyhuang.cbetar2.yml, 在 Flathub CI/CD 時不必要的下載。
+
 * Flatpak apps 19.2.0:
   * [新增] 支援 CBETA 離線 DB (Bookcase)。
 

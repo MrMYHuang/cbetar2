@@ -28,6 +28,7 @@ win
 pwa
 apk
 ios/Pods
+flatpak
 others
 MrMYHuang.github.io
 buildElectron/**/*.js
