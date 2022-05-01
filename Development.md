@@ -5,10 +5,11 @@ Frontend, TypeScript, CSS, Ionic, React, Redux, react-app-rewired, Webpack Alias
 
 ## Run Locally
 ### Progressive Web App
-0. Required software: Node 12
+0. Required software:
+    1. Node 14: nvm is recommended: https://github.com/nvm-sh/nvm
 1. Run Shell script:
 ```
-git clone https://github.com/MrMYHuang/cbetar2.git
+git clone --recursive https://github.com/MrMYHuang/cbetar2.git
 cd cbetar2
 npm i
 npm run start
@@ -27,6 +28,7 @@ npm run start
    9. App Store provisionprofile with cert Apple Distribution (for dist-mas)
 1. Run Shell script:
 ```
+cd cbetar2
 npm i
 npm run dist-mas-dev
 ```
@@ -64,14 +66,15 @@ Note: The Mac Catalyst app in this section has limited functions. It is recommen
     2. Xcode 13
 1. Run Shell script:
 ```
+cd cbetar2
 cd ios
-pod install
 ```
 2. Open cbetar2.xcworkspace by Xcode...
 
 ### Mac App Store
 1. Run Shell script:
 ```
+cd cbetar2
 npm i
 npm run dist-mas
 ```
@@ -101,6 +104,7 @@ npm run dist-mac
 
 1. Run Shell script:
 ```
+cd cbetar2
 npm i
 npm run dist-snap
 ```
@@ -111,14 +115,19 @@ npm run publish-snap
 
 ### Flathub (Linux) built on local
 0. Required software:
-    1. flatpak:
+    1. Fedora is recommended.
+    2. flatpak:
     ```
-    sudo apt install flatpak flatpak-builder
-    flatpak install org.freedesktop.appstream-glib org.freedesktop.Sdk//21.08 org.electronjs.Electron2.BaseApp//21.08 org.freedesktop.Sdk.Extension.node14//21.08
+    sudo dnf install flatpak flatpak-builder python3-aiohttp
+    flatpak install --user org.freedesktop.appstream-glib org.freedesktop.Sdk//21.08 org.electronjs.Electron2.BaseApp//21.08 org.freedesktop.Sdk.Extension.node14//21.08
     ```
 
 1. Run shell script :
 ```
+cd cbetar2
+# x.y.z from version in package.json.
+git tag x.y.z
+git clone https://github.com/flathub/io.github.mrmyhuang.cbetar2.git flatpak
 npm i
 npm run prepare-flatpak
 npm run dist-flatpak-dev
@@ -126,16 +135,20 @@ npm run dist-flatpak-dev
 
 ### Flathub (Linux) built by Flathub CI/CD
 0. Required software:
-    1. flatpak:
+    1. Fedora is recommended.
+    2. flatpak:
     ```
-    sudo apt install flatpak
-    flatpak install org.freedesktop.appstream-glib
+    sudo dnf install flatpak python3-aiohttp
+    flatpak install --user org.freedesktop.appstream-glib
     ```
 
 1. Update package.json version to x.y.z. Then, commit it and tag with x.y.z.
 
 2. Run shell script :
 ```
+cd cbetar2
+# x.y.z from version in package.json.
+git tag x.y.z
 npm i
 npm run prepare-flatpak
 cd flatpak
