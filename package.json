@@ -63,7 +63,7 @@
   "dependencies": {
     "axios": "^0.26.1",
     "electron-window-state": "^5.0.3",
-    "libxslt-myh": "^0.9.16",
+    "libxslt-myh": "^0.9.18",
     "node-downloader-helper": "^2.1.1",
     "semver": "^7.3.7"
   },
