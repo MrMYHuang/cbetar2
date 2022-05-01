@@ -4,8 +4,8 @@
   "files": [
     "buildElectron/**/*",
     "package.json",
-    "!**/node_modules/**/*.{mk,a,h,cpp}",
-    "!**/node_modules/libxslt-myh/deps/**/*"
+    "!**/node_modules/**/*.{h,c,cpp,py,pl,a,mk,Makefile,m4,hbs,gypi,sh,in,vms}",
+    "!**/node_modules/**/tests/*"
   ],
   "extraResources": [
     {
@@ -17,7 +17,7 @@
     "cbeta_gaiji/cbeta_gaiji.json"
   ],
   "asarUnpack": [
-    "node_modules/node1-libxmljsmt-myh/**/*"
+    "node_modules/{libxslt-myh,node1-libxmljsmt-myh}/**/*.{js,json,node}"
   ],
   "afterAllArtifactBuild": "electron-builder-notarize-pkg-myh",
   "icon": "buildElectron/icon.icns",

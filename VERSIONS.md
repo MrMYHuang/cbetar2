@@ -1,4 +1,8 @@
 # <a id='history'>版本歷史</a>
+* MAS apps 19.2.1:
+  * [新增] 支援 CBETA 離線 DB (Bookcase)。
+  * [修正] 刪除不必要的檔案。 
+
 * PWA 6.0.2:
   * [修正] 某些經文頁起頭無編號，無法執行語音播放的問題。
 
@@ -6,9 +10,6 @@
   * [變更] 移除 flatpak submodule，避免新版 flatpak manifest, io.github.mrmyhuang.cbetar2.yml, 在 Flathub CI/CD 時不必要的下載。
 
 * Flatpak apps 19.2.0:
-  * [新增] 支援 CBETA 離線 DB (Bookcase)。
-
-* MAS apps 19.2.0:
   * [新增] 支援 CBETA 離線 DB (Bookcase)。
 
 * AppImage apps 19.2.0:

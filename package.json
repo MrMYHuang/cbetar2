@@ -3,7 +3,7 @@
   "productName": "電子佛典",
   "homepage": "/",
   "pwaVersion": "6.0.2",
-  "version": "19.2.0",
+  "version": "19.2.1",
   "license": "MIT",
   "keywords": [
     "CBETA",
@@ -27,14 +27,14 @@
   ],
   "main": "buildElectron/main.js",
   "scripts": {
-    "postinstall": "electron-builder install-app-deps",
+    "rebuild-native-for-electron": "electron-builder install-app-deps",
     "start": "react-app-rewired start",
     "build": "react-app-rewired build && powershell -file ./tools/CopyBuild.ps1",
     "build_linux": "react-app-rewired build && ./tools/CopyBuild.sh",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject",
     "build-electron": "tsc -b tsconfigElectron.json",
-    "start-electron": "npm run build-electron && electron .",
+    "start-electron": "npm run build-electron && npm run rebuild-native-for-electron && electron .",
     "dist-win": "npm run build-electron && electron-builder -w -c electronBuilderConfigs/win.json",
     "dist-appImage": "npm run build-electron && electron-builder -l AppImage -c electronBuilderConfigs/appImage.json",
     "dist-deb": "export USE_SYSTEM_FPM=true && npm run build-electron && electron-builder -l deb -c electronBuilderConfigs/deb.json",
@@ -63,7 +63,7 @@
   "dependencies": {
     "axios": "^0.26.1",
     "electron-window-state": "^5.0.3",
-    "libxslt-myh": "^0.9.13",
+    "libxslt-myh": "^0.9.15",
     "node-downloader-helper": "^2.1.1",
     "semver": "^7.3.7"
   },

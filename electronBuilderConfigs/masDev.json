@@ -3,19 +3,23 @@
   "appId": "io.github.mrmyhuang.cbetar2",
   "files": [
     "buildElectron/**/*",
-    "package.json"
+    "package.json",
+    "!**/node_modules/**/*.{h,c,cpp,py,pl,a,mk,Makefile,m4,hbs,gypi,sh,in,vms}",
+    "!**/node_modules/**/tests/*"
   ],
   "extraResources": [
     {
       "from": "electronBuilderConfigs",
       "to": ".",
-      "filter": ["IsMas.txt"]
+      "filter": [
+        "IsMas.txt"
+      ]
     },
     "buildElectron/*.xsl",
     "cbeta_gaiji/cbeta_gaiji.json"
   ],
   "asarUnpack": [
-    "node_modules/node1-libxmljsmt-myh/**/*"
+    "node_modules/{libxslt-myh,node1-libxmljsmt-myh}/**/*.{js,json,node}"
   ],
   "icon": "buildElectron/icon.icns",
   "mac": {
