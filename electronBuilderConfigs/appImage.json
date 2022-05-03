@@ -20,6 +20,9 @@
   "icon": "buildElectron/icon.icns",
   "appImage": {
     "artifactName": "${name}_${version}_linux_${arch}.${ext}",
+    "desktop": {
+      "StartupWMClass": "cbetar2"
+    },
     "category": "Education"
   }
 }
