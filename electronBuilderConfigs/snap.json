@@ -1,10 +1,5 @@
 {
-  "extends": null,
-  "appId": "io.github.mrmyhuang.cbetar2",
-  "files": [
-    "buildElectron/**/*",
-    "package.json"
-  ],
+  "extends": "electronBuilderConfigs/common.json",
   "extraResources": [
     {
       "from": "electronBuilderConfigs",
@@ -13,13 +8,5 @@
     },
     "buildElectron/*.xsl",
     "cbeta_gaiji/cbeta_gaiji.json"
-  ],
-  "asarUnpack": [
-    "node_modules/node1-libxmljsmt-myh/**/*"
-  ],
-  "icon": "buildElectron/icon.png",
-  "snap": {
-    "artifactName": "${name}_${version}_linux_${arch}.${ext}",
-    "category": "Education"
-  }
+  ]
 }

@@ -1,12 +1,5 @@
 {
-  "extends": null, 
-  "appId": "io.github.mrmyhuang.cbetar2",
-  "files": [
-    "buildElectron/**/*",
-    "package.json",
-    "!**/node_modules/**/*.{h,c,cpp,py,pl,a,mk,Makefile,m4,hbs,gypi,sh,in,vms}",
-    "!**/node_modules/**/tests/*"
-  ],
+  "extends": "electronBuilderConfigs/common.json",
   "extraResources": [
     {
       "from": "electronBuilderConfigs",
@@ -16,17 +9,11 @@
     "buildElectron/*.xsl",
     "cbeta_gaiji/cbeta_gaiji.json"
   ],
-  "asarUnpack": [
-    "node_modules/{libxslt-myh,node1-libxmljsmt-myh}/**/*.{js,json,node}"
-  ],
   "afterAllArtifactBuild": "electron-builder-notarize-pkg-myh",
-  "icon": "buildElectron/icon.icns",
   "mac": {
     "publish": ["github"],
     "type": "distribution",
     "artifactName": "${name}_${version}_macos_${arch}.${ext}",
-    "category": "public.app-category.education",
-    "minimumSystemVersion": "10.11",
     "hardenedRuntime": true
   }
 }

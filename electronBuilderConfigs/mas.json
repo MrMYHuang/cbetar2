@@ -1,12 +1,5 @@
 {
-  "extends": null,
-  "appId": "io.github.mrmyhuang.cbetar2",
-  "files": [
-    "buildElectron/**/*",
-    "package.json",
-    "!**/node_modules/**/*.{h,c,cpp,py,pl,a,mk,Makefile,m4,hbs,gypi,sh,in,vms}",
-    "!**/node_modules/**/tests/*"
-  ],
+  "extends": "electronBuilderConfigs/common.json",
   "extraResources": [
     {
       "from": "electronBuilderConfigs",
@@ -16,10 +9,6 @@
     "buildElectron/*.xsl",
     "cbeta_gaiji/cbeta_gaiji.json"
   ],
-  "asarUnpack": [
-    "node_modules/{libxslt-myh,node1-libxmljsmt-myh}/**/*.{js,json,node}"
-  ],
-  "icon": "buildElectron/icon.icns",
   "mac": {
     "type": "distribution",
     "identity": null
@@ -28,8 +17,6 @@
     "type": "distribution",
     "identity": "Meng-Yuan Huang",
     "artifactName": "${name}_${version}_mas64.${ext}",
-    "category": "public.app-category.education",
-    "minimumSystemVersion": "10.11",
     "hardenedRuntime": false,
     "entitlements": "buildElectron/entitlements.mas.plist",
     "entitlementsInherit": "buildElectron/entitlements.mas.inherit.plist",
