@@ -16,7 +16,7 @@
   "mas": {
     "type": "distribution",
     "identity": "Meng-Yuan Huang",
-    "artifactName": "${name}_${version}_mas64.${ext}",
+    "artifactName": "${name}_${version}_mas.${ext}",
     "hardenedRuntime": false,
     "entitlements": "buildElectron/entitlements.mas.plist",
     "entitlementsInherit": "buildElectron/entitlements.mas.inherit.plist",

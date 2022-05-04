@@ -17,7 +17,7 @@
   },
   "masDev": {
     "type": "development",
-    "artifactName": "${name}_${version}_mas.${ext}",
+    "artifactName": "${name}_${version}_masDev.${ext}",
     "hardenedRuntime": false,
     "entitlements": "buildElectron/entitlements.mas.plist",
     "entitlementsInherit": "buildElectron/entitlements.mas.inherit.plist",
