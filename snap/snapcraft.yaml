@@ -34,7 +34,7 @@ parts:
         cp snap/local/io.github.mrmyhuang.cbetar2.desktop ${electronPackagePath}
         cp -rv ${electronPackagePath} $SNAPCRAFT_PART_INSTALL/cbetar2
     build-snaps:
-    - node/14/stable
+    - node/16/stable
     build-packages:
     - unzip
     stage-packages:

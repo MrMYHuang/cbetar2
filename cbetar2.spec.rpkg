@@ -42,7 +42,7 @@ tar zxf %{SOURCE1} -C %{name}
 %build
 wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 . ~/.nvm/nvm.sh
-nvm install 14
+nvm install 16
 cd %{name}
 npm i --ignore-scripts
 npm run build-electron

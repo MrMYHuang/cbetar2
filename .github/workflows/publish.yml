@@ -32,7 +32,7 @@ jobs:
       - name: Build and publish
         uses: actions/setup-node@v1
         with:
-          node-version: 14
+          node-version: 16
 
       - run: |
           npm i --ignore-scripts
@@ -50,7 +50,7 @@ jobs:
       - name: Build and publish
         uses: actions/setup-node@v1
         with:
-          node-version: 14
+          node-version: 16
 
       - run: |
           npm i --ignore-scripts
@@ -68,7 +68,7 @@ jobs:
       - name: Build and publish
         uses: actions/setup-node@v1
         with:
-          node-version: 14
+          node-version: 16
 
       - run: |
           npm i --ignore-scripts
@@ -86,7 +86,7 @@ jobs:
       - name: Build and publish
         uses: actions/setup-node@v1
         with:
-          node-version: 14
+          node-version: 16
 
       - run: |
           sudo apt -y install ruby ruby-dev
@@ -106,7 +106,7 @@ jobs:
       - name: Build and publish
         uses: actions/setup-node@v1
         with:
-          node-version: 14
+          node-version: 16
 
       - run: |
           sudo apt -y install ruby ruby-dev rpm
@@ -126,7 +126,7 @@ jobs:
       - name: Build and publish
         uses: actions/setup-node@v1
         with:
-          node-version: 14
+          node-version: 16
 
       - run: |
           npm i --ignore-scripts

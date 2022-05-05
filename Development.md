@@ -6,7 +6,7 @@ Frontend, TypeScript, CSS, Ionic, React, Redux, react-app-rewired, Webpack Alias
 ## Run Locally
 ### Progressive Web App
 0. Required software:
-    1. Node 14: nvm is recommended: https://github.com/nvm-sh/nvm
+    1. Node 16: nvm is recommended: https://github.com/nvm-sh/nvm
 1. Run Shell script:
 ```
 git clone --recursive https://github.com/MrMYHuang/cbetar2.git
@@ -119,7 +119,7 @@ npm run publish-snap
     2. flatpak:
     ```
     sudo dnf install flatpak flatpak-builder python3-aiohttp
-    flatpak install --user org.freedesktop.appstream-glib org.freedesktop.Sdk//21.08 org.electronjs.Electron2.BaseApp//21.08 org.freedesktop.Sdk.Extension.node14//21.08
+    flatpak install --user org.freedesktop.appstream-glib org.freedesktop.Sdk//21.08 org.electronjs.Electron2.BaseApp//21.08 org.freedesktop.Sdk.Extension.node16//21.08
     ```
 
 1. Run shell script :
