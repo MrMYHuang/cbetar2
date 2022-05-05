@@ -29,12 +29,9 @@ parts:
     override-build: |
         npm i --ignore-scripts
         npm run build-electron
-        npm run rebuild-native-for-electron
-        npx electron-packager . cbetar2 --overwrite --prune=true --asar.unpackDir node_modules/node1-libxmljsmt-myh --ignore '^\/(?!(package\.json|node_modules|buildElectron))' --icon buildElectron/icon.png
-        electronPackagePath=$(echo ./cbetar2-linux-*)
-        cp electronBuilderConfigs/IsSnap.txt ${electronPackagePath}/resources
+        npx electron-builder -l dir -c electronBuilderConfigs/snap.json
+        electronPackagePath=./dist/linux-unpacked
         cp snap/local/io.github.mrmyhuang.cbetar2.desktop ${electronPackagePath}
-        cp --parent -v buildElectron/*.xsl cbeta_gaiji/cbeta_gaiji.json ${electronPackagePath}/resources
         cp -rv ${electronPackagePath} $SNAPCRAFT_PART_INSTALL/cbetar2
     build-snaps:
     - node/14/stable
