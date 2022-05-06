@@ -46,8 +46,7 @@ nvm install 16
 cd %{name}
 npm i --ignore-scripts
 npm run build-electron
-npm run rebuild-native-for-electron
-npx electron-builder -l dir -c electronBuilderConfigs/flatpak.json
+npm x -- electron-builder -l dir -c electronBuilderConfigs/flatpak.json
 
 %install
 electronPackagePath=$(ls -d ./%{name}/dist/linux-unpacked)
