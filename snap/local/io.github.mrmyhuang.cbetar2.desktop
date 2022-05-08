@@ -6,3 +6,4 @@ Icon=${SNAP}/meta/gui/icon.png
 Type=Application
 Terminal=false
 Categories=Education;
+StartupWMClass=cbetar2

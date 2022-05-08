@@ -43,3 +43,5 @@ flatpak/build/
 flatpak/generated-sources.json
 *.xcbkptlist
 *.apk
+node-v*/
+debian/
