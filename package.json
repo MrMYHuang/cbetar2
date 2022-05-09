@@ -38,7 +38,7 @@
     "dist-win": "npm run build-electron && electron-builder -w -c electronBuilderConfigs/win.json",
     "dist-appImage": "npm run build-electron && electron-builder -l AppImage -c electronBuilderConfigs/appImage.json",
     "dist-deb": "export USE_SYSTEM_FPM=true && npm run build-electron && electron-builder -l deb -c electronBuilderConfigs/deb.json",
-    "dist-debian": "sudo gbp buildpackage --git-pbuilder",
+    "dist-debian": "sudo gbp buildpackage --git-pbuilder --git-pbuilder-options='--use-network yes'",
     "dist-rpm": "export USE_SYSTEM_FPM=true && npm run build-electron && electron-builder -l rpm -c electronBuilderConfigs/rpm.json",
     "eb-dist-snap": "npm run build-electron && rm -f dist/*.snap && electron-builder -l snap -c electronBuilderConfigs/snap.json",
     "eb-dist-snap-arm64": "export SNAPCRAFT_BUILD_ENVIRONMENT=lxd && npm run build-electron && rm -f dist/*.snap && electron-builder -l snap -c electronBuilderConfigs/snap.json --arm64",
