@@ -191,5 +191,8 @@ workflows:
 
   test:
     jobs:
-      - test-build-appImage-arm64:
+      - hold:
           type: approval
+      - test-build-appImage-arm64:
+          requires:
+            - hold
