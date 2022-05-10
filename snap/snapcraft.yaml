@@ -27,16 +27,19 @@ parts:
     source: .
     parse-info: [buildElectron/io.github.mrmyhuang.cbetar2.metainfo.xml]
     override-build: |
+        mkdir -p nvm
+        wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | NVM_DIR=`pwd`/nvm bash
+        . nvm/nvm.sh
+        nvm install 16
         npm i --ignore-scripts
         npm run build-electron
         npm x -- electron-builder -l dir -c electronBuilderConfigs/snap.json
-        electronPackagePath=./dist/linux-unpacked
+        electronPackagePath=$(ls -d ./dist/linux*unpacked)
         cp snap/local/io.github.mrmyhuang.cbetar2.desktop ${electronPackagePath}
         cp -rv ${electronPackagePath} $SNAPCRAFT_PART_INSTALL/cbetar2
-    build-snaps:
-    - node/16/stable
     build-packages:
     - unzip
+    - wget
     stage-packages:
     - libnss3
     - libnspr4

@@ -193,6 +193,14 @@ workflows:
     jobs:
       - hold:
           type: approval
-      - test-build-appImage-arm64:
+      - build-snap-amd64:
           requires:
             - hold
+      - build-snap-arm64:
+          requires:
+            - hold
+      - publish:
+          requires:
+            - hold
+            - build-snap-amd64
+            - build-snap-arm64
