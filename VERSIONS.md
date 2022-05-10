@@ -1,4 +1,7 @@
 # <a id='history'>版本歷史</a>
+* Installer apps 19.2.2:
+  * [修正] AppImage 在一些舊 glibc Linux distros (e.g., Debian 11, openSUSE Leap 15.3) 無法執行的問題。
+
 * MAS apps 19.2.1:
   * [新增] 支援 CBETA 離線 DB (Bookcase)。
   * [修正] 刪除不必要的檔案。 

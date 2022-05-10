@@ -32,7 +32,7 @@ jobs:
       - name: Build and publish
         uses: actions/setup-node@v1
         with:
-          node-version: 16
+          node-version: 14
 
       - run: |
           npm i --ignore-scripts
@@ -50,10 +50,9 @@ jobs:
       - name: Build and publish
         uses: actions/setup-node@v1
         with:
-          node-version: 16
+          node-version: 14
 
-      - shell: 'script -q -e -c "bash {0}"'
-        run: |
+      - run: |
           npm i --ignore-scripts
           npm run dist-win -- -p always --arm64 "-c.win.publish.provider=github" "-c.win.publish.publishAutoUpdate=false"
 
@@ -71,8 +70,9 @@ jobs:
         with:
           node-version: 16
 
-      - run: |
-          npm run docker-dist-appImage -- -p always --x64
+      - shell: 'script -q -e -c "bash {0}"'
+        run: |
+          npm run docker-dist-appImage -- -- -p always --x64
 
   publish-deb-amd64:
     runs-on: ubuntu-latest
