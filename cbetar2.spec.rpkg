@@ -1,7 +1,7 @@
 # vim: syntax=spec
 
 Name:       {{{ git_dir_name }}}
-Version:    19.2.1
+Version:    19.2.2
 Release:    1%{?dist}
 Summary:    A Buddhist text reader using CBETA APIs.
 URL:        https://github.com/MrMYHuang/%{name}

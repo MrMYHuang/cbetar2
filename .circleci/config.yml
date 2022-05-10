@@ -80,8 +80,25 @@ jobs:
       - run:
           name: Build AppImage
           command: |
-            npm i --ignore-scripts
-            GH_TOKEN=${GH_TOKEN} npm run dist-appImage -- -p always --arm64
+            GH_TOKEN=${GH_TOKEN} npm run docker-dist-appImage -- -p always --arm64
+
+  test-build-appImage-arm64:
+    <<: *defaults
+    machine:
+      image: ubuntu-2004:202101-01
+    resource_class: arm.medium
+    steps:
+      - checkout
+      - run: git submodule sync
+      - run: git submodule update --init
+
+      - run:
+          name: Build AppImage
+          command: |
+            GH_TOKEN=${GH_TOKEN} npm run docker-dist-appImage
+
+      - store_artifacts:
+          path: dist
 
   build-deb-arm64:
     <<: *defaults
@@ -171,3 +188,8 @@ workflows:
               only: /^([vc][0-9]+.[0-9]+.[0-9]+|rpm-aarch64)$/
             branches:
               ignore: /.*/
+
+  test:
+    jobs:
+      - test-build-appImage-arm64:
+          type: approval

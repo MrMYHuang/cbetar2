@@ -30,5 +30,11 @@ jobs:
           node-version: 16
 
       - run: |
-          npm i --ignore-scripts
-          npm run dist-appImage -- -p always --x64
+          npm run docker-dist-appImage
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: build
+          path: |
+            dist/*.AppImage
