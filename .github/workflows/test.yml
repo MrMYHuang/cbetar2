@@ -29,8 +29,9 @@ jobs:
         with:
           node-version: 16
 
-      - run: |
-          npm run docker-dist-appImage
+      - shell: 'script -q -e -c "bash {0}"'
+        run: |
+          npm run docker-dist-appImage -- -- -p always --x64
 
       - name: Archive artifacts
         uses: actions/upload-artifact@v2

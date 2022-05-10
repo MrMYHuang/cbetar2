@@ -80,7 +80,7 @@ jobs:
       - run:
           name: Build AppImage
           command: |
-            GH_TOKEN=${GH_TOKEN} npm run docker-dist-appImage -- -p always --arm64
+            GH_TOKEN=${GH_TOKEN} npm run docker-dist-appImage -- -p always --x64
 
   test-build-appImage-arm64:
     <<: *defaults

@@ -52,7 +52,8 @@ jobs:
         with:
           node-version: 16
 
-      - run: |
+      - shell: 'script -q -e -c "bash {0}"'
+        run: |
           npm i --ignore-scripts
           npm run dist-win -- -p always --arm64 "-c.win.publish.provider=github" "-c.win.publish.publishAutoUpdate=false"
 
@@ -71,8 +72,7 @@ jobs:
           node-version: 16
 
       - run: |
-          npm i --ignore-scripts
-          npm run dist-appImage -- -p always --x64
+          npm run docker-dist-appImage -- -p always --x64
 
   publish-deb-amd64:
     runs-on: ubuntu-latest
