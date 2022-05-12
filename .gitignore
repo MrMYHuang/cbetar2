@@ -45,3 +45,4 @@ flatpak/generated-sources.json
 *.apk
 node-v*/
 debian/
+cbetar2/

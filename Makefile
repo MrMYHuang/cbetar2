@@ -11,6 +11,7 @@ DATA = ${PREFIX}/share
 MANPREFIX = ${DATA}/man
 METAINFO = ${PREFIX}/share/metainfo
 DOCPREFIX = ${PREFIX}/share/doc/${NAME}
+OPT = ${PREFIX}
 
 ARCH := $(shell uname -m)
 ifeq ($(ARCH), x86_64)
@@ -36,18 +37,16 @@ clean:
 	rm -rf ${electronPackagePath} node_modules ${NODE_PACKAGE}
 
 install: all
-	install -d ${DESTDIR}/${PREFIX}/${NAME} ${DESTDIR}/${BIN} ${DESTDIR}/${METAINFO} ${DESTDIR}/${DATA}/applications ${DESTDIR}/${DATA}/icons ${DESTDIR}/${MANPREFIX}/man1
-	cp -a ${electronPackagePath}/. ${DESTDIR}/${PREFIX}/${NAME}
-	ln -s ${DESTDIR}/${PREFIX}/${NAME}/${NAME} ${DESTDIR}/${BIN}
+	install -d ${DESTDIR}/${OPT}/${NAME} ${DESTDIR}/${BIN} ${DESTDIR}/${METAINFO} ${DESTDIR}/${DATA}/applications ${DESTDIR}/${DATA}/icons ${DESTDIR}/${MANPREFIX}/man1
+	cp -a ${electronPackagePath}/. ${DESTDIR}/${OPT}/${NAME}
+	ln -s ${DESTDIR}/${OPT}/${NAME}/${NAME} ${DESTDIR}/${BIN}
+
 	cp buildElectron/io.github.mrmyhuang.${NAME}.metainfo.xml ${DESTDIR}/${METAINFO}
 	cp buildElectron/io.github.mrmyhuang.${NAME}.desktop ${DESTDIR}/${DATA}/applications/${NAME}.desktop
-
-	#desktop-file-validate ${DESTDIR}/${DATA}/applications/${NAME}.desktop
-
-	cp buildElectron/icon.png ${DESTDIR}/${DATA}/icons/${NAME}.png
-
 	sed -i 's#^Exec=.*$$#Exec=${BIN}/${NAME} --no-sandbox#' ${DESTDIR}/${DATA}/applications/${NAME}.desktop
 	sed -i 's#^Icon=.*$$#Icon=${DATA}/icons/${NAME}.png#' ${DESTDIR}/${DATA}/applications/${NAME}.desktop
+	#desktop-file-validate ${DESTDIR}/${DATA}/applications/${NAME}.desktop
+	cp buildElectron/icon.png ${DESTDIR}/${DATA}/icons/${NAME}.png
 
 uninstall:
 	rm -rf ${DESTDIR}/${PREFIX}/${NAME}
