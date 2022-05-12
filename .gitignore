@@ -45,4 +45,8 @@ flatpak/generated-sources.json
 *.apk
 node-v*/
 debian/
-cbetar2/
+src/cbetar2
+.npm
+.electron-gyp
+.cache
+.config

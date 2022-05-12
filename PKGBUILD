@@ -2,22 +2,23 @@
 pkgname=cbetar2
 pkgver=19.2.2
 pkgrel=1
-pkgdesc=""
+pkgdesc="A Buddhist text reader using CBETA APIs"
 arch=('x86_64' 'aarch64')
 url="https://github.com/MrMYHuang/cbetar2"
 license=('MIT')
-groups=()
-depends=()
-makedepends=('git') # 'bzr', 'git', 'mercurial' or 'subversion'
+groups=('base-devel')
+depends=('gtk3' 'libnotify' 'nss' 'at-spi2-core' 'alsa-lib' 'mesa' 'libdrm')
+makedepends=('python3' 'wget')
 provides=("${pkgname}")
 conflicts=("${pkgname}")
-replaces=()
-backup=()
 options=()
 install=
-source=('git+https://github.com/MrMYHuang/cbetar2.git#tag=19.2.2')
+source=()
 noextract=()
-md5sums=('SKIP')
+
+prepare() {
+	ln -sf "$startdir" "$srcdir/$pkgname"
+}
 
 build() {
 	cd "$srcdir/${pkgname}"
