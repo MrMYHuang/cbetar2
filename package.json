@@ -51,7 +51,7 @@
     "dist-flatpak": "npm run build-electron && electron-builder -l dir -c electronBuilderConfigs/flatpak.json",
     "dist-copr-dev": "rpkg local",
     "dist-copr": "rpkg build cbetar2",
-    "dist-pkg-dev": "makepkg -f",
+    "dist-pkg-dev": "cd arch && makepkg -f",
     "dist-pkg": "tools/preparePkg.sh",
     "dist-mac": "npm run build-electron && electron-builder -m pkg -c electronBuilderConfigs/mac.json",
     "icons-mas": "cd buildElectron && iconutil -c icns icon.iconset",
