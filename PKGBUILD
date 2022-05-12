@@ -13,12 +13,8 @@ provides=("${pkgname}")
 conflicts=("${pkgname}")
 options=()
 install=
-source=()
+source=('git+https://github.com/MrMYHuang/cbetar2.git#tag=19.2.2')
 noextract=()
-
-prepare() {
-	ln -sf "$startdir" "$srcdir/$pkgname"
-}
 
 build() {
 	cd "$srcdir/${pkgname}"

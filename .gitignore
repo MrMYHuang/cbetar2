@@ -50,3 +50,4 @@ src/cbetar2
 .electron-gyp
 .cache
 .config
+pkg
