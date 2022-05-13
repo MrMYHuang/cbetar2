@@ -1,4 +1,7 @@
 # <a id='history'>版本歷史</a>
+* PWA 6.0.3:
+  * [修正] 分頁模式語音播放，頁面已跳至下一頁，但語音仍重複播前一頁的問題。
+
 * Installer apps 19.2.2:
   * [修正] AppImage 在一些舊 glibc Linux distros (e.g., Debian 11, openSUSE Leap 15.3) 無法執行的問題。
 

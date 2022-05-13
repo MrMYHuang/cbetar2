@@ -154,7 +154,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     this.speechSynthesisUtterance = null;
     if (this.state.canTextToSpeech) {
       this.speechSynthesisUtterance = new SpeechSynthesisUtterance();
-      this.speechSynthesisUtterance.onend = (ev: SpeechSynthesisEvent) => {
+      this.speechSynthesisUtterance.onend = async (ev: SpeechSynthesisEvent) => {
         speechSynthesis.cancel();
 
         // Stop button pressed.
@@ -168,7 +168,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         if (hasNextTexts1) {
           this.workTextsIndex += 1;
         } else if (hasNextTexts2) {
-          this.pageNext();
+          await this.pageNext();
           this.findTextsInPageAndChunking();
         } else {
           this.setState({ speechState: SpeechState.UNINITIAL }, () => {
@@ -320,7 +320,11 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     if (this.props.paginated && this.state.currentPage > 1) {
       this.rendition?.prev(n);
       //console.log(this.visibleChars.filter((vc) => vc.page === (this.state.currentPage - n)).map((vc) => vc.char).join(''));
-      this.setState({ currentPage: this.state.currentPage - n });
+      return new Promise<void>((ok, fail) => {
+        this.setState({ currentPage: this.state.currentPage - n }, () => {
+          ok();
+        });
+      });
     }
   }
 
@@ -328,7 +332,12 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     if (this.props.paginated && this.state.currentPage < this.state.pageCount) {
       this.rendition?.next(n);
       //console.log(this.visibleChars.filter((vc) => vc.page === (this.state.currentPage + n)).map((vc) => vc.char).join(''));
-      this.setState({ currentPage: this.state.currentPage + n });
+
+      return new Promise<void>((ok, fail) => {
+        this.setState({ currentPage: this.state.currentPage + n }, () => {
+          ok();
+        });
+      });
     }
   }
 
