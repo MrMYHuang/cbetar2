@@ -8,19 +8,6 @@
 
 CBETA 電子佛典閱讀器2(非官方) (Chinese Buddhist Electronic Text Association Reader 2)，簡寫cbetar2，使用 CBETA API 存取電子佛經，支援以下功能
 
-
-* <a id='modular'>模組化程式</a>
-
-  cbetar2 為一支模組化程式，由 frontend app (PWA) + backend app (CBETA API or cbetar2 backend) 組成。有兩種使用方式：
-
-  1. 連線DB版 app：PWA + CBETA API
-    * 此版本不須先下載 CBETA 離線經文資料檔，但要作離線瀏覽要把經文加至書籤。
-    * 安裝方式：瀏覽器安裝、商店安裝。支援多種平台。
-  2. 離線DB版 app：PWA + cbetar2 backend
-    * 此版本預設與連線版相同，多了離線DB的支援。要切為離線DB模式，要先下載、解壓<a href='http://www.cbeta.org/download/cbreader.htm'>CBETA 離線經文資料檔</a>，可離線瀏覽目錄、經文。
-    * 安裝方式：下載安裝檔案安裝。支援 Windows 7+, Linux, macOS 10.10+。
-    * 設定：啟動 app 後，執行選單/檔案/設定 Bookcase目錄。
-
 * <a id='search'>搜尋、瀏覽</a>
   1. 搜索目錄：在目錄頁，按下右上角放大鏡圖示。在對話框輸入經文部分(或全部)標題，按下"搜索目錄"後會列出相關經文。
 
@@ -120,6 +107,18 @@ CBETA 電子佛典閱讀器2(非官方) (Chinese Buddhist Electronic Text Associ
 
   App設定頁的異常回報鈕使用方法為：執行會造成app異常的步驟後，再至設定頁按下異常回報鈕，即會自動產生一封E-mail，包含異常的記錄，發送此E-mail給我們即可。
 
+* <a id='modular'>模組化程式</a>
+
+  cbetar2 為一支模組化程式，由 frontend app (PWA) + backend app (CBETA API or cbetar2 backend) 組成。有兩種使用方式：
+
+  1. 連線DB版 app：PWA + CBETA API
+    * 此版本不須先下載 CBETA 離線經文資料檔，但要作離線瀏覽要把經文加至書籤。
+    * 安裝方式：瀏覽器安裝、商店安裝。支援多種平台。
+  2. 離線DB版 app：PWA + cbetar2 backend
+    * 此版本預設與連線版相同，多了離線DB的支援。要切為離線DB模式，要先下載、解壓<a href='http://www.cbeta.org/download/cbreader.htm'>CBETA 離線經文資料檔</a>，可離線瀏覽目錄、經文。
+    * 安裝方式：下載安裝檔案安裝。支援 Windows 7+, Linux, macOS 10.10+。
+    * 設定：啟動 app 後，執行選單/檔案/設定 Bookcase目錄。
+
 程式碼為開放(MIT License)，可自由下載修改、重新發佈。
 
 ## 支援平台
@@ -127,17 +126,19 @@ CBETA 電子佛典閱讀器2(非官方) (Chinese Buddhist Electronic Text Associ
 * Windows 10 amd64 + Chrome
 * Windows 11 on ARM + Chrome
 * Android 9 + Chrome
-* Firefly RK-3399 + Android 7.1 + Firefox 91 (from PWA)
+* Firefly RK-3399 + Android 7.1 + Firefox 91
 * macOS 11 amd64 + Chrome
-* macOS 11.5.2 arm64 + Electron app (from Apple App Store)
-* macOS 11.5.2 arm64 host + Ubuntu 20.04 arm64 guest + Electron app (from Snap Store)
+* macOS 11 arm64 + Apple App Store app
+* macOS 11 arm64 host + Ubuntu 20.04 arm64 guest + Snap Store app
+* macOS 12 arm64 host + openSUSE Leap 15.3 aarch64 guest + AppImage app
+* macOS 12 arm64 host + Arch Linux aarch64 guest + AppImage app
 * iPad 7 iPadOS 14-15 + Safari
 * iPhone 8 (模擬器) + Safari
-* Debian Linux 10 + Chrome
-* Raspberry Pi 4 + Ubuntu 20 arm64 + Electron app (from Snap Store)
-* Ubuntu 21 amd64 + Electron app (from Snap Store)
-* Ubuntu 21 amd64 + Electron app (from Flathub)
-* Fedora 35 arm64 + Electron app (from Flathub)
+* Debian Linux arm64 10 + Chrome
+* Raspberry Pi 4 + Ubuntu 20 arm64 + Snap Store app
+* Ubuntu 21 amd64 + Snap Store app
+* Ubuntu 21 amd64 + Flathub app
+* Fedora 35 aarch64 + Flathub app
 
 非上述環境仍可嘗試使用此 app。若有<a href='#knownIssues'>已知問題</a>未描述的問題，可用<a href='#report'>異常回報</a>功能。
 
@@ -216,12 +217,12 @@ https://MrMYHuang.github.io
 <img width="auto" height='60px' src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/HuaweiAppGallery.png'/>
 </a>
 
-#### macOS 10.11+ (amd64 & arm64) - 使用 Apple App Store
+#### macOS 10.11+ (x86_64 & arm64) - 使用 Apple App Store
 <a href='https://apps.apple.com/app/id1546347689' target='_blank'>
 <img width="auto" height='60px' src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/Download_on_the_Mac_App_Store_Badge_CNTC_RGB_blk_100217.svg'/>
 </a>
 
-#### Windows 10+ (amd64 & arm64) - 使用 Microsoft Store
+#### Windows 10+ (x64 & arm64) - 使用 Microsoft Store
 <a href='//www.microsoft.com/store/apps/9P6TDQX46JJL' target='_blank'>
 <img width="auto" height='60px' src='https://developer.microsoft.com/store/badges/images/Chinese-Traditional_get-it-from-MS.png' alt='Chinese Traditional badge'/>
 </a>
@@ -231,12 +232,12 @@ https://MrMYHuang.github.io
 <img width="auto" height='60px' src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/[TW]-snap-store-black@2x.png' />
 </a>
 
-#### Linux (amd64 & arm64) - 使用 Flathub
+#### Linux (x86_64 & aarch64) - 使用 Flathub
 <a href='https://flathub.org/apps/details/io.github.mrmyhuang.cbetar2' target='_blank'>
 <img width="auto" height='60px' src='https://flathub.org/assets/badges/flathub-badge-en.png' />
 </a>
 
-### RHEL 8 & 9 / CentOS 8 & 9 / Fedora Linux 34-36 (amd64 & arm64) - 使用 Copr
+### RHEL 8 & 9 / CentOS 8 & 9 / Fedora Linux 34-36 (x86_64 & aarch64) - 使用 Copr
 Shell script:
 ```
 sudo dnf copr enable mrmyh/cbetar2
@@ -244,14 +245,14 @@ sudo dnf install cbetar2
 ```
 
 ### 下載安裝檔
-支援的 amd64 & arm64 作業系統如下 (Android 為連線 DB app，其他都是離線 DB app)：
+支援的作業系統如下 (Android 為連線 DB app，其他都是離線 DB app)：
 
   1. Android (中國大陸使用者也能安裝)
-  2. Linux AppImage (Ubuntu, Fedora)
-  3. Linux DEB (Debian, Ubuntu, ...)
-  4. Linux RPM (Fedora, ...)
-  5. Windows 7+
-  6. macOS 10.11+
+  2. Linux amd64 & arm64 AppImage (Ubuntu, Fedora, Debian, Arch, openSUSE)
+  3. Linux amd64 & arm64 DEB (Debian, Ubuntu, ...)
+  4. Linux RPM x86_64 & aarch64 (Fedora, ...)
+  5. Windows 7+ x64 & arm64
+  6. macOS 10.11+ x86_64 & arm64
 
 請開啟任一頁面，下載最新版安裝檔：
 
