@@ -5,14 +5,14 @@ import { /*applyMiddleware,*/ createStore, Store } from "redux";
 //import promise from "redux-promise-middleware"
 
 import reducer from "./reducers";
-import Globals from "../Globals";
 
 //const middleware = applyMiddleware(promise(), thunk, logger)
 
 var savedStore: Store;
+const storeFile = 'Settings.json';
 
-export default function getSavedStore() {
-    var savedSettingsStr = localStorage.getItem(Globals.storeFile);
+function getSavedStore() {
+    var savedSettingsStr = localStorage.getItem(storeFile);
     if (savedSettingsStr != null) {
         savedStore = createStore(reducer, JSON.parse(savedSettingsStr));//, middleware)
     }
@@ -22,3 +22,10 @@ export default function getSavedStore() {
 
     return savedStore;
 }
+
+const store = {
+    storeFile,
+    getSavedStore,
+};
+
+export default store;

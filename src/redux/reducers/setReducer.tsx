@@ -2,12 +2,22 @@ import Globals from '../../Globals';
 import { Bookmark, BookmarkType } from '../../models/Bookmark';
 import { Settings } from '../../models/Settings';
 
+function updateUi(newSettings: Settings) {
+  while (document.body.classList.length > 0) {
+    document.body.classList.remove(document.body.classList.item(0)!);
+  }
+  document.body.classList.toggle(`theme${newSettings.theme}`, true);
+  document.body.classList.toggle(`print${newSettings.printStyle}`, true);
+  Globals.updateCssVars(newSettings);
+}
+
 // Used to store settings. They will be saved to file.
 export default function reducer(state = new Settings(), action: any) {
   let newSettings: Settings = { ...state };
   switch (action.type) {
     case "LOAD_SETTINGS":
       newSettings = JSON.parse(localStorage.getItem(Globals.storeFile)!).settings;
+      updateUi(newSettings);
       break;
     case "SET_KEY_VAL":
       var key = action.key;
@@ -106,6 +116,7 @@ export default function reducer(state = new Settings(), action: any) {
     // @ts-ignore
     case "DEFAULT_SETTINGS":
       newSettings = new Settings();
+      updateUi(newSettings);
     // Don't use break here!
     // eslint-disable-next-line
     default:

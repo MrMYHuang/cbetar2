@@ -15,7 +15,6 @@ import {
 import { IonReactRouter } from '@ionic/react-router';
 import { connect, Provider } from 'react-redux';
 import queryString from 'query-string';
-import getSavedStore from './redux/store';
 import { bookmark, settings, library, book } from 'ionicons/icons';
 import CatalogPage from './pages/CatalogPage';
 import WorkPage from './pages/WorkPage';
@@ -52,8 +51,6 @@ import { TmpSettings } from './models/TmpSettings';
 import { Settings } from './models/Settings';
 
 const electronBackendApi: any = (window as any).electronBackendApi;
-
-let store = getSavedStore();
 /*
 class DebugRouter extends IonReactRouter {
   constructor(props: any) {
@@ -103,6 +100,7 @@ interface State {
   downloadModal: any;
 }
 
+const store = Globals.store;
 class _App extends React.Component<PageProps> {
   render() {
     return (
@@ -191,7 +189,7 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
     let showToastInit = false;
     let toastMessageInit = '';
     if(Globals.twKaiFontNeedUpgrade() && this.props.settings.useFontKai) {
-      (this.props as any).dispatch({
+      this.props.dispatch({
         type: "SET_KEY_VAL",
         key: 'useFontKai',
         val: false
@@ -251,13 +249,7 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
 
   restoreAppSettings() {
     localStorage.setItem(Globals.storeFile, this.originalAppSettingsStr!);
-    this.props.dispatch({ type: 'LOAD_SETTINGS' });
-    while (document.body.classList.length > 0) {
-      document.body.classList.remove(document.body.classList.item(0)!);
-    }
-    document.body.classList.toggle(`theme${this.props.settings.theme}`, true);
-    document.body.classList.toggle(`print${this.props.settings.printStyle}`, true);
-    Globals.updateCssVars(this.props.settings);
+    this.props.dispatch({ type: 'LOAD_SETTINGS' })
   }
 
   // Prevent device from sleeping.

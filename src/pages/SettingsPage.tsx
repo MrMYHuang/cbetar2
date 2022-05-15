@@ -64,9 +64,11 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
   }
 
   async updateAllJuans() {
+    const states = Globals.store.getState();
+    const settings = states.settings as Settings;
     this.setState({ juansDownloadedRatio: 0 });
-    const workBookmarksWithHtml = this.props.settings.bookmarks.filter((b) => b.type === BookmarkType.WORK);
-    const juanBookmarksWithHtml = this.props.settings.bookmarks.filter((b) => b.type === BookmarkType.JUAN);
+    const workBookmarksWithHtml = settings.bookmarks.filter((b) => b.type === BookmarkType.WORK);
+    const juanBookmarksWithHtml = settings.bookmarks.filter((b) => b.type === BookmarkType.JUAN);
     const juanBookmarksNotInWorkBookmarksWithHtml = juanBookmarksWithHtml.filter((b) => workBookmarksWithHtml.findIndex((wb) => wb.work?.work === b.work?.work) === -1);
 
     // Total juans to download.
@@ -93,7 +95,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
         }
         if (j === 0) {
           // Update bookmarks for once.
-          this.updateBookmark(this.props.settings.bookmarks, Object.assign(bookmarkWithHtml, { work: res.workInfo }));
+          this.updateBookmark(settings.bookmarks, Object.assign(bookmarkWithHtml, { work: res.workInfo }));
         }
         console.log(`File saved: ${fileName}`);
       }
@@ -112,13 +114,13 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
         Globals.saveFileToIndexedDB(fileName, res.htmlStr);
       }
       // Update bookmarks
-      this.updateBookmark(this.props.settings.bookmarks, Object.assign(bookmarkWithHtml, { work: newWork }));
+      this.updateBookmark(settings.bookmarks, Object.assign(bookmarkWithHtml, { work: newWork }));
       console.log(`File saved: ${fileName}`);
     }
 
     this.props.dispatch({
       type: "UPDATE_BOOKMARKS",
-      bookmarks: this.props.settings.bookmarks,
+      bookmarks: settings.bookmarks,
     });
     this.setState({ showUpdateAllJuansDone: true });
   }
@@ -277,8 +279,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
 
                     <IonButton fill='outline' shape='round' size='large' className='uiFont' onClick={(e) => {
                       (document.querySelector('#importJsonInput') as HTMLInputElement).click();
-                    }}>匯入</IonButton
-                    >
+                    }}>匯入</IonButton>
                     <IonButton fill='outline' shape='round' size='large' className='uiFont' onClick={(e) => {
                       this.setState({ showClearAlert: true });
                     }}>重置</IonButton>
@@ -305,11 +306,6 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                           handler: async (value) => {
                             await Globals.clearAppData();
                             this.props.dispatch({ type: 'DEFAULT_SETTINGS' });
-                            while (document.body.classList.length > 0) {
-                              document.body.classList.remove(document.body.classList.item(0)!);
-                            }
-                            document.body.classList.toggle(`theme${this.props.settings.theme}`, true);
-                            document.body.classList.toggle(`print${this.props.settings.printStyle}`, true);
                             this.setState({ showClearAlert: false, showToast: true, toastMessage: "清除成功!" });
                           },
                         }
@@ -421,8 +417,9 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                   this.props.dispatch({
                     type: "SET_KEY_VAL",
                     key: 'scrollbarSize',
-                    val: value,
+                    val: +value,
                   });
+                  this.props.settings.scrollbarSize = +value;
                   Globals.updateCssVars(this.props.settings);
                 }}>
                 <IonSelectOption className='uiFont' value={0}>無</IonSelectOption>
@@ -441,7 +438,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                   return;
                 }
 
-                (this.props as any).dispatch({
+                this.props.dispatch({
                   type: "SET_KEY_VAL",
                   key: 'showComments',
                   val: isChecked
@@ -469,11 +466,12 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                   return;
                 }
 
-                (this.props as any).dispatch({
+                this.props.dispatch({
                   type: "SET_KEY_VAL",
                   key: 'useFontKai',
                   val: isChecked
                 });
+                this.props.settings.useFontKai = isChecked;
                 Globals.updateCssVars(this.props.settings);
               }} />
             </IonItem>
@@ -493,7 +491,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                       showDownloadKaiFontAlert: false,
                     });
 
-                    (this.props as any).dispatch({
+                    this.props.dispatch({
                       type: "SET_KEY_VAL",
                       key: 'useFontKai',
                       val: false
@@ -505,12 +503,13 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                   cssClass: 'secondary uiFont',
                   handler: async (value) => {
                     this.setState({ showDownloadKaiFontAlert: false, showToast: true, toastMessage: "楷書字型背景下載中..." });
-                    Globals.loadTwKaiFonts().then(v => {
-                      (this.props as any).dispatch({
+                    Globals.loadTwKaiFonts().then(async v => {
+                      this.props.dispatch({
                         type: "SET_KEY_VAL",
                         key: 'useFontKai',
                         val: true
                       });
+                      this.props.settings.useFontKai = true;
                       Globals.updateCssVars(this.props.settings);
                     })
                   },
@@ -529,6 +528,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                       key: 'uiFontSize',
                       val: +e.detail.value,
                     });
+                    this.props.settings.fontSize = +e.detail.value;
                     Globals.updateCssVars(this.props.settings);
                   }} />
                 </div>
@@ -543,8 +543,9 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                   this.props.dispatch({
                     type: "SET_KEY_VAL",
                     key: 'fontSize',
-                    val: e.detail.value,
+                    val: +e.detail.value,
                   });
+                  this.props.settings.fontSize = +e.detail.value;
                   Globals.updateCssVars(this.props.settings);
                 }} />
               </div>

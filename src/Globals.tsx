@@ -3,6 +3,7 @@ import { isPlatform, IonLabel, IonIcon } from '@ionic/react';
 import { Work } from './models/Work';
 import { Bookmark } from './models/Bookmark';
 import { refreshCircle } from 'ionicons/icons';
+import Store from './redux/store';
 
 const pwaUrl = process.env.PUBLIC_URL || '/';
 const bugReportApiUrl = 'https://vh6ud1o56g.execute-api.ap-northeast-1.amazonaws.com/bugReportMailer';
@@ -10,7 +11,6 @@ const apiVersion = 'v1.2';
 const cbetaApiUrl = `https://cbdata.dila.edu.tw/${apiVersion}`;
 const dilaDictApiUrl = `https://glossaries.dila.edu.tw/search.json`;
 const cbetardb = 'cbetardb';
-const storeFile = 'Settings.json';
 const twKaiFontVersion = 4;
 // Disable problematic fonts.
 //const twKaiFonts = ['Kai'];
@@ -20,6 +20,8 @@ const twKaiFontKeys = ['twKaiFont-1', 'twKaiFont-2', 'twKaiFont-3', 'twKaiExtBFo
 //const twKaiFontPaths = [`${pwaUrl}/assets/TW-Kai-98_1.woff`, `${pwaUrl}/assets/TW-Kai-Ext-B-98_1.woff`, `${pwaUrl}/assets/TW-Kai-Plus-98_1.woff`, ];
 const twKaiFontPaths = [`${pwaUrl}/assets/TW-Kai-98_1-1.woff2`, `${pwaUrl}/assets/TW-Kai-98_1-2.woff2`, `${pwaUrl}/assets/TW-Kai-98_1-3.woff2`, `${pwaUrl}/assets/TW-Kai-Ext-B-98_1-1.woff2`, `${pwaUrl}/assets/TW-Kai-Ext-B-98_1-2.woff2`, `${pwaUrl}/assets/TW-Kai-Ext-B-98_1-3.woff2`, `${pwaUrl}/assets/TW-Kai-Plus-98_1-1.woff2`, `${pwaUrl}/assets/TW-Kai-Plus-98_1-2.woff2`,];
 let log = '';
+
+let store = Store.getSavedStore();
 
 const axiosInstance = axios.create({
   baseURL: cbetaApiUrl,
@@ -181,7 +183,7 @@ async function fetchJuan(work: string, juan: string, htmlFile: string | null, up
   } catch {
     // Ignore file not found.
   }
-  const settingsStr = localStorage.getItem(storeFile);
+  const settingsStr = localStorage.getItem(Store.storeFile);
 
   let workInfo = new Work({});
   let bookmark: Bookmark | undefined;
@@ -314,7 +316,8 @@ function zhVoices() {
 }
 
 const Globals = {
-  storeFile: storeFile,
+  storeFile: Store.storeFile,
+  store,
   fontSizeNorm: 24,
   fontSizeLarge: 48,
   getLog,
