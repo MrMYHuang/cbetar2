@@ -327,7 +327,7 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
               <Route path={`/settings`} render={(props: any) => <SettingsPage {...props} />} />
               <Route path={`/`} render={() => { return this.routeByQueryString(); }} exact={true} />
             </IonRouterOutlet>
-            <IonTabBar slot="bottom">
+            <IonTabBar hidden={this.props.tmpSettings.fullScreen} slot="bottom">
               <IonTabButton tab="bookmarks" href={`/bookmarks`}>
                 <IonIcon icon={bookmark} />
               </IonTabButton>

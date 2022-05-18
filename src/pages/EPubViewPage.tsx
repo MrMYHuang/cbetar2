@@ -7,7 +7,7 @@ import * as uuid from 'uuid';
 import queryString from 'query-string';
 import './EPubViewPage.css';
 import Globals from '../Globals';
-import { bookmark, arrowBack, home, search, ellipsisHorizontal, ellipsisVertical, arrowForward, musicalNotes, stopCircle, book, shareSocial, print, refreshCircle, copy, arrowUp, arrowDown, musicalNote, link, chevronUpOutline, playSkipForward, playSkipBack } from 'ionicons/icons';
+import { bookmark, arrowBack, home, search, ellipsisHorizontal, ellipsisVertical, arrowForward, musicalNotes, stopCircle, book, shareSocial, print, refreshCircle, copy, arrowUp, arrowDown, musicalNote, link, chevronUpOutline, playSkipForward, playSkipBack, expand } from 'ionicons/icons';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
 import { Work } from '../models/Work';
 import SearchAlert from '../components/SearchAlert';
@@ -186,6 +186,15 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       };
     }
     document.addEventListener("keydown", this.keyListener.bind(this), false);
+    document.onfullscreenchange = () => {
+      if (!document.fullscreenElement) {
+        this.props.dispatch({
+          type: "TMP_SET_KEY_VAL",
+          key: 'fullScreen',
+          val: false,
+        });
+      }
+    };
   }
 
   async loadEpubCoverToMemFs() {
@@ -224,6 +233,23 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       this.lastPage = 0;
     }
     this.fetchData();
+  }
+
+  componentDidUpdate(prevProps: any) {
+    if (this.props.tmpSettings.fullScreen !== prevProps.tmpSettings.fullScreen) {
+
+      let waitFullscreenSwitching = new Promise<void>(() => { });
+      if (this.props.tmpSettings.fullScreen) {
+        waitFullscreenSwitching = document.documentElement.requestFullscreen();
+      } else {
+        waitFullscreenSwitching = document.exitFullscreen();
+      }
+
+      waitFullscreenSwitching.then(() => {
+        this.ionViewWillLeave();
+        this.ionViewWillEnter();
+      });
+    }
   }
 
   ionViewDidEnter() {
@@ -363,17 +389,28 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
     // Left/down Key
     if (key === (this.props.rtlVerticalLayout ? 37 : 40)) {
-      this.buttonNext()
+      this.buttonNext();
+      return;
     }
 
     // Right/top Key
     if (key === (this.props.rtlVerticalLayout ? 39 : 38)) {
       this.buttonPrev();
+      return;
     }
 
     if (e.code === 'F3' || (e.ctrlKey && e.key.toLowerCase() === 'f')) {
       e.preventDefault();
       this.setState({ showSearchTextToast: false, showSearchTextAlert: true });
+      return;
+    }
+
+    if (e.code === "Enter") {
+      this.props.dispatch({
+        type: "TMP_SET_KEY_VAL",
+        key: 'fullScreen',
+        val: !this.props.tmpSettings.fullScreen,
+      });
     }
   };
 
@@ -1119,7 +1156,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
   render() {
     let header = (
-      <IonHeader>
+      <IonHeader hidden={this.props.tmpSettings.fullScreen}>
         <IonToolbar>
           <IonTitle className='uiFont'></IonTitle>
 
@@ -1412,6 +1449,15 @@ class _EPubViewPage extends React.Component<PageProps, State> {
                 this.juanPrev();
               }}>
                 <IonIcon style={this.props.rtlVerticalLayout ? {} : { transform: 'rotate(270deg)' }} icon={playSkipForward} color='dark'></IonIcon>
+              </IonFabButton>
+              <IonFabButton onClick={e => {
+                this.props.dispatch({
+                  type: "TMP_SET_KEY_VAL",
+                  key: 'fullScreen',
+                  val: !this.props.tmpSettings.fullScreen,
+                });
+              }}>
+                <IonIcon icon={expand} color='dark'></IonIcon>
               </IonFabButton>
             </IonFabList>
           </IonFab>

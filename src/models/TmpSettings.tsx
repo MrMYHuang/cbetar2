@@ -5,4 +5,5 @@ export class TmpSettings {
     workListType: WorkListType | undefined;
     mainVersion: string | null = null;
     cbetaOfflineDbMode: boolean = false;
+    fullScreen: boolean = false;
 }

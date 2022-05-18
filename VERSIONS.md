@@ -1,6 +1,9 @@
 # <a id='history'>版本歷史</a>
+* PWA 6.1.0:
+  * [新增] 經文頁支援全螢幕模式。鍵盤快速鍵: Enter
+
 * PWA 6.0.5:
-  * [修正] package.json homepage 若不為根目錄，app link 運作異常問題。
+  * [修正] package.json homepage 若不為根目錄，第一次使用 app link 運作異常問題。
 
 * PWA 6.0.4:
   * [修正] redux dispatch 與 redux states 使用邏輯。例如：修正楷書開關 UI 與實際字型不一致的問題。
