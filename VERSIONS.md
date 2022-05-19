@@ -1,8 +1,7 @@
 # <a id='history'>版本歷史</a>
-* PWA 6.1.0:
+* PWA 6.2.0:
   * [新增] 經文頁支援全螢幕模式。鍵盤快速鍵: Enter
-
-* PWA 6.0.5:
+  * [新增] 經文頁按鈕透明度設定。
   * [修正] package.json homepage 若不為根目錄，第一次使用 app link 運作異常問題。
 
 * PWA 6.0.4:

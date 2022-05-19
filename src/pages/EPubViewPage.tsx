@@ -1368,7 +1368,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       </IonHeader>
     );
 
-    const fabButtonOpacity = 0.2;
+    const fabButtonOpacity = this.props.settings.fabButtonAlpha;
     let navButtons = (<>
       <IonFab vertical='center' horizontal='start' slot='fixed'>
         <IonFabButton style={{ opacity: fabButtonOpacity }} onClick={e => this.props.rtlVerticalLayout ? this.buttonNext() : this.buttonPrev()}

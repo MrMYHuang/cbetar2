@@ -8,6 +8,7 @@ export class Settings {
     paginated: boolean = true;
     rtlVerticalLayout: boolean = true;
     scrollbarSize = 0;
+    fabButtonAlpha = 0.2;
     useFontKai = false;
     fontSize = 32;
     uiFontSize: number = 24;

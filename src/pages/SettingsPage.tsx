@@ -448,6 +448,22 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={text} slot='start' />
+              <div className="contentBlock">
+                <div style={{ flexDirection: "column" }}>
+                  <IonLabel className='ion-text-wrap uiFont'>經文頁按鈕透明度: {this.props.settings.fabButtonAlpha.toFixed(1)}</IonLabel>
+                  <IonRange min={0} max={1} step={0.1} pin={true} snaps={true} value={this.props.settings.fabButtonAlpha} onIonChange={e => {
+                    this.props.dispatch({
+                      type: "SET_KEY_VAL",
+                      key: 'fabButtonAlpha',
+                      val: +e.detail.value,
+                    });
+                  }} />
+                </div>
+              </div>
+            </IonItem>
+            <IonItem>
+              <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
+              <IonIcon icon={text} slot='start' />
               <IonLabel className='ion-text-wrap uiFont'>{Globals.appSettings['useFontKai']}</IonLabel>
               <IonToggle slot='end' checked={this.props.settings.useFontKai} onIonChange={async e => {
                 const isChecked = e.detail.checked;
