@@ -14,6 +14,7 @@ import { TmpSettings } from '../models/TmpSettings';
 interface StateProps {
   showFontLicense: boolean;
   juansDownloadedRatio: number;
+  fontDownloadedRatio: number;
   showUpdateAllJuansDone: boolean;
   showBugReportAlert: boolean;
   showDownloadKaiFontAlert: boolean;
@@ -41,6 +42,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
     this.state = {
       showFontLicense: false,
       juansDownloadedRatio: 0,
+      fontDownloadedRatio: 0,
       showBugReportAlert: false,
       showUpdateAllJuansDone: false,
       showDownloadKaiFontAlert: false,
@@ -464,7 +466,10 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={text} slot='start' />
-              <IonLabel className='ion-text-wrap uiFont'>{Globals.appSettings['useFontKai']}</IonLabel>
+              <div style={{ width: '100%' }}>
+                <IonLabel className='ion-text-wrap uiFont'>{Globals.appSettings['useFontKai']}</IonLabel>
+                <IonProgressBar value={this.state.fontDownloadedRatio} />
+              </div>
               <IonToggle slot='end' checked={this.props.settings.useFontKai} onIonChange={async e => {
                 const isChecked = e.detail.checked;
 
@@ -519,7 +524,9 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                   cssClass: 'secondary uiFont',
                   handler: async (value) => {
                     this.setState({ showDownloadKaiFontAlert: false, showToast: true, toastMessage: "楷書字型背景下載中..." });
-                    Globals.loadTwKaiFonts().then(async v => {
+                    Globals.loadTwKaiFonts((progress: number) => {
+                      this.setState({ fontDownloadedRatio: progress });
+                    }).then(async v => {
                       this.props.dispatch({
                         type: "SET_KEY_VAL",
                         key: 'useFontKai',

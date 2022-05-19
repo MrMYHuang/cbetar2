@@ -32,13 +32,14 @@ function twKaiFontNeedUpgrade() {
   return +(localStorage.getItem('twKaiFontVersion') ?? 1) < twKaiFontVersion;
 }
 
-async function loadTwKaiFonts() {
+async function loadTwKaiFonts(progressCallback: Function | null = null) {
   let forceUpdate = false;
   if (twKaiFontNeedUpgrade()) {
     localStorage.setItem('twKaiFontVersion', twKaiFontVersion + "");
     forceUpdate = true;
   }
 
+  let finishCount = 0;
   let load: Promise<any>[] = [];
   for (let i = 0; i < twKaiFonts.length; i++) {
     load.push(loadTwKaiFont(
@@ -46,7 +47,12 @@ async function loadTwKaiFonts() {
       twKaiFontKeys[i],
       twKaiFontPaths[i],
       forceUpdate,
-    ));
+    ).then(
+      // eslint-disable-next-line no-loop-func
+      () => {
+      finishCount += 1;
+      progressCallback && progressCallback(finishCount /  twKaiFonts.length);
+    }));
   }
   return Promise.all(load);
 }
@@ -80,7 +86,7 @@ async function loadTwKaiFont(font: string, key: string, path: string, forceUpdat
     return fontFace.load() as Promise<any>;
   }).then((fontFace) => {
     document.fonts.add(fontFace);
-    console.log(`[Main] ${font} font loading success!`);
+    console.log(`[Main] ${key} font loading success!`);
   });
 }
 
