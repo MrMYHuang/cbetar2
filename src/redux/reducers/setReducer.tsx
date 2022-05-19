@@ -123,6 +123,13 @@ export default function reducer(state = new Settings(), action: any) {
       if (Object.keys(newSettings).length === 0) {
         newSettings = new Settings();
       }
+      const defaultSettings = new Settings();
+      Object.keys(defaultSettings).forEach(key => {
+        // Upgrade the old setting with new key and default value.
+        if ((newSettings as any)[key] === undefined) {
+          (newSettings as any)[key] = (defaultSettings as any)[key];
+        }
+      });
   }
   return newSettings;
 }
