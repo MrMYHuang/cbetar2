@@ -383,18 +383,16 @@ class _EPubViewPage extends React.Component<PageProps, State> {
   }
 
   keyListener(e: KeyboardEvent) {
-    let key = e.keyCode || e.which;
-
     console.log(e.type)
 
     // Left/down Key
-    if (key === (this.props.rtlVerticalLayout ? 37 : 40)) {
+    if (e.code === (this.props.rtlVerticalLayout ? 'ArrowLeft' : 'ArrowDown')) {
       this.buttonNext();
       return;
     }
 
     // Right/top Key
-    if (key === (this.props.rtlVerticalLayout ? 39 : 38)) {
+    if (e.code === (this.props.rtlVerticalLayout ? 'ArrowRight' : 'ArrowTop')) {
       this.buttonPrev();
       return;
     }
