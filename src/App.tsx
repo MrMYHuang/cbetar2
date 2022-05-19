@@ -93,6 +93,7 @@ interface AppOrigProps extends Props, RouteComponentProps<{
 }> { }
 
 interface State {
+  windowInnerHeight: number | null;
   showToast: boolean;
   toastMessage: string;
   showUpdateAlert: boolean;
@@ -117,6 +118,7 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
 
   constructor(props: any) {
     super(props);
+
     if (!this.props.settings.hasAppLog) {
       Globals.disableAppLog();
     }
@@ -157,9 +159,12 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
     // Update IonApp height after screen rotation.
     if (Globals.isTouchDevice()) {
       window.onorientationchange = (event) => {
-        setTimeout(() => {
-          this.forceUpdate();
-        }, 500);
+        this.setState({ windowInnerHeight: null }, () => {
+          setTimeout(() => {
+            this.setState({ windowInnerHeight: window.innerHeight }, () => {
+            });
+          }, 500);
+        });
       }
     }
 
@@ -188,7 +193,7 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
 
     let showToastInit = false;
     let toastMessageInit = '';
-    if(Globals.twKaiFontNeedUpgrade() && this.props.settings.useFontKai) {
+    if (Globals.twKaiFontNeedUpgrade() && this.props.settings.useFontKai) {
       this.props.dispatch({
         type: "SET_KEY_VAL",
         key: 'useFontKai',
@@ -206,12 +211,25 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
     }
 
     this.state = {
+      // Work around a window.innerHeight update problem on Android 9.
+      // For example, when this app switches off full screen mode,
+      // there is a race condition between update of window.innerHeight and render of this component.
+      // If render is faster, we get a wrong innerHeight.
+      // Thus, we save the correct innerHeight to this variable for switching off full screen mode.
+      windowInnerHeight: null,
       showUpdateAlert: false,
       showRestoreAppSettingsToast: (queryParams.settings != null && this.originalAppSettingsStr != null) || false,
       showToast: showToastInit,
       toastMessage: toastMessageInit,
       downloadModal: { progress: 0, show: false }
     };
+
+    // Work around the correct innerHeight problem on Android by using delayed update.
+    setTimeout(() => {
+      if (this.state.windowInnerHeight !== window.innerHeight) {
+        this.setState({ windowInnerHeight: window.innerHeight });
+      }
+    }, 500);
 
     serviceWorkCallbacks.onUpdate = (registration: ServiceWorkerRegistration) => {
       this.registrationNew = registration;
@@ -305,7 +323,7 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
     return (
       <IonApp style={
         // Without this, window height shrinks after Android soft keyboard poping up.
-        Globals.isTouchDevice() ? { height: `${window.innerHeight}px` } : {}
+        (Globals.isTouchDevice() && this.state.windowInnerHeight && !this.props.tmpSettings.fullScreen) ? { height: `${this.state.windowInnerHeight}px` } : {}
       }>
         <IonReactRouter basename={Globals.pwaUrl}>
           <IonTabs>

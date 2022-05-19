@@ -238,11 +238,13 @@ class _EPubViewPage extends React.Component<PageProps, State> {
   componentDidUpdate(prevProps: any) {
     if (this.props.tmpSettings.fullScreen !== prevProps.tmpSettings.fullScreen) {
 
-      let waitFullscreenSwitching = new Promise<void>(() => { });
-      if (this.props.tmpSettings.fullScreen) {
-        waitFullscreenSwitching = document.documentElement.requestFullscreen();
-      } else {
-        waitFullscreenSwitching = document.exitFullscreen();
+      let waitFullscreenSwitching = new Promise<void>((ok) => { ok(); });
+      if (!isPlatform('ios')) {
+        if (this.props.tmpSettings.fullScreen) {
+          waitFullscreenSwitching = document.documentElement.requestFullscreen();
+        } else {
+          waitFullscreenSwitching = document.exitFullscreen();
+        }
       }
 
       waitFullscreenSwitching.then(() => {
