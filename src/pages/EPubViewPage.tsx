@@ -217,24 +217,19 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     return `${this.props.match.params.work}/${this.props.match.params.path}`;
   }
 
-  currentWork = '';
+  oldWorkJuanId = '';
   uuidStr = '';
   epubcfiFromUrl = '';
   ionViewWillEnter() {
-    let queryParams = queryString.parse(this.props.location.search) as any;
-    this.htmlFile = queryParams.file;
-    this.htmlTitle = queryParams.title;
-    this.epubcfiFromUrl = queryParams.bookmark || '';
-    let state = this.props.location.state as any;
-    this.uuidStr = state ? state.uuid : '';
-    //console.log( 'view will enter' );
-    if (this.currentWork !== this.workJuanId) {
-      this.currentWork = this.workJuanId;
-      this.lastPage = 0;
+    if (this.state.htmlStr != null && this.bookSettingsChanged) {
+      this.bookSettingsChanged = false;
+      this.html2Epub();
+    } else {
+      this.restoreSavedPage();
     }
-    this.fetchData();
   }
 
+  bookSettingsChanged = true;
   componentDidUpdate(prevProps: any) {
     if (this.props.tmpSettings.fullScreen !== prevProps.tmpSettings.fullScreen) {
 
@@ -248,25 +243,58 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       }
 
       waitFullscreenSwitching.then(() => {
-        this.ionViewWillLeave();
-        this.ionViewWillEnter();
+        this.html2Epub();
       });
     }
+
+    const queryParams = queryString.parse(this.props.location.search) as any;
+    this.htmlFile = queryParams.file;
+    this.htmlTitle = queryParams.title;
+    this.epubcfiFromUrl = queryParams.bookmark || '';
+    const state = this.props.location.state as any;
+    this.uuidStr = state ? state.uuid : '';
+    //console.log( 'view will enter' );
+    if (this.oldWorkJuanId !== this.workJuanId) {
+      this.oldWorkJuanId = this.workJuanId;
+      this.savedPageIndex = 1;
+      // Reduce the redundant book update.
+      this.bookSettingsChanged = false;
+      this.fetchData().then(() => {
+        this.html2Epub();
+      });
+    }
+
+    this.bookSettingsChanged = this.bookSettingsChanged || [
+      'paginated',
+      'rtlVerticalLayout',
+      'scrollbarSize',
+      'fontSize',
+      'uiFontSize',
+      'showComments',
+    ].some((v) => this.props.settings[v] !== prevProps.settings[v]);
   }
 
   ionViewDidEnter() {
   }
 
-  lastPage = 0;
+  savedPageIndex = 1;
   ionViewWillLeave() {
+    this.savedPageIndex = this.state.currentPage;
+    this.setState({ currentPage: 1, showSearchTextToast: false });
+    this.resetTextToSpeech();
+  }
+
+  resetTextToSpeech() {
     if (this.state.canTextToSpeech) {
       speechSynthesis.cancel();
     }
-    this.lastPage = this.state.currentPage;
-    this.setState({ htmlStr: null, currentPage: 1, speechState: SpeechState.UNINITIAL, showSearchTextToast: false });
+    this.setState({ speechState: SpeechState.UNINITIAL });
+  }
+
+  destroyBook() {
+    this.resetTextToSpeech();
     this.book?.destroy();
     this.book = null;
-    this.bookCreated = false;
   }
 
   get fileName() {
@@ -277,25 +305,30 @@ class _EPubViewPage extends React.Component<PageProps, State> {
   }
 
   async fetchData() {
-    this.setState({ isLoading: true });
-    try {
-      const res = await Globals.fetchJuan(
-        this.props.match.params.work,
-        this.props.match.params.path,
-        this.htmlFile,
-        false,
-        this.props.tmpSettings.cbetaOfflineDbMode,
-      );
+    return new Promise<boolean>(async (ok, fail) => {
+      this.setState({ isLoading: true });
+      try {
+        const res = await Globals.fetchJuan(
+          this.props.match.params.work,
+          this.props.match.params.path,
+          this.htmlFile,
+          false,
+          this.props.tmpSettings.cbetaOfflineDbMode,
+        );
 
-      await this.loadEpubCoverToMemFs();
+        await this.loadEpubCoverToMemFs();
 
-      // isLoading shall consider the epub.js loading time, thus disable it here.
-      this.setState({ /*isLoading: false, */fetchError: false, workInfo: res.workInfo, htmlStr: res.htmlStr });
-    } catch (e) {
-      console.error(e);
-      console.error(new Error().stack);
-      this.setState({ isLoading: false, fetchError: true });
-    }
+        // isLoading shall consider the epub.js loading time, thus disable it here.
+        this.setState({ /*isLoading: false, */fetchError: false, workInfo: res.workInfo, htmlStr: res.htmlStr }, () => {
+          ok(true);
+        });
+      } catch (e) {
+        console.error(e);
+        console.error(new Error().stack);
+        this.setState({ isLoading: false, fetchError: true });
+        fail(e);
+      }
+    });
   }
 
   epubcfiFromSelectedString = '';
@@ -414,10 +447,9 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     }
   };
 
-  bookCreated = false;
   ePubIframe: HTMLIFrameElement | null = null;
   async html2Epub() {
-    this.bookCreated = true;
+    this.destroyBook();
     this.epub = nodepub.document({
       id: '123-123456789',
       cover: './logo.png',
@@ -647,9 +679,8 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         console.error(error);
       }
 
-      if (this.lastPage !== 0 && this.bookmark == null && this.lastPage !== this.state.currentPage) {
-        this.jumpToPage(this.lastPage);
-      }
+      this.restoreSavedPage();
+
       this.setState({ isLoading: false });
 
       if (this.hasBookmark) {
@@ -1022,6 +1053,13 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         range.startContainer.parentElement?.scrollIntoView();
       }
     }, 100);
+  }
+
+  restoreSavedPage() {
+    if (this.bookmark == null && this.savedPageIndex !== this.state.currentPage) {
+      // Restore the saved page index.
+      this.jumpToPage(this.savedPageIndex);
+    }
   }
 
   buttonPrev() {
@@ -1411,10 +1449,6 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       </IonFab>
     </>);
 
-    if (!this.bookCreated && this.state.htmlStr != null) {
-      this.html2Epub();
-    }
-
     return (
       <IonPage>
         {header}
@@ -1639,7 +1673,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
 const mapStateToProps = (state: any /*, ownProps*/) => {
   return {
-    settings: state.settings,
+    settings: {...state.settings},
     bookmarks: state.settings.bookmarks,
     fontSize: state.settings.fontSize,
     showComments: state.settings.showComments,
