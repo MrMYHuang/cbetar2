@@ -1,7 +1,8 @@
 # <a id='history'>版本歷史</a>
 * PWA 6.5.0:
   * [優化] 經文頁減少不必要的經文重新載入。
-  * [優化] 升級為 @reduxjs/toolkit。
+  * [優化] 升級為 @reduxjs/toolkit node package。
+  * [優化] 升級 epubjs-myh node package。
 
 * PWA 6.3.2:
   * [修正] 經文頁全螢幕模式的 iPad, iPhone 支援度。

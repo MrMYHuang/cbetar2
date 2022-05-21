@@ -94,7 +94,7 @@
     "electron": "^16",
     "electron-builder": "^23.0.4",
     "electron-builder-notarize-pkg-myh": "^1.3.0",
-    "epubjs-myh": "^0.3.116",
+    "epubjs-myh": "^0.3.118",
     "history": "^4.10.1",
     "ionicons": "^6",
     "memfs": "^3.4.1",
