@@ -126,14 +126,14 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
     electronBackendApi?.receive("fromMain", (data: any) => {
       switch (data.event) {
         case 'version':
-          store.dispatch({
+          this.props.dispatch({
             type: "TMP_SET_KEY_VAL",
             key: 'mainVersion',
             val: data.version,
           });
           break;
         case 'cbetaOfflineDbMode':
-          store.dispatch({
+          this.props.dispatch({
             type: "TMP_SET_KEY_VAL",
             key: 'cbetaOfflineDbMode',
             val: data.isOn,
@@ -390,7 +390,7 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
             text: this.props.tmpSettings.shareTextModal?.text,
             showModal: this.props.tmpSettings.shareTextModal?.show || false,
             finish: () => {
-              store.dispatch({
+              this.props.dispatch({
                 type: "TMP_SET_KEY_VAL",
                 key: 'shareTextModal',
                 val: { show: false },
