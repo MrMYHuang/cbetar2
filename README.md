@@ -39,7 +39,7 @@ CBETA 電子佛典閱讀器2(非官方) (Chinese Buddhist Electronic Text Associ
 * 經文頁鍵盤、手勢支援
   * 左、右鍵，右、左滑：分頁直排模式下一頁、上一頁
   * 下、上鍵，上、下滑：分頁模排模式下一頁、上一頁
-  * Enter: 全螢幕切換
+  * Enter、滑鼠雙擊、手勢雙擊: 全螢幕進入/離開切換
   * Esc: 離開全螢幕
   * F3 或 Ctrl + f: 搜尋文字
 
