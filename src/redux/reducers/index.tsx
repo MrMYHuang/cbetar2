@@ -5,4 +5,4 @@ import tmpSettings from './tmpSetReducer';
 
 export default combineReducers({
   settings, tmpSettings
-})
+});

@@ -16,7 +16,7 @@ function getSavedStore() {
     if (savedSettingsStr != null) {
         savedStore = configureStore({
             reducer,
-            enhancers: JSON.parse(savedSettingsStr)
+            preloadedState: JSON.parse(savedSettingsStr)
         });//, middleware)
     }
     else {
