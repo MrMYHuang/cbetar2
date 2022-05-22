@@ -126,14 +126,14 @@ class _WorkPage extends React.Component<PageProps, State> {
     this.setState({ showAddBookmarkDone: true });
     this.props.dispatch({
       type: "ADD_BOOKMARK",
-      bookmark: new Bookmark({
+      bookmark: {
         type: BookmarkType.WORK,
         uuid: this.props.match.params.path,
         selectedText: this.state.work!.title,
         epubcfi: '',
         fileName: '',
         work: this.state.work!,
-      }),
+      } as Bookmark,
     });
   }
 

@@ -197,14 +197,14 @@ class _CatalogPage extends React.Component<PageProps, State> {
   addBookmarkHandler() {
     this.props.dispatch({
       type: "ADD_BOOKMARK",
-      bookmark: new Bookmark({
+      bookmark: {
         type: BookmarkType.CATALOG,
         uuid: this.props.match.params.path,
         selectedText: this.state.pathLabel,
         epubcfi: '',
         fileName: '',
         work: null,
-      }),
+      } as Bookmark,
     });
   }
 

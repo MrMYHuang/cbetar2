@@ -345,7 +345,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       // IMPORTANT!!! Don't arbitrarily change the HTML structure of htmlStr.
       // Otherwise, saved epubcfi bookmarks will become invalid!
       htmlStr: this.state.htmlStr,
-      bookmark: new Bookmark({
+      bookmark: {
         type: this.htmlFile ? BookmarkType.HTML : BookmarkType.JUAN,
         uuid: uuidStr,
         selectedText: selectedText,
@@ -356,7 +356,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
           juan: this.props.match.params.path,
         }
         ),
-      }),
+      } as Bookmark,
     });
     this.setState({ showToast: true, toastMessage: '書籤新增成功！' });
     return;
