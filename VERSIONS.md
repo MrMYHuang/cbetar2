@@ -1,5 +1,7 @@
 # <a id='history'>版本歷史</a>
-* PWA 6.5.0:
+* PWA 6.7.0:
+  * [新增] 經文頁支援雙擊手勢切至全螢幕。
+  * [新增] 經文頁全螢幕切換支援回復頁面，並標示原頁面第1個字。
   * [優化] 經文頁減少不必要的經文重新載入。
   * [優化] 升級為 @reduxjs/toolkit node package。
   * [優化] 升級 epubjs-myh node package。

@@ -233,12 +233,13 @@ class _EPubViewPage extends React.Component<PageProps, State> {
   oldWorkJuanId = '';
   uuidStr = '';
   epubcfiFromUrl = '';
+  epubcfiFromUrlUpdated = false;
   ionViewWillEnter() {
     if (this.state.htmlStr != null && this.bookSettingsChanged) {
       this.bookSettingsChanged = false;
       this.html2Epub();
     } else {
-      this.restoreSavedPage();
+      this.restoreSavedPage(true);
     }
   }
 
@@ -248,7 +249,11 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       let waitFullscreenSwitching = new Promise<void>((ok) => { ok(); });
       if (!isPlatform('ios')) {
         if (this.props.tmpSettings.fullScreen) {
-          waitFullscreenSwitching = document.documentElement.requestFullscreen();
+          try {
+            waitFullscreenSwitching = document.documentElement.requestFullscreen();
+          } catch (error) {
+            console.error(error);
+          }
         } else {
           waitFullscreenSwitching = document.exitFullscreen();
         }
@@ -263,7 +268,10 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     const queryParams = queryString.parse(this.props.location.search) as any;
     this.htmlFile = queryParams.file;
     this.htmlTitle = queryParams.title;
-    this.epubcfiFromUrl = queryParams.bookmark || '';
+    if (this.epubcfiFromUrl !== (queryParams.bookmark || '')) {
+      this.epubcfiFromUrlUpdated = true;
+      this.epubcfiFromUrl = queryParams.bookmark || '';
+    }
     const state = this.props.location.state as any;
     this.uuidStr = state ? state.uuid : '';
     //console.log( 'view will enter' );
@@ -395,8 +403,12 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     const newPage = this.state.currentPage - n;
     if (this.props.paginated && this.state.currentPage > 1) {
       this.rendition?.prev(n);
-      this.setState({ currentPage: newPage });
-      this.findTextsInPage(newPage);
+      return new Promise<void>((ok) => {
+        this.setState({ currentPage: newPage }, () => {
+          this.findTextsInPage(newPage);
+          ok();
+        });
+      });
     }
   }
 
@@ -404,8 +416,12 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     const newPage = this.state.currentPage + n;
     if (this.props.paginated && this.state.currentPage < this.state.pageCount) {
       this.rendition?.next(n);
-      this.setState({ currentPage: newPage });
-      this.findTextsInPage(newPage);
+      return new Promise<void>((ok) => {
+        this.setState({ currentPage: newPage }, () => {
+          this.findTextsInPage(newPage);
+          ok();
+        });
+      });
     }
   }
 
@@ -418,9 +434,9 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     let step = currentPage < page ? 1 : -1;
     let diff = Math.abs(page - currentPage);
     if (step === 1) {
-      this.pageNext(diff);
+      return this.pageNext(diff);
     } else {
-      this.pagePrev(diff);
+      return this.pagePrev(diff);
     }
   }
 
@@ -644,7 +660,6 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       //this.rendition.on("keydown", this.keyListener.bind(this));
 
       this.rendition.on("selected", (cfiRange: any, contents: any) => {
-        console.log(cfiRange);
         this.epubcfiFromSelectedString = cfiRange;
         const selectedStringTemp = this.setSelectedString();
         const selectedRangeTemp = this.setSelectedRange();
@@ -682,14 +697,17 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         // For !paginated.
         const pagestoSkipCoverToc = 2;
         // Jump to epubcfi or the content pages.
-        await (this.rendition as any)._display(this.props.paginated ? this.epubcfi : pagestoSkipCoverToc);
+        if (this.epubcfiFromUrlUpdated) {
+          this.epubcfiFromUrlUpdated = false;
+          await (this.rendition as any)._display(this.props.paginated ? this.epubcfi : pagestoSkipCoverToc);
+        } else {
+          if (!this.restoreSavedPage()) {
+            await (this.rendition as any)._display(this.props.paginated ? this.epubcfi : pagestoSkipCoverToc);
+          }
+        }
       } catch (error) {
         console.error(error);
       }
-
-      this.updateEPubIframe();
-      await this.updatePageInfos();
-      this.restoreSavedPage();
 
       this.setState({ isLoading: false });
 
@@ -711,8 +729,13 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     const iframes = document.getElementsByTagName('iframe');
     if (iframes.length === 1) {
       this.ePubIframe = iframes[0];
-      this.ePubIframe.contentDocument?.addEventListener('keydown', this.keyListener.bind(this), false);
       const ePubIframeWindow = this.ePubIframe!.contentWindow! as any;
+      // Avoid multiple initializations.
+      if (ePubIframeWindow.isInit) {
+        console.log('Warning! Redundant call of updateEPubIframe. ePubIframe is initialized before.');
+        return;
+      }
+      this.ePubIframe.contentDocument?.addEventListener('keydown', this.keyListener.bind(this), false);
       const ePubIframeWindow2 = ePubIframeWindow as Window;
       if (isPlatform('android')) {
         ePubIframeWindow.window.oncontextmenu = Globals.disableAndroidChromeCallout;
@@ -728,7 +751,9 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       ePubIframeWindow.addSwpiedEvents = addSwpiedEvents;
       ePubIframeWindow.addSwpiedEvents();
       ePubIframeWindow.document.addEventListener('swiped', (e: any) => {
+        // Cancel double click event after a swiped event.
         clicksInInterval = 0;
+
         if (!this.props.paginated) {
           return;
         }
@@ -757,6 +782,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         this.doubleClicksToggleFullScreen();
       }
       this.findVisibleTexts();
+      ePubIframeWindow.isInit = true;
 
       /*
       this.ePubIframe.contentWindow?.addEventListener('unload', () => {
@@ -1050,45 +1076,50 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
   moveToSearchText(index: number) {
     const range = this.searchTextRanges[index];
-    this.moveToEpubcfi(this.rangeToEpubcfi(range));
+    this.moveToRange(range);
   }
 
   rangeToEpubcfi(range: Range) {
-
     return (this.rendition?.getContents() as any)[0].cfiFromRange(range) || '';
-    /*
+  }
 
-      if (this.props.paginated) {
-      } else {
-        range.startContainer.parentElement?.scrollIntoView();
-      }*/
+  moveToRange(range: Range) {
+    if (this.props.paginated) {
+      this.moveToEpubcfi(this.rangeToEpubcfi(range));
+    } else {
+      range.startContainer.parentElement?.scrollIntoView();
+    }
   }
 
   moveToEpubcfi(epubcfi: string) {
     return new Promise<void>((ok) => {
       this.rendition?.display(epubcfi).then(() => {
         this.rendition?.annotations.removeAll();
-        ok();
-        return;
         this.rendition?.annotations.highlight(epubcfi, {}, (e: any) => {
-        })
+        });
+        ok();
       });
     })
   }
 
-  restoreSavedPage() {
-    if (this.bookmark == null && this.savedPageIndex !== this.state.currentPage) {
+  restoreSavedPage(isIonViewEnter: boolean = false) {
+    if (isIonViewEnter && this.bookmark == null && this.savedPageIndex !== this.state.currentPage) {
       // Restore the saved page index.
-      //this.jumpToPage(this.savedPageIndex);
+      this.jumpToPage(this.savedPageIndex);
+      return true;
     }
+
     const savedPageStartCfiRange = this.pageStartCfiRanges[this.savedPageIndex - 1];
     if (savedPageStartCfiRange != null) {
       this.moveToEpubcfi(savedPageStartCfiRange).then(() => {
         return this.updatePageInfos();
       }).then(() => {
+        this.updateEPubIframe();
         this.findTextsInPage(this.state.currentPage);
       });
+      return true;
     }
+    return false;
   }
 
   buttonPrev() {
