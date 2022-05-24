@@ -17,7 +17,7 @@ import { TmpSettings } from '../models/TmpSettings';
 import { clearTimeout } from 'timers';
 
 // Load TW-Kai font in iframe.
-async function loadTwKaiFonts(this: any) {
+async function loadTwKaiFonts(this: Window) {
   for (let i = 0; i < Globals.twKaiFonts.length; i++) {
     loadTwKaiFont(
       Globals.twKaiFonts[i],
@@ -235,16 +235,38 @@ class _EPubViewPage extends React.Component<PageProps, State> {
   epubcfiFromUrl = '';
   epubcfiFromUrlUpdated = false;
   ionViewWillEnter() {
-    if (this.state.htmlStr != null && this.bookSettingsChanged) {
+    if (this.state.htmlStr != null && (this.bookSettingsChanged || this.bookmarkEpubcfiUpdated)) {
       this.bookSettingsChanged = false;
       this.html2Epub();
     } else {
-      this.restoreSavedPage(true);
+      if (this.bookmark == null && this.savedPageIndex !== this.state.currentPage) {
+        // Restore the saved page index.
+        this.jumpToPage(this.savedPageIndex);
+        return true;
+      }
     }
   }
 
   bookSettingsChanged = true;
-  componentDidUpdate(prevProps: any) {
+  componentDidUpdate(prevProps: PageProps) {
+    const queryParams = queryString.parse(this.props.location.search) as any;
+    this.htmlFile = queryParams.file;
+    this.htmlTitle = queryParams.title;
+    if (this.epubcfiFromUrl !== (queryParams.bookmark || '')) {
+      this.epubcfiFromUrlUpdated = true;
+      this.epubcfiFromUrl = queryParams.bookmark || '';
+    }
+    const state = this.props.location.state as any;
+    this.uuidStr = state ? state.uuid : '';
+
+    const newBookmarkEpubcfi = this.props.bookmarks.find((b) => b.uuid === this.uuidStr)?.epubcfi || '';
+    if (this.uuidStr !== '' && newBookmarkEpubcfi !== this.bookmarkEpubcfi) {
+      this.bookmarkEpubcfi = newBookmarkEpubcfi;
+      this.pageStartEpubcfies = [];
+      this.isPageSearched = [];
+      this.bookmarkEpubcfiUpdated = true;
+    }
+
     if (this.props.tmpSettings.fullScreen !== prevProps.tmpSettings.fullScreen) {
       let waitFullscreenSwitching = new Promise<void>((ok) => { ok(); });
       if (!isPlatform('ios')) {
@@ -264,16 +286,6 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         this.html2Epub();
       });
     }
-
-    const queryParams = queryString.parse(this.props.location.search) as any;
-    this.htmlFile = queryParams.file;
-    this.htmlTitle = queryParams.title;
-    if (this.epubcfiFromUrl !== (queryParams.bookmark || '')) {
-      this.epubcfiFromUrlUpdated = true;
-      this.epubcfiFromUrl = queryParams.bookmark || '';
-    }
-    const state = this.props.location.state as any;
-    this.uuidStr = state ? state.uuid : '';
     //console.log( 'view will enter' );
     if (this.oldWorkJuanId !== this.workJuanId) {
       this.oldWorkJuanId = this.workJuanId;
@@ -384,7 +396,13 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     return;
   }
 
+  bookmarkEpubcfi = '';
+  bookmarkEpubcfiUpdated = false;
   get bookmark() {
+    if(this.props.bookmarks.length == null) {
+      return null;
+    }
+
     return this.props.bookmarks.find(
       (e) => e.type === BookmarkType.JUAN && e.uuid === this.uuidStr);
   }
@@ -395,8 +413,21 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
   epubcfiFirstPage = 'epubcfi(/6/6[s1]!/4/4/2/6[body]/6,/1:0,/1:1)';
   get epubcfi() {
-    const hasSection = this.rendition?.book.spine.get(this.epubcfiFromUrl);
-    return hasSection ? this.epubcfiFromUrl : this.bookmark != null ? this.bookmark!.epubcfi : this.epubcfiFirstPage;
+    const useUrlEpubcfi = this.epubcfiFromUrlUpdated && this.rendition?.book.spine.get(this.epubcfiFromUrl);
+    const useBookmarkEpubcfi = this.bookmarkEpubcfiUpdated && this.bookmark;
+    const useSavedPageStartEpubcfi = this.pageStartEpubcfies[this.savedPageIndex - 1];
+
+    if (useSavedPageStartEpubcfi) {
+      return useSavedPageStartEpubcfi;
+    } else if (useUrlEpubcfi) {
+      this.epubcfiFromUrlUpdated = false;
+      return this.epubcfiFromUrl;
+    } else if (useBookmarkEpubcfi) {
+      this.bookmarkEpubcfiUpdated = false;
+      return this.bookmark!.epubcfi;
+    } else {
+      return this.epubcfiFirstPage;
+    }
   }
 
   pagePrev(n: number = 1) {
@@ -472,7 +503,8 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
   ePubIframe: HTMLIFrameElement | null = null;
   async html2Epub() {
-    this.destroyBook();
+    //this.destroyBook();
+    (this.rendition as any)?.manager?.stage?.destroy();
     this.epub = nodepub.document({
       id: '123-123456789',
       cover: './logo.png',
@@ -697,27 +729,22 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         // For !paginated.
         const pagestoSkipCoverToc = 2;
         // Jump to epubcfi or the content pages.
-        if (this.epubcfiFromUrlUpdated) {
-          this.epubcfiFromUrlUpdated = false;
-          await (this.rendition as any)._display(this.props.paginated ? this.epubcfi : pagestoSkipCoverToc);
+
+        if (this.props.paginated) {
+          this.moveToEpubcfi(this.epubcfi).then(() => {
+            return this.updatePageInfos();
+          }).then(() => {
+            this.updateEPubIframe();
+            this.findTextsInPage(this.state.currentPage);
+          });
         } else {
-          if (!this.restoreSavedPage()) {
-            await (this.rendition as any)._display(this.props.paginated ? this.epubcfi : pagestoSkipCoverToc);
-          }
+          await (this.rendition as any)._display(pagestoSkipCoverToc);
         }
       } catch (error) {
         console.error(error);
       }
 
       this.setState({ isLoading: false });
-
-      if (this.hasBookmark) {
-        try {
-          this.rendition?.annotations.highlight(this.epubcfi);
-        } catch (e) {
-          console.error(e);
-        }
-      }
 
       this.book?.locations.generate(150);
     } catch (e) {
@@ -900,7 +927,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
   pageWidth = 0;
   pagesWidth = 0;
-  pageStartCfiRanges: string[] = [];
+  pageStartEpubcfies: string[] = [];
   findTextsInPage(n: number) {
     const timeStart = new Date();
     // Zero-based index n.
@@ -916,8 +943,8 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         } else {
           pageStartCharIndex = this.findBinBoundaryVisibleCharIndex(pageStartOffset, 0, this.visibleChars.length - 1) + 1;
         }
-        this.pageStartCfiRanges[nZ] = this.rangeToEpubcfi(this.visibleCharToRange(pageStartCharIndex));
       }
+      this.pageStartEpubcfies[nZ] = this.rangeToEpubcfi(this.visibleCharToRange(pageStartCharIndex));
 
       let pageEndCharSearchRangeEnd = this.visibleChars.length - 1;
       let pageEndCharIndex = this.visibleChars.length - 1;
@@ -1100,26 +1127,6 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         ok();
       });
     })
-  }
-
-  restoreSavedPage(isIonViewEnter: boolean = false) {
-    if (isIonViewEnter && this.bookmark == null && this.savedPageIndex !== this.state.currentPage) {
-      // Restore the saved page index.
-      this.jumpToPage(this.savedPageIndex);
-      return true;
-    }
-
-    const savedPageStartCfiRange = this.pageStartCfiRanges[this.savedPageIndex - 1];
-    if (savedPageStartCfiRange != null) {
-      this.moveToEpubcfi(savedPageStartCfiRange).then(() => {
-        return this.updatePageInfos();
-      }).then(() => {
-        this.updateEPubIframe();
-        this.findTextsInPage(this.state.currentPage);
-      });
-      return true;
-    }
-    return false;
   }
 
   buttonPrev() {
@@ -1744,7 +1751,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 const mapStateToProps = (state: any /*, ownProps*/) => {
   return {
     settings: { ...state.settings },
-    bookmarks: state.settings.bookmarks,
+    bookmarks: JSON.parse(JSON.stringify(state.settings.bookmarks)),
     fontSize: state.settings.fontSize,
     showComments: state.settings.showComments,
     paginated: state.settings.paginated,
@@ -1753,7 +1760,7 @@ const mapStateToProps = (state: any /*, ownProps*/) => {
     scrollbarSize: state.settings.scrollbarSize,
     voiceURI: state.settings.voiceURI,
     speechRate: state.settings.speechRate,
-    tmpSettings: state.tmpSettings,
+    tmpSettings: { ...state.tmpSettings },
   }
 };
 
