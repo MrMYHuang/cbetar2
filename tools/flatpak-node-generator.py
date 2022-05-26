@@ -851,6 +851,10 @@ class ElectronBinaryManager:
 
     def find_binaries(self, binary: str) -> Iterator['ElectronBinaryManager.Binary']:
         for electron_arch, flatpak_arch in self.ELECTRON_ARCHES_TO_FLATPAK.items():
+            # Electron v19+ drop linux-ia32 support.
+            if version_tuple(self.version) >= version_tuple("19.0.0") and electron_arch == "ia32":
+                continue
+
             binary_filename = f'{binary}-v{self.version}-linux-{electron_arch}.zip'
             binary_url = self.child_url(binary_filename)
 
@@ -1823,6 +1827,8 @@ def scan_for_lockfiles(base: Path, patterns: List[str]) -> Iterator[Path]:
             if not patterns or any(map(lockfile.match, patterns)):
                 yield lockfile
 
+def version_tuple(v: str):
+    return tuple(map(int, (v.split("."))))
 
 async def main() -> None:
     parser = argparse.ArgumentParser(description='Flatpak Node generator')
