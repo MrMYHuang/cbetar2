@@ -1,4 +1,7 @@
 # <a id='history'>版本歷史</a>
+* Installer apps, Snap apps, Flathub apps 19.3.0:
+  * [優化] 升級 Electron 19.0.1.
+
 * PWA 6.7.0:
   * [新增] 經文頁支援雙擊手勢切至全螢幕。
   * [新增] 經文頁全螢幕切換支援回復頁面，並標示原頁面第1個字。
