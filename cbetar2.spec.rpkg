@@ -13,8 +13,9 @@ VCS:        {{{ git_dir_vcs }}}
 Source0:    {{{ git_dir_pack }}}
 Source1:    {{{ git_pack path=cbeta_gaiji dir_name=cbeta_gaiji }}}
 
+BuildRequires: nodejs
+BuildRequires: npm
 BuildRequires: jq
-BuildRequires: wget
 BuildRequires: make
 BuildRequires: python3
 BuildRequires: gcc-c++
@@ -40,16 +41,13 @@ tar zxf %{SOURCE0}
 tar zxf %{SOURCE1} -C %{name}
 
 %build
-wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
-. ~/.nvm/nvm.sh
-nvm install 16
 cd %{name}
 npm i --ignore-scripts
 npm run build-electron
 npm x -- electron-builder -l dir -c electronBuilderConfigs/flatpak.json
 
 %install
-electronPackagePath=$(ls -d ./%{name}/dist/linux-unpacked)
+electronPackagePath=$(ls -d ./%{name}/dist/linux*unpacked)
 
 mkdir -p %{buildroot}/%{_usr}/%{name}
 cp -a ${electronPackagePath}/. %{buildroot}/%{_usr}/%{name}
@@ -85,6 +83,9 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/*.metainfo.xml
 %{_datadir}/icons/%{name}.png
 
 %changelog
+* Wed May 25 2022 Meng-Yuan Huang <myh@live.com> 19.2.2-1
+- 19.2.2: Use distro's nodejs to build.
+
 * Wed Apr 21 2022 Meng-Yuan Huang <myh@live.com> 19.2.0-1
 - 19.2.0: Fix Gnome Shell app menu name and icon.
 

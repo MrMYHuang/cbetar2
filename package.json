@@ -3,7 +3,7 @@
   "productName": "電子佛典",
   "homepage": "/",
   "pwaVersion": "6.7.0",
-  "version": "19.2.2",
+  "version": "19.3.0",
   "license": "MIT",
   "keywords": [
     "CBETA",
@@ -91,7 +91,7 @@
     "@types/semver": "^7.3.9",
     "@types/uuid": "^8.3.4",
     "customize-cra": "^1.0.0",
-    "electron": "^16",
+    "electron": "^19.0.1",
     "electron-builder": "^23.0.4",
     "electron-builder-notarize-pkg-myh": "^1.3.0",
     "epubjs-myh": "^0.3.118",

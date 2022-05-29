@@ -1,4 +1,7 @@
 # <a id='history'>版本歷史</a>
+* Installer apps, Snap apps, Flathub apps 19.3.0:
+  * [優化] 升級 Electron 19.0.1.
+  
 * PWA 6.7.1:
   * [修正] 書籤位置還原邏輯。
 
