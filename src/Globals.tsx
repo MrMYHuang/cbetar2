@@ -102,6 +102,26 @@ function getFileName(work: string, juan: string) {
   return `${work}_juan${juan}.html`;
 }
 
+async function checkKeyInIndexedDB(key: string) {
+  const dbOpenReq = indexedDB.open(cbetardb);
+
+  return new Promise(function (ok, fail) {
+    dbOpenReq.onsuccess = async function (ev) {
+      const db = dbOpenReq.result;
+
+      const trans = db.transaction(["store"], 'readonly');
+      let req = trans.objectStore('store').getKey(key);
+      req.onsuccess = async function (_ev) {
+        const data = req.result;
+        if (!data) {
+          return fail();
+        }
+        return ok(data);
+      };
+    };
+  });
+}
+
 async function getFileFromIndexedDB(fileName: string) {
   const dbOpenReq = indexedDB.open(cbetardb);
 
@@ -421,6 +441,7 @@ const Globals = {
   },
   fetchJuan,
   getFileName,
+  checkKeyInIndexedDB,
   getFileFromIndexedDB,
   saveFileToIndexedDB,
   removeFileFromIndexedDB,
