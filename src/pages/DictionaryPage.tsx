@@ -84,12 +84,13 @@ class _DictionaryPage extends React.Component<PageProps, State> {
         {
           responseType: 'json',
         });
-      this.props.dictionaryHistory.unshift(keyword);
-      this.props.dictionaryHistory.splice(10);
+      let dictionaryHistory = JSON.parse(JSON.stringify(this.props.dictionaryHistory));
+      dictionaryHistory.unshift(keyword);
+      dictionaryHistory.splice(10);
       this.props.dispatch({
         type: "SET_KEY_VAL",
         key: 'dictionaryHistory',
-        val: this.props.dictionaryHistory,
+        val: dictionaryHistory,
       });
       this.setState({ fetchError: false, isLoading: false, searches: res.data });
     } catch (e) {
@@ -344,7 +345,7 @@ const DictionaryPage = withIonLifeCycle(_DictionaryPage);
 const mapStateToProps = (state: any /*, ownProps*/) => {
   return {
     dictionaryHistory: state.settings.dictionaryHistory,
-  }
+  };
 };
 
 //const mapDispatchToProps = {};

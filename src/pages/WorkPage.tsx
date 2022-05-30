@@ -88,7 +88,7 @@ class _WorkPage extends React.Component<PageProps, State> {
         // [TODO]
         if (!this.props.tmpSettings.cbetaOfflineDbMode) {
           const resToc = await Globals.axiosInstance.get(`/toc?work=${path}`) as any;
-          work.mulu = (resToc.data.results[0].mulu as WorkChapter[]).map((wc) => new WorkChapter(wc));
+          work.mulu = (resToc.data.results[0].mulu as WorkChapter[]).map((wc) => (wc as WorkChapter));
         }
 
       } catch (err) {
@@ -338,7 +338,7 @@ const mapStateToProps = (state: any /*, ownProps*/) => {
   return {
     bookmarks: state.settings.bookmarks,
     tmpSettings: state.tmpSettings,
-  }
+  };
 };
 
 //const mapDispatchToProps = {};

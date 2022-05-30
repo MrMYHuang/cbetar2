@@ -191,7 +191,7 @@ async function fetchJuan(work: string, juan: string, htmlFile: string | null, up
   }
   const settingsStr = localStorage.getItem(Store.storeFile);
 
-  let workInfo = new Work({});
+  let workInfo = ({} as Work);
   let bookmark: Bookmark | undefined;
   if (settingsStr) {
     const bookmarks: Array<Bookmark> = (JSON.parse(settingsStr) as any).settings.bookmarks;

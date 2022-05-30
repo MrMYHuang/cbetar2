@@ -22,6 +22,7 @@ export default function reducer(state = { ...defaultSettings }, action: any) {
     case "SET_KEY_VAL":
       var key = action.key;
       var val = action.val;
+      (newSettings as any)[key] = val;
       switch (key) {
         case 'theme': {
           document.body.classList.forEach((val) => {
@@ -41,9 +42,13 @@ export default function reducer(state = { ...defaultSettings }, action: any) {
           document.body.classList.toggle(`print${val}`, true);
           break;
         }
+        case 'useFontKai':
+        case 'uiFontSize':
+        case 'fontSize': {
+          Globals.updateCssVars(newSettings);
+          break;
+        }
       }
-
-      (newSettings as any)[key] = val;
       localStorage.setItem(Globals.storeFile, JSON.stringify({ settings: newSettings }));
       break;
     case "ADD_BOOKMARK":

@@ -80,12 +80,13 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
         {
           responseType: 'json',
         });
-      this.props.wordDictionaryHistory.unshift(keyword);
-      this.props.wordDictionaryHistory.splice(10);
+      let wordDictionaryHistory = JSON.parse(JSON.stringify(this.props.wordDictionaryHistory));
+      wordDictionaryHistory.unshift(keyword);
+      wordDictionaryHistory.splice(10);
       this.props.dispatch({
         type: "SET_KEY_VAL",
         key: 'wordDictionaryHistory',
-        val: this.props.wordDictionaryHistory,
+        val: wordDictionaryHistory,
       });
       this.setState({ fetchError: false, isLoading: false, search: res.data.heteronyms });
     } catch (e) {
@@ -366,7 +367,7 @@ const WordDictionaryPage = withIonLifeCycle(_WordDictionaryPage);
 const mapStateToProps = (state: any /*, ownProps*/) => {
   return {
     wordDictionaryHistory: state.settings.wordDictionaryHistory,
-  }
+  };
 };
 
 //const mapDispatchToProps = {};

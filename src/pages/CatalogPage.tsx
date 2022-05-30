@@ -291,9 +291,7 @@ class _CatalogPage extends React.Component<PageProps, State> {
               onIonChange={e => {
                 const value = +e.detail.value;
 
-                if (value !== this.state.topCatalogsType) {
-                  this.setState({ topCatalogsType: value });
-                }
+                this.setState({ topCatalogsType: value });
 
                 let nextPage = '';
                 switch (value) {
@@ -376,7 +374,7 @@ const mapStateToProps = (state: any /*, ownProps*/) => {
     bookmarks: state.settings.bookmarks,
     state: state,
     tmpSettings: state.tmpSettings,
-  }
+  };
 };
 
 //const mapDispatchToProps = {};

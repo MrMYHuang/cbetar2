@@ -133,7 +133,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     this.state = {
       isLoading: false,
       fetchError: false,
-      workInfo: new Work({}),
+      workInfo: ({} as Work),
       htmlStr: null,
       currentPage: 1,
       pageCount: 1,
@@ -1750,8 +1750,8 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
 const mapStateToProps = (state: any /*, ownProps*/) => {
   return {
-    settings: { ...state.settings },
-    bookmarks: JSON.parse(JSON.stringify(state.settings.bookmarks)),
+    settings: state.settings ,
+    bookmarks: state.settings.bookmarks,
     fontSize: state.settings.fontSize,
     showComments: state.settings.showComments,
     paginated: state.settings.paginated,
@@ -1760,8 +1760,8 @@ const mapStateToProps = (state: any /*, ownProps*/) => {
     scrollbarSize: state.settings.scrollbarSize,
     voiceURI: state.settings.voiceURI,
     speechRate: state.settings.speechRate,
-    tmpSettings: { ...state.tmpSettings },
-  }
+    tmpSettings: state.tmpSettings,
+  };
 };
 
 const EPubViewPage = withIonLifeCycle(_EPubViewPage);

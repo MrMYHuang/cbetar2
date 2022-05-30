@@ -344,13 +344,6 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                 interfaceOptions={{ cssClass: 'cbetar2themes' }}
                 onIonChange={e => {
                   const value = +e.detail.value;
-                  // Important! Because it can results in rerendering of its parent component but
-                  // store states of this component is not updated yet! And IonSelect value is changed
-                  // back to the old value and onIonChange is triggered again!
-                  // Thus, we use this check to ignore this invalid change.
-                  if (this.props.settings.theme === value) {
-                    return;
-                  }
 
                   this.props.dispatch({
                     type: "SET_KEY_VAL",
@@ -412,17 +405,15 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                 interfaceOptions={{ cssClass: 'uiFont' }}
                 onIonChange={e => {
                   const value = +e.detail.value;
-                  if (this.props.settings.scrollbarSize === value) {
-                    return;
-                  }
 
                   this.props.dispatch({
                     type: "SET_KEY_VAL",
                     key: 'scrollbarSize',
                     val: +value,
                   });
-                  this.props.settings.scrollbarSize = +value;
-                  Globals.updateCssVars(this.props.settings);
+                  setTimeout(() => {
+                    Globals.updateCssVars(this.props.settings);
+                  }, 0);
                 }}>
                 <IonSelectOption className='uiFont' value={0}>無</IonSelectOption>
                 <IonSelectOption className='uiFont' value={1}>中</IonSelectOption>
@@ -492,8 +483,6 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                   key: 'useFontKai',
                   val: isChecked
                 });
-                this.props.settings.useFontKai = isChecked;
-                Globals.updateCssVars(this.props.settings);
               }} />
             </IonItem>
             <IonAlert
@@ -532,8 +521,6 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                         key: 'useFontKai',
                         val: true
                       });
-                      this.props.settings.useFontKai = true;
-                      Globals.updateCssVars(this.props.settings);
                     })
                   },
                 }
@@ -551,9 +538,6 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                       key: 'uiFontSize',
                       val: +e.detail.value,
                     });
-                    let settings = { ...this.props.settings };
-                    settings.fontSize = +e.detail.value;
-                    Globals.updateCssVars(settings);
                   }} />
                 </div>
               </div>
@@ -569,8 +553,6 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                     key: 'fontSize',
                     val: +e.detail.value,
                   });
-                  this.props.settings.fontSize = +e.detail.value;
-                  Globals.updateCssVars(this.props.settings);
                 }} />
               </div>
             </IonItem>
@@ -585,9 +567,6 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                 interfaceOptions={{ cssClass: 'cbetar2themes' }}
                 onIonChange={e => {
                   const value = +e.detail.value;
-                  if (this.props.settings.printStyle === value) {
-                    return;
-                  }
 
                   this.props.dispatch({
                     type: "SET_KEY_VAL",
@@ -610,9 +589,6 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                 cancelText='取消'
                 onIonChange={e => {
                   const value = e.detail.value;
-                  if (this.props.settings.voiceURI === value) {
-                    return;
-                  }
 
                   this.props.dispatch({
                     type: "SET_KEY_VAL",
@@ -706,7 +682,7 @@ const mapStateToProps = (state: any /*, ownProps*/) => {
   return {
     settings: state.settings,
     tmpSettings: state.tmpSettings,
-  }
+  };
 };
 
 const SettingsPage = withIonLifeCycle(_SettingsPage);

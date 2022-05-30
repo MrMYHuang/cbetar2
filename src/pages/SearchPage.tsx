@@ -164,7 +164,7 @@ const SearchPage = withIonLifeCycle(_SearchPage);
 
 const mapStateToProps = (state: any /*, ownProps*/) => {
   return {
-  }
+  };
 };
 
 //const mapDispatchToProps = {};

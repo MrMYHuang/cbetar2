@@ -104,7 +104,7 @@ class _BookmarkPage extends React.Component<PageProps, State> {
   }
 
   reorderBookmarks(event: CustomEvent<ItemReorderEventDetail>) {
-    const bookmarks = event.detail.complete(this.props.bookmarks);
+    const bookmarks = event.detail.complete(JSON.parse(JSON.stringify(this.props.bookmarks)));
     this.props.dispatch({
       type: "UPDATE_BOOKMARKS",
       bookmarks: bookmarks,
@@ -216,7 +216,7 @@ class _BookmarkPage extends React.Component<PageProps, State> {
 const mapStateToProps = (state: any /*, ownProps*/) => {
   return {
     bookmarks: state.settings.bookmarks,
-  }
+  };
 };
 
 //const mapDispatchToProps = {};
