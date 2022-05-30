@@ -290,6 +290,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     if (this.oldWorkJuanId !== this.workJuanId) {
       this.oldWorkJuanId = this.workJuanId;
       this.savedPageIndex = 1;
+      this.pageStartEpubcfies = [];
       // Reduce the redundant book update.
       this.bookSettingsChanged = false;
       this.fetchData().then(() => {
@@ -308,10 +309,13 @@ class _EPubViewPage extends React.Component<PageProps, State> {
   }
 
   ionViewDidEnter() {
+    this.ionViewLeave = false;
   }
 
   savedPageIndex = 1;
+  ionViewLeave = false;
   ionViewWillLeave() {
+    this.ionViewLeave = true;
     this.savedPageIndex = this.state.currentPage;
     this.setState({ currentPage: 1, showSearchTextToast: false });
     this.resetTextToSpeech();
@@ -472,7 +476,11 @@ class _EPubViewPage extends React.Component<PageProps, State> {
   }
 
   keyListener(e: KeyboardEvent) {
-    console.log(e.type)
+    if (this.ionViewLeave) {
+      return;
+    }
+
+    //console.log(e.type);
 
     // Left/down Key
     if (e.code === (this.props.rtlVerticalLayout ? 'ArrowLeft' : 'ArrowDown')) {
@@ -492,7 +500,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       return;
     }
 
-    if (e.code === "Enter") {
+    if (e.altKey && e.code === 'Enter') {
       this.props.dispatch({
         type: "TMP_SET_KEY_VAL",
         key: 'fullScreen',

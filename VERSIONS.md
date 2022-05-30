@@ -1,9 +1,11 @@
 # <a id='history'>版本歷史</a>
+* PWA 6.7.3:
+  * [修正] 書籤位置還原邏輯。
+  * [修正] 全螢幕熱鍵改為 Alt + Enter。
+  * [優化] 楷書字型下載檢查。
+
 * Installer apps, Snap apps, Flathub apps 19.3.0:
   * [優化] 升級 Electron 19.0.1.
-  
-* PWA 6.7.1:
-  * [修正] 書籤位置還原邏輯。
 
 * PWA 6.7.0:
   * [新增] 經文頁支援雙擊手勢切至全螢幕。
