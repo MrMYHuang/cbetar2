@@ -114,8 +114,6 @@ async function getFileFromIndexedDB(fileName: string) {
       req.onsuccess = async function (_ev) {
         const data = req.result;
         if (!data) {
-          console.error(`${fileName} loading failed!`);
-          console.error(new Error().stack);
           return fail();
         }
         return ok(data);
