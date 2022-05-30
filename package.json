@@ -2,7 +2,7 @@
   "name": "cbetar2",
   "productName": "電子佛典",
   "homepage": "/",
-  "pwaVersion": "6.7.7",
+  "pwaVersion": "6.7.8",
   "version": "19.3.0",
   "license": "MIT",
   "keywords": [
@@ -29,8 +29,7 @@
   "scripts": {
     "rebuild-native-for-electron": "electron-builder install-app-deps",
     "start": "react-app-rewired start",
-    "build": "react-app-rewired build && powershell -file ./tools/CopyBuild.ps1",
-    "build_linux": "react-app-rewired build && ./tools/CopyBuild.sh",
+    "build": "react-app-rewired build && node ./tools/build.js",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject",
     "build-electron": "tsc -b tsconfigElectron.json",

@@ -222,13 +222,19 @@ class _EPubViewPage extends React.Component<PageProps, State> {
   epubcfiFromUrlUpdated = false;
   ionViewWillEnter() {
     if (this.fetchNewData) {
+      this.bookSettingsChanged = false;
       this.fetchNewData = false;
       this.fetchData().then(() => {
         this.html2Epub();
       });
-    } else if (this.bookSettingsChanged || this.bookmarkEpubcfiUpdated) {
+    } else if (this.bookSettingsChanged) {
       this.bookSettingsChanged = false;
       this.html2Epub();
+    } else if (this.bookmarkEpubcfiUpdated) {
+      this.bookmarkEpubcfiUpdated = false;
+      this.moveToEpubcfi(this.bookmarkEpubcfi).then(() => {
+        return this.updatePageInfos();
+      });
     } else {
       if (this.bookmark == null && this.savedPageIndex !== this.state.currentPage) {
         // Restore the saved page index.
@@ -257,7 +263,6 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       this.pageStartEpubcfies = [];
       this.isPageSearched = [];
       this.bookmarkEpubcfiUpdated = true;
-      this.fetchNewData = true;
     }
 
     if (this.props.tmpSettings.fullScreen !== prevProps.tmpSettings.fullScreen) {
@@ -284,6 +289,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       this.oldWorkJuanId = this.workJuanId;
       this.savedPageIndex = 1;
       this.pageStartEpubcfies = [];
+      this.fetchNewData = true;
       // Reduce the redundant book update.
       this.bookSettingsChanged = true;
     }
