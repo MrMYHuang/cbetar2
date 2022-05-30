@@ -221,7 +221,12 @@ class _EPubViewPage extends React.Component<PageProps, State> {
   epubcfiFromUrl = '';
   epubcfiFromUrlUpdated = false;
   ionViewWillEnter() {
-    if (this.state.htmlStr != null && (this.bookSettingsChanged || this.bookmarkEpubcfiUpdated)) {
+    if (this.fetchNewData) {
+      this.fetchNewData = false;
+      this.fetchData().then(() => {
+        this.html2Epub();
+      });
+    } else if (this.bookSettingsChanged || this.bookmarkEpubcfiUpdated) {
       this.bookSettingsChanged = false;
       this.html2Epub();
     } else {
@@ -234,6 +239,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
   }
 
   bookSettingsChanged = true;
+  fetchNewData = true;
   componentDidUpdate(prevProps: PageProps) {
     const queryParams = queryString.parse(this.props.location.search) as any;
     this.htmlFile = queryParams.file;
@@ -251,6 +257,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       this.pageStartEpubcfies = [];
       this.isPageSearched = [];
       this.bookmarkEpubcfiUpdated = true;
+      this.fetchNewData = true;
     }
 
     if (this.props.tmpSettings.fullScreen !== prevProps.tmpSettings.fullScreen) {
@@ -278,10 +285,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       this.savedPageIndex = 1;
       this.pageStartEpubcfies = [];
       // Reduce the redundant book update.
-      this.bookSettingsChanged = false;
-      this.fetchData().then(() => {
-        this.html2Epub();
-      });
+      this.bookSettingsChanged = true;
     }
 
     this.bookSettingsChanged = this.bookSettingsChanged || [
@@ -390,7 +394,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
   bookmarkEpubcfi = '';
   bookmarkEpubcfiUpdated = false;
   get bookmark() {
-    if(this.props.bookmarks.length == null) {
+    if (this.props.bookmarks.length == null) {
       return null;
     }
 
@@ -726,7 +730,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         // Jump to epubcfi or the content pages.
 
         if (this.props.paginated) {
-          this.moveToEpubcfi(this.epubcfi).then(() => {
+          await this.moveToEpubcfi(this.epubcfi).then(() => {
             return this.updatePageInfos();
           }).then(() => {
             this.updateEPubIframe();
@@ -1745,7 +1749,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
 const mapStateToProps = (state: any /*, ownProps*/) => {
   return {
-    settings: state.settings ,
+    settings: state.settings,
     bookmarks: state.settings.bookmarks,
     fontSize: state.settings.fontSize,
     showComments: state.settings.showComments,
