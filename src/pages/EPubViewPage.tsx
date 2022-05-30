@@ -236,7 +236,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         return this.updatePageInfos();
       });
     } else {
-      if (this.bookmark == null && this.savedPageIndex !== this.state.currentPage) {
+      if (this.savedPageIndex !== this.state.currentPage) {
         // Restore the saved page index.
         this.jumpToPage(this.savedPageIndex);
         return true;
@@ -720,6 +720,12 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
       this.rendition.on(EVENTS.RENDITION.DISPLAYED, () => {
         //console.log(`EVENTS.RENDITION.DISPLAYED`);
+        if (this.ionViewLeave) {
+          // Workaround a bug on Android that after switching to dictionary search page and tapping the search input, then switching back, then this ePub view renders blank page.
+          this.fetchNewData = true;
+          return;
+        }
+
         this.updatePageInfos();
       });
 
