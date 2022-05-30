@@ -503,6 +503,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
   ePubIframe: HTMLIFrameElement | null = null;
   async html2Epub() {
     //this.destroyBook();
+    this.setState({ isLoading: true });
     (this.rendition as any)?.manager?.stage?.destroy();
     this.epub = nodepub.document({
       id: '123-123456789',
