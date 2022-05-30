@@ -199,6 +199,7 @@ class _BookmarkPage extends React.Component<PageProps, State> {
               </IonList>
             </>
           }
+          <div style={{ fontSize: 'var(--ui-font-size)', textAlign: 'center' }}>可離線瀏覽圖示 <IonIcon icon={download}/></div>
 
           <IonToast
             cssClass='uiFont'
