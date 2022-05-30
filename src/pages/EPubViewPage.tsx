@@ -18,21 +18,7 @@ import { clearTimeout } from 'timers';
 
 // Load TW-Kai font in iframe.
 async function loadTwKaiFonts(this: Window) {
-  for (let i = 0; i < Globals.twKaiFonts.length; i++) {
-    loadTwKaiFont(
-      Globals.twKaiFonts[i],
-      Globals.twKaiFontKeys[i],
-    ).then(fontFace => {
-      this.document.fonts.add(fontFace);
-    });
-  }
-}
-
-async function loadTwKaiFont(font: string, key: string) {
-  return Globals.getFileFromIndexedDB(key).then(fontData => {
-    const fontFace = new window.FontFace(font, fontData as Buffer);
-    return fontFace.load();
-  })
+  Globals.loadTwKaiFonts(undefined, this);
 }
 
 function addCbetaLineBreaks(this: any) {
@@ -302,6 +288,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       'paginated',
       'rtlVerticalLayout',
       'scrollbarSize',
+      'useFontKai',
       'fontSize',
       'uiFontSize',
       'showComments',

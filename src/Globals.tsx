@@ -14,6 +14,7 @@ const cbetardb = 'cbetardb';
 const twKaiFontVersion = 4;
 // Disable problematic fonts.
 //const twKaiFonts = ['Kai'];
+let twKaiFontsCache: { [key: string]: ArrayBuffer } = {};
 const twKaiFonts = ['Kai', 'Kai', 'Kai', 'KaiExtB', 'KaiExtB', 'KaiExtB', 'KaiPlus', 'KaiPlus'];
 const twKaiFontKeys = ['twKaiFont-1', 'twKaiFont-2', 'twKaiFont-3', 'twKaiExtBFont-1', 'twKaiExtBFont-2', 'twKaiExtBFont-3', 'twKaiPlusFont-1', 'twKaiPlusFont-2',];
 /* Font source: https://data.gov.tw/dataset/5961 */
@@ -32,7 +33,7 @@ function twKaiFontNeedUpgrade() {
   return +(localStorage.getItem('twKaiFontVersion') ?? 1) < twKaiFontVersion;
 }
 
-async function loadTwKaiFonts(progressCallback: Function | null = null) {
+async function loadTwKaiFonts(progressCallback: Function | null = null, win: Window = window) {
   let forceUpdate = false;
   if (twKaiFontNeedUpgrade()) {
     localStorage.setItem('twKaiFontVersion', twKaiFontVersion + "");
@@ -49,16 +50,18 @@ async function loadTwKaiFonts(progressCallback: Function | null = null) {
       forceUpdate,
     ).then(
       // eslint-disable-next-line no-loop-func
-      () => {
+      (fontFace) => {
+      win.document.fonts.add(fontFace);
+      //console.log(`[Main] ${twKaiFontKeys[i]} font loading success!`);
       finishCount += 1;
-      progressCallback && progressCallback(finishCount /  twKaiFonts.length);
+      progressCallback && progressCallback(finishCount / twKaiFonts.length);
     }));
   }
   return Promise.all(load);
 }
 
 async function loadTwKaiFont(font: string, key: string, path: string, forceUpdate: boolean) {
-  let fontData: any;
+  let fontData = twKaiFontsCache[key];
   let updateFont = () => {
     return axiosInstance.get(`${window.location.origin}/${path}`, {
       responseType: 'arraybuffer',
@@ -72,22 +75,24 @@ async function loadTwKaiFont(font: string, key: string, path: string, forceUpdat
 
   let updateFontOrNot;
   if (!forceUpdate) {
-    updateFontOrNot = getFileFromIndexedDB(key).then(data => {
-      fontData = data;
-    }).catch(err => {
-      return updateFont();
-    });
+    if (fontData) {
+      updateFontOrNot = Promise.resolve(fontData);
+    } else {
+      updateFontOrNot = getFileFromIndexedDB(key).then(data => {
+        fontData = data as ArrayBuffer;
+      }).catch(err => {
+        return updateFont();
+      });
+    }
   } else {
     updateFontOrNot = updateFont();
   }
 
   return updateFontOrNot.then(() => {
+    twKaiFontsCache[key] = fontData as ArrayBuffer;
     const fontFace = new window.FontFace(font, fontData);
-    return fontFace.load() as Promise<any>;
-  }).then((fontFace) => {
-    document.fonts.add(fontFace);
-    console.log(`[Main] ${key} font loading success!`);
-  });
+    return fontFace.load();
+  })
 }
 
 function scrollbarSizeIdToValue(id: number) {
@@ -354,6 +359,7 @@ const Globals = {
   cbetaApiUrl,
   dilaDictApiUrl,
   twKaiFontNeedUpgrade,
+  twKaiFontsCache,
   twKaiFonts,
   twKaiFontKeys,
   twKaiFontVersion,
