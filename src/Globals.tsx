@@ -14,7 +14,7 @@ const cbetardb = 'cbetardb';
 const twKaiFontVersion = 4;
 // Disable problematic fonts.
 //const twKaiFonts = ['Kai'];
-let twKaiFontsCache: { [key: string]: ArrayBuffer } = {};
+let twKaiFontsCache: { [key: string]: FontFace } = {};
 const twKaiFonts = ['Kai', 'Kai', 'Kai', 'KaiExtB', 'KaiExtB', 'KaiExtB', 'KaiPlus', 'KaiPlus'];
 const twKaiFontKeys = ['twKaiFont-1', 'twKaiFont-2', 'twKaiFont-3', 'twKaiExtBFont-1', 'twKaiExtBFont-2', 'twKaiExtBFont-3', 'twKaiPlusFont-1', 'twKaiPlusFont-2',];
 /* Font source: https://data.gov.tw/dataset/5961 */
@@ -61,25 +61,26 @@ async function loadTwKaiFonts(progressCallback: Function | null = null, win: Win
 }
 
 async function loadTwKaiFont(font: string, key: string, path: string, forceUpdate: boolean) {
-  let fontData = twKaiFontsCache[key];
-  let updateFont = () => {
+  const fontFaceCache = twKaiFontsCache[key];
+  const updateFont = () => {
     return axiosInstance.get(`${window.location.origin}/${path}`, {
       responseType: 'arraybuffer',
       timeout: 0,
     }).then(res => {
-      fontData = res.data;
+      const fontData = res.data;
       saveFileToIndexedDB(key, fontData);
       localStorage.setItem('twKaiFontVersion', twKaiFontVersion + "");
+      return new window.FontFace(font, fontData)
     });
   };
 
-  let updateFontOrNot;
+  let updateFontOrNot: Promise<FontFace>;
   if (!forceUpdate) {
-    if (fontData) {
-      updateFontOrNot = Promise.resolve(fontData);
+    if (fontFaceCache) {
+      updateFontOrNot = Promise.resolve(fontFaceCache);
     } else {
-      updateFontOrNot = getFileFromIndexedDB(key).then(data => {
-        fontData = data as ArrayBuffer;
+      updateFontOrNot = (getFileFromIndexedDB(key) as Promise<ArrayBuffer>).then((data) => {
+        return new window.FontFace(font, data);
       }).catch(err => {
         return updateFont();
       });
@@ -88,9 +89,8 @@ async function loadTwKaiFont(font: string, key: string, path: string, forceUpdat
     updateFontOrNot = updateFont();
   }
 
-  return updateFontOrNot.then(() => {
-    twKaiFontsCache[key] = fontData as ArrayBuffer;
-    const fontFace = new window.FontFace(font, fontData);
+  return updateFontOrNot.then((fontFace) => {
+    twKaiFontsCache[key] = fontFace;
     return fontFace.load();
   })
 }
