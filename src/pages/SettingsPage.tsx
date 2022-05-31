@@ -494,7 +494,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
               backdropDismiss={false}
               onDidPresent={(ev) => {
               }}
-              header={'使用楷書字型將下載 44 MB 字型檔、並且影響效能。繼續？'}
+              header={'使用楷書字型將下載 44 MB 字型檔、並可能會影響效能。繼續？'}
               buttons={[
                 {
                   text: '取消',
