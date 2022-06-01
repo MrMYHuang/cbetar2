@@ -538,6 +538,10 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       htmlStrModifiedStyles = htmlStrModifiedStyles.replace(/(margin|border)-right/g, '$1-bottom');
       htmlStrModifiedStyles = htmlStrModifiedStyles.replace(/(margin|border)-top/g, '$1-right');
       htmlStrModifiedStyles = htmlStrModifiedStyles.replace(/(margin|border)-temp/g, '$1-top');
+      // The custome tag 'mulu' causes text nodes have abnormal x/y values by getBoundingClientRect.
+      // It causes findTextsInPage abnormal!
+      // Rewrite it to p tag.
+      htmlStrModifiedStyles = htmlStrModifiedStyles.replace(/mulu/g, 'p');
     }
     /* else {
       htmlStrModifiedStyles = htmlStrModifiedStyles.replace(/margin-top/g, 'margin-left');
@@ -955,6 +959,10 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         } else {
           pageStartCharIndex = this.findBinBoundaryVisibleCharIndex(pageStartOffset, 0, this.visibleChars.length - 1) + 1;
         }
+      }
+      if (pageStartCharIndex >= this.visibleChars.length) {
+        console.log('No visible text anymore.');
+        return '';
       }
       this.pageStartEpubcfies[nZ] = this.rangeToEpubcfi(this.visibleCharToRange(pageStartCharIndex));
 
