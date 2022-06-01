@@ -184,6 +184,10 @@ ion-toast::part(button) {
     font-size: var(--ui-font-size) !important;
 }
 
+ion-toast::part(message) {
+    line-height: normal !important;
+}
+
 .uiFontX2 {
     font-size: calc(var(--ui-font-size) * 2) !important;
 }

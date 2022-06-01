@@ -914,6 +914,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     }
   }
 
+  infiniteLoopMsg = 'App 異常，部分功能無法使用，請回報造成異常的經文。';
   findBinBoundaryVisibleCharIndex(binBoundary: number, leftSearchIndex: number, rightSearchIndex: number): number {
     const checkpointIndex = leftSearchIndex + Math.floor((rightSearchIndex - leftSearchIndex) / 2);
     if (checkpointIndex === 0) {
@@ -932,8 +933,20 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     if (rect0BinDirSize < binBoundary && binBoundary <= rect1BinDirSize) {
       return checkpointIndex;
     } else if (rect0BinDirSize < binBoundary && binBoundary > rect1BinDirSize) {
+      // Avoid infinite loops.
+      if (checkpointIndex + 1 === leftSearchIndex) {
+        console.error(`Infinite loop detected at ${checkpointIndex}!`);
+        this.setState({showToast: true, toastMessage: this.infiniteLoopMsg});
+        return -1;
+      }
       return this.findBinBoundaryVisibleCharIndex(binBoundary, checkpointIndex + 1, rightSearchIndex);
     } else if (rect0BinDirSize >= binBoundary && binBoundary <= rect1BinDirSize) {
+      // Avoid infinite loops.
+      if (checkpointIndex === rightSearchIndex) {
+        console.error(`Infinite loop detected at ${checkpointIndex}!`);
+        this.setState({showToast: true, toastMessage: this.infiniteLoopMsg});
+        return -1;
+      }
       return this.findBinBoundaryVisibleCharIndex(binBoundary, leftSearchIndex, checkpointIndex);
     } else {
       console.error('Unreasonable case!');
