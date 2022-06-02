@@ -97,6 +97,7 @@
     "history": "^4.10.1",
     "ionicons": "^6",
     "memfs": "^3.4.4",
+    "node-gyp": "^9.0.0",
     "node-polyfill-webpack-plugin": "^1.1.4",
     "nodepub": "^3.0.8",
     "qrcode": "^1.5.0",
