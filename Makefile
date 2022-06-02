@@ -27,7 +27,7 @@ clean:
 install: all
 	install -d ${DESTDIR}/${OPT}/${NAME} ${DESTDIR}/${BIN} ${DESTDIR}/${METAINFO} ${DESTDIR}/${DATA}/applications ${DESTDIR}/${DATA}/icons ${DESTDIR}/${MANPREFIX}/man1
 	cp -a ${electronPackagePath}/. ${DESTDIR}/${OPT}/${NAME}
-	ln -s ${DESTDIR}/${OPT}/${NAME}/${NAME} ${DESTDIR}/${BIN}
+	ln -s ${OPT}/${NAME}/${NAME} ${DESTDIR}/${BIN}
 
 	cp buildElectron/io.github.mrmyhuang.${NAME}.metainfo.xml ${DESTDIR}/${METAINFO}
 	cp buildElectron/io.github.mrmyhuang.${NAME}.desktop ${DESTDIR}/${DATA}/applications/${NAME}.desktop
