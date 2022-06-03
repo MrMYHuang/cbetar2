@@ -3,13 +3,18 @@ import { isPlatform, IonLabel, IonIcon } from '@ionic/react';
 import * as AdmZip from 'adm-zip';
 import { refreshCircle } from 'ionicons/icons';
 import Store from './redux/store';
+import IndexedDbFuncs from './IndexedDbFuncs';
+const saveFileToIndexedDB = IndexedDbFuncs.saveFileToIndexedDB;
+const checkKeyInIndexedDB = IndexedDbFuncs.checkKeyInIndexedDB;
+const clearIndexedDB = IndexedDbFuncs.clearIndexedDB;
+const getFileFromIndexedDB = IndexedDbFuncs.getFileFromIndexedDB;
+const removeFileFromIndexedDB = IndexedDbFuncs.removeFileFromIndexedDB;
 
 const pwaUrl = process.env.PUBLIC_URL || '/';
 const bugReportApiUrl = 'https://vh6ud1o56g.execute-api.ap-northeast-1.amazonaws.com/bugReportMailer';
 const apiVersion = 'v1.2';
 const cbetaApiUrl = `https://cbdata.dila.edu.tw/${apiVersion}`;
 const dilaDictApiUrl = `https://glossaries.dila.edu.tw/search.json`;
-const cbetardb = 'cbetardb';
 const twKaiFontVersion = 4;
 // Disable problematic fonts.
 //const twKaiFonts = ['Kai'];
@@ -138,96 +143,6 @@ function getFileName(work: string, juan: string) {
   return `${work}_juan${juan}.html`;
 }
 
-async function checkKeyInIndexedDB(key: string) {
-  const dbOpenReq = indexedDB.open(cbetardb);
-
-  return new Promise(function (ok, fail) {
-    dbOpenReq.onsuccess = async function (ev) {
-      const db = dbOpenReq.result;
-
-      const trans = db.transaction(["store"], 'readonly');
-      let req = trans.objectStore('store').getKey(key);
-      req.onsuccess = async function (_ev) {
-        const data = req.result;
-        if (!data) {
-          return fail();
-        }
-        return ok(data);
-      };
-    };
-  });
-}
-
-async function getFileFromIndexedDB(fileName: string) {
-  const dbOpenReq = indexedDB.open(cbetardb);
-
-  return new Promise(function (ok, fail) {
-    dbOpenReq.onsuccess = async function (ev) {
-      const db = dbOpenReq.result;
-
-      const trans = db.transaction(["store"], 'readwrite');
-      let req = trans.objectStore('store').get(fileName);
-      req.onsuccess = async function (_ev) {
-        const data = req.result;
-        if (!data) {
-          return fail();
-        }
-        return ok(data);
-      };
-    };
-  });
-}
-
-async function saveFileToIndexedDB(fileName: string, data: any) {
-  const dbOpenReq = indexedDB.open(cbetardb);
-  return new Promise<void>((ok, fail) => {
-    dbOpenReq.onsuccess = async (ev: Event) => {
-      const db = dbOpenReq.result;
-
-      const transWrite = db.transaction(["store"], 'readwrite')
-      const reqWrite = transWrite.objectStore('store').put(data, fileName);
-      reqWrite.onsuccess = (_ev: any) => ok();
-      reqWrite.onerror = (_ev: any) => fail();
-    };
-  });
-}
-
-async function removeFileFromIndexedDB(fileName: string) {
-  const dbOpenReq = indexedDB.open(cbetardb);
-  return new Promise<void>((ok, fail) => {
-    try {
-      dbOpenReq.onsuccess = (ev: Event) => {
-        const db = dbOpenReq.result;
-
-        const transWrite = db.transaction(["store"], 'readwrite')
-        try {
-          const reqWrite = transWrite.objectStore('store').delete(fileName);
-          reqWrite.onsuccess = (_ev: any) => ok();
-          reqWrite.onerror = (_ev: any) => fail();
-        } catch (err) {
-          console.error(err);
-        }
-      };
-    } catch (err) {
-      fail(err);
-    }
-  });
-}
-
-async function clearIndexedDB() {
-  const dbOpenReq = indexedDB.open(cbetardb);
-  return new Promise<void>((ok, fail) => {
-    dbOpenReq.onsuccess = async (ev: Event) => {
-      const db = dbOpenReq.result;
-
-      const transWrite = db.transaction(["store"], 'readwrite')
-      const reqWrite = transWrite.objectStore('store').clear();
-      reqWrite.onsuccess = (_ev: any) => ok();
-      reqWrite.onerror = (_ev: any) => fail();
-    };
-  });
-}
-
 async function clearAppData() {
   localStorage.clear();
   await clearIndexedDB();
@@ -318,7 +233,6 @@ const Globals = {
   getLog,
   enableAppLog,
   disableAppLog,
-  cbetardb,
   pwaUrl,
   bugReportApiUrl,
   apiVersion,

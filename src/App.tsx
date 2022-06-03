@@ -50,6 +50,7 @@ import DownloadModal from './components/DownloadModal';
 import { TmpSettings } from './models/TmpSettings';
 import { CbetaDbMode, Settings } from './models/Settings';
 import CbetaOfflineIndexedDb from './CbetaOfflineDb';
+import IndexedDbFuncs from './IndexedDbFuncs';
 
 const electronBackendApi: any = (window as any).electronBackendApi;
 /*
@@ -262,7 +263,7 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
       });
     }
 
-    const dbOpenReq = indexedDB.open(Globals.cbetardb);
+    const dbOpenReq = indexedDB.open(IndexedDbFuncs.cbetardb);
     // Init store in indexedDB if necessary.
     dbOpenReq.onupgradeneeded = function (event: IDBVersionChangeEvent) {
       var db = (event.target as any).result;

@@ -1,3 +1,4 @@
+import Constants from "./Constants";
 import Globals from "./Globals";
 
 const xmlParser = new DOMParser();
@@ -7,8 +8,6 @@ let navDocBulei: Document;
 let navDocVol: Document;
 let catalogs: any;
 let spines: Array<any>;
-const localFileProtocolName = 'https';
-const localFileHost = 'localdb.mrmyhuang.github.io';
 const cbetaBookcaseDir = 'Bookcase';
 let gaijis: any;
 let isInit = false;
@@ -118,7 +117,7 @@ export async function fetchJuan(work: string, juan: string) {
 
     return {
         work_info,
-        results: [result.replace(/\.\.\/figures/g, `${localFileProtocolName}://${localFileHost}/${cbetaBookcaseDir}/CBETA/figures`)],
+        results: [result.replace(/\.\.\/figures/g, `https://${Constants.localFileHost}/${cbetaBookcaseDir}/CBETA/figures`)],
     };
 }
 
@@ -168,7 +167,6 @@ function elementTPostprocessing(doc: Document, node: Node, parent: Node | null =
 }
 
 const CbetaOfflineIndexedDb = {
-    localFileProtocolName,
     init,
     fetchCatalogs,
     fetchWork,
