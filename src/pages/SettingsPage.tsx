@@ -246,7 +246,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                 backdropDismiss={false}
                 onDidPresent={(ev) => {
                 }}
-                header={'Bookcase 資料格式與連線版資料不相同，會影響書籤定位。確定使用？'}
+                header={'注意：1. Bookcase 資料格式與連線版資料不相同，會影響書籤定位。\n2. 若匯入失敗，可能是記憶體、儲存空間不足。\n確定執行？'}
                 buttons={[
                   {
                     text: '取消',

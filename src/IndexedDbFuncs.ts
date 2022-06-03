@@ -95,14 +95,9 @@ async function getFileFromIndexedDB(fileName: string) {
 
 // Empty filter loads all files.
 async function loadZipToIndexedDB(file: File | ArrayBuffer, filter: RegExp[] = [], progressCallback: Function | null = null) {
-  let buffer: ArrayBuffer;
-  if (file instanceof File) {
-    buffer = await file.arrayBuffer();
-  } else {
-    buffer = file;
-  }
+  const isFile = file instanceof File;
 
-  let zip = new AdmZip.default(Funcs.arrayBufferToBuffer(buffer));
+  let zip = new AdmZip.default(Buffer.from(isFile ? (await file.arrayBuffer()) : file ));
   const zipEntries = zip.getEntries();
   let finishCount = 0;
   for (let i = 0; i < zipEntries.length; i++) {
