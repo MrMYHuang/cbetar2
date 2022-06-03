@@ -1,5 +1,13 @@
 const customizeCra = require("customize-cra");
 const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
+const fs = require('fs');
+const path = require('path');
+
+const setWebpackEntry = entry => config => {
+  config.entry = entry;
+  fs.writeFileSync('abc.json', JSON.stringify(config));
+  return config;
+};
 
 module.exports = customizeCra.override(
   // add webpack bundle visualizer if BUNDLE_VISUALIZE flag is enabled
@@ -25,5 +33,5 @@ module.exports = customizeCra.override(
         }
       ]
     })
-  )
+  ),
 );
