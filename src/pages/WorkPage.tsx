@@ -9,12 +9,16 @@ import { bookmark, arrowBack, home, search, shareSocial, refreshCircle, ellipsis
 import { Bookmark, BookmarkType } from '../models/Bookmark';
 import SearchAlert from '../components/SearchAlert';
 import { TmpSettings } from '../models/TmpSettings';
+import fetchJuan from '../fetchJuan';
+import { CbetaDbMode, Settings } from '../models/Settings';
+import CbetaOfflineIndexedDb from '../CbetaOfflineDb';
 
 const electronBackendApi: any = (window as any).electronBackendApi;
 
 interface Props {
   dispatch: Function;
   bookmarks: [Bookmark];
+  settings: Settings;
   tmpSettings: TmpSettings;
 }
 
@@ -65,28 +69,34 @@ class _WorkPage extends React.Component<PageProps, State> {
     } else {
       try {
         let data: any;
-        if (this.props.tmpSettings.cbetaOfflineDbMode) {
-          electronBackendApi?.send("toMain", { event: 'fetchWork', path: path });
-          data = await new Promise((ok, fail) => {
-            electronBackendApi?.receiveOnce("fromMain", (data: any) => {
-              switch (data.event) {
-                case 'fetchWork':
-                  ok(data);
-                  break;
-              }
+        switch (this.props.settings.cbetaOfflineDbMode) {
+          case CbetaDbMode.OfflineIndexedDb:
+            data = await CbetaOfflineIndexedDb.fetchWork(path);
+            break;
+          case CbetaDbMode.OfflineFileSystem:
+            electronBackendApi?.send("toMain", { event: 'fetchWork', path: path });
+            data = await new Promise((ok, fail) => {
+              electronBackendApi?.receiveOnce("fromMain", (data: any) => {
+                switch (data.event) {
+                  case 'fetchWork':
+                    ok(data);
+                    break;
+                }
+              });
             });
-          });
-        } else {
-          const res = await Globals.axiosInstance.get(`/works?work=${path}`, {
-            responseType: 'arraybuffer',
-          });
-          data = JSON.parse(new TextDecoder().decode(res.data));
+            break;
+          case CbetaDbMode.Online:
+            const res = await Globals.axiosInstance.get(`/works?work=${path}`, {
+              responseType: 'arraybuffer',
+            });
+            data = JSON.parse(new TextDecoder().decode(res.data));
+            break;
         }
         const works = data.results as [Work];
         work = works[0];
 
         // [TODO]
-        if (!this.props.tmpSettings.cbetaOfflineDbMode) {
+        if (this.props.settings.cbetaOfflineDbMode === CbetaDbMode.Online) {
           const resToc = await Globals.axiosInstance.get(`/toc?work=${path}`) as any;
           work.mulu = (resToc.data.results[0].mulu as WorkChapter[]).map((wc) => (wc as WorkChapter));
         }
@@ -110,7 +120,7 @@ class _WorkPage extends React.Component<PageProps, State> {
     for (let i = 0; i < juans.length; i++) {
       this.fetchJuan = juans[i];
       try {
-        const res = await Globals.fetchJuan(work.work, this.fetchJuan, null);
+        const res = await fetchJuan(work.work, this.fetchJuan, null);
         Globals.saveFileToIndexedDB(Globals.getFileName(work.work, this.fetchJuan), res.htmlStr);
       } catch (err) {
         console.error(`Fetching juan ${i} failed! ${err}`);
@@ -120,7 +130,7 @@ class _WorkPage extends React.Component<PageProps, State> {
   }
 
   async addBookmarkHandler() {
-    if (!this.props.tmpSettings.cbetaOfflineDbMode) {
+    if (this.props.settings.cbetaOfflineDbMode === CbetaDbMode.Online) {
       await this.saveJuans();
     }
     this.setState({ showAddBookmarkDone: true });
@@ -338,6 +348,7 @@ const mapStateToProps = (state: any /*, ownProps*/) => {
   return {
     bookmarks: state.settings.bookmarks,
     tmpSettings: state.tmpSettings,
+    settings: state.settings,
   };
 };
 

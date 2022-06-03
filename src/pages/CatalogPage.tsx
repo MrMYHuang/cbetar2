@@ -10,6 +10,8 @@ import { bookmark, arrowBack, home, search, shareSocial, refreshCircle } from 'i
 import SearchAlert from '../components/SearchAlert';
 import queryString from 'query-string';
 import { TmpSettings } from '../models/TmpSettings';
+import { CbetaDbMode, Settings } from '../models/Settings';
+import CbetaOfflineIndexedDb from '../CbetaOfflineDb';
 
 const famousJuans = [
   { title: '般若波羅蜜多心經', url: `/catalog/juan/T0251/1` },
@@ -31,6 +33,7 @@ const electronBackendApi: any = (window as any).electronBackendApi;
 interface Props {
   dispatch: Function;
   bookmarks: [Bookmark];
+  settings: Settings;
   tmpSettings: TmpSettings;
 }
 
@@ -122,22 +125,28 @@ class _CatalogPage extends React.Component<PageProps, State> {
         //electronBackendApi?.send("toMain", { event: 'ready' });
         try {
           let obj: any;
-          if (this.props.tmpSettings.cbetaOfflineDbMode) {
-            electronBackendApi?.send("toMain", { event: 'fetchCatalog', path: path });
-            obj = await new Promise((ok, fail) => {
-              electronBackendApi?.receiveOnce("fromMain", (data: any) => {
-                switch (data.event) {
-                  case 'fetchCatalog':
-                    ok(data);
-                    break;
-                }
+          switch (this.props.settings.cbetaOfflineDbMode) {
+            case CbetaDbMode.OfflineIndexedDb:
+              obj = await CbetaOfflineIndexedDb.fetchCatalogs(path);
+              break;
+            case CbetaDbMode.OfflineFileSystem:
+              electronBackendApi?.send("toMain", { event: 'fetchCatalog', path: path });
+              obj = await new Promise((ok, fail) => {
+                electronBackendApi?.receiveOnce("fromMain", (data: any) => {
+                  switch (data.event) {
+                    case 'fetchCatalog':
+                      ok(data);
+                      break;
+                  }
+                });
               });
-            });
-          } else {
-            const res = await Globals.axiosInstance.get(`/catalog_entry?q=${path}`, {
-              responseType: 'arraybuffer',
-            });
-            obj = JSON.parse(new TextDecoder().decode(res.data)) as any;
+              break;
+            case CbetaDbMode.Online:
+              const res = await Globals.axiosInstance.get(`/catalog_entry?q=${path}`, {
+                responseType: 'arraybuffer',
+              });
+              obj = JSON.parse(new TextDecoder().decode(res.data)) as any;
+              break;
           }
           const data = obj.results as [any];
           catalogs = data.map((json) => new Catalog(json));
@@ -374,6 +383,7 @@ const mapStateToProps = (state: any /*, ownProps*/) => {
     bookmarks: state.settings.bookmarks,
     state: state,
     tmpSettings: state.tmpSettings,
+    settings: state.settings,
   };
 };
 

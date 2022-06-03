@@ -2,17 +2,19 @@ import React from 'react';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonRange, IonIcon, IonLabel, IonToggle, IonButton, IonAlert, IonSelect, IonSelectOption, IonProgressBar, IonToast, withIonLifeCycle } from '@ionic/react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
-import Globals from '../Globals';
 import { helpCircle, text, documentText, refreshCircle, musicalNotes, colorPalette, bug, download, print, informationCircle } from 'ionicons/icons';
 
+import Globals from '../Globals';
 import './SettingsPage.css';
 import PackageInfos from '../../package.json';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
-import { Settings } from '../models/Settings';
+import { CbetaDbMode, Settings } from '../models/Settings';
 import { TmpSettings } from '../models/TmpSettings';
+import fetchJuan from '../fetchJuan';
 
 interface StateProps {
   showFontLicense: boolean;
+  cbetaBookZipLoadRatio: number;
   juansDownloadedRatio: number;
   fontDownloadedRatio: number;
   showUpdateAllJuansDone: boolean;
@@ -41,6 +43,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
 
     this.state = {
       showFontLicense: false,
+      cbetaBookZipLoadRatio: 0,
       juansDownloadedRatio: 0,
       fontDownloadedRatio: 0,
       showBugReportAlert: false,
@@ -86,13 +89,13 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
       const work = bookmarkWithHtml.work!;
       const juans = work.juan_list.split(',');
       for (let j = 0; j < juans.length; j++) {
-        const fetchJuan = juans[j];
+        const juan = juans[j];
         juansDownloaded += 1;
         this.setState({ juansDownloadedRatio: juansDownloaded / juansToDownload });
-        const res = await Globals.fetchJuan(work.work, fetchJuan, null, true);
-        const fileName = Globals.getFileName(work.work, fetchJuan);
+        const res = await fetchJuan(work.work, juan, null, true);
+        const fileName = Globals.getFileName(work.work, juan);
         // Update HTML.
-        if (!this.props.tmpSettings.cbetaOfflineDbMode) {
+        if (this.props.settings.cbetaOfflineDbMode === CbetaDbMode.Online) {
           Globals.saveFileToIndexedDB(fileName, res.htmlStr);
         }
         if (j === 0) {
@@ -107,12 +110,12 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
       this.setState({ juansDownloadedRatio: juansDownloaded / juansToDownload });
       const bookmarkWithHtml = juanBookmarksNotInWorkBookmarksWithHtml[i];
       const work = bookmarkWithHtml.work!;
-      const res = await Globals.fetchJuan(work.work, `${work.juan}`, null, true);
+      const res = await fetchJuan(work.work, `${work.juan}`, null, true);
       const fileName = Globals.getFileName(work.work, `${work.juan}`);
       let newWork = res.workInfo;
       newWork.juan = work.juan;
       // Update HTML.
-      if (!this.props.tmpSettings.cbetaOfflineDbMode) {
+      if (this.props.settings.cbetaOfflineDbMode === CbetaDbMode.Online) {
         Globals.saveFileToIndexedDB(fileName, res.htmlStr);
       }
       // Update bookmarks
@@ -166,11 +169,11 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
               <IonLabel className='ion-text-wrap uiFont'>Backend app版本: {this.props.tmpSettings.mainVersion}</IonLabel>
             </IonItem>
           */}
-            <IonItem hidden={!this.props.tmpSettings.mainVersion}>
+            <IonItem hidden={false && !this.props.tmpSettings.mainVersion}>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={informationCircle} slot='start' />
               <IonLabel className='ion-text-wrap uiFont'>使用CBETA離線經文資料檔</IonLabel>
-              <IonToggle slot='end' disabled checked={this.props.tmpSettings.cbetaOfflineDbMode} />
+              <IonToggle slot='end' disabled checked={this.props.settings.cbetaOfflineDbMode !== CbetaDbMode.Online} />
             </IonItem>
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
@@ -247,6 +250,41 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                   },
                 ]}
               />
+            </IonItem>
+            <IonItem>
+              <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
+              <IonIcon icon={download} slot='start' />
+              <div className='contentBlock'>
+                <div style={{ flexDirection: 'column' }}>
+                  <div style={{ width: '100%' }}>
+                    <IonLabel className='ion-text-wrap uiFont'>CBETA Bookcase</IonLabel>
+                    <IonProgressBar value={this.state.cbetaBookZipLoadRatio} />
+                  </div>
+                  <div style={{ textAlign: 'right' }}>
+                    <input id='importCbetaBookcaseInput' type='file' accept='.zip' style={{ display: 'none' }} onChange={async (ev) => {
+                      const file = ev.target.files?.item(0);
+                      if (file == null) {
+                        return;
+                      }
+                      try {
+                        console.log(new Date().toLocaleTimeString());
+                        await Globals.loadCbetaBookcaseZipToIndexedDB(file, (ratio: number) => {
+                          this.setState({ cbetaBookZipLoadRatio: ratio });
+                        });
+                        console.log(new Date().toLocaleTimeString());
+                      } catch (e) {
+                        console.error(e);
+                        console.error(new Error().stack);
+                      }
+                      (document.getElementById('importCbetaBookcaseInput') as HTMLInputElement).value = '';
+                    }} />
+
+                    <IonButton fill='outline' shape='round' size='large' className='uiFont' onClick={(e) => {
+                      (document.querySelector('#importCbetaBookcaseInput') as HTMLInputElement).click();
+                    }}>匯入</IonButton>
+                  </div>
+                </div>
+              </div>
             </IonItem>
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}

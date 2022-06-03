@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { isPlatform, IonLabel, IonIcon } from '@ionic/react';
-import { Work } from './models/Work';
-import { Bookmark } from './models/Bookmark';
+import * as AdmZip from 'adm-zip';
 import { refreshCircle } from 'ionicons/icons';
 import Store from './redux/store';
 
@@ -29,6 +28,38 @@ const axiosInstance = axios.create({
   timeout: 10000,
 });
 
+function arrayBufferToBuffer(ab: ArrayBuffer) {
+  const buf = Buffer.alloc(ab.byteLength);
+  const view = new Uint8Array(ab);
+  for (let i = 0; i < buf.length; ++i) {
+    buf[i] = view[i];
+  }
+  return buf;
+}
+
+function bufferToArrayBuffer(buf: Buffer) {
+  const ab = new ArrayBuffer(buf.length);
+  const view = new Uint8Array(ab);
+  for (let i = 0; i < buf.length; ++i) {
+    view[i] = buf[i];
+  }
+  return ab;
+}
+
+async function loadCbetaBookcaseZipToIndexedDB(file: File, progressCallback: Function | null = null) {
+  const zip = new AdmZip.default(arrayBufferToBuffer(await file.arrayBuffer()));
+  const zipEntries = zip.getEntries();
+  let finishCount = 0;
+  for (let i = 0; i < zipEntries.length; i++) {
+    let zipEntry = zipEntries[i];
+    if (!zipEntry.isDirectory) {
+      await saveFileToIndexedDB(zipEntry.entryName, zipEntry.getData());
+      finishCount += 1;
+      progressCallback && progressCallback(finishCount / zipEntries.length);
+    }
+  }
+}
+
 function twKaiFontNeedUpgrade() {
   return +(localStorage.getItem('twKaiFontVersion') ?? 1) < twKaiFontVersion;
 }
@@ -51,11 +82,11 @@ async function loadTwKaiFonts(progressCallback: Function | null = null, win: Win
     ).then(
       // eslint-disable-next-line no-loop-func
       (fontFace) => {
-      win.document.fonts.add(fontFace);
-      //console.log(`[Main] ${twKaiFontKeys[i]} font loading success!`);
-      finishCount += 1;
-      progressCallback && progressCallback(finishCount / twKaiFonts.length);
-    }));
+        win.document.fonts.add(fontFace);
+        //console.log(`[Main] ${twKaiFontKeys[i]} font loading success!`);
+        finishCount += 1;
+        progressCallback && progressCallback(finishCount / twKaiFonts.length);
+      }));
   }
   return Promise.all(load);
 }
@@ -203,72 +234,6 @@ async function clearAppData() {
 }
 
 const electronBackendApi: any = (window as any).electronBackendApi;
-// Fetch juan or HTML file.
-async function fetchJuan(work: string, juan: string, htmlFile: string | null, update: boolean = false, cbetaOfflineDbMode: boolean = false) {
-  const fileName = htmlFile || getFileName(work, juan);
-  let htmlStr: string | null = null;
-  try {
-    htmlStr = await getFileFromIndexedDB(fileName) as string;
-  } catch {
-    // Ignore file not found.
-  }
-  const settingsStr = localStorage.getItem(Store.storeFile);
-
-  let workInfo = ({} as Work);
-  let bookmark: Bookmark | undefined;
-  if (settingsStr) {
-    const bookmarks: Array<Bookmark> = (JSON.parse(settingsStr) as any).settings.bookmarks;
-    bookmark = bookmarks.find((b) => b.fileName === fileName || b.uuid === work);
-  }
-
-  if (htmlStr !== null && bookmark !== undefined && !update) {
-    workInfo = bookmark.work!;
-  } else {
-    if (htmlFile) {
-      const res = await axiosInstance.get(`/${htmlFile}`, {
-        responseType: 'arraybuffer',
-      });
-      let tryDecoder = new TextDecoder();
-      let tryDecodeHtmlStr = tryDecoder.decode(res.data);
-      if (tryDecodeHtmlStr.includes('charset=big5')) {
-        htmlStr = new TextDecoder('big5').decode(res.data);
-      } else {
-        htmlStr = tryDecodeHtmlStr;
-      }
-    } else {
-      let data: any;
-      if (cbetaOfflineDbMode) {
-        electronBackendApi?.send("toMain", { event: 'fetchJuan', work, juan });
-        data = await new Promise((ok, fail) => {
-          electronBackendApi?.receiveOnce("fromMain", (data: any) => {
-            switch (data.event) {
-              case 'fetchJuan':
-                ok(data);
-                break;
-            }
-          });
-        });
-      } else {
-        const res = await axiosInstance.get(`/juans?edition=CBETA&work_info=1&work=${work}&juan=${juan}`, {
-          responseType: 'arraybuffer',
-        });
-        data = JSON.parse(new TextDecoder().decode(res.data));
-      }
-      htmlStr = data.results[0];
-      workInfo = data.work_info;
-    }
-
-    // Convert HTML to XML, because ePub requires XHTML.
-    // Bad structured HTML will cause DOMParser parse error on some browsers!
-    let doc = document.implementation.createHTMLDocument("");
-    doc.body.innerHTML = htmlStr!;
-    htmlStr = new XMLSerializer().serializeToString(doc.body);
-    // Remove body tag.
-    htmlStr = htmlStr.replace('<body', '<div');
-    htmlStr = htmlStr.replace('/body>', '/div>');
-  }
-  return { htmlStr, workInfo };
-}
 
 function removeElementsByClassName(doc: Document, className: string) {
   let elements = doc.getElementsByClassName(className);
@@ -345,6 +310,7 @@ function zhVoices() {
 }
 
 const Globals = {
+  cbetar2AssetDir: 'cbetar2',
   storeFile: Store.storeFile,
   store,
   fontSizeNorm: 24,
@@ -445,12 +411,13 @@ const Globals = {
   isStoreApps: () => {
     return isPlatform('pwa') || isPlatform('electron');
   },
-  fetchJuan,
+  electronBackendApi,
   getFileName,
   checkKeyInIndexedDB,
   getFileFromIndexedDB,
   saveFileToIndexedDB,
   removeFileFromIndexedDB,
+  loadCbetaBookcaseZipToIndexedDB,
   clearAppData,
   removeElementsByClassName,
   disableAndroidChromeCallout,

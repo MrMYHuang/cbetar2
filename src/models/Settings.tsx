@@ -1,5 +1,11 @@
 import { Bookmark } from "./Bookmark";
 
+export enum CbetaDbMode {
+    Online,
+    OfflineFileSystem,
+    OfflineIndexedDb,
+}
+
 export interface Settings {
     // version is the setting file version.
     version: number;
@@ -19,6 +25,7 @@ export interface Settings {
     bookmarks: Bookmark[];
     dictionaryHistory: string[];
     wordDictionaryHistory: string[];
+    cbetaOfflineDbMode: CbetaDbMode;
 }
 
 const defaultSettings = {
@@ -40,6 +47,7 @@ const defaultSettings = {
     bookmarks: [],
     dictionaryHistory: [],
     wordDictionaryHistory: [],
+    cbetaOfflineDbMode: CbetaDbMode.OfflineIndexedDb,
 } as Settings;
 
 export default defaultSettings;

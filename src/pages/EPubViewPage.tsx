@@ -15,6 +15,8 @@ import ePub, { Book, Rendition, EVENTS } from 'epubjs-myh';
 import * as nodepub from 'nodepub';
 import { TmpSettings } from '../models/TmpSettings';
 import { clearTimeout } from 'timers';
+import fetchJuan from '../fetchJuan';
+import { CbetaDbMode } from '../models/Settings';
 
 // Load TW-Kai font in iframe.
 async function loadTwKaiFonts(this: Window) {
@@ -343,12 +345,12 @@ class _EPubViewPage extends React.Component<PageProps, State> {
     return new Promise<boolean>(async (ok, fail) => {
       this.setState({ isLoading: true });
       try {
-        const res = await Globals.fetchJuan(
+        const res = await fetchJuan(
           this.props.match.params.work,
           this.props.match.params.path,
           this.htmlFile,
           false,
-          this.props.tmpSettings.cbetaOfflineDbMode,
+          this.props.settings.cbetaOfflineDbMode,
         );
 
         await this.loadEpubCoverToMemFs();
@@ -385,7 +387,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         uuid: uuidStr,
         selectedText: selectedText,
         epubcfi: this.epubcfiFromSelectedString,
-        fileName: this.props.tmpSettings.cbetaOfflineDbMode ? null : this.htmlFile || `${this.props.match.params.work}_juan${this.props.match.params.path}.html`,
+        fileName: this.props.settings.cbetaOfflineDbMode !== CbetaDbMode.Online ? null : this.htmlFile || `${this.props.match.params.work}_juan${this.props.match.params.path}.html`,
         work: Object.assign(this.state.workInfo, {
           title: this.htmlFile ? this.htmlTitle : this.state.workInfo.title,
           juan: this.props.match.params.path,
@@ -936,7 +938,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       // Avoid infinite loops.
       if (checkpointIndex + 1 === leftSearchIndex) {
         console.error(`Infinite loop detected at ${checkpointIndex}!`);
-        this.setState({showToast: true, toastMessage: this.infiniteLoopMsg});
+        this.setState({ showToast: true, toastMessage: this.infiniteLoopMsg });
         return -1;
       }
       return this.findBinBoundaryVisibleCharIndex(binBoundary, checkpointIndex + 1, rightSearchIndex);
@@ -944,7 +946,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       // Avoid infinite loops.
       if (checkpointIndex === rightSearchIndex) {
         console.error(`Infinite loop detected at ${checkpointIndex}!`);
-        this.setState({showToast: true, toastMessage: this.infiniteLoopMsg});
+        this.setState({ showToast: true, toastMessage: this.infiniteLoopMsg });
         return -1;
       }
       return this.findBinBoundaryVisibleCharIndex(binBoundary, leftSearchIndex, checkpointIndex);
@@ -1312,7 +1314,11 @@ class _EPubViewPage extends React.Component<PageProps, State> {
             <IonIcon icon={arrowBack} slot='icon-only' />
           </IonButton>
 
-          <IonButton hidden={!this.state.fetchError} fill="clear" slot='end' onClick={e => this.fetchData()}>
+          <IonButton hidden={!this.state.fetchError} fill="clear" slot='end' onClick={e => {
+            this.fetchData().then(() => {
+              this.html2Epub();
+            });
+          }}>
             <IonIcon icon={refreshCircle} slot='icon-only' />
           </IonButton>
 

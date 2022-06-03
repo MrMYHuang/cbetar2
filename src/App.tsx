@@ -48,7 +48,8 @@ import ShareTextModal from './components/ShareTextModal';
 import WordDictionaryPage from './pages/WordDictionaryPage';
 import DownloadModal from './components/DownloadModal';
 import { TmpSettings } from './models/TmpSettings';
-import { Settings } from './models/Settings';
+import { CbetaDbMode, Settings } from './models/Settings';
+import CbetaOfflineIndexedDb from './CbetaOfflineDb';
 
 const electronBackendApi: any = (window as any).electronBackendApi;
 /*
@@ -123,6 +124,10 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
       Globals.disableAppLog();
     }
 
+    if(this.props.settings.cbetaOfflineDbMode === CbetaDbMode.OfflineIndexedDb) {
+      CbetaOfflineIndexedDb.init();
+    }
+
     electronBackendApi?.receive("fromMain", (data: any) => {
       switch (data.event) {
         case 'version':
@@ -134,7 +139,7 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
           break;
         case 'cbetaOfflineDbMode':
           this.props.dispatch({
-            type: "TMP_SET_KEY_VAL",
+            type: "SET_KEY_VAL",
             key: 'cbetaOfflineDbMode',
             val: data.isOn,
           });
