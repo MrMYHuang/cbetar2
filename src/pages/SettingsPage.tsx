@@ -1,5 +1,5 @@
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonRange, IonIcon, IonLabel, IonToggle, IonButton, IonAlert, IonSelect, IonSelectOption, IonProgressBar, IonToast, withIonLifeCycle } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonRange, IonIcon, IonLabel, IonToggle, IonButton, IonAlert, IonSelect, IonSelectOption, IonProgressBar, IonToast, withIonLifeCycle, IonLoading } from '@ionic/react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { helpCircle, text, documentText, refreshCircle, musicalNotes, colorPalette, bug, download, print, informationCircle } from 'ionicons/icons';
@@ -11,6 +11,7 @@ import { Bookmark, BookmarkType } from '../models/Bookmark';
 import { CbetaDbMode, Settings } from '../models/Settings';
 import { TmpSettings } from '../models/TmpSettings';
 import fetchJuan from '../fetchJuan';
+import IndexedDbFuncs from '../IndexedDbFuncs';
 
 interface StateProps {
   showFontLicense: boolean;
@@ -20,6 +21,11 @@ interface StateProps {
   showUpdateAllJuansDone: boolean;
   showBugReportAlert: boolean;
   showDownloadKaiFontAlert: boolean;
+  isLoading: boolean;
+  showAlert: boolean;
+  showUseBookcaseAlert: boolean;
+  showClearBookcaseAlert: boolean;
+  alertMessage: string;
   showClearAlert: boolean;
   showToast: boolean;
   toastMessage: string;
@@ -49,6 +55,11 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
       showBugReportAlert: false,
       showUpdateAllJuansDone: false,
       showDownloadKaiFontAlert: false,
+      isLoading: false,
+      showAlert: false,
+      showUseBookcaseAlert: false,
+      showClearBookcaseAlert: false,
+      alertMessage: '',
       showClearAlert: false,
       showToast: false,
       toastMessage: '',
@@ -169,7 +180,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
               <IonLabel className='ion-text-wrap uiFont'>Backend app版本: {this.props.tmpSettings.mainVersion}</IonLabel>
             </IonItem>
           */}
-            <IonItem hidden={false && !this.props.tmpSettings.mainVersion}>
+            <IonItem hidden={!this.props.tmpSettings.mainVersion}>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={informationCircle} slot='start' />
               <IonLabel className='ion-text-wrap uiFont'>使用CBETA離線經文資料檔</IonLabel>
@@ -177,8 +188,139 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
             </IonItem>
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
+              <IonIcon icon={download} slot='start' />
+              <div style={{ width: '100%' }}>
+                <IonLabel className='ion-text-wrap uiFont'><a href='http://www.cbeta.org/download/cbreader.htm' target="_new">離線 Bookcase 下載</a></IonLabel>
+                <IonProgressBar value={this.state.cbetaBookZipLoadRatio} />
+              </div>
+              <input id='importCbetaBookcaseInput' type='file' accept='.zip' style={{ display: 'none' }} onChange={async (ev) => {
+                const file = ev.target.files?.item(0);
+                if (file == null) {
+                  return;
+                }
+
+                this.setState({ showToast: true, toastMessage: `請等待進度條結束。可能須1個多小時。` });
+                try {
+                  const res = await Globals.axiosInstance.get(`${window.location.origin}/${Globals.pwaUrl}/assets.zip`, {
+                    responseType: 'arraybuffer',
+                  });
+                  await IndexedDbFuncs.loadZipToIndexedDB(res.data);
+                  console.log(new Date().toLocaleTimeString());
+                  this.setState({ isLoading: true, showToast: true, toastMessage: `請等待進度條結束，可能需1小時以上。` });
+                  await IndexedDbFuncs.loadZipToIndexedDB(file, [
+                    /.*rj-gif.*/g,
+                    /.*sd-gif.*/g,
+                    /.*XML.*/g,
+                    /.*bulei_nav.xhtml/g,
+                    /.*advance_nav.xhtml/g,
+                    /.*catalog.txt/g,
+                    /.*spine.txt/g,
+                    /.*figures.*/g,
+                  ],(ratio: number) => {
+                    this.setState({ cbetaBookZipLoadRatio: ratio });
+                  });
+                  console.log(new Date().toLocaleTimeString());
+                  this.setState({ isLoading: false, showAlert: true, alertMessage: `匯入 app 成功！您可以刪除 zip 檔節省空間。` });
+                  this.props.dispatch({
+                    type: "SET_KEY_VAL",
+                    key: 'cbetaOfflineDbMode',
+                    val: CbetaDbMode.OfflineIndexedDb
+                  });
+                } catch (e) {
+                  console.error(e);
+                  console.error(new Error().stack);
+                  this.setState({ isLoading: false, showAlert: true, alertMessage: `錯誤: ${e}` });
+                }
+                (document.getElementById('importCbetaBookcaseInput') as HTMLInputElement).value = '';
+              }} />
+              <IonButton fill='outline' slot='end' shape='round' size='large' className='uiFont' onClick={(e) => {
+                if (this.props.settings.cbetaOfflineDbMode === CbetaDbMode.OfflineIndexedDb) {
+                  this.setState({ showClearBookcaseAlert: true });
+                } else {
+                  this.setState({ showUseBookcaseAlert: true });
+                }
+              }}>{this.props.settings.cbetaOfflineDbMode === CbetaDbMode.OfflineIndexedDb ? '關閉' : '匯入'}</IonButton>
+              <IonAlert
+                cssClass='uiFont'
+                isOpen={this.state.showUseBookcaseAlert}
+                backdropDismiss={false}
+                onDidPresent={(ev) => {
+                }}
+                header={'Bookcase 資料格式與連線版資料不相同，會影響書籤定位。確定使用？'}
+                buttons={[
+                  {
+                    text: '取消',
+                    cssClass: 'primary uiFont',
+                    handler: (value) => {
+                      this.setState({
+                        showUseBookcaseAlert: false,
+                      });
+                    },
+                  },
+                  {
+                    text: '確定',
+                    cssClass: 'secondary uiFont',
+                    handler: async (value) => {
+                      this.setState({ showUseBookcaseAlert: false });
+                      (document.querySelector('#importCbetaBookcaseInput') as HTMLInputElement).click();
+                    },
+                  }
+                ]}
+              />
+              <IonAlert
+                cssClass='uiFont'
+                isOpen={this.state.showClearBookcaseAlert}
+                backdropDismiss={false}
+                onDidPresent={(ev) => {
+                }}
+                header={'關閉 Bookcase 功能會刪除所有離線資料！確定？'}
+                buttons={[
+                  {
+                    text: '取消',
+                    cssClass: 'primary uiFont',
+                    handler: (value) => {
+                      this.setState({
+                        showClearBookcaseAlert: false,
+                      });
+                    },
+                  },
+                  {
+                    text: '確定',
+                    cssClass: 'secondary uiFont',
+                    handler: async (value) => {
+                      this.setState({ isLoading: true, showClearBookcaseAlert: false });
+                      await IndexedDbFuncs.clearIndexedDB();
+                      this.setState({ isLoading: false, showClearBookcaseAlert: false, showToast: true, toastMessage: '清除成功!' });
+                      this.props.dispatch({
+                        type: "SET_KEY_VAL",
+                        key: 'cbetaOfflineDbMode',
+                        val: CbetaDbMode.Online
+                      });
+                    },
+                  }
+                ]}
+              />
+            </IonItem>
+            <IonItem hidden={this.props.settings.cbetaOfflineDbMode !== CbetaDbMode.Online}>
+              <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
+              <IonIcon icon={refreshCircle} slot='start' />
+              <div style={{ width: '100%' }}>
+                <IonLabel className='ion-text-wrap uiFont'>更新離線經文檔</IonLabel>
+                <IonProgressBar value={this.state.juansDownloadedRatio} />
+              </div>
+              <IonButton fill='outline' shape='round' slot='end' size='large' className='uiFont' onClick={async (e) => this.updateAllJuans()}>更新</IonButton>
+              <IonToast
+                cssClass='uiFont'
+                isOpen={this.state.showUpdateAllJuansDone}
+                onDidDismiss={() => this.setState({ showUpdateAllJuansDone: false })}
+                message={`離線經文檔更新完畢！`}
+                duration={2000}
+              />
+            </IonItem>
+            <IonItem>
+              <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={bug} slot='start' />
-              <IonLabel className='ion-text-wrap uiFont'><a href="https://github.com/MrMYHuang/cbetar2#report" target="_new">啟用app異常記錄</a></IonLabel>
+              <IonLabel className='ion-text-wrap uiFont'><a href="https://github.com/MrMYHuang/cbetar2#report" target="_new">啟用 app 異常記錄</a></IonLabel>
               <IonToggle slot='end' checked={this.props.settings.hasAppLog} onIonChange={e => {
                 const isChecked = e.detail.checked;
 
@@ -256,42 +398,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
               <IonIcon icon={download} slot='start' />
               <div className='contentBlock'>
                 <div style={{ flexDirection: 'column' }}>
-                  <div style={{ width: '100%' }}>
-                    <IonLabel className='ion-text-wrap uiFont'>CBETA Bookcase</IonLabel>
-                    <IonProgressBar value={this.state.cbetaBookZipLoadRatio} />
-                  </div>
-                  <div style={{ textAlign: 'right' }}>
-                    <input id='importCbetaBookcaseInput' type='file' accept='.zip' style={{ display: 'none' }} onChange={async (ev) => {
-                      const file = ev.target.files?.item(0);
-                      if (file == null) {
-                        return;
-                      }
-                      try {
-                        console.log(new Date().toLocaleTimeString());
-                        await Globals.loadCbetaBookcaseZipToIndexedDB(file, (ratio: number) => {
-                          this.setState({ cbetaBookZipLoadRatio: ratio });
-                        });
-                        console.log(new Date().toLocaleTimeString());
-                      } catch (e) {
-                        console.error(e);
-                        console.error(new Error().stack);
-                      }
-                      (document.getElementById('importCbetaBookcaseInput') as HTMLInputElement).value = '';
-                    }} />
-
-                    <IonButton fill='outline' shape='round' size='large' className='uiFont' onClick={(e) => {
-                      (document.querySelector('#importCbetaBookcaseInput') as HTMLInputElement).click();
-                    }}>匯入</IonButton>
-                  </div>
-                </div>
-              </div>
-            </IonItem>
-            <IonItem>
-              <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
-              <IonIcon icon={download} slot='start' />
-              <div className='contentBlock'>
-                <div style={{ flexDirection: 'column' }}>
-                  <IonLabel className='ion-text-wrap uiFont'>App設定與書籤</IonLabel>
+                  <IonLabel className='ion-text-wrap uiFont'>App 設定與書籤</IonLabel>
                   <div style={{ textAlign: 'right' }}>
                     <IonButton fill='outline' shape='round' size='large' className='uiFont' onClick={async (e) => {
                       const settingsJsonUri = `data:text/json;charset=utf-8,${encodeURIComponent(localStorage.getItem(Globals.storeFile) || '')}`;
@@ -354,22 +461,6 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                   </div>
                 </div>
               </div>
-            </IonItem>
-            <IonItem>
-              <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
-              <IonIcon icon={refreshCircle} slot='start' />
-              <div style={{ width: '100%' }}>
-                <IonLabel className='ion-text-wrap uiFont'>更新離線經文檔</IonLabel>
-                <IonProgressBar value={this.state.juansDownloadedRatio} />
-              </div>
-              <IonButton fill='outline' shape='round' slot='end' size='large' className='uiFont' onClick={async (e) => this.updateAllJuans()}>更新</IonButton>
-              <IonToast
-                cssClass='uiFont'
-                isOpen={this.state.showUpdateAllJuansDone}
-                onDidDismiss={() => this.setState({ showUpdateAllJuansDone: false })}
-                message={`離線經文檔更新完畢！`}
-                duration={2000}
-              />
             </IonItem>
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
@@ -706,12 +797,39 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
             />
           </IonList>
 
+          <IonAlert
+            cssClass='uiFont'
+            isOpen={this.state.showAlert}
+            backdropDismiss={false}
+            onDidPresent={(ev) => {
+            }}
+            header={this.state.alertMessage}
+            buttons={[
+              {
+                text: '確定',
+                cssClass: 'primary uiFont',
+                handler: (value) => {
+                  this.setState({
+                    showAlert: false,
+                  });
+                },
+              },
+            ]}
+          />
+
           <IonToast
             cssClass='uiFont'
             isOpen={this.state.showToast}
             onDidDismiss={() => this.setState({ showToast: false })}
             message={this.state.toastMessage}
             duration={2000}
+          />
+
+          <IonLoading
+            cssClass='uiFont'
+            isOpen={this.state.isLoading}
+            onDidDismiss={() => this.setState({ isLoading: false })}
+            message={'執行中...'}
           />
         </IonContent>
       </IonPage >

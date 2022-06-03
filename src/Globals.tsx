@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { isPlatform, IonLabel, IonIcon } from '@ionic/react';
-import * as AdmZip from 'adm-zip';
 import { refreshCircle } from 'ionicons/icons';
 import Store from './redux/store';
 import IndexedDbFuncs from './IndexedDbFuncs';
@@ -32,38 +31,6 @@ const axiosInstance = axios.create({
   baseURL: cbetaApiUrl,
   timeout: 10000,
 });
-
-function arrayBufferToBuffer(ab: ArrayBuffer) {
-  const buf = Buffer.alloc(ab.byteLength);
-  const view = new Uint8Array(ab);
-  for (let i = 0; i < buf.length; ++i) {
-    buf[i] = view[i];
-  }
-  return buf;
-}
-
-function bufferToArrayBuffer(buf: Buffer) {
-  const ab = new ArrayBuffer(buf.length);
-  const view = new Uint8Array(ab);
-  for (let i = 0; i < buf.length; ++i) {
-    view[i] = buf[i];
-  }
-  return ab;
-}
-
-async function loadCbetaBookcaseZipToIndexedDB(file: File, progressCallback: Function | null = null) {
-  const zip = new AdmZip.default(arrayBufferToBuffer(await file.arrayBuffer()));
-  const zipEntries = zip.getEntries();
-  let finishCount = 0;
-  for (let i = 0; i < zipEntries.length; i++) {
-    let zipEntry = zipEntries[i];
-    if (!zipEntry.isDirectory) {
-      await saveFileToIndexedDB(zipEntry.entryName, zipEntry.getData());
-      finishCount += 1;
-      progressCallback && progressCallback(finishCount / zipEntries.length);
-    }
-  }
-}
 
 function twKaiFontNeedUpgrade() {
   return +(localStorage.getItem('twKaiFontVersion') ?? 1) < twKaiFontVersion;
@@ -174,7 +141,7 @@ function enableAppLog() {
   console.error = function () {
     log += '----- Error ----\n';
     log += (Array.from(arguments)) + '\n';
-    if (arguments[0].isAxiosError) {
+    if (arguments[0] && arguments[0].isAxiosError) {
       log += `URL: ${arguments[0].config.url}\n`;
     }
     consoleError.apply(console, arguments as any);
@@ -225,7 +192,7 @@ function zhVoices() {
 }
 
 const Globals = {
-  cbetar2AssetDir: 'cbetar2',
+  cbetar2AssetDir: 'cbetar2/assets',
   storeFile: Store.storeFile,
   store,
   fontSizeNorm: 24,
@@ -331,7 +298,6 @@ const Globals = {
   getFileFromIndexedDB,
   saveFileToIndexedDB,
   removeFileFromIndexedDB,
-  loadCbetaBookcaseZipToIndexedDB,
   clearAppData,
   removeElementsByClassName,
   disableAndroidChromeCallout,

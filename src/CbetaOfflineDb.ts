@@ -1,4 +1,4 @@
-import Constants from "./Constants";
+import Funcs from "./Funcs";
 import Globals from "./Globals";
 
 const xmlParser = new DOMParser();
@@ -110,19 +110,19 @@ export async function fetchJuan(work: string, juan: string) {
 
     let xhtmlDoc = xsltProcessor.transformToDocument(stringToXml(documentString));
     let originalRootNode = xhtmlDoc.getRootNode().firstChild!;
-    const rootNode = elementTPostprocessing(xhtmlDoc, originalRootNode);
+    const rootNode = await elementTPostprocessing(xhtmlDoc, originalRootNode);
     xhtmlDoc.getRootNode().removeChild(originalRootNode);
-    xhtmlDoc.getRootNode().appendChild(rootNode);    
+    xhtmlDoc.getRootNode().appendChild(rootNode!);
     const result = xhtmlDoc.documentElement.outerHTML;
 
     return {
         work_info,
-        results: [result.replace(/\.\.\/figures/g, `https://${Constants.localFileHost}/${cbetaBookcaseDir}/CBETA/figures`)],
+        results: [result],
     };
 }
 
 let lb = '';
-function elementTPostprocessing(doc: Document, node: Node, parent: Node | null = null): Node {
+async function elementTPostprocessing(doc: Document, node: Node, parent: Node | null = null) {
     const c = node;
     if (c.nodeType === Node.ELEMENT_NODE) {
         let c2 = c as Element;
@@ -138,13 +138,19 @@ function elementTPostprocessing(doc: Document, node: Node, parent: Node | null =
             // elementTPostprocessing could delete child nodes
             // and indexing could become wrong after child nodes list changed.
             // Thus, using backward traversal.
-            for (let i = c2.childNodes.length - 1; i >= 0; i-- ) {
-                elementTPostprocessing(doc, c2.childNodes[i], c2);
+            for (let i = c2.childNodes.length - 1; i >= 0; i--) {
+                await elementTPostprocessing(doc, c2.childNodes[i], c2);
             }
 
             if (c2.textContent === '') {
                 parent?.removeChild(node);
-            } 
+            }
+            return c2;
+        } else if (c2.tagName === 'img') {
+            const src = c2.getAttribute('src') || '';
+            const imgKey = src.replace(/\.\.\/figures/g, `${cbetaBookcaseDir}/CBETA/figures`);
+            const imgData = await Globals.getFileFromIndexedDB(imgKey) as Uint8Array;
+            c2.setAttribute('src', Funcs.uint8ArrayToBase64Img(imgData, imgKey));
             return c2;
         } else if (c2.tagName === 'g') {
             const gaijiId = c2.getAttribute('ref')?.substring(1) || '';
@@ -156,8 +162,8 @@ function elementTPostprocessing(doc: Document, node: Node, parent: Node | null =
             }
             return c2;
         } else {
-            for (let i = c2.childNodes.length - 1; i >= 0; i-- ) {
-                elementTPostprocessing(doc, c2.childNodes[i], c2);
+            for (let i = c2.childNodes.length - 1; i >= 0; i--) {
+                await elementTPostprocessing(doc, c2.childNodes[i], c2);
             }
             return c2;
         }

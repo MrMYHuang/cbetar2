@@ -360,6 +360,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
           ok(true);
         });
       } catch (e) {
+        console.error(`Not found: work ${this.props.match.params.work}, juan ${this.props.match.params.path}`);
         console.error(e);
         console.error(new Error().stack);
         this.setState({ isLoading: false, fetchError: true });

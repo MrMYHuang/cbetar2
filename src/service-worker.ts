@@ -13,8 +13,6 @@ import { ExpirationPlugin } from 'workbox-expiration';
 import { precacheAndRoute, createHandlerBoundToURL } from 'workbox-precaching';
 import { registerRoute } from 'workbox-routing';
 import { StaleWhileRevalidate } from 'workbox-strategies';
-import Constants from './Constants';
-import IndexedDbFuncs from './IndexedDbFuncs';
 
 //import CbetaOfflineDb from './CbetaOfflineDb';
 //import Globals from './Globals';
@@ -83,12 +81,3 @@ self.addEventListener('message', (event) => {
 });
 
 // Any other custom service worker logic can go here.
-registerRoute((opts) => {
-  if (opts.url.host === Constants.localFileHost) {
-    return true;
-  }
-  return false;
-}, async (opts) => {
-  const data = (await IndexedDbFuncs.getFileFromIndexedDB(opts.url?.pathname.substring(1) || '')) as Uint8Array;
-  return new Response(data);
-});

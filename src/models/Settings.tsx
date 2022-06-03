@@ -47,7 +47,7 @@ const defaultSettings = {
     bookmarks: [],
     dictionaryHistory: [],
     wordDictionaryHistory: [],
-    cbetaOfflineDbMode: CbetaDbMode.OfflineIndexedDb,
+    cbetaOfflineDbMode: CbetaDbMode.Online,
 } as Settings;
 
 export default defaultSettings;
