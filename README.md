@@ -117,15 +117,15 @@ CBETA 電子佛典閱讀器2(非官方) (Chinese Buddhist Electronic Text Associ
 
 * <a id='modular'>模組化程式</a>
 
-  cbetar2 為一支模組化程式，由 frontend app (PWA) + backend app (CBETA API or cbetar2 backend) 組成。有兩種使用方式：
+  cbetar2 為一支模組化程式，由 frontend app (PWA) + backend app (CBETA API or cbetar2 backend) 組成。有3種使用方式：
 
-  1. 連線DB版 app：PWA + CBETA API
-    * 此版本不須先下載 CBETA 離線經文資料檔，但要作離線瀏覽要把經文加至書籤。
-    * 安裝方式：瀏覽器安裝、商店安裝。支援多種平台。
-  2. 離線DB版 app：PWA + cbetar2 backend
-    * 此版本預設與連線版相同，多了離線DB的支援。要切為離線DB模式，要先下載、解壓<a href='http://www.cbeta.org/download/cbreader.htm'>CBETA 離線經文資料檔</a>，可離線瀏覽目錄、經文。
-    * 安裝方式：下載安裝檔案安裝。支援 Windows 7+, Linux, macOS 10.10+。
-    * 設定：啟動 app 後，執行選單/檔案/設定 Bookcase目錄。
+  1. 連線 DB：PWA + CBETA API
+    * 此模式不須先下載 CBETA 離線經文資料檔，但要作離線瀏覽要把經文加至書籤。
+  2. 離線 DB + PWA：PWA + CBETA 離線經文檔
+    * 此模式與連線模式相似，多了離線DB的支援。要設定此模式，要先下載 DB：<a href='https://github.com/MrMYHuang/cbetar2-bookcase/'>詳情</a>。可離線瀏覽目錄、經文，但部分功能仍須連線，如全文檢索。
+  3. 離線 DB + Electron app：PWA + cbetar2 backend
+    * 此模式與 PWA 離線版功能相同。要設定此模式，要先下載、解壓<a href='http://www.cbeta.org/download/cbreader.htm'>CBETA 離線經文資料檔</a>。啟動 app 後，執行選單/檔案/設定 Bookcase目錄。
+    * 使用瀏覽器安裝的 PWA 不支援此模式。
 
 程式碼為開放(MIT License)，可自由下載修改、重新發佈。
 
@@ -136,17 +136,22 @@ CBETA 電子佛典閱讀器2(非官方) (Chinese Buddhist Electronic Text Associ
 * Android 9 + Chrome
 * Firefly RK-3399 + Android 7.1 + Firefox 91
 * macOS 11 amd64 + Chrome
-* macOS 11 arm64 + Apple App Store app
-* macOS 11 arm64 host + Ubuntu 20.04 arm64 guest + Snap Store app
-* macOS 12 arm64 host + openSUSE Leap 15.3 aarch64 guest + AppImage app
-* macOS 12 arm64 host + Arch Linux aarch64 guest + AppImage app
+* macOS 11 arm64 + Mac App Store
 * iPad 7 iPadOS 14-15 + Safari
+* iPad Pro + App Store
 * iPhone 8 (模擬器) + Safari
 * Debian Linux arm64 10 + Chrome
-* Raspberry Pi 4 + Ubuntu 20 arm64 + Snap Store app
-* Ubuntu 21 amd64 + Snap Store app
-* Ubuntu 21 amd64 + Flathub app
-* Fedora 35 aarch64 + Flathub app
+* Ubuntu 21 amd64 + Snap Store
+* Ubuntu 21 amd64 + Flathub
+* Ubuntu 20.04 arm64 + Snap Store
+* Fedora 35 aarch64 + Flathub
+* Fedora 36 aarch64 + COPR
+* openSUSE Leap 15.3 aarch64 + AppImage
+* Arch Linux aarch64 + AppImage
+* Kali Linux arm64 + DEB
+* Raspberry Pi 4 + Ubuntu 20 arm64 + Snap Store
+* CentOS Stream 9 aarch64 + COPR
+* AlmaLinux 9 aarch64 + COPR
 
 非上述環境仍可嘗試使用此 app。若有<a href='#knownIssues'>已知問題</a>未描述的問題，可用<a href='#report'>異常回報</a>功能。
 
@@ -156,11 +161,11 @@ CBETA 電子佛典閱讀器2(非官方) (Chinese Buddhist Electronic Text Associ
 
 此 app 有3種取得、安裝方式：
 
-  1. 連線 DB 版 app：Chrome, Safari 網頁瀏覽器。
-  2. 連線 DB 版 app：App 商店。
-  3. 離線 DB 版 app：下載安裝檔。
+  1. Chrome, Safari 網頁瀏覽器。
+  2. App 商店。
+  3. 下載安裝檔。
 
-建議採用第1種用瀏覽器安裝，以取得最完整的 app 功能體驗。3種安裝方法如下。
+3種安裝方法如下。
 
 ### <a id='web-app'>從瀏覽器開啟/安裝</a>
 請用 Chrome (Windows, macOS, Linux, Android作業系統使用者)、Safari iOS (iPhone, iPad 使用者) 瀏覽器開啟以下網址：
@@ -253,12 +258,12 @@ sudo dnf install cbetar2
 ```
 
 ### 下載安裝檔
-支援的作業系統如下 (Android 為連線 DB app，其他都是離線 DB app)：
+支援的作業系統如下：
 
   1. Android (中國大陸使用者也能安裝)
   2. Linux amd64 & arm64 AppImage (Ubuntu, Fedora, Debian, Arch, openSUSE)
-  3. Linux amd64 & arm64 DEB (Debian, Ubuntu, ...)
-  4. Linux RPM x86_64 & aarch64 (Fedora, ...)
+  3. Linux amd64 & arm64 DEB (Debian, Ubuntu, Kali, ...)
+  4. Linux RPM x86_64 & aarch64 (Fedora, CentOS Stream, AlmaLinux, ...)
   5. Windows 7+ x64 & arm64
   6. macOS 10.11+ x86_64 & arm64
 
@@ -298,11 +303,11 @@ sudo dnf install cbetar2
 
 ## <a id='privacy'>隱私政策聲明</a>
 
-此app無收集使用者個人資訊，也無收集匿名資訊。
+此 app 無收集使用者個人資訊，也無收集匿名資訊。
 
 ## 第三方軟體版權聲明
 
-1. <a href="http://cbdata.dila.edu.tw/v1.2/" target="_new">CBETA API參考文件</a>
+1. <a href="http://cbdata.dila.edu.tw/v1.2/" target="_new">CBETA API 參考文件</a>
 2. <a href="http://glossaries.dila.edu.tw/?locale=zh-TW" target="_new">DILA 佛學術語字辭典</a>
 3. <a href="https://data.gov.tw/dataset/5961" target="_new">全字庫字型</a>
 4. <a href="https://github.com/g0v/moedict-webkit" target="_new">萌典字典</a>
