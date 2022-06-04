@@ -3,11 +3,6 @@ import { isPlatform, IonLabel, IonIcon } from '@ionic/react';
 import { refreshCircle } from 'ionicons/icons';
 import Store from './redux/store';
 import IndexedDbFuncs from './IndexedDbFuncs';
-const saveFileToIndexedDB = IndexedDbFuncs.saveFileToIndexedDB;
-const checkKeyInIndexedDB = IndexedDbFuncs.checkKeyInIndexedDB;
-const clearIndexedDB = IndexedDbFuncs.clearIndexedDB;
-const getFileFromIndexedDB = IndexedDbFuncs.getFileFromIndexedDB;
-const removeFileFromIndexedDB = IndexedDbFuncs.removeFileFromIndexedDB;
 
 const pwaUrl = process.env.PUBLIC_URL || '/';
 const bugReportApiUrl = 'https://vh6ud1o56g.execute-api.ap-northeast-1.amazonaws.com/bugReportMailer';
@@ -71,7 +66,7 @@ async function loadTwKaiFont(font: string, key: string, path: string, forceUpdat
       timeout: 0,
     }).then(res => {
       const fontData = res.data;
-      saveFileToIndexedDB(key, fontData);
+      IndexedDbFuncs.saveFile(key, fontData);
       localStorage.setItem('twKaiFontVersion', twKaiFontVersion + "");
       return new window.FontFace(font, fontData)
     });
@@ -82,7 +77,7 @@ async function loadTwKaiFont(font: string, key: string, path: string, forceUpdat
     if (fontFaceCache) {
       updateFontOrNot = Promise.resolve(fontFaceCache);
     } else {
-      updateFontOrNot = (getFileFromIndexedDB(key) as Promise<ArrayBuffer>).then((data) => {
+      updateFontOrNot = (IndexedDbFuncs.getFile(key) as Promise<ArrayBuffer>).then((data) => {
         return new window.FontFace(font, data);
       }).catch(err => {
         return updateFont();
@@ -112,7 +107,7 @@ function getFileName(work: string, juan: string) {
 
 async function clearAppData() {
   localStorage.clear();
-  await clearIndexedDB();
+  await IndexedDbFuncs.clear();
 }
 
 const electronBackendApi: any = (window as any).electronBackendApi;
@@ -294,10 +289,6 @@ const Globals = {
   },
   electronBackendApi,
   getFileName,
-  checkKeyInIndexedDB,
-  getFileFromIndexedDB,
-  saveFileToIndexedDB,
-  removeFileFromIndexedDB,
   clearAppData,
   removeElementsByClassName,
   disableAndroidChromeCallout,

@@ -11,7 +11,7 @@ import SearchAlert from '../components/SearchAlert';
 import queryString from 'query-string';
 import { TmpSettings } from '../models/TmpSettings';
 import { CbetaDbMode, Settings } from '../models/Settings';
-import CbetaOfflineIndexedDb from '../CbetaOfflineDb';
+import CbetaOfflineIndexedDb from '../CbetaOfflineIndexedDb';
 
 const famousJuans = [
   { title: '般若波羅蜜多心經', url: `/catalog/juan/T0251/1` },

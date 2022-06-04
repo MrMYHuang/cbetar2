@@ -49,7 +49,7 @@ import WordDictionaryPage from './pages/WordDictionaryPage';
 import DownloadModal from './components/DownloadModal';
 import { TmpSettings } from './models/TmpSettings';
 import { CbetaDbMode, Settings } from './models/Settings';
-import CbetaOfflineIndexedDb from './CbetaOfflineDb';
+import CbetaOfflineIndexedDb from './CbetaOfflineIndexedDb';
 import IndexedDbFuncs from './IndexedDbFuncs';
 
 const electronBackendApi: any = (window as any).electronBackendApi;

@@ -1,4 +1,5 @@
 import Globals from '../../Globals';
+import IndexedDbFuncs from '../../IndexedDbFuncs';
 import { Bookmark, BookmarkType } from '../../models/Bookmark';
 import defaultSettings, { Settings } from '../../models/Settings';
 
@@ -57,7 +58,7 @@ export default function reducer(state = { ...defaultSettings }, action: any) {
       if (fileName !== null && fileName !== '' &&
         !oldBookmarks.some((bookmark: Bookmark) => bookmark.fileName === fileName)
       ) {
-        Globals.saveFileToIndexedDB(fileName, action.htmlStr);
+        IndexedDbFuncs.saveFile(fileName, action.htmlStr);
       }
       newSettings.bookmarks = [...newSettings.bookmarks, action.bookmark];
       localStorage.setItem(Globals.storeFile, JSON.stringify({ settings: newSettings }));
@@ -86,7 +87,7 @@ export default function reducer(state = { ...defaultSettings }, action: any) {
                   const noJuanBookmarkUseTheFile = bookmarksTemp.find((b) => b.type === BookmarkType.JUAN && b.fileName === fileName) == null;
                   if (noJuanBookmarkUseTheFile) {
                     try {
-                      Globals.removeFileFromIndexedDB(fileName);
+                      IndexedDbFuncs.removeFile(fileName);
                     } catch (err) {
                       console.error(err);
                     }
@@ -99,7 +100,7 @@ export default function reducer(state = { ...defaultSettings }, action: any) {
                 const noJuanBookmarkUseTheFile = bookmarksTemp.find((b) => b.type === BookmarkType.JUAN && b.fileName === fileName) == null;
                 if (noJuanBookmarkUseTheFile) {
                   try {
-                    Globals.removeFileFromIndexedDB(fileName!);
+                    IndexedDbFuncs.removeFile(fileName!);
                   } catch (err) {
                     console.error(err);
                   }

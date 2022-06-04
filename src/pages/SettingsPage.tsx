@@ -107,7 +107,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
         const fileName = Globals.getFileName(work.work, juan);
         // Update HTML.
         if (this.props.settings.cbetaOfflineDbMode === CbetaDbMode.Online) {
-          Globals.saveFileToIndexedDB(fileName, res.htmlStr);
+          IndexedDbFuncs.saveFile(fileName, res.htmlStr);
         }
         if (j === 0) {
           // Update bookmarks for once.
@@ -127,7 +127,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
       newWork.juan = work.juan;
       // Update HTML.
       if (this.props.settings.cbetaOfflineDbMode === CbetaDbMode.Online) {
-        Globals.saveFileToIndexedDB(fileName, res.htmlStr);
+        IndexedDbFuncs.saveFile(fileName, res.htmlStr);
       }
       // Update bookmarks
       this.updateBookmark(settings.bookmarks, Object.assign(bookmarkWithHtml, { work: newWork }));
@@ -190,7 +190,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={download} slot='start' />
               <div style={{ width: '100%' }}>
-                <IonLabel className='ion-text-wrap uiFont'><a href='http://www.cbeta.org/download/cbreader.htm' target="_new">離線 Bookcase 下載</a></IonLabel>
+                <IonLabel className='ion-text-wrap uiFont'><a href='https://github.com/MrMYHuang/cbetar2-bookcase' target="_new">離線經文 DB 下載 </a></IonLabel>
                 <IonProgressBar value={this.state.cbetaBookZipLoadRatio} />
               </div>
               <input id='importCbetaBookcaseInput' type='file' accept='.zip' style={{ display: 'none' }} onChange={async (ev) => {
@@ -199,15 +199,15 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                   return;
                 }
 
-                this.setState({ showToast: true, toastMessage: `請等待進度條結束。可能須1個多小時。` });
+                this.setState({ showToast: true, toastMessage: `請等待進度條結束。可能須1個多小時。`, cbetaBookZipLoadRatio: 0 });
                 try {
                   const res = await Globals.axiosInstance.get(`${window.location.origin}/${Globals.pwaUrl}/assets.zip`, {
                     responseType: 'arraybuffer',
                   });
-                  await IndexedDbFuncs.loadZipToIndexedDB(res.data);
+                  await IndexedDbFuncs.extractZipToZips(res.data);
                   console.log(new Date().toLocaleTimeString());
                   this.setState({ isLoading: true, showToast: true, toastMessage: `請等待進度條結束，可能需1小時以上。` });
-                  await IndexedDbFuncs.loadZipToIndexedDB(file, [
+                  await IndexedDbFuncs.extractZipToZips(file, [
                     /.*rj-gif.*/g,
                     /.*sd-gif.*/g,
                     /.*XML.*/g,
@@ -216,7 +216,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                     /.*catalog.txt/g,
                     /.*spine.txt/g,
                     /.*figures.*/g,
-                  ],(ratio: number) => {
+                  ], undefined, (ratio: number) => {
                     this.setState({ cbetaBookZipLoadRatio: ratio });
                   });
                   console.log(new Date().toLocaleTimeString());
@@ -229,7 +229,8 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                 } catch (e) {
                   console.error(e);
                   console.error(new Error().stack);
-                  this.setState({ isLoading: false, showAlert: true, alertMessage: `錯誤: ${e}` });
+                  this.setState({ isLoading: false, showAlert: true, alertMessage: `匯入錯誤，將清空 app 離線 DB: ${e}` });
+                  await IndexedDbFuncs.clear();
                 }
                 (document.getElementById('importCbetaBookcaseInput') as HTMLInputElement).value = '';
               }} />
@@ -289,8 +290,8 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                     cssClass: 'secondary uiFont',
                     handler: async (value) => {
                       this.setState({ isLoading: true, showClearBookcaseAlert: false });
-                      await IndexedDbFuncs.clearIndexedDB();
-                      this.setState({ isLoading: false, showClearBookcaseAlert: false, showToast: true, toastMessage: '清除成功!' });
+                      await IndexedDbFuncs.clear();
+                      this.setState({ isLoading: false, showClearBookcaseAlert: false, showAlert: true, alertMessage: '清除成功!' });
                       this.props.dispatch({
                         type: "SET_KEY_VAL",
                         key: 'cbetaOfflineDbMode',
@@ -451,9 +452,14 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                           text: '重置',
                           cssClass: 'secondary uiFont',
                           handler: async (value) => {
-                            await Globals.clearAppData();
-                            this.props.dispatch({ type: 'DEFAULT_SETTINGS' });
-                            this.setState({ showClearAlert: false, showToast: true, toastMessage: "清除成功!" });
+                            this.setState({ isLoading: true });
+                            try {
+                              await Globals.clearAppData();
+                              this.props.dispatch({ type: 'DEFAULT_SETTINGS' });
+                              this.setState({ isLoading: false, showClearAlert: false, showToast: true, toastMessage: "清除成功!" });
+                            } catch (error) {
+                              this.setState({ isLoading: false });
+                            }
                           },
                         }
                       ]}
@@ -601,7 +607,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                   if (isChecked) {
                     // Check missing fonts.
                     for (let i = 0; i < Globals.twKaiFontKeys.length; i++) {
-                      await Globals.checkKeyInIndexedDB(Globals.twKaiFontKeys[i]);
+                      await IndexedDbFuncs.checkKey(Globals.twKaiFontKeys[i]);
                     }
                     Globals.loadTwKaiFonts();
                   }
@@ -644,7 +650,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                   text: '繼續',
                   cssClass: 'secondary uiFont',
                   handler: async (value) => {
-                    this.setState({ showDownloadKaiFontAlert: false, showToast: true, toastMessage: "楷書字型背景下載中..." });
+                    this.setState({ isLoading: true, showDownloadKaiFontAlert: false, showToast: true, toastMessage: "楷書字型背景下載中..." });
                     Globals.loadTwKaiFonts((progress: number) => {
                       this.setState({ fontDownloadedRatio: progress });
                     }).then(async v => {
@@ -653,7 +659,9 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                         key: 'useFontKai',
                         val: true
                       });
-                    })
+                    }).finally(() => {
+                      this.setState({ isLoading: false });
+                    });
                   },
                 }
               ]}

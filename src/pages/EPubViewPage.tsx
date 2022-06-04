@@ -17,6 +17,8 @@ import { TmpSettings } from '../models/TmpSettings';
 import { clearTimeout } from 'timers';
 import fetchJuan from '../fetchJuan';
 import { CbetaDbMode } from '../models/Settings';
+import IndexedDbFuncs from '../IndexedDbFuncs';
+import CbetaOfflineIndexedDb from '../CbetaOfflineIndexedDb';
 
 // Load TW-Kai font in iframe.
 async function loadTwKaiFonts(this: Window) {
@@ -199,16 +201,20 @@ class _EPubViewPage extends React.Component<PageProps, State> {
   }
 
   async loadEpubCoverToMemFs() {
-    let logoArray = new Uint8Array(JSON.parse(localStorage.getItem('logo.png') || '[]'));
-
-    if (logoArray.length === 0) {
-      // Download book logo.
-      const res = await Globals.axiosInstance.get(`${window.location.origin}/${Globals.pwaUrl}/assets/icon/icon.png`, {
-        responseType: 'arraybuffer',
-      });
-      logoArray = new Uint8Array(res.data);
-      let logoStr = JSON.stringify(Array.from(logoArray));
-      localStorage.setItem('logo.png', logoStr);
+    let logoArray: Uint8Array;
+    if (this.props.settings.cbetaOfflineDbMode !== CbetaDbMode.OfflineIndexedDb) {
+      logoArray = new Uint8Array(JSON.parse(localStorage.getItem('logo.png') || '[]'));
+      if (logoArray.length === 0) {
+        // Download book logo.
+        const res = await Globals.axiosInstance.get(`${window.location.origin}/${Globals.pwaUrl}/assets/icon/icon.png`, {
+          responseType: 'arraybuffer',
+        });
+        logoArray = new Uint8Array(res.data);
+        let logoStr = JSON.stringify(Array.from(logoArray));
+        localStorage.setItem('logo.png', logoStr);
+      }
+    } else {
+      logoArray = await IndexedDbFuncs.getFile<Uint8Array>(`${Globals.cbetar2AssetDir}/icon.png`);
     }
     let fs = require('fs');
     fs.writeFileSync('logo.png', logoArray);

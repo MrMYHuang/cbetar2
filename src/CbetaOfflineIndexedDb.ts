@@ -1,5 +1,6 @@
 import Funcs from "./Funcs";
 import Globals from "./Globals";
+import IndexedDbFuncs from "./IndexedDbFuncs";
 
 const xmlParser = new DOMParser();
 const xsltProcessor = new XSLTProcessor();
@@ -17,7 +18,7 @@ function stringToXml(str: string) {
 }
 
 async function getFileAsStringFromIndexedDB(file: string) {
-    return textDecoder.decode((await Globals.getFileFromIndexedDB(file)) as Uint8Array);
+    return textDecoder.decode((await IndexedDbFuncs.getZippedFile(file)) as Uint8Array);
 }
 
 export async function init() {
@@ -149,7 +150,8 @@ async function elementTPostprocessing(doc: Document, node: Node, parent: Node | 
         } else if (c2.tagName === 'img') {
             const src = c2.getAttribute('src') || '';
             const imgKey = src.replace(/\.\.\/figures/g, `${cbetaBookcaseDir}/CBETA/figures`);
-            const imgData = await Globals.getFileFromIndexedDB(imgKey) as Uint8Array;
+            // Image is uncompressed.
+            const imgData = await IndexedDbFuncs.getFile(imgKey) as Uint8Array;
             c2.setAttribute('src', Funcs.uint8ArrayToBase64Img(imgData, imgKey));
             return c2;
         } else if (c2.tagName === 'g') {

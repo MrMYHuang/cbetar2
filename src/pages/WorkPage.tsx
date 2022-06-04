@@ -11,7 +11,8 @@ import SearchAlert from '../components/SearchAlert';
 import { TmpSettings } from '../models/TmpSettings';
 import fetchJuan from '../fetchJuan';
 import { CbetaDbMode, Settings } from '../models/Settings';
-import CbetaOfflineIndexedDb from '../CbetaOfflineDb';
+import CbetaOfflineIndexedDb from '../CbetaOfflineIndexedDb';
+import IndexedDbFuncs from '../IndexedDbFuncs';
 
 const electronBackendApi: any = (window as any).electronBackendApi;
 
@@ -121,7 +122,7 @@ class _WorkPage extends React.Component<PageProps, State> {
       this.fetchJuan = juans[i];
       try {
         const res = await fetchJuan(work.work, this.fetchJuan, null);
-        Globals.saveFileToIndexedDB(Globals.getFileName(work.work, this.fetchJuan), res.htmlStr);
+        IndexedDbFuncs.saveFile(Globals.getFileName(work.work, this.fetchJuan), res.htmlStr);
       } catch (err) {
         console.error(`Fetching juan ${i} failed! ${err}`);
         console.error(new Error().stack);

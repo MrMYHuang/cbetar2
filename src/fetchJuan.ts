@@ -1,14 +1,15 @@
 import Globals from "./Globals";
 import { Work } from './models/Work';
 import { Bookmark } from './models/Bookmark';
-import {fetchJuan as fetchJuanFromIndexDB} from './CbetaOfflineDb';
+import {fetchJuan as fetchJuanFromIndexedDB} from './CbetaOfflineIndexedDb';
+import IndexedDbFuncs from "./IndexedDbFuncs";
 
 // Fetch juan or HTML file.
 export default async function fetchJuan(work: string, juan: string, htmlFile: string | null, update: boolean = false, cbetaOfflineDbMode: number = 0) {
     const fileName = htmlFile || Globals.getFileName(work, juan);
     let htmlStr: string | null = null;
     try {
-      htmlStr = await Globals.getFileFromIndexedDB(fileName) as string;
+      htmlStr = await IndexedDbFuncs.getFile(fileName) as string;
     } catch {
       // Ignore file not found.
     }
@@ -39,7 +40,7 @@ export default async function fetchJuan(work: string, juan: string, htmlFile: st
         let data: any;
         switch (cbetaOfflineDbMode) {
           case 2:
-              data = await fetchJuanFromIndexDB(work, juan);
+              data = await fetchJuanFromIndexedDB(work, juan);
             break;
           case 1:
             Globals.electronBackendApi?.send("toMain", { event: 'fetchJuan', work, juan });
