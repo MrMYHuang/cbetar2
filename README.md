@@ -196,11 +196,11 @@ https://MrMYHuang.github.io
 
 <img src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/Safari/OpenAppUrl.png' width='50%' />
 
-1. 滑動頁面至下方，點選"加入主畫面" (Add to Home Screen)：
+2. 滑動頁面至下方，點選"加入主畫面" (Add to Home Screen)：
 
 <img src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/Safari/AddToHomeScreen.png' width='50%' />
 
-1. 點擊"新增" (Add)：
+3. 點擊"新增" (Add)：
 
 <img src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/Safari/AddToHomeScreen2.png' width='50%' />
 
