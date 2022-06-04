@@ -290,18 +290,19 @@ sudo dnf install cbetar2
   6. 初次啟動 app 仍須網路連線(自動下載前端 app)。
 
 ## <a id='knownIssues'>已知問題</a>
-1. iOS Safari 在單頁模式下，捲軸無法顯示。
-2. 目前多數 Chrome 無法暫停合成語音播放，因此此 app 目前經文語音播放功能不支援暫停，只支援停止。
-3. 語音播放速度受限不同引擎、語音限制，可能無法達到指定速度。
-4. "避免螢幕自動鎖定"功能僅限部分較新 Chrome 瀏覽器才支援。
-5. iOS Safari 13.4 以上才支援"分享此頁"功能。
-6. iOS Safari 不支援 app 捷徑 (App Store iOS app 支援)。
-7. Safari, iOS Safari 不支援列印直排經文。( https://bugs.webkit.org/show_bug.cgi?id=220043 )
-8. iOS Safari 選擇文字後，仍會閃爍彈出式選單才消失。
-9. 合成語音選項濾掉非離線語音，以避開非離線語音單次播放最長字串過小的問題。
-10. 合成語音選項在 Android Chrome 無效。( https://stackoverflow.com/a/61366224/631869 )
-11. 合成語音功能在 Linux 無作用。
-12. App Store iOS app 不支援列印。
+1. iOS
+    1. iOS Safari 在單頁模式下，捲軸無法顯示。
+    2. iOS Safari 13.4 以上才支援"分享此頁"功能。
+    3. iOS Safari 不支援 app 捷徑 (iOS App Store app 支援)。
+    4. Safari, iOS Safari 不支援列印直排經文。( https://bugs.webkit.org/show_bug.cgi?id=220043 )
+    5. iOS App Store app 不支援列印。
+    6. iOS Safari 選擇文字後，仍會閃爍彈出式選單才消失。
+    7. 不支援"避免螢幕自動鎖定"。
+2. 其它
+  1. 目前多數 Chrome 無法暫停合成語音播放，因此此 app 目前經文語音播放功能不支援暫停，只支援停止。
+  2. 語音播放速度受限不同引擎、語音限制，可能無法達到指定速度。
+  3. 合成語音選項濾掉非離線語音，以避開非離線語音單次播放最長字串過小的問題。
+  4. 合成語音功能在 Linux 無作用。
 
 ## <a id='history'></a><a href='https://github.com/MrMYHuang/cbetar2/raw/master/VERSIONS.md'>版本歷史</a>
 ## <a href='https://github.com/MrMYHuang/cbetar2/raw/master/Development.md'>程式開發</a>
