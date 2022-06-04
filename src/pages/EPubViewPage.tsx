@@ -1,4 +1,3 @@
-//import * as fs from 'fs';
 import React from 'react';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton, withIonLifeCycle, IonIcon, IonAlert, IonPopover, IonList, IonItem, IonLabel, IonFab, IonFabButton, IonToast, IonLoading, isPlatform, IonProgressBar, IonFabList } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
@@ -18,7 +17,6 @@ import { clearTimeout } from 'timers';
 import fetchJuan from '../fetchJuan';
 import { CbetaDbMode } from '../models/Settings';
 import IndexedDbFuncs from '../IndexedDbFuncs';
-import CbetaOfflineIndexedDb from '../CbetaOfflineIndexedDb';
 
 // Load TW-Kai font in iframe.
 async function loadTwKaiFonts(this: Window) {
@@ -366,10 +364,10 @@ class _EPubViewPage extends React.Component<PageProps, State> {
           ok(true);
         });
       } catch (e) {
+        this.setState({ isLoading: false, fetchError: true });
         console.error(`Not found: work ${this.props.match.params.work}, juan ${this.props.match.params.path}`);
         console.error(e);
         console.error(new Error().stack);
-        this.setState({ isLoading: false, fetchError: true });
         fail(e);
       }
     });
@@ -769,11 +767,11 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         console.error(error);
       }
 
-      this.setState({ isLoading: false });
-
       this.book?.locations.generate(150);
     } catch (e) {
       console.log(e);
+    } finally {
+      this.setState({ isLoading: false });
     }
   }
 
