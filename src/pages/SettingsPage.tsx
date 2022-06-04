@@ -183,7 +183,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
             <IonItem hidden={!this.props.tmpSettings.mainVersion}>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={informationCircle} slot='start' />
-              <IonLabel className='ion-text-wrap uiFont'>使用CBETA離線經文資料檔</IonLabel>
+              <IonLabel className='ion-text-wrap uiFont'>使用 CBETA 離線經文資料檔</IonLabel>
               <IonToggle slot='end' disabled checked={this.props.settings.cbetaOfflineDbMode !== CbetaDbMode.Online} />
             </IonItem>
             <IonItem>
@@ -340,9 +340,9 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
             <IonItem hidden={!this.props.settings.hasAppLog}>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={bug} slot='start' />
-              <IonLabel className='ion-text-wrap uiFont'>回報app異常記錄</IonLabel>
+              <IonLabel className='ion-text-wrap uiFont'>回報 app 異常記錄</IonLabel>
               <IonButton fill='outline' shape='round' slot='end' size='large' className='uiFont' onClick={e => {
-                this.reportText = "瀏覽器：" + navigator.userAgent + "\n\nApp版本：" + PackageInfos.pwaVersion + "\n\nApp設定：" + JSON.stringify(this.props.settings) + "\n\nLog：\n" + Globals.getLog();
+                this.reportText = "瀏覽器：" + navigator.userAgent + "\n\nApp 版本：" + PackageInfos.pwaVersion + "\n\nApp 設定：" + JSON.stringify(this.props.settings) + "\n\nLog：\n" + Globals.getLog();
                 this.setState({ showBugReportAlert: true });
               }}>回報</IonButton>
               <IonAlert
@@ -437,7 +437,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                       backdropDismiss={false}
                       onDidPresent={(ev) => {
                       }}
-                      header={'重置會還原app設定預設值並清除書籤、字型檔！確定重置？'}
+                      header={'重置會還原 app 設定預設值並清除書籤、字型檔！確定重置？'}
                       buttons={[
                         {
                           text: '取消',

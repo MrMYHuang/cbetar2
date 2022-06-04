@@ -246,7 +246,7 @@ const Globals = {
     'paginated': '單頁/分頁',
     'showComments': '顯示經文註解、版權',
     'useFontKai': '黑體/楷書字體',
-    'uiFontSize': 'UI字型大小',
+    'uiFontSize': 'UI 字型大小',
     'fontSize': '經文字型大小',
     'printStyle': '經文列印樣式',
   } as Record<string, string>,
