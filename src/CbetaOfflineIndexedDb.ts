@@ -1,4 +1,4 @@
-import Funcs from "./Funcs";
+import Constants from "./Constants";
 import Globals from "./Globals";
 import IndexedDbFuncs from "./IndexedDbFuncs";
 
@@ -118,7 +118,7 @@ export async function fetchJuan(work: string, juan: string) {
 
     return {
         work_info,
-        results: [result],
+        results: [result.replace(/\.\.\/figures/g, `https://${Constants.indexedDBHost}/${cbetaBookcaseDir}/CBETA/figures`)],
     };
 }
 
@@ -146,13 +146,6 @@ async function elementTPostprocessing(doc: Document, node: Node, parent: Node | 
             if (c2.textContent === '') {
                 parent?.removeChild(node);
             }
-            return c2;
-        } else if (c2.tagName === 'img') {
-            const src = c2.getAttribute('src') || '';
-            const imgKey = src.replace(/\.\.\/figures/g, `${cbetaBookcaseDir}/CBETA/figures`);
-            // Image is uncompressed.
-            const imgData = await IndexedDbFuncs.getFile(imgKey) as Uint8Array;
-            c2.setAttribute('src', Funcs.uint8ArrayToBase64Img(imgData, imgKey));
             return c2;
         } else if (c2.tagName === 'g') {
             const gaijiId = c2.getAttribute('ref')?.substring(1) || '';

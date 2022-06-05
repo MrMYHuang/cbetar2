@@ -1,4 +1,7 @@
 # <a id='history'>版本歷史</a>
+* PWA 7.1.0:
+  * [修正] App link 在新電腦無法開啟的問題。
+
 * PWA 7.0.0:
   * [新增] 支援使用 CBETA Bookcase 離線瀏覽。
 

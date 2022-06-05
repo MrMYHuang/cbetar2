@@ -17,6 +17,7 @@ import { clearTimeout } from 'timers';
 import fetchJuan from '../fetchJuan';
 import { CbetaDbMode } from '../models/Settings';
 import IndexedDbFuncs from '../IndexedDbFuncs';
+import VirtualHtml from '../models/VirtualHtml';
 
 // Load TW-Kai font in iframe.
 async function loadTwKaiFonts(this: Window) {
@@ -696,6 +697,28 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       });
 
       this.rendition = this.book.renderTo('cbetarEPubView', {
+        method: 'srcFromSw',
+        sendToServiceWoker: ({ pathname, html }: VirtualHtml) => {
+          const messageChannel = new MessageChannel();
+
+          return new Promise<void>(ok => {
+            // Wait VIRTUAL_HTML.
+            messageChannel.port1.onmessage = (event) => {
+              if (event.data.type === 'VIRTUAL_HTML' && event.data.pathname === pathname) {
+                ok();
+              }
+            }
+
+            // Send VIRTUAL_HTML.
+            Globals.getServiceWorkerReg().then(serviceWorkerReg => {
+              serviceWorkerReg.active?.postMessage({
+                type: 'VIRTUAL_HTML',
+                pathname,
+                html,
+              }, [messageChannel.port2]);
+            });
+          });
+        },
         width: "100%", height: "100%",
         spread: 'none',
         flow: this.props.paginated ? 'paginated' : 'scrolled',

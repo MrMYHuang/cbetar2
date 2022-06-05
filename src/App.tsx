@@ -115,7 +115,6 @@ class _App extends React.Component<PageProps> {
 }
 
 class _AppOrig extends React.Component<AppOrigProps, State> {
-  registrationNew: ServiceWorkerRegistration | null;
   originalAppSettingsStr: string | null | undefined;
 
   constructor(props: any) {
@@ -155,7 +154,6 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
     });
     electronBackendApi?.send("toMain", { event: 'ready' });
 
-    this.registrationNew = null;
     // Disable browser callout.
     if (isPlatform('android')) {
       window.oncontextmenu = Globals.disableAndroidChromeCallout;
@@ -238,7 +236,6 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
     }, 500);
 
     serviceWorkCallbacks.onUpdate = (registration: ServiceWorkerRegistration) => {
-      this.registrationNew = registration;
       this.setState({ showUpdateAlert: true });
     };
 
@@ -319,7 +316,7 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
       if (queryMatches !== null) {
         query = decodeURIComponent(queryMatches[1]);
       }
-      return <Redirect to={`${Globals.pwaUrl}/` + routeMatches[1] + query} />;
+      return <Redirect to={`${Globals.pwaUrl}` + routeMatches[1] + query} />;
     } else if (window.location.pathname === `${Globals.pwaUrl}/` || window.location.pathname === `${Globals.pwaUrl}` || window.location.pathname === ``) {
       return <Redirect to={`/bookmarks`} />;
     }
@@ -371,11 +368,11 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
           cssClass='uiFont'
           isOpen={this.state.showUpdateAlert}
           backdropDismiss={false}
-          onDidPresent={(ev) => {
+          onDidPresent={async (ev) => {
             // Run SKIP_WAITING at onDidPresent event to avoid a race condition of
             // an old page fetching old JS chunks with a new service worker!
-            this.registrationNew?.installing?.postMessage({ type: 'SKIP_WAITING' });
-            this.registrationNew?.waiting?.postMessage({ type: 'SKIP_WAITING' });
+            (await Globals.getServiceWorkerReg()).installing?.postMessage({ type: 'SKIP_WAITING' });
+            (await Globals.getServiceWorkerReg()).waiting?.postMessage({ type: 'SKIP_WAITING' });
           }}
           header={'App 已更新，請重啟!'}
           buttons={[

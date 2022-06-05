@@ -13,9 +13,9 @@ import { ExpirationPlugin } from 'workbox-expiration';
 import { precacheAndRoute, createHandlerBoundToURL } from 'workbox-precaching';
 import { registerRoute } from 'workbox-routing';
 import { StaleWhileRevalidate } from 'workbox-strategies';
-
-//import CbetaOfflineDb from './CbetaOfflineDb';
-//import Globals from './Globals';
+import Constants from './Constants';
+import IndexedDbFuncs from './IndexedDbFuncs';
+import VirtualHtml from './models/VirtualHtml';
 
 declare const self: ServiceWorkerGlobalScope;
 
@@ -72,12 +72,53 @@ registerRoute(
   })
 );
 
+const virtualHtmls: VirtualHtml[] = [];
 // This allows the web app to trigger skipWaiting via
 // registration.waiting.postMessage({type: 'SKIP_WAITING'})
 self.addEventListener('message', (event) => {
-  if (event.data && event.data.type === 'SKIP_WAITING') {
-    self.skipWaiting();
+  if (event.data) {
+    switch (event.data.type) {
+      case 'SKIP_WAITING':
+        self.skipWaiting();
+        break;
+      case 'VIRTUAL_HTML':
+        // Transfer HTML contents for iframe from window.
+        virtualHtmls.push({
+          pathname: event.data.pathname,
+          html: event.data.html,
+        });
+        event.ports[0].postMessage({ type: 'VIRTUAL_HTML', pathname: event.data.pathname })
+        break;
+    }
   }
 });
 
 // Any other custom service worker logic can go here.
+
+// Response a virtual HTML file to iframes with the same origin as window, so that iframes can inherit service worker from window.
+registerRoute(({ url }) => {
+  if (url.origin === self.location.origin && virtualHtmls.some((v) => v.pathname === url.pathname)) {
+    return true;
+  }
+  return false;
+}, async ({ url }) => {
+  const dataIndex = virtualHtmls.findIndex(v => v.pathname === url?.pathname);
+  const data = virtualHtmls.splice(dataIndex, 1)[0];
+  const headers = new Headers({
+    'Content-Type': 'text/html'
+  });
+  return new Response(data.html, {
+    headers
+  });
+});
+
+registerRoute((opts) => {
+  if (opts.url.host === Constants.indexedDBHost) {
+    return true;
+  }
+  return false;
+}, async ({ url }) => {
+  // Image is uncompressed.
+  const imgData = await IndexedDbFuncs.getFile(url?.pathname.substring(1) ?? '') as Uint8Array;
+  return new Response(imgData);
+});

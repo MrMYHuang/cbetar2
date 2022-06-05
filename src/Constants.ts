@@ -1,5 +1,5 @@
 const Constants = {
-    localFileHost: 'localdb.mrmyhuang.github.io'
+    indexedDBHost: 'indexdb.com',
 };
 
 export default Constants;

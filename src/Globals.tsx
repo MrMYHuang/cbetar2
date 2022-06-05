@@ -4,7 +4,7 @@ import { refreshCircle } from 'ionicons/icons';
 import Store from './redux/store';
 import IndexedDbFuncs from './IndexedDbFuncs';
 
-const pwaUrl = process.env.PUBLIC_URL || '/';
+const pwaUrl = process.env.PUBLIC_URL || '';
 const bugReportApiUrl = 'https://vh6ud1o56g.execute-api.ap-northeast-1.amazonaws.com/bugReportMailer';
 const apiVersion = 'v1.2';
 const cbetaApiUrl = `https://cbdata.dila.edu.tw/${apiVersion}`;
@@ -19,6 +19,7 @@ const twKaiFontKeys = ['twKaiFont-1', 'twKaiFont-2', 'twKaiFont-3', 'twKaiExtBFo
 //const twKaiFontPaths = [`${pwaUrl}/assets/TW-Kai-98_1.woff`, `${pwaUrl}/assets/TW-Kai-Ext-B-98_1.woff`, `${pwaUrl}/assets/TW-Kai-Plus-98_1.woff`, ];
 const twKaiFontPaths = [`${pwaUrl}/assets/TW-Kai-98_1-1.woff2`, `${pwaUrl}/assets/TW-Kai-98_1-2.woff2`, `${pwaUrl}/assets/TW-Kai-98_1-3.woff2`, `${pwaUrl}/assets/TW-Kai-Ext-B-98_1-1.woff2`, `${pwaUrl}/assets/TW-Kai-Ext-B-98_1-2.woff2`, `${pwaUrl}/assets/TW-Kai-Ext-B-98_1-3.woff2`, `${pwaUrl}/assets/TW-Kai-Plus-98_1-1.woff2`, `${pwaUrl}/assets/TW-Kai-Plus-98_1-2.woff2`,];
 let log = '';
+
 
 let store = Store.getSavedStore();
 
@@ -186,6 +187,26 @@ function zhVoices() {
   return speechSynthesis.getVoices().filter(v => ['zh-TW', 'zh_TW', 'zh-CN', 'zh_CN', 'zh-HK', 'zh_HK'].some(name => v.localService && v.lang.indexOf(name) > -1));
 }
 
+
+let _serviceWorkerReg: ServiceWorkerRegistration | null;
+async function getServiceWorkerReg() {
+  if (_serviceWorkerReg) {
+    return _serviceWorkerReg;
+  }
+
+  return new Promise<ServiceWorkerRegistration>(ok => {
+    const waitLoading = setInterval(() => {
+      if (_serviceWorkerReg) {
+        clearInterval(waitLoading);
+        ok(_serviceWorkerReg);
+      }
+    }, 10);
+  });
+}
+function setServiceWorkerReg(serviceWorkerReg: ServiceWorkerRegistration) {
+  _serviceWorkerReg = serviceWorkerReg;
+}
+
 const Globals = {
   cbetar2AssetDir: 'cbetar2/assets',
   storeFile: Store.storeFile,
@@ -295,6 +316,8 @@ const Globals = {
   disableIosSafariCallout,
   copyToClipboard,
   zhVoices,
+  setServiceWorkerReg,
+  getServiceWorkerReg,
 };
 
 export default Globals;
