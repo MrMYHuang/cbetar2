@@ -13,13 +13,17 @@ createRoot(document.getElementById('root')!).render(<BrowserRouter><App /></Brow
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.register({
+    onLoad: (registration: ServiceWorkerRegistration) => {
+        Globals.setServiceWorkerReg(registration);
+        console.log('ServiceWorkerRegistration loaded!');
+    },
     onSuccess: (registration: ServiceWorkerRegistration) => {
         Globals.setServiceWorkerReg(registration);
         serviceWorkCallbacks.onSuccess(registration);
         console.log('Precache app loaded!');
     },
     onUpdate: (registration: ServiceWorkerRegistration) => {
-        Globals.setServiceWorkerReg(registration);
+        Globals.setServiceWorkerRegUpdated(registration);
         serviceWorkCallbacks.onUpdate(registration);
         console.log('Found app updated!');
     },

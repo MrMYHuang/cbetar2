@@ -187,16 +187,16 @@ function zhVoices() {
   return speechSynthesis.getVoices().filter(v => ['zh-TW', 'zh_TW', 'zh-CN', 'zh_CN', 'zh-HK', 'zh_HK'].some(name => v.localService && v.lang.indexOf(name) > -1));
 }
 
-
-let _serviceWorkerReg: ServiceWorkerRegistration | null;
+let serviceWorkerLoaded = false;
+let _serviceWorkerReg: ServiceWorkerRegistration;
 async function getServiceWorkerReg() {
-  if (_serviceWorkerReg) {
+  if (serviceWorkerLoaded) {
     return _serviceWorkerReg;
   }
 
   return new Promise<ServiceWorkerRegistration>(ok => {
     const waitLoading = setInterval(() => {
-      if (_serviceWorkerReg) {
+      if (navigator.serviceWorker.controller != null) {
         clearInterval(waitLoading);
         ok(_serviceWorkerReg);
       }
@@ -205,6 +205,14 @@ async function getServiceWorkerReg() {
 }
 function setServiceWorkerReg(serviceWorkerReg: ServiceWorkerRegistration) {
   _serviceWorkerReg = serviceWorkerReg;
+}
+
+let _serviceWorkerRegUpdated: ServiceWorkerRegistration;
+function getServiceWorkerRegUpdated() {
+  return _serviceWorkerRegUpdated;
+}
+function setServiceWorkerRegUpdated(serviceWorkerRegUpdated: ServiceWorkerRegistration) {
+  _serviceWorkerRegUpdated = serviceWorkerRegUpdated;
 }
 
 const Globals = {
@@ -318,6 +326,8 @@ const Globals = {
   zhVoices,
   setServiceWorkerReg,
   getServiceWorkerReg,
+  setServiceWorkerRegUpdated,
+  getServiceWorkerRegUpdated,
 };
 
 export default Globals;

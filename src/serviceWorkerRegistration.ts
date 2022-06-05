@@ -19,6 +19,7 @@ const isLocalhost = Boolean(
 );
 
 type Config = {
+  onLoad?: (registration: ServiceWorkerRegistration) => void;
   onSuccess?: (registration: ServiceWorkerRegistration) => void;
   onUpdate?: (registration: ServiceWorkerRegistration) => void;
 };
@@ -61,6 +62,7 @@ function registerValidSW(swUrl: string, config?: Config) {
   navigator.serviceWorker
     .register(swUrl)
     .then((registration) => {
+      config?.onLoad && config?.onLoad(registration);
       /*
       if(registration.waiting) {
         const reg = registration.waiting;

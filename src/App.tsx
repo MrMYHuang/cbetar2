@@ -371,8 +371,8 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
           onDidPresent={async (ev) => {
             // Run SKIP_WAITING at onDidPresent event to avoid a race condition of
             // an old page fetching old JS chunks with a new service worker!
-            (await Globals.getServiceWorkerReg()).installing?.postMessage({ type: 'SKIP_WAITING' });
-            (await Globals.getServiceWorkerReg()).waiting?.postMessage({ type: 'SKIP_WAITING' });
+            Globals.getServiceWorkerRegUpdated().installing?.postMessage({ type: 'SKIP_WAITING' });
+            Globals.getServiceWorkerRegUpdated().waiting?.postMessage({ type: 'SKIP_WAITING' });
           }}
           header={'App 已更新，請重啟!'}
           buttons={[
