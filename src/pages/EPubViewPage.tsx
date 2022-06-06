@@ -698,14 +698,18 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
       this.rendition = this.book.renderTo('cbetarEPubView', {
         method: 'srcFromSw',
-        sendToServiceWoker: ({ pathname, html }: VirtualHtml) => {
+        sendToServiceWoker: ({ html }: VirtualHtml) => {
           const messageChannel = new MessageChannel();
 
-          return new Promise<void>(ok => {
+          // The following creates a virtual same origin HTML file with a random pathname, which avoiding multiple requests incorrectly use the same name.
+          // The virtual HTML file is sent to the service worker.
+          const pathname = "/_" + Math.floor(Math.random() * 1e9);
+
+          return new Promise<string>(ok => {
             // Wait VIRTUAL_HTML.
             messageChannel.port1.onmessage = (event) => {
               if (event.data.type === 'VIRTUAL_HTML' && event.data.pathname === pathname) {
-                ok();
+                ok(pathname);
               }
             }
 
