@@ -12,6 +12,7 @@ import { CbetaDbMode, Settings } from '../models/Settings';
 import { TmpSettings } from '../models/TmpSettings';
 import fetchJuan from '../fetchJuan';
 import IndexedDbFuncs from '../IndexedDbFuncs';
+import CbetaOfflineIndexedDb from '../CbetaOfflineIndexedDb';
 
 interface StateProps {
   showFontLicense: boolean;
@@ -141,6 +142,30 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
     this.setState({ showUpdateAllJuansDone: true });
   }
 
+  async importBookcase(run: Function) {
+    this.setState({ isLoading: true, showToast: true, toastMessage: `請等待進度條結束。可能需1個多小時。`, cbetaBookZipLoadRatio: 0 });
+    try {
+      const res = await Globals.axiosInstance.get(`${window.location.origin}/${Globals.pwaUrl}/assets.zip`, {
+        responseType: 'arraybuffer',
+      });
+      await IndexedDbFuncs.extractZipToZips(res.data);
+      console.log(new Date().toLocaleTimeString());
+      await run();
+      console.log(new Date().toLocaleTimeString());
+      this.setState({ isLoading: false, showAlert: true, alertMessage: `匯入 app 成功！您可以刪除原匯入檔以節省空間。` });
+      this.props.dispatch({
+        type: "SET_KEY_VAL",
+        key: 'cbetaOfflineDbMode',
+        val: CbetaDbMode.OfflineIndexedDb
+      });
+    } catch (e) {
+      console.error(e);
+      console.error(new Error().stack);
+      this.setState({ isLoading: false, showAlert: true, alertMessage: `匯入錯誤，將清空 app 離線 DB: ${e}` });
+      await IndexedDbFuncs.clear();
+    }
+  }
+
   reportText = '';
   render() {
     return (
@@ -199,39 +224,12 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                   return;
                 }
 
-                this.setState({ showToast: true, toastMessage: `請等待進度條結束。可能須1個多小時。`, cbetaBookZipLoadRatio: 0 });
-                try {
-                  const res = await Globals.axiosInstance.get(`${window.location.origin}/${Globals.pwaUrl}/assets.zip`, {
-                    responseType: 'arraybuffer',
-                  });
-                  await IndexedDbFuncs.extractZipToZips(res.data);
-                  console.log(new Date().toLocaleTimeString());
-                  this.setState({ isLoading: true, showToast: true, toastMessage: `請等待進度條結束，可能需1小時以上。` });
-                  await IndexedDbFuncs.extractZipToZips(file, [
-                    /.*rj-gif.*/g,
-                    /.*sd-gif.*/g,
-                    /.*XML.*/g,
-                    /.*bulei_nav.xhtml/g,
-                    /.*advance_nav.xhtml/g,
-                    /.*catalog.txt/g,
-                    /.*spine.txt/g,
-                    /.*figures.*/g,
-                  ], undefined, (ratio: number) => {
+                await this.importBookcase(async () => {
+                  await IndexedDbFuncs.extractZipToZips(file, CbetaOfflineIndexedDb.filesFilter, undefined, (ratio: number) => {
                     this.setState({ cbetaBookZipLoadRatio: ratio });
                   });
-                  console.log(new Date().toLocaleTimeString());
-                  this.setState({ isLoading: false, showAlert: true, alertMessage: `匯入 app 成功！您可以刪除 zip 檔節省空間。` });
-                  this.props.dispatch({
-                    type: "SET_KEY_VAL",
-                    key: 'cbetaOfflineDbMode',
-                    val: CbetaDbMode.OfflineIndexedDb
-                  });
-                } catch (e) {
-                  console.error(e);
-                  console.error(new Error().stack);
-                  this.setState({ isLoading: false, showAlert: true, alertMessage: `匯入錯誤，將清空 app 離線 DB: ${e}` });
-                  await IndexedDbFuncs.clear();
-                }
+                });
+
                 (document.getElementById('importCbetaBookcaseInput') as HTMLInputElement).value = '';
               }} />
               <IonButton fill='outline' slot='end' shape='round' size='large' className='uiFont' onClick={(e) => {
@@ -247,25 +245,43 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                 backdropDismiss={false}
                 onDidPresent={(ev) => {
                 }}
-                header={'注意：1. Bookcase 資料格式與連線版資料不相同，會影響書籤定位。\n2. 若匯入失敗，可能是記憶體、儲存空間不足。\n確定執行？'}
+                header={'注意：1. Bookcase 資料格式與連線版資料不相同，會影響書籤定位。\n2. 若匯入失敗，可能是儲存空間不足。\n確定執行？'}
                 buttons={[
                   {
-                    text: '取消',
+                    text: '確定',
                     cssClass: 'primary uiFont',
+                    handler: async (value) => {
+                      this.setState({ showUseBookcaseAlert: false });
+                      (document.querySelector('#importCbetaBookcaseInput') as HTMLInputElement).click();
+                    },
+                  },
+                  /*
+                  {
+                    text: '確定',
+                    cssClass: 'primary uiFont',
+                    handler: async (value) => {
+                      this.setState({ showUseBookcaseAlert: false });
+                      const dirHandle: FileSystemDirectoryHandle = await (window as any).showDirectoryPicker();
+                      if (!dirHandle) {
+                        return;
+                      }
+
+                      this.importBookcase(async () => {
+                        await IndexedDbFuncs.loadFolderToZips(dirHandle, CbetaOfflineIndexedDb.filesFilter, undefined, (ratio: number) => {
+                          this.setState({ cbetaBookZipLoadRatio: ratio });
+                        });
+                      });
+                    },
+                  },*/
+                  {
+                    text: '取消',
+                    cssClass: 'secondary uiFont',
                     handler: (value) => {
                       this.setState({
                         showUseBookcaseAlert: false,
                       });
                     },
                   },
-                  {
-                    text: '確定',
-                    cssClass: 'secondary uiFont',
-                    handler: async (value) => {
-                      this.setState({ showUseBookcaseAlert: false });
-                      (document.querySelector('#importCbetaBookcaseInput') as HTMLInputElement).click();
-                    },
-                  }
                 ]}
               />
               <IonAlert

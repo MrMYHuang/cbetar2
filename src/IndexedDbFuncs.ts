@@ -103,9 +103,24 @@ async function getZippedFile(fileName: string) {
   return new AdmZip(Buffer.from(data)).getEntries()[0].getData();
 }
 
+async function fileFilterAndZipper(entryName: string, data: Buffer | Uint8Array, filter: RegExp[] = [], extensionToZip: string[] = ['txt', 'xml', 'xhtml', 'html', 'json', 'xsl',]) {
+  if (entryName.split('.').pop()?.toLowerCase() === 'xml') {
+    
+    console.log(entryName);
+  }
+  if (filter.length === 0 || filter.some((regExp) => { return regExp.test(entryName); })) {
+    const fileExt = entryName.split('.').pop()?.toLowerCase();
+    if (extensionToZip.some(ext => { return fileExt === ext })) {
+      await saveZippedFile(entryName, data);
+    } else {
+      await saveFile(entryName, data);
+    }
+  }
+}
+
 // Extract one zip to multiple zips and save to IndexedDB.
 // Empty filter loads all files.
-async function extractZipToZips(file: File | ArrayBuffer, filter: RegExp[] = [], extensionToZip: string[] = ['txt', 'xml', 'xhtml', 'html', 'json', 'xsl',], progressCallback: Function | null = null) {
+async function extractZipToZips(file: File | ArrayBuffer, filter: RegExp[] = [], extensionToZip: string[] | undefined = undefined, progressCallback: Function | null = null) {
   const isFile = file instanceof File;
 
   let zip = new AdmZip(Buffer.from(isFile ? (await file.arrayBuffer()) : file));
@@ -115,17 +130,39 @@ async function extractZipToZips(file: File | ArrayBuffer, filter: RegExp[] = [],
     let zipEntry = zipEntries[i];
     if (!zipEntry.isDirectory) {
       const entryName = zipEntry.entryName;
-      if (filter.length === 0 || filter.some((regExp) => { return regExp.test(entryName); })) {
-        const fileExt = entryName.split('.').pop()?.toLowerCase();
-        if (extensionToZip.some(ext => { return fileExt === ext })) {
-          await saveZippedFile(entryName, zipEntry.getData());
-        } else {
-          await saveFile(entryName, zipEntry.getData());
-        }
-      }
+      await fileFilterAndZipper(entryName, zipEntry.getData(), filter, extensionToZip);
       finishCount += 1;
       progressCallback && progressCallback(finishCount / zipEntries.length);
     }
+  }
+}
+
+let fileHandles: [string, FileSystemFileHandle][] = [];
+async function getDirHandleAllFiles(dirHandle: FileSystemDirectoryHandle, parentPath: string = '') {
+  const currentPath = `${parentPath}/${dirHandle.name}`;
+  for await (const [key, value] of (dirHandle as any).entries()) {
+    if (value instanceof FileSystemFileHandle) {
+      fileHandles.push([`${currentPath}/${key}`, value]);
+    } else {
+      await getDirHandleAllFiles(value, currentPath);
+    }
+  }
+  return;
+}
+
+// Load one folder to multiple zips and save to IndexedDB.
+// Empty filter loads all files.
+async function loadFolderToZips(dirHandle: FileSystemDirectoryHandle, filter: RegExp[] = [], extensionToZip: string[] | undefined = undefined, progressCallback: Function | null = null) {
+  let finishCount = 0;
+  fileHandles = [];
+  await getDirHandleAllFiles(dirHandle);
+  for (let i = 0; i < fileHandles.length; i++) {
+    const [key, fileHandle] = fileHandles[i];
+    const file = await fileHandle.getFile();
+    const data = await file.arrayBuffer();
+    await fileFilterAndZipper(key, new Uint8Array(data), filter, extensionToZip);
+    finishCount += 1;
+    progressCallback && progressCallback(finishCount / fileHandles.length);
   }
 }
 
@@ -134,6 +171,7 @@ const IndexedDbFuncs = {
   saveFile,
   saveZippedFile,
   extractZipToZips,
+  loadFolderToZips,
   removeFile,
   getFile,
   getZippedFile,

@@ -697,7 +697,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
       });
 
       this.rendition = this.book.renderTo('cbetarEPubView', {
-        method: 'srcFromSw',
+        method: process.env.NODE_ENV === 'production' ? 'srcFromSw' : 'srcdoc',
         sendToServiceWoker: ({ html }: VirtualHtml) => {
           const messageChannel = new MessageChannel();
 

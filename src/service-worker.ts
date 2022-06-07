@@ -119,6 +119,6 @@ registerRoute((opts) => {
   return false;
 }, async ({ url }) => {
   // Image is uncompressed.
-  const imgData = await IndexedDbFuncs.getFile(url?.pathname.substring(1) ?? '') as Uint8Array;
+  const imgData = await IndexedDbFuncs.getFile(url?.pathname || '') as Uint8Array;
   return new Response(imgData);
 });

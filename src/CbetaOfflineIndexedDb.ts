@@ -2,6 +2,17 @@ import Constants from "./Constants";
 import Globals from "./Globals";
 import IndexedDbFuncs from "./IndexedDbFuncs";
 
+const filesFilter = [
+    /.*rj-gif.*/,
+    /.*sd-gif.*/,
+    /.*XML.*/,
+    /.*bulei_nav.xhtml/,
+    /.*advance_nav.xhtml/,
+    /.*catalog.txt/,
+    /.*spine.txt/,
+    /.*figures.*/,
+];
+
 const xmlParser = new DOMParser();
 const xsltProcessor = new XSLTProcessor();
 const textDecoder = new TextDecoder();
@@ -25,13 +36,13 @@ export async function init() {
     const stylesheetString = await getFileAsStringFromIndexedDB(`${Globals.cbetar2AssetDir}/nav_fix.xsl`);
     xsltProcessor.importStylesheet(stringToXml(stylesheetString));
 
-    let documentString = await getFileAsStringFromIndexedDB(`${cbetaBookcaseDir}/CBETA/bulei_nav.xhtml`);
+    let documentString = await getFileAsStringFromIndexedDB(`/${cbetaBookcaseDir}/CBETA/bulei_nav.xhtml`);
     navDocBulei = xsltProcessor.transformToDocument(stringToXml(documentString));
 
-    documentString = await getFileAsStringFromIndexedDB(`${cbetaBookcaseDir}/CBETA/advance_nav.xhtml`);
+    documentString = await getFileAsStringFromIndexedDB(`/${cbetaBookcaseDir}/CBETA/advance_nav.xhtml`);
     navDocVol = xsltProcessor.transformToDocument(stringToXml(documentString));
 
-    const catalogsString = await getFileAsStringFromIndexedDB(`${cbetaBookcaseDir}/CBETA/catalog.txt`);
+    const catalogsString = await getFileAsStringFromIndexedDB(`/${cbetaBookcaseDir}/CBETA/catalog.txt`);
     catalogs = catalogsString.split(/\r\n/);
     catalogs = (Object).fromEntries(
         catalogs.map((l: string) => {
@@ -41,7 +52,7 @@ export async function init() {
         })
     );
 
-    const spinesString = await getFileAsStringFromIndexedDB(`${cbetaBookcaseDir}/CBETA/spine.txt`);
+    const spinesString = await getFileAsStringFromIndexedDB(`/${cbetaBookcaseDir}/CBETA/spine.txt`);
     spines = spinesString.split(/\r\n/);
     spines = spines.map((l: string) => {
         const f = l.split(/\s*,\s*/);
@@ -105,7 +116,7 @@ export async function fetchJuan(work: string, juan: string) {
 
     const work_info = (await fetchWork(work)).results[0];
     const stylesheetString = await getFileAsStringFromIndexedDB(`${Globals.cbetar2AssetDir}/tei.xsl`);
-    const documentString = await getFileAsStringFromIndexedDB(`${cbetaBookcaseDir}/CBETA/XML/${work_info.id}/${work_info.vol}/${work_info.vol}n${work_info.sutra}_${juan.toString().padStart(3, '0')}.xml`);
+    const documentString = await getFileAsStringFromIndexedDB(`/${cbetaBookcaseDir}/CBETA/XML/${work_info.id}/${work_info.vol}/${work_info.vol}n${work_info.sutra}_${juan.toString().padStart(3, '0')}.xml`);
 
     xsltProcessor.importStylesheet(stringToXml(stylesheetString));
 
@@ -168,6 +179,7 @@ async function elementTPostprocessing(doc: Document, node: Node, parent: Node | 
 }
 
 const CbetaOfflineIndexedDb = {
+    filesFilter,
     init,
     fetchCatalogs,
     fetchWork,
