@@ -112,15 +112,17 @@ async function getZippedFile(fileName: string) {
   return entry.getData!(new zip.Uint8ArrayWriter());*/
 }
 
-async function fileFilterAndZipper(entryName: string, data: Uint8Array, filter: RegExp[] = [], extensionToZip: string[] = ['txt', 'xml', 'xhtml', 'html', 'json', 'xsl',]) {
-  if (filter.length === 0 || filter.some((regExp) => { return regExp.test(entryName); })) {
-    const fileExt = entryName.split('.').pop()?.toLowerCase();
-    if (extensionToZip.some(ext => { return fileExt === ext })) {
-      await saveZippedFile(entryName, data);
-    } else {
-      await saveFile(entryName, data);
-    }
+async function fileFilterAndZipper(entryName: string, data: Uint8Array, extensionToZip: string[] = ['txt', 'xml', 'xhtml', 'html', 'json', 'xsl',]) {
+  const fileExt = entryName.split('.').pop()?.toLowerCase();
+  if (extensionToZip.some(ext => { return fileExt === ext })) {
+    await saveZippedFile(entryName, data);
+  } else {
+    await saveFile(entryName, data);
   }
+}
+
+function fileNameFilter(fileName: string, filter: RegExp[] = []) {
+  return filter.length === 0 || filter.some((regExp) => { return regExp.test(fileName); });
 }
 
 async function extractZipToZips(file: File | Blob, filter: RegExp[] = [], extensionToZip: string[] | undefined = undefined, progressCallback: Function | null = null) {
@@ -129,10 +131,10 @@ async function extractZipToZips(file: File | Blob, filter: RegExp[] = [], extens
   let finishCount = 0;
   for (let i = 0; i < zipEntries.length; i++) {
     let zipEntry = zipEntries[i];
-    if (!zipEntry.directory) {
-      const entryName = '/' + zipEntry.filename;
+    const entryName = '/' + zipEntry.filename;
+    if (!zipEntry.directory && fileNameFilter(entryName, filter)) {
       const data = await zipEntry.getData!(new zip.Uint8ArrayWriter());
-      await fileFilterAndZipper(entryName, data, filter, extensionToZip);
+      await fileFilterAndZipper(entryName, data, extensionToZip);
       finishCount += 1;
       progressCallback && progressCallback(finishCount / zipEntries.length);
     }
@@ -160,9 +162,13 @@ async function loadFolderToZips(dirHandle: FileSystemDirectoryHandle, filter: Re
   await getDirHandleAllFiles(dirHandle);
   for (let i = 0; i < fileHandles.length; i++) {
     const [key, fileHandle] = fileHandles[i];
+    if (!fileNameFilter(key, filter)) {
+      continue;
+    }
+
     const file = await fileHandle.getFile();
     const data = await file.arrayBuffer();
-    await fileFilterAndZipper(key, new Uint8Array(data), filter, extensionToZip);
+    await fileFilterAndZipper(key, new Uint8Array(data), extensionToZip);
     finishCount += 1;
     progressCallback && progressCallback(finishCount / fileHandles.length);
   }
