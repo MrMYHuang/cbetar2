@@ -1,4 +1,7 @@
 # <a id='history'>版本歷史</a>
+* PWA 7.3.0:
+  * [優化] 支援 iPad 2GB RAM 匯入 CBETA Bookcase 離線 DB。
+
 * PWA 7.2.0:
   * [修正] 匯入 CBETA Bookcase 離線 DB 後，缺少檔案。舊版使用者請先至設定頁關閉，再重新匯入。造成不便請見諒。
 

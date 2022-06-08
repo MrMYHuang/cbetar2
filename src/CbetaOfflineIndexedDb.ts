@@ -33,7 +33,7 @@ async function getFileAsStringFromIndexedDB(file: string) {
 }
 
 export async function init() {
-    const stylesheetString = await getFileAsStringFromIndexedDB(`${Globals.cbetar2AssetDir}/nav_fix.xsl`);
+    const stylesheetString = await getFileAsStringFromIndexedDB(`/${Globals.cbetar2AssetDir}/nav_fix.xsl`);
     xsltProcessor.importStylesheet(stringToXml(stylesheetString));
 
     let documentString = await getFileAsStringFromIndexedDB(`/${cbetaBookcaseDir}/CBETA/bulei_nav.xhtml`);
@@ -59,7 +59,7 @@ export async function init() {
         return f[0];
     })
 
-    gaijis = JSON.parse(await getFileAsStringFromIndexedDB(`${Globals.cbetar2AssetDir}/cbeta_gaiji.json`));
+    gaijis = JSON.parse(await getFileAsStringFromIndexedDB(`/${Globals.cbetar2AssetDir}/cbeta_gaiji.json`));
     isInit = true;
 }
 
@@ -115,7 +115,7 @@ export async function fetchJuan(work: string, juan: string) {
     isInit || await init();
 
     const work_info = (await fetchWork(work)).results[0];
-    const stylesheetString = await getFileAsStringFromIndexedDB(`${Globals.cbetar2AssetDir}/tei.xsl`);
+    const stylesheetString = await getFileAsStringFromIndexedDB(`/${Globals.cbetar2AssetDir}/tei.xsl`);
     const documentString = await getFileAsStringFromIndexedDB(`/${cbetaBookcaseDir}/CBETA/XML/${work_info.id}/${work_info.vol}/${work_info.vol}n${work_info.sutra}_${juan.toString().padStart(3, '0')}.xml`);
 
     xsltProcessor.importStylesheet(stringToXml(stylesheetString));

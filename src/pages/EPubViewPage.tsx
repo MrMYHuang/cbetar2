@@ -213,7 +213,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
         localStorage.setItem('logo.png', logoStr);
       }
     } else {
-      logoArray = await IndexedDbFuncs.getFile<Uint8Array>(`${Globals.cbetar2AssetDir}/icon.png`);
+      logoArray = await IndexedDbFuncs.getFile<Uint8Array>(`/${Globals.cbetar2AssetDir}/icon.png`);
     }
     let fs = require('fs');
     fs.writeFileSync('logo.png', logoArray);

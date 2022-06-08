@@ -146,7 +146,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
     this.setState({ isLoading: true, showToast: true, toastMessage: `請等待進度條結束。可能需1個多小時。`, cbetaBookZipLoadRatio: 0 });
     try {
       const res = await Globals.axiosInstance.get(`${window.location.origin}/${Globals.pwaUrl}/assets.zip`, {
-        responseType: 'arraybuffer',
+        responseType: 'blob',
       });
       await IndexedDbFuncs.extractZipToZips(res.data);
       console.log(new Date().toLocaleTimeString());
@@ -232,6 +232,20 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
 
                 (document.getElementById('importCbetaBookcaseInput') as HTMLInputElement).value = '';
               }} />
+              <input id='importCbetaBookcaseDirInput' type='file' style={{ display: 'none' }} onChange={async (ev) => {
+                const file = ev.target.files?.item(0);
+                if (file == null) {
+                  return;
+                }
+
+                await this.importBookcase(async () => {
+                  await IndexedDbFuncs.extractZipToZips(file, CbetaOfflineIndexedDb.filesFilter, undefined, (ratio: number) => {
+                    this.setState({ cbetaBookZipLoadRatio: ratio });
+                  });
+                });
+
+                (document.getElementById('importCbetaBookcaseInput') as HTMLInputElement).value = '';
+              }} />
               <IonButton fill='outline' slot='end' shape='round' size='large' className='uiFont' onClick={(e) => {
                 if (this.props.settings.cbetaOfflineDbMode === CbetaDbMode.OfflineIndexedDb) {
                   this.setState({ showClearBookcaseAlert: true });
@@ -272,7 +286,8 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                         });
                       });
                     },
-                  },*/
+                  },
+                  */
                   {
                     text: '取消',
                     cssClass: 'secondary uiFont',

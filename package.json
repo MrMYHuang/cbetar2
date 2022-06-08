@@ -2,7 +2,7 @@
   "name": "cbetar2",
   "productName": "電子佛典",
   "homepage": "/",
-  "pwaVersion": "7.2.0",
+  "pwaVersion": "7.3.0",
   "version": "19.3.1",
   "license": "MIT",
   "keywords": [
@@ -90,6 +90,7 @@
     "@types/react-router-dom": "^5.3.3",
     "@types/semver": "^7.3.9",
     "@types/uuid": "^8.3.4",
+    "@zip.js/zip.js": "^2.4.12",
     "adm-zip": "^0.5.9",
     "customize-cra": "^1.0.0",
     "electron": "^19.0.1",

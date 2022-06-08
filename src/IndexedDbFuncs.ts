@@ -1,4 +1,5 @@
 import AdmZip from 'adm-zip';
+import * as zip from '@zip.js/zip.js';
 
 const cbetardb = 'cbetardb';
 
@@ -20,6 +21,10 @@ async function saveZippedFile(fileName: string, data: any) {
   const zip = new AdmZip();
   zip.addFile('file', data);
   return saveFile(fileName, zip.toBuffer());
+  /*
+  const zipFile = new zip.ZipWriter(new zip.Uint8ArrayWriter());
+  zipFile.add('file', new zip.Uint8ArrayReader(data));
+  return saveFile(fileName, await zipFile.close());*/
 }
 
 async function removeFile(fileName: string) {
@@ -101,13 +106,13 @@ async function getFile<T>(fileName: string): Promise<T> {
 async function getZippedFile(fileName: string) {
   const data = await getFile<Uint8Array>(fileName);
   return new AdmZip(Buffer.from(data)).getEntries()[0].getData();
+  /*
+  const data = await getFile<Uint8Array>(fileName);
+  const entry = (await new zip.ZipReader(new zip.Uint8ArrayReader(data)).getEntries())[0];
+  return entry.getData!(new zip.Uint8ArrayWriter());*/
 }
 
-async function fileFilterAndZipper(entryName: string, data: Buffer | Uint8Array, filter: RegExp[] = [], extensionToZip: string[] = ['txt', 'xml', 'xhtml', 'html', 'json', 'xsl',]) {
-  if (entryName.split('.').pop()?.toLowerCase() === 'xml') {
-    
-    console.log(entryName);
-  }
+async function fileFilterAndZipper(entryName: string, data: Uint8Array, filter: RegExp[] = [], extensionToZip: string[] = ['txt', 'xml', 'xhtml', 'html', 'json', 'xsl',]) {
   if (filter.length === 0 || filter.some((regExp) => { return regExp.test(entryName); })) {
     const fileExt = entryName.split('.').pop()?.toLowerCase();
     if (extensionToZip.some(ext => { return fileExt === ext })) {
@@ -118,19 +123,16 @@ async function fileFilterAndZipper(entryName: string, data: Buffer | Uint8Array,
   }
 }
 
-// Extract one zip to multiple zips and save to IndexedDB.
-// Empty filter loads all files.
-async function extractZipToZips(file: File | ArrayBuffer, filter: RegExp[] = [], extensionToZip: string[] | undefined = undefined, progressCallback: Function | null = null) {
-  const isFile = file instanceof File;
-
-  let zip = new AdmZip(Buffer.from(isFile ? (await file.arrayBuffer()) : file));
-  const zipEntries = zip.getEntries();
+async function extractZipToZips(file: File | Blob, filter: RegExp[] = [], extensionToZip: string[] | undefined = undefined, progressCallback: Function | null = null) {
+  const zipReader = new zip.ZipReader(new zip.BlobReader(file));
+  const zipEntries = await zipReader.getEntries();
   let finishCount = 0;
   for (let i = 0; i < zipEntries.length; i++) {
     let zipEntry = zipEntries[i];
-    if (!zipEntry.isDirectory) {
-      const entryName = zipEntry.entryName;
-      await fileFilterAndZipper(entryName, zipEntry.getData(), filter, extensionToZip);
+    if (!zipEntry.directory) {
+      const entryName = '/' + zipEntry.filename;
+      const data = await zipEntry.getData!(new zip.Uint8ArrayWriter());
+      await fileFilterAndZipper(entryName, data, filter, extensionToZip);
       finishCount += 1;
       progressCallback && progressCallback(finishCount / zipEntries.length);
     }
