@@ -1,5 +1,5 @@
 import AdmZip from 'adm-zip';
-import * as zip from '@zip.js/zip.js';
+import * as zip from 'zip.js-myh';
 
 const cbetardb = 'cbetardb';
 
@@ -129,15 +129,18 @@ async function extractZipToZips(file: File | Blob, filter: RegExp[] = [], extens
   const zipReader = new zip.ZipReader(new zip.BlobReader(file));
   const zipEntries = await zipReader.getEntries();
   let finishCount = 0;
-  for (let i = 0; i < zipEntries.length; i++) {
-    let zipEntry = zipEntries[i];
+  const iter = zipReader.getEntry();
+  let curr = iter.next();
+  while (!(await curr).done) {
+    const zipEntry = ((await curr).value) as zip.Entry;
     const entryName = '/' + zipEntry.filename;
     if (!zipEntry.directory && fileNameFilter(entryName, filter)) {
       const data = await zipEntry.getData!(new zip.Uint8ArrayWriter());
       await fileFilterAndZipper(entryName, data, extensionToZip);
-      finishCount += 1;
       progressCallback && progressCallback(finishCount / zipEntries.length);
     }
+    finishCount += 1;
+    curr = iter.next();
   }
 }
 
@@ -162,13 +165,11 @@ async function loadFolderToZips(dirHandle: FileSystemDirectoryHandle, filter: Re
   await getDirHandleAllFiles(dirHandle);
   for (let i = 0; i < fileHandles.length; i++) {
     const [key, fileHandle] = fileHandles[i];
-    if (!fileNameFilter(key, filter)) {
-      continue;
+    if (fileNameFilter(key, filter)) {
+      const file = await fileHandle.getFile();
+      const data = await file.arrayBuffer();
+      await fileFilterAndZipper(key, new Uint8Array(data), extensionToZip);
     }
-
-    const file = await fileHandle.getFile();
-    const data = await file.arrayBuffer();
-    await fileFilterAndZipper(key, new Uint8Array(data), extensionToZip);
     finishCount += 1;
     progressCallback && progressCallback(finishCount / fileHandles.length);
   }

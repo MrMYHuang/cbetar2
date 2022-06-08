@@ -1,4 +1,8 @@
 # <a id='history'>版本歷史</a>
+* PWA 7.3.1:
+  * [優化] Android 支援匯入官方 CBETA Bookcase 離線 DB。
+  * [優化] Android 匯入 CBETA Bookcase 離線 DB 改善。
+
 * PWA 7.3.0:
   * [優化] 支援 iPad 2GB RAM 匯入 CBETA Bookcase 離線 DB。
 
