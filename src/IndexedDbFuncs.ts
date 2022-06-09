@@ -1,5 +1,5 @@
 import AdmZip from 'adm-zip';
-import * as zip from 'zip.js-myh';
+import * as zip from '@zip.js/zip.js';
 
 const cbetardb = 'cbetardb';
 
@@ -129,7 +129,7 @@ async function extractZipToZips(file: File | Blob, filter: RegExp[] = [], extens
   const zipReader = new zip.ZipReader(new zip.BlobReader(file));
   const zipEntries = await zipReader.getEntries();
   let finishCount = 0;
-  const iter = zipReader.getEntry();
+  const iter = zipReader.getEntriesGenerator();
   let curr = iter.next();
   while (!(await curr).done) {
     const zipEntry = ((await curr).value) as zip.Entry;
