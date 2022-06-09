@@ -2,7 +2,7 @@
   "name": "cbetar2",
   "productName": "電子佛典",
   "homepage": "/",
-  "pwaVersion": "7.3.1",
+  "pwaVersion": "7.3.2",
   "version": "19.3.1",
   "license": "MIT",
   "keywords": [
@@ -126,7 +126,8 @@
     "workbox-range-requests": "^5.1.4",
     "workbox-routing": "^5.1.4",
     "workbox-strategies": "^5.1.4",
-    "workbox-streams": "^5.1.4"
+    "workbox-streams": "^5.1.4",
+    "zip.js-myh": "^2.4.16"
   },
   "browserslist": {
     "production": [

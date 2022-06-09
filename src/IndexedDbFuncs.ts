@@ -1,5 +1,6 @@
 import AdmZip from 'adm-zip';
-import * as zip from '@zip.js/zip.js';
+//import * as zip from '@zip.js/zip.js';
+import * as zip from 'zip.js-myh';
 
 const cbetardb = 'cbetardb';
 
@@ -127,17 +128,19 @@ function fileNameFilter(fileName: string, filter: RegExp[] = []) {
 
 async function extractZipToZips(file: File | Blob, filter: RegExp[] = [], extensionToZip: string[] | undefined = undefined, progressCallback: Function | null = null) {
   const zipReader = new zip.ZipReader(new zip.BlobReader(file));
-  const zipEntries = await zipReader.getEntries();
   let finishCount = 0;
   const iter = zipReader.getEntriesGenerator();
   let curr = iter.next();
+  // filesLength is initialized after the first yield.
+  await curr;
+  const filesLength = zipReader.filesLength || 0;
   while (!(await curr).done) {
     const zipEntry = ((await curr).value) as zip.Entry;
     const entryName = '/' + zipEntry.filename;
     if (!zipEntry.directory && fileNameFilter(entryName, filter)) {
       const data = await zipEntry.getData!(new zip.Uint8ArrayWriter());
       await fileFilterAndZipper(entryName, data, extensionToZip);
-      progressCallback && progressCallback(finishCount / zipEntries.length);
+      progressCallback && progressCallback(finishCount / filesLength);
     }
     finishCount += 1;
     curr = iter.next();
