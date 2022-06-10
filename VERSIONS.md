@@ -1,4 +1,7 @@
 # <a id='history'>版本歷史</a>
+* PWA 7.3.3:
+  * [優化] 移除 adm-zip。
+
 * PWA 7.3.2:
   * [優化] CBETA Bookcase 離線 DB 匯入速度。
 

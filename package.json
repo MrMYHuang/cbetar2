@@ -2,7 +2,7 @@
   "name": "cbetar2",
   "productName": "電子佛典",
   "homepage": "/",
-  "pwaVersion": "7.3.2",
+  "pwaVersion": "7.3.3",
   "version": "19.3.1",
   "license": "MIT",
   "keywords": [
@@ -78,7 +78,6 @@
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.0.1",
     "@testing-library/user-event": "^14.1.0",
-    "@types/adm-zip": "^0.5.0",
     "@types/jest": "^27.4.1",
     "@types/libxmljs": "^0.18.7",
     "@types/node": "^17.0.23",
@@ -91,7 +90,6 @@
     "@types/semver": "^7.3.9",
     "@types/uuid": "^8.3.4",
     "@zip.js/zip.js": "^2.4.14",
-    "adm-zip": "^0.5.9",
     "customize-cra": "^1.0.0",
     "electron": "^19.0.1",
     "electron-builder": "^23.0.4",
@@ -127,7 +125,7 @@
     "workbox-routing": "^5.1.4",
     "workbox-strategies": "^5.1.4",
     "workbox-streams": "^5.1.4",
-    "zip.js-myh": "^2.4.16"
+    "zip.js-myh": "file:../zip.js"
   },
   "browserslist": {
     "production": [

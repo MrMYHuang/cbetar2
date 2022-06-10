@@ -1,4 +1,3 @@
-import AdmZip from 'adm-zip';
 //import * as zip from '@zip.js/zip.js';
 import * as zip from 'zip.js-myh';
 
@@ -18,14 +17,14 @@ async function saveFile(fileName: string, data: any) {
   });
 }
 
-async function saveZippedFile(fileName: string, data: any) {
-  const zip = new AdmZip();
+async function saveZippedFile(fileName: string, data: Uint8Array) {
+  /*const zip = new AdmZip();
   zip.addFile('file', data);
-  return saveFile(fileName, zip.toBuffer());
-  /*
+  return saveFile(fileName, zip.toBuffer());*/
+  
   const zipFile = new zip.ZipWriter(new zip.Uint8ArrayWriter());
-  zipFile.add('file', new zip.Uint8ArrayReader(data));
-  return saveFile(fileName, await zipFile.close());*/
+  await zipFile.add('file', new zip.Uint8ArrayReader(data));
+  return saveFile(fileName, await zipFile.close());
 }
 
 async function removeFile(fileName: string) {
@@ -104,13 +103,10 @@ async function getFile<T>(fileName: string): Promise<T> {
   });
 }
 
-async function getZippedFile(fileName: string) {
-  const data = await getFile<Uint8Array>(fileName);
-  return new AdmZip(Buffer.from(data)).getEntries()[0].getData();
-  /*
+async function getZippedFile(fileName: string) {  
   const data = await getFile<Uint8Array>(fileName);
   const entry = (await new zip.ZipReader(new zip.Uint8ArrayReader(data)).getEntries())[0];
-  return entry.getData!(new zip.Uint8ArrayWriter());*/
+  return entry.getData!(new zip.Uint8ArrayWriter());
 }
 
 async function fileFilterAndZipper(entryName: string, data: Uint8Array, extensionToZip: string[] = ['txt', 'xml', 'xhtml', 'html', 'json', 'xsl',]) {
