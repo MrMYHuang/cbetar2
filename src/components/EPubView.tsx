@@ -245,8 +245,9 @@ export class _EPubView extends React.Component<PageProps, State> {
     } else {
       if (this.savedPageIndex !== this.state.currentPage) {
         // Restore the saved page index.
-        this.jumpToPage(this.savedPageIndex);
-        return true;
+        this.html2Epub().then(() => {
+          this.jumpToPage(this.savedPageIndex);
+        });
       }
     }
   }

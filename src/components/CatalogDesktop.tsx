@@ -118,7 +118,7 @@ class _CatalogDesktop extends React.Component<PageProps, State> {
     return <>
       <IonMenu
         ref={this.menuRef}
-        contentId='abc'
+        contentId='main'
         onIonWillClose={() => {
         }}
       >
