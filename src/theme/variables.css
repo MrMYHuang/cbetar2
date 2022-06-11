@@ -188,6 +188,16 @@ ion-toast::part(message) {
     line-height: normal !important;
 }
 
+.MuiTreeItem-label {
+    font-family: var(--ion-font-family) !important;
+    font-size: calc(var(--ui-font-size) * 0.8) !important;
+    color: var(--color);
+}
+
+.MuiTreeItem-iconContainer {
+    color: var(--ion-color-primary);
+}
+
 .uiFontX2 {
     font-size: calc(var(--ui-font-size) * 2) !important;
 }

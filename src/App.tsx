@@ -342,6 +342,7 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
               {/* The following route is for backward compatibility. */}
               <Route path={`/:tab(catalog)/catalog/:path/:label`} render={(props: any) => <CatalogPage {...props} />} exact={true} />
               <Route path={`/:tab(catalog)/:type(catalog|volumes|famous|desktop)?/:path?`} render={(props: any) => <CatalogPage {...props} />} exact={true} />
+              <Route path={`/:tab(catalog)/:type(desktop)?/:work/:path/`} component={CatalogPage} exact={true} />
               <Route path={`/:tab(bookmarks)`} render={(props: any) => <BookmarkPage {...props} />} exact={true} />
               <Route path={`/:tab(dictionary)/search/:keyword?`} render={(props: any) => <DictionaryPage {...props} />} exact={true} />
               <Route path={`/:tab(dictionary)/searchWord/:keyword?`} render={(props: any) => <WordDictionaryPage {...props} />} exact={true} />

@@ -1,5 +1,5 @@
 import React from 'react';
-import { IonItem, IonLabel, IonMenu, IonLoading, IonButton } from '@ionic/react';
+import { IonItem, IonLabel, IonMenu, IonLoading, IonButton, withIonLifeCycle } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
 import { SwipeableDrawer } from '@mui/material';
 import { ChevronRight, ExpandMore } from '@mui/icons-material';
@@ -12,6 +12,7 @@ import { CbetaDbMode, Settings } from '../models/Settings';
 import { TmpSettings } from '../models/TmpSettings';
 import CbetaOfflineIndexedDb, { CatalogNode } from '../CbetaOfflineIndexedDb';
 import Globals from '../Globals';
+import EPubView from './EPubView';
 
 const electronBackendApi: any = (window as any).electronBackendApi;
 
@@ -31,8 +32,6 @@ const famousJuans = [
 ];
 
 interface Props {
-  topCatalogsType: number;
-  setFetchData: Function;
 }
 
 interface ReduxProps {
@@ -64,8 +63,10 @@ class _CatalogDesktop extends React.Component<PageProps, State> {
       isLoading: false,
     };
     this.menuRef = React.createRef<HTMLIonMenuElement>();
+  }
 
-    this.props.setFetchData(this.fetchData.bind(this));
+  ionViewWillEnter() {
+    this.fetchData();
   }
 
   async fetchData() {
@@ -114,36 +115,25 @@ class _CatalogDesktop extends React.Component<PageProps, State> {
   getTreeView(node: CatalogNode): React.ReactNode {
 
     return <TreeItem nodeId={node.n} label={node.label} key={node.label}>
-      {node.children?.map((childNode) => {
-        return childNode ? this.getTreeView(childNode) : null;
-      })}
-    </TreeItem>;
-    /*
-    this.state.catalogTree?.forEach((catalog: Catalog, index: number) => {
-      let routeLink = '';
-      const isHtmlNode = catalog.nodeType === 'html';
-      if (isHtmlNode) {
-        routeLink = `/catalog/juan/${catalog.n}/1`;
-      } else if (catalog.work == null) {
-        routeLink = `/catalog/catalog/${catalog.n}`;
-      } else {
-        routeLink = `/catalog/work/${catalog.work}`;
+      {
+        node.children ?
+          node.children.map((childNode) => {
+            return childNode ? this.getTreeView(childNode) : null;
+          }) :
+          node.work ? Array.from({length: +node.juan}, (v, i) => {
+            const ip1 = i + 1;
+            const id = `${node.work}_${ip1}`;
+            const label = `卷${ip1}`;
+            return <TreeItem nodeId={id} label={label} key={id} onClick={() => {
+              const routeLink = `/catalog/desktop/${node.work}/${ip1}`;
+              this.props.history.push({
+                pathname: routeLink,
+              });
+            }} />
+          })
+            : null
       }
-      rows.push(
-        <IonItem key={`${catalog.n}item` + index} button={true} onClick={async event => {
-          event.preventDefault();
-          this.props.history.push({
-            pathname: routeLink,
-            search: queryString.stringify(isHtmlNode ? { file: catalog.file!, title: catalog.label } : {}),
-          });
-        }}>
-          <IonLabel className='ion-text-wrap uiFont' key={`${catalog.n}label` + index}>
-            {catalog.label}
-          </IonLabel>
-        </IonItem>
-      );
-    });
-    return rows;*/
+    </TreeItem>;
   }
 
   getFamousJuanRows() {
@@ -166,9 +156,9 @@ class _CatalogDesktop extends React.Component<PageProps, State> {
   render() {
     return <>
       <IonMenu
-      ref={this.menuRef}
-      contentId='abc'
-      type='overlay'
+        ref={this.menuRef}
+        contentId='abc'
+        type='overlay'
         onIonWillClose={() => {
           this.props.dispatch({
             type: "SET_KEY_VAL",
@@ -185,6 +175,12 @@ class _CatalogDesktop extends React.Component<PageProps, State> {
           {this.state.catalogTree && this.getTreeView(this.state.catalogTree)}
         </TreeView>
       </IonMenu>
+
+      <EPubView
+        history={this.props.history}
+        location={this.props.location}
+        match={this.props.match}
+      />
 
       <IonButton id='abc' onClick={() => {
         this.menuRef.current?.open();
@@ -209,8 +205,8 @@ const mapStateToProps = (state: any, ownProps: Props) => {
   };
 };
 
-//const mapDispatchToProps = {};
+const CatalogDesktop = withIonLifeCycle(_CatalogDesktop);
 
 export default connect(
   mapStateToProps,
-)(_CatalogDesktop);
+)(CatalogDesktop);
