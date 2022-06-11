@@ -1,6 +1,7 @@
 import React from 'react';
 import { IonItem, IonLabel, IonList, IonLoading } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
+import { SwipeableDrawer } from '@mui/material';
 import queryString from 'query-string';
 
 import { Catalog } from '../models/Catalog';
@@ -48,17 +49,15 @@ interface State {
   showSearchAlert: boolean;
   fetchError: boolean;
   catalogs: Array<Catalog>;
-  pathLabel: string;
   isLoading: boolean;
 }
 
-class _CatalogTouch extends React.Component<PageProps, State> {
+class _CatalogDesktop extends React.Component<PageProps, State> {
   constructor(props: any) {
     super(props);
     this.state = {
       fetchError: false,
       catalogs: [],
-      pathLabel: '',
       showSearchAlert: false,
       isLoading: false,
     };
@@ -66,67 +65,42 @@ class _CatalogTouch extends React.Component<PageProps, State> {
     this.props.setFetchData(this.fetchData.bind(this));
   }
 
-  async fetchData(path: string) {
+  async fetchData() {
     //console.log('fetch');
     this.setState({ isLoading: true });
     let catalogs = new Array<Catalog>();
-    let pathLabel = '';
 
-    switch (this.props.topCatalogsType) {
-      case 0:
-      case 1:
-        return this.fetchTopCatalogs(this.props.topCatalogsType);
-      case -1:
         //electronBackendApi?.send("toMain", { event: 'ready' });
         try {
           let obj: any;
           switch (this.props.settings.cbetaOfflineDbMode) {
             case CbetaDbMode.OfflineIndexedDb:
-              obj = await CbetaOfflineIndexedDb.fetchCatalogs(path);
+              obj = await CbetaOfflineIndexedDb.fetchAllCatalogs();
               break;
             case CbetaDbMode.OfflineFileSystem:
-              electronBackendApi?.send("toMain", { event: 'fetchCatalog', path: path });
+              electronBackendApi?.send("toMain", { event: 'fetchAllCatalogs' });
               obj = await new Promise((ok, fail) => {
                 electronBackendApi?.receiveOnce("fromMain", (data: any) => {
                   switch (data.event) {
-                    case 'fetchCatalog':
+                    case 'fetchAllCatalogs':
                       ok(data);
                       break;
                   }
                 });
               });
               break;
-            case CbetaDbMode.Online:
-              const res = await Globals.axiosInstance.get(`/catalog_entry?q=${path}`, {
-                responseType: 'arraybuffer',
-              });
-              obj = JSON.parse(new TextDecoder().decode(res.data)) as any;
-              break;
           }
           const data = obj.results as [any];
           catalogs = data.map((json) => new Catalog(json));
 
-          const parentPath = this.parentPath(path);
-          // path is not a top catalog.
-          if (parentPath !== '') {
-            pathLabel = obj.label;
-          } else {
-            const topCatalogsByCatLabel = Globals.topCatalogsByCat[path];
-            pathLabel = (topCatalogsByCatLabel !== undefined) ? topCatalogsByCatLabel : Globals.topCatalogsByVol[path];
-          }
-
-          this.setState({ fetchError: false, isLoading: false, catalogs: catalogs, pathLabel });
+          this.setState({ fetchError: false, isLoading: false, catalogs: catalogs });
           return true;
         } catch (e) {
           console.error(e);
           console.error(new Error().stack);
-          this.setState({ fetchError: true, isLoading: false, pathLabel: '' });
+          this.setState({ fetchError: true, isLoading: false });
           return false;
         }
-      case 2:
-        this.setState({ fetchError: false, isLoading: false, pathLabel: '' });
-        break;
-    }
   }
 
   fetchTopCatalogs(topCatalogsType: number) {
@@ -144,7 +118,7 @@ class _CatalogTouch extends React.Component<PageProps, State> {
       };
       catalogs.push(catalog);
     });
-    this.setState({ fetchError: false, isLoading: false, catalogs: catalogs, pathLabel: '' });
+    this.setState({ fetchError: false, isLoading: false, catalogs: catalogs });
     return true;
   }
 
@@ -207,18 +181,7 @@ class _CatalogTouch extends React.Component<PageProps, State> {
     </IonList>
 
     return <>
-      <div className='uiFontX2' style={{ color: 'var(--ion-color-primary)' }}>{this.state.pathLabel}</div>
       {list}
-
-      <div style={{ fontSize: 'var(--ui-font-size)', textAlign: 'center' }}><a href="https://github.com/MrMYHuang/cbetar2#bookmark" target="_new">書籤與離線瀏覽說明</a></div>
-      <div style={{ fontSize: 'var(--ui-font-size)', textAlign: 'center' }}><a href="https://github.com/MrMYHuang/cbetar2#search" target="_new">搜尋經書教學</a></div>
-
-      <SearchAlert
-        {...{
-          showSearchAlert: this.state.showSearchAlert,
-          finish: () => { this.setState({ showSearchAlert: false }) }, ...this.props
-        }}
-      />
 
       <IonLoading
         cssClass='uiFont'
@@ -243,4 +206,4 @@ const mapStateToProps = (state: any, ownProps: Props) => {
 
 export default connect(
   mapStateToProps,
-)(_CatalogTouch);
+)(_CatalogDesktop);

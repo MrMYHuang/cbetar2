@@ -3,7 +3,6 @@ import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { IonContent, IonHeader, IonPage, IonToolbar, IonList, IonItem, IonLabel, IonButton, IonIcon, withIonLifeCycle, IonLoading, IonSelectOption, IonSelect } from '@ionic/react';
 import { bookmark, arrowBack, home, search, shareSocial, refreshCircle } from 'ionicons/icons';
-import { SwipeableDrawer } from '@mui/material';
 
 import './CatalogPage.css';
 import { Catalog } from '../models/Catalog';
@@ -11,7 +10,7 @@ import Globals from '../Globals';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
 import { TmpSettings } from '../models/TmpSettings';
 import { Settings } from '../models/Settings';
-import CatalogTouch, { _CatalogTouch } from '../components/CatalogTouch';
+import CatalogTouch from '../components/CatalogTouch';
 
 interface Props {
   dispatch: Function;

@@ -13,12 +13,32 @@ const filesFilter = [
     /.*figures.*/,
 ];
 
+interface CatalogDetails {
+    file: string;
+    work: string;
+    juan: string;
+    juan_start: 1;
+    juan_list: string;
+    category: string;
+    creators: string;
+    title: string;
+    id: string;
+    vol: string;
+    sutra: string;
+}
+
+interface CatalogNode extends CatalogDetails {
+    n: string;
+    label: string;
+    children: CatalogNode[];
+}
+
 const xmlParser = new DOMParser();
 const xsltProcessor = new XSLTProcessor();
 const textDecoder = new TextDecoder();
 let navDocBulei: Document;
 let navDocVol: Document;
-let catalogs: any;
+let catalogs: { [key: string]: CatalogDetails };
 let spines: Array<any>;
 const cbetaBookcaseDir = 'Bookcase';
 let gaijis: any;
@@ -43,12 +63,12 @@ export async function init() {
     navDocVol = xsltProcessor.transformToDocument(stringToXml(documentString));
 
     const catalogsString = await getFileAsStringFromIndexedDB(`/${cbetaBookcaseDir}/CBETA/catalog.txt`);
-    catalogs = catalogsString.split(/\r\n/);
+    const catalogsStrings = catalogsString.split(/\r\n/);
     catalogs = (Object).fromEntries(
-        catalogs.map((l: string) => {
+        catalogsStrings.map((l: string) => {
             const f = l.split(/\s*,\s*/);
             const file = `${f[0]}${f[4]}`;
-            return [file, { file, work: `${f[0]}${f[4]}`, juan: f[5], juan_start: 1, category: f[1], creators: f[7], title: f[6], id: f[0], vol: `${f[0]}${f[3]}`, sutra: f[4] }];
+            return [file, { file, work: `${f[0]}${f[4]}`, juan: f[5], juan_start: 1, category: f[1], creators: f[7], title: f[6], id: f[0], vol: `${f[0]}${f[3]}`, sutra: f[4] } as CatalogDetails];
         })
     );
 
@@ -75,7 +95,7 @@ export async function fetchCatalogs(path: string) {
         const nodesSnapshot = doc.evaluate(`//nav/li${subcatalogsXPath}`, doc, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE);
         const results = Array.from({ length: nodesSnapshot.snapshotLength }, (v, i) => {
             const node = nodesSnapshot.snapshotItem(i);
-            const n = `${path}.${(i + 1).toString().padStart(3, '0')}`;
+            const n: string = `${path}.${(i + 1).toString().padStart(3, '0')}`;
             const ele = node?.childNodes[0] as Element;
             const label = ele.textContent;
             if (ele.nodeName === 'cblink') {
@@ -91,6 +111,49 @@ export async function fetchCatalogs(path: string) {
         return { label: catalogLabel, results };
     } catch (error: any) {
         error.message = `path = ${path}\n${error.message}`;
+        throw (error);
+    }
+}
+
+function fetchSubcatalogs(node: Node | ChildNode, n: string): CatalogNode {
+    const ele = node.childNodes[0] as Element;
+    const label = ele.textContent;
+    if (ele.nodeName === 'cblink') {
+        const href = ele.getAttribute('href')!;
+        const matches = /.*\/([A-Z]*).*n(.*)_.*.xml$/.exec(href)!;
+        const work = matches[1] + matches[2];
+        const catalog = catalogs[work];
+        return Object.assign({ n, label }, catalog) as CatalogNode;
+    }
+    let children: CatalogNode[] = [];
+    const ele1 = node?.childNodes[1] as Element;
+    // Node containing subcatalogs.
+    if (ele1.nodeName === 'ol') {
+        ele1.childNodes.forEach((node, i) => {
+            const subN = `${n}.${(i + 1).toString().padStart(3, '0')}`;
+            children.push(fetchSubcatalogs(node, subN));
+        })
+    }
+    return { n, label, children } as CatalogNode;
+}
+
+export async function fetchAllCatalogs(): Promise<CatalogNode> {
+    isInit || await init();
+
+    //const catalogTypeIsBulei = subpaths.shift() === 'CBETA';
+    const catalogTypeIsBulei = true;
+    try {
+        const n = 'CBETA';
+        const doc = (catalogTypeIsBulei ? navDocBulei : navDocVol);
+        const nodesSnapshot = doc.evaluate(`//nav/`, doc, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE);
+        const children = Array.from({ length: nodesSnapshot.snapshotLength }, (v, i) => {
+            const node = nodesSnapshot.snapshotItem(i);
+            const subN = `${n}.${(i + 1).toString().padStart(3, '0')}`;
+            return fetchSubcatalogs(node!, subN)
+        });
+        return { n, label: 'CBETA', children } as CatalogNode;
+    } catch (error: any) {
+        error.message = `${error.message}`;
         throw (error);
     }
 }
@@ -182,6 +245,7 @@ const CbetaOfflineIndexedDb = {
     filesFilter,
     init,
     fetchCatalogs,
+    fetchAllCatalogs,
     fetchWork,
     fetchJuan
 };
