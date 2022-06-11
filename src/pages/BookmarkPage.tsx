@@ -7,9 +7,11 @@ import './WorkPage.css';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
 import { download, swapVertical } from 'ionicons/icons';
 import queryString from 'query-string';
+import { CbetaDbMode, Settings } from '../models/Settings';
 
 interface Props {
   dispatch: Function;
+  settings: Settings;
   bookmarks: [Bookmark];
   fontSize: number;
 }
@@ -37,12 +39,16 @@ class _BookmarkPage extends React.Component<PageProps, State> {
     this.bookmarkListRef = React.createRef<HTMLIonListElement>();
   }
 
+  get touchOrDesktopPath() {
+    return this.props.settings.cbetaOfflineDbMode === CbetaDbMode.OfflineIndexedDb ? 'desktop' : 'juan';
+  }
+
   ionViewWillEnter() {
     //console.log(`${this.props.match.url} will enter.`);
     let queryParams = queryString.parse(this.props.location.search) as any;
     if (queryParams.item && queryParams.item < this.props.bookmarks.length) {
       const bookmark = this.props.bookmarks[queryParams.item];
-      this.props.history.push(`/catalog/juan/${bookmark.work?.work}/${bookmark.work?.juan}`);
+      this.props.history.push(`/catalog/${this.touchOrDesktopPath}/${bookmark.work?.work}/${bookmark.work?.juan}`);
     } else if (!this.hasBookmark) {
       this.setState({ showToast: true, toastMessage: '無書籤！請從目錄頁新增書籤。' });
 
@@ -124,11 +130,11 @@ class _BookmarkPage extends React.Component<PageProps, State> {
         case BookmarkType.WORK:
           routeLink = `/catalog/work/${bookmark.uuid}`; break;
         case BookmarkType.JUAN:
-          routeLink = `/catalog/juan/${bookmark.work?.work}/${bookmark.work?.juan}`;
+          routeLink = `/catalog/${this.touchOrDesktopPath}/${bookmark.work?.work}/${bookmark.work?.juan}`;
           label = `${bookmark.work?.title}第${bookmark.work?.juan}卷 - ${label}`; break;
         case BookmarkType.HTML:
           isHtmlNode = true;
-          routeLink = `/catalog/juan/${bookmark.work?.work}/1`;
+          routeLink = `/catalog/${this.touchOrDesktopPath}/${bookmark.work?.work}/1`;
           label = `${bookmark.work?.title} - ${label}`; break;
       }
       rows.push(
@@ -217,6 +223,7 @@ class _BookmarkPage extends React.Component<PageProps, State> {
 const mapStateToProps = (state: any /*, ownProps*/) => {
   return {
     bookmarks: state.settings.bookmarks,
+    settings: state.settings,
   };
 };
 

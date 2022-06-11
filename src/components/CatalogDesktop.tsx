@@ -1,5 +1,5 @@
 import React from 'react';
-import { IonMenu, IonLoading, IonButton, withIonLifeCycle } from '@ionic/react';
+import { IonMenu, IonLoading, IonButton, withIonLifeCycle, IonHeader, IonIcon, IonToolbar, IonTitle } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
 import { ChevronRight, ExpandMore } from '@mui/icons-material';
 import { TreeView, TreeItem } from '@mui/lab';
@@ -9,8 +9,11 @@ import { CbetaDbMode, Settings } from '../models/Settings';
 import { TmpSettings } from '../models/TmpSettings';
 import CbetaOfflineIndexedDb, { CatalogNode } from '../CbetaOfflineIndexedDb';
 import EPubView from './EPubView';
+import { arrowBackCircle } from 'ionicons/icons';
 
 const electronBackendApi: any = (window as any).electronBackendApi;
+
+const catalogTreeId = 'catalogTree';
 
 interface Props {
 }
@@ -23,6 +26,7 @@ interface ReduxProps {
 
 interface PageProps extends Props, ReduxProps, RouteComponentProps<{
   tab: string;
+  work: string;
   path: string;
 }> { }
 
@@ -31,6 +35,7 @@ interface State {
   fetchError: boolean;
   catalogTree: CatalogNode | null;
   isLoading: boolean;
+  defaultSelectedNode: string;
 }
 
 class _CatalogDesktop extends React.Component<PageProps, State> {
@@ -42,15 +47,16 @@ class _CatalogDesktop extends React.Component<PageProps, State> {
       catalogTree: null,
       showSearchAlert: false,
       isLoading: false,
+      defaultSelectedNode: '',
     };
     this.menuRef = React.createRef<HTMLIonMenuElement>();
   }
 
   componentDidMount() {
-    this.fetchData();
-  }
-
-  ionViewWillEnter() {
+    this.fetchData().then(() => {
+      const work = this.props.match.params.work;
+      work && this.setState({ defaultSelectedNode: `${catalogTreeId}-${work}_${this.props.match.params.path}` });
+    });
   }
 
   async fetchData() {
@@ -91,14 +97,13 @@ class _CatalogDesktop extends React.Component<PageProps, State> {
   }
 
   getTreeView(node: CatalogNode): React.ReactNode {
-
     return <TreeItem nodeId={node.n} label={node.label} key={node.label}>
       {
         node.children ?
           node.children.map((childNode) => {
             return childNode ? this.getTreeView(childNode) : null;
           }) :
-          node.work ? Array.from({length: +node.juan}, (v, i) => {
+          node.work ? Array.from({ length: +node.juan }, (v, i) => {
             const ip1 = i + 1;
             const id = `${node.work}_${ip1}`;
             const label = `卷${ip1}`;
@@ -118,11 +123,22 @@ class _CatalogDesktop extends React.Component<PageProps, State> {
     return <>
       <IonMenu
         ref={this.menuRef}
-        contentId='main'
         onIonWillClose={() => {
         }}
       >
+        <IonHeader>
+          <IonToolbar>
+            <IonButton fill="clear" slot='start'
+              onClick={e => this.menuRef.current?.close()}>
+              <IonIcon icon={arrowBackCircle} slot='icon-only' />
+            </IonButton>
+
+            <IonTitle className='uiFont'>目錄</IonTitle>
+          </IonToolbar>
+        </IonHeader>
+
         <TreeView
+          id={catalogTreeId}
           defaultCollapseIcon={<ExpandMore />}
           defaultExpandIcon={<ChevronRight />}
           sx={{ height: '100%', flexGrow: 1, overflowY: 'auto' }}
@@ -135,12 +151,8 @@ class _CatalogDesktop extends React.Component<PageProps, State> {
         history={this.props.history}
         location={this.props.location}
         match={this.props.match}
+        showMenu={() => { this.menuRef.current?.open(); }}
       />
-
-      <IonButton id='abc' onClick={async () => {
-        await this.menuRef.current?.close();
-        await this.menuRef.current?.open();
-      }}>Hi</IonButton>
 
       <IonLoading
         cssClass='uiFont'

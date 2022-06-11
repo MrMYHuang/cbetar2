@@ -50,7 +50,7 @@ class _ShareTextModal extends React.Component<PageProps, State> {
     return (
       <IonModal
         isOpen={this.props.showModal}
-        swipeToClose={true}
+        canDismiss={true}
         //presentingElement={router || undefined}
         onWillPresent={() => {
           let isAppSettingsExport: Array<boolean> = [];

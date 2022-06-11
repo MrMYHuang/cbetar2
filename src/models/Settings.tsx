@@ -6,6 +6,13 @@ export enum CbetaDbMode {
     OfflineIndexedDb,
 }
 
+export enum CatalogPageMode {
+    ByBu,
+    ByVolume,
+    ByFamous,
+    Desktop,
+}
+
 export interface Settings {
     // version is the setting file version.
     version: number;
@@ -26,6 +33,7 @@ export interface Settings {
     dictionaryHistory: string[];
     wordDictionaryHistory: string[];
     cbetaOfflineDbMode: CbetaDbMode;
+    catalogPageMode: CatalogPageMode;
 }
 
 const defaultSettings = {
@@ -48,6 +56,7 @@ const defaultSettings = {
     dictionaryHistory: [],
     wordDictionaryHistory: [],
     cbetaOfflineDbMode: CbetaDbMode.Online,
+    catalogPageMode: CatalogPageMode.ByBu,
 } as Settings;
 
 export default defaultSettings;

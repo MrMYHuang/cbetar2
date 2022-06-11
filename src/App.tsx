@@ -124,7 +124,7 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
       Globals.disableAppLog();
     }
 
-    if(this.props.settings.cbetaOfflineDbMode === CbetaDbMode.OfflineIndexedDb) {
+    if (this.props.settings.cbetaOfflineDbMode === CbetaDbMode.OfflineIndexedDb) {
       CbetaOfflineIndexedDb.init();
     }
 
@@ -341,8 +341,9 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
               <Route path={`/:tab(catalog)/fulltextsearch/:keyword`} render={props => <FullTextSearchPage {...props} />} exact={true} />
               {/* The following route is for backward compatibility. */}
               <Route path={`/:tab(catalog)/catalog/:path/:label`} render={(props: any) => <CatalogPage {...props} />} exact={true} />
-              <Route path={`/:tab(catalog)/:type(catalog|volumes|famous)?/:path?`} render={(props: any) => <CatalogPage {...props} />} exact={true} />
-              <Route path={`/:tab(catalog)/:type(desktop)?/:work?/:path?`} render={(props: any) => <CatalogPage {...props} />} exact={true} />
+              <Route path={`/:tab(catalog)`} render={(props: any) => <CatalogPage {...props} />} exact={true} />
+              <Route path={`/:tab(catalog)/:type(catalog|volumes|famous)/:path?`} render={(props: any) => <CatalogPage {...props} />} exact={true} />
+              <Route path={`/:tab(catalog)/:type(desktop)/:work?/:path?`} render={(props: any) => <CatalogPage {...props} />} exact={true} />
               <Route path={`/:tab(bookmarks)`} render={(props: any) => <BookmarkPage {...props} />} exact={true} />
               <Route path={`/:tab(dictionary)/search/:keyword?`} render={(props: any) => <DictionaryPage {...props} />} exact={true} />
               <Route path={`/:tab(dictionary)/searchWord/:keyword?`} render={(props: any) => <WordDictionaryPage {...props} />} exact={true} />

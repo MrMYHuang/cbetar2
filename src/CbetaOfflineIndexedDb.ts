@@ -155,7 +155,7 @@ export async function fetchAllCatalogs(): Promise<CatalogNode> {
             const subN = `${n}.${(i + 1).toString().padStart(3, '0')}`;
             return fetchSubcatalogs(nodeNav.childNodes[i], subN)
         });
-        return { n, label: 'CBETA', children } as CatalogNode;
+        return { n, label: 'CBETA 部類目錄', children } as CatalogNode;
     } catch (error: any) {
         error.message = `${error.message}`;
         throw (error);

@@ -7,7 +7,7 @@ import queryString from 'query-string';
 import { Catalog } from '../models/Catalog';
 import SearchAlert from './SearchAlert';
 import { connect } from 'react-redux';
-import { CbetaDbMode, Settings } from '../models/Settings';
+import { CatalogPageMode, CbetaDbMode, Settings } from '../models/Settings';
 import { TmpSettings } from '../models/TmpSettings';
 import CbetaOfflineIndexedDb from '../CbetaOfflineIndexedDb';
 import Globals from '../Globals';
@@ -41,11 +41,11 @@ interface ReduxProps {
 
 interface PageProps extends Props, ReduxProps, RouteComponentProps<{
   tab: string;
+  type: string;
   path: string;
 }> { }
 
 interface State {
-  topCatalogsType: number;
   showSearchAlert: boolean;
   fetchError: boolean;
   catalogs: Array<Catalog>;
@@ -57,7 +57,6 @@ class _CatalogTouch extends React.Component<PageProps, State> {
   constructor(props: any) {
     super(props);
     this.state = {
-      topCatalogsType: -1,
       fetchError: false,
       catalogs: [],
       pathLabel: '',
@@ -74,12 +73,18 @@ class _CatalogTouch extends React.Component<PageProps, State> {
       case `/catalog`: topCatalogsType = 0; break;
       case `/catalog/volumes`: topCatalogsType = 1; break;
       case `/catalog/famous`: topCatalogsType = 2; break;
+      case `/catalog/desktop`: topCatalogsType = 3; break;
       default: topCatalogsType = -1; break;
     }
-    this.setState({ topCatalogsType: topCatalogsType }, () => {
-      //console.log(this.props.history.length);
-      this.fetchData(this.props.match.params.path);
+
+    this.props.dispatch({
+      type: "TMP_SET_KEY_VAL",
+      key: 'catalogPageMode',
+      val: topCatalogsType,
     });
+    setTimeout(() => {
+      this.fetchData(this.props.match.params.path);
+    }, 0);
   }
 
   async fetchData(path: string) {
@@ -88,60 +93,62 @@ class _CatalogTouch extends React.Component<PageProps, State> {
     let catalogs = new Array<Catalog>();
     let pathLabel = '';
 
-    switch (this.state.topCatalogsType) {
-      case 0:
-      case 1:
-        return this.fetchTopCatalogs(this.state.topCatalogsType);
-      case -1:
-        //electronBackendApi?.send("toMain", { event: 'ready' });
-        try {
-          let obj: any;
-          switch (this.props.settings.cbetaOfflineDbMode) {
-            case CbetaDbMode.OfflineIndexedDb:
-              obj = await CbetaOfflineIndexedDb.fetchCatalogs(path);
-              break;
-            case CbetaDbMode.OfflineFileSystem:
-              electronBackendApi?.send("toMain", { event: 'fetchCatalog', path: path });
-              obj = await new Promise((ok, fail) => {
-                electronBackendApi?.receiveOnce("fromMain", (data: any) => {
-                  switch (data.event) {
-                    case 'fetchCatalog':
-                      ok(data);
-                      break;
-                  }
-                });
+    if (this.isTopCatalog) {
+      switch (this.props.settings.catalogPageMode) {
+        case CatalogPageMode.ByBu:
+        case CatalogPageMode.ByVolume:
+          return this.fetchTopCatalogs(this.props.settings.catalogPageMode);
+        case CatalogPageMode.ByFamous:
+          this.setState({ fetchError: false, isLoading: false, pathLabel: '' });
+          break;
+      }
+    } else {
+      //electronBackendApi?.send("toMain", { event: 'ready' });
+      try {
+        let obj: any;
+        switch (this.props.settings.cbetaOfflineDbMode) {
+          case CbetaDbMode.OfflineIndexedDb:
+            obj = await CbetaOfflineIndexedDb.fetchCatalogs(path);
+            break;
+          case CbetaDbMode.OfflineFileSystem:
+            electronBackendApi?.send("toMain", { event: 'fetchCatalog', path: path });
+            obj = await new Promise((ok, fail) => {
+              electronBackendApi?.receiveOnce("fromMain", (data: any) => {
+                switch (data.event) {
+                  case 'fetchCatalog':
+                    ok(data);
+                    break;
+                }
               });
-              break;
-            case CbetaDbMode.Online:
-              const res = await Globals.axiosInstance.get(`/catalog_entry?q=${path}`, {
-                responseType: 'arraybuffer',
-              });
-              obj = JSON.parse(new TextDecoder().decode(res.data)) as any;
-              break;
-          }
-          const data = obj.results as [any];
-          catalogs = data.map((json) => new Catalog(json));
-
-          const parentPath = this.parentPath(path);
-          // path is not a top catalog.
-          if (parentPath !== '') {
-            pathLabel = obj.label;
-          } else {
-            const topCatalogsByCatLabel = Globals.topCatalogsByCat[path];
-            pathLabel = (topCatalogsByCatLabel !== undefined) ? topCatalogsByCatLabel : Globals.topCatalogsByVol[path];
-          }
-
-          this.setState({ fetchError: false, isLoading: false, catalogs: catalogs, pathLabel });
-          return true;
-        } catch (e) {
-          console.error(e);
-          console.error(new Error().stack);
-          this.setState({ fetchError: true, isLoading: false, pathLabel: '' });
-          return false;
+            });
+            break;
+          case CbetaDbMode.Online:
+            const res = await Globals.axiosInstance.get(`/catalog_entry?q=${path}`, {
+              responseType: 'arraybuffer',
+            });
+            obj = JSON.parse(new TextDecoder().decode(res.data)) as any;
+            break;
         }
-      case 2:
-        this.setState({ fetchError: false, isLoading: false, pathLabel: '' });
-        break;
+        const data = obj.results as [any];
+        catalogs = data.map((json) => new Catalog(json));
+
+        const parentPath = this.parentPath(path);
+        // path is not a top catalog.
+        if (parentPath !== '') {
+          pathLabel = obj.label;
+        } else {
+          const topCatalogsByCatLabel = Globals.topCatalogsByCat[path];
+          pathLabel = (topCatalogsByCatLabel !== undefined) ? topCatalogsByCatLabel : Globals.topCatalogsByVol[path];
+        }
+
+        this.setState({ fetchError: false, isLoading: false, catalogs: catalogs, pathLabel });
+        return true;
+      } catch (e) {
+        console.error(e);
+        console.error(new Error().stack);
+        this.setState({ fetchError: true, isLoading: false, pathLabel: '' });
+        return false;
+      }
     }
   }
 
@@ -169,7 +176,7 @@ class _CatalogTouch extends React.Component<PageProps, State> {
     paths.pop();
     return paths.join('.');
   }
-  
+
   addBookmarkHandler() {
     this.props.dispatch({
       type: "ADD_BOOKMARK",
@@ -197,7 +204,7 @@ class _CatalogTouch extends React.Component<PageProps, State> {
   }
 
   get isTopCatalog() {
-    return [`/catalog`, `/catalog/volumes`, `/catalog/famous`].reduce((prev, curr) => prev || curr === this.props.match.url, false);
+    return [`/catalog`, `/catalog/volumes`, `/catalog/famous`].some((v) => v === this.props.match.url);
   }
 
   getRows() {
@@ -249,7 +256,7 @@ class _CatalogTouch extends React.Component<PageProps, State> {
 
   render() {
     let list = <IonList>
-      {this.state.topCatalogsType === 2 ? this.getFamousJuanRows() : this.getRows()}
+      {this.props.settings.catalogPageMode === CatalogPageMode.ByFamous ? this.getFamousJuanRows() : this.getRows()}
     </IonList>
 
     return <>
@@ -262,31 +269,42 @@ class _CatalogTouch extends React.Component<PageProps, State> {
 
           <IonSelect
             hidden={!this.isTopCatalog} slot='start'
-            value={this.state.topCatalogsType}
+            value={this.props.settings.catalogPageMode}
             className='buttonRounded'
             interface='popover'
             interfaceOptions={{ cssClass: 'cbetar2themes' }}
             onIonChange={e => {
               const value = +e.detail.value;
 
-              this.setState({ topCatalogsType: value });
+              this.props.dispatch({
+                type: "SET_KEY_VAL",
+                key: 'catalogPageMode',
+                val: value,
+              });
+              setTimeout(() => {
+                let nextPage = '';
+                switch (value) {
+                  case 0: nextPage = `/catalog`; break;
+                  case 1: nextPage = `/catalog/volumes`; break;
+                  case 2: nextPage = `/catalog/famous`; break;
+                  case 3: nextPage = `/catalog/desktop`; break;
+                  case -1: nextPage = this.props.match.url; break;
+                }
+                if (this.props.match.url !== nextPage) {
+                  this.props.history.push(nextPage);
+                }
 
-              let nextPage = '';
-              switch (value) {
-                case 0: nextPage = `/catalog`; break;
-                case 1: nextPage = `/catalog/volumes`; break;
-                case 2: nextPage = `/catalog/famous`; break;
-                case 3: nextPage = `/catalog/desktop`; break;
-                case -1: nextPage = this.props.match.url; break;
-              }
-              if (this.props.match.url !== nextPage) {
-                this.props.history.push(nextPage);
-              }
+              }, 0);
             }}>
             <IonSelectOption className='uiFont' value={0}>部分類</IonSelectOption>
             <IonSelectOption className='uiFont' value={1}>冊分類</IonSelectOption>
             <IonSelectOption className='uiFont' value={2}>知名經典</IonSelectOption>
-            <IonSelectOption className='uiFont' value={3}>桌面模式</IonSelectOption>
+            {
+              this.props.settings.cbetaOfflineDbMode === CbetaDbMode.OfflineIndexedDb ?
+                <IonSelectOption className='uiFont' value={3}>桌面模式</IonSelectOption>
+                :
+                null
+            }
           </IonSelect>
 
           <IonButton hidden={!this.state.fetchError} fill="clear" slot='end' onClick={e => this.fetchData(this.props.match.params.path)}>

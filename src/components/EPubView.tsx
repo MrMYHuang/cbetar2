@@ -6,7 +6,7 @@ import * as uuid from 'uuid';
 import queryString from 'query-string';
 import './EPubView.css';
 import Globals from '../Globals';
-import { bookmark, arrowBack, home, search, ellipsisHorizontal, ellipsisVertical, arrowForward, musicalNotes, stopCircle, book, shareSocial, print, refreshCircle, copy, arrowUp, arrowDown, musicalNote, link, chevronUpOutline, playSkipForward, playSkipBack, expand } from 'ionicons/icons';
+import { bookmark, arrowBack, home, search, ellipsisHorizontal, ellipsisVertical, arrowForward, musicalNotes, stopCircle, book, shareSocial, print, refreshCircle, copy, arrowUp, arrowDown, musicalNote, link, chevronUpOutline, playSkipForward, playSkipBack, expand, menu } from 'ionicons/icons';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
 import { Work } from '../models/Work';
 import SearchAlert from '../components/SearchAlert';
@@ -15,7 +15,7 @@ import * as nodepub from 'nodepub';
 import { TmpSettings } from '../models/TmpSettings';
 import { clearTimeout } from 'timers';
 import fetchJuan from '../fetchJuan';
-import { CbetaDbMode } from '../models/Settings';
+import { CbetaDbMode, Settings } from '../models/Settings';
 import IndexedDbFuncs from '../IndexedDbFuncs';
 import VirtualHtml from '../models/VirtualHtml';
 
@@ -56,11 +56,12 @@ interface VisibleChar {
 }
 
 interface Props {
+  showMenu: Function | null;
   dispatch: Function;
   bookmarks: [Bookmark];
   fontSize: number;
   scrollbarSize: number;
-  settings: any;
+  settings: Settings;
   showComments: boolean;
   paginated: boolean;
   rtlVerticalLayout: boolean;
@@ -86,6 +87,7 @@ enum SpeechState {
 interface State {
   isLoading: boolean;
   fetchError: boolean;
+  noJuanSelected: boolean;
   workInfo: Work;
   htmlStr: string | null;
   currentPage: number;
@@ -122,6 +124,7 @@ export class _EPubView extends React.Component<PageProps, State> {
     this.state = {
       isLoading: false,
       fetchError: false,
+      noJuanSelected: false,
       workInfo: ({} as Work),
       htmlStr: null,
       currentPage: 1,
@@ -231,8 +234,8 @@ export class _EPubView extends React.Component<PageProps, State> {
     if (this.fetchNewData) {
       this.bookSettingsChanged = false;
       this.fetchNewData = false;
-      this.fetchData().then(() => {
-        this.html2Epub();
+      this.fetchData().then((hasData) => {
+        hasData && this.html2Epub();
       });
     } else if (this.bookSettingsChanged) {
       this.bookSettingsChanged = false;
@@ -310,7 +313,7 @@ export class _EPubView extends React.Component<PageProps, State> {
       'fontSize',
       'uiFontSize',
       'showComments',
-    ].some((v) => this.props.settings[v] !== prevProps.settings[v]);
+    ].some((v) => (this.props.settings as any)[v] !== (prevProps.settings as any)[v]);
   }
 
   ionViewDidEnter() {
@@ -348,8 +351,13 @@ export class _EPubView extends React.Component<PageProps, State> {
   }
 
   async fetchData() {
+    if (!this.props.match.params.work) {
+      this.setState({ isLoading: false, noJuanSelected: true });
+      return false;
+    }
+
     return new Promise<boolean>(async (ok, fail) => {
-      this.setState({ isLoading: true });
+      this.setState({ isLoading: true, noJuanSelected: false });
       try {
         const res = await fetchJuan(
           this.props.match.params.work,
@@ -1343,13 +1351,27 @@ export class _EPubView extends React.Component<PageProps, State> {
         <IonToolbar>
           <IonTitle className='uiFont'></IonTitle>
 
-          <IonButton fill="clear" slot='start' onClick={e => this.props.history.goBack()}>
+          <IonButton fill="clear" slot='start'
+            hidden={this.props.settings.cbetaOfflineDbMode !== CbetaDbMode.OfflineIndexedDb}
+            onClick={e => this.props.showMenu && this.props.showMenu()}>
+            <IonIcon icon={menu} slot='icon-only' />
+          </IonButton>
+
+          <IonButton fill="clear" slot='start'
+            hidden={this.props.settings.cbetaOfflineDbMode !== CbetaDbMode.OfflineIndexedDb}
+            onClick={e => this.props.history.push('/catalog')}>
+            <IonIcon icon={home} slot='icon-only' />
+          </IonButton>
+
+          <IonButton fill="clear" slot='start'
+            hidden={this.props.settings.cbetaOfflineDbMode === CbetaDbMode.OfflineIndexedDb}
+            onClick={e => this.props.history.goBack()}>
             <IonIcon icon={arrowBack} slot='icon-only' />
           </IonButton>
 
           <IonButton hidden={!this.state.fetchError} fill="clear" slot='end' onClick={e => {
-            this.fetchData().then(() => {
-              this.html2Epub();
+            this.fetchData().then((hasData) => {
+              hasData && this.html2Epub();
             });
           }}>
             <IonIcon icon={refreshCircle} slot='icon-only' />
@@ -1652,7 +1674,21 @@ export class _EPubView extends React.Component<PageProps, State> {
             message={'載入中...'}
           />
 
-          {this.state.fetchError ? Globals.fetchErrorContent : <></>}
+          {
+            this.state.fetchError ?
+              Globals.fetchErrorContent
+              : this.state.noJuanSelected ?
+                <div className='contentCenter'>
+                  <IonLabel>
+                    <div>
+                      <div>請選擇經卷</div>
+                      <div style={{ fontSize: 'var(--ui-font-size)', paddingTop: 24 }}>
+                        請按左上方選單按鈕<IonIcon icon={menu} slot='icon-only' />。</div>
+                    </div>
+                  </IonLabel>
+                </div>
+                : <></>
+          }
 
           <div id='cbetarEPubView' style={{ width: '100%', height: '100%', userSelect: "text", WebkitUserSelect: "text" }}>
           </div>

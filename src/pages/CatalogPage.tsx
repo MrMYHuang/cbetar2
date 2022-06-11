@@ -8,7 +8,7 @@ import { Catalog } from '../models/Catalog';
 import Globals from '../Globals';
 import { Bookmark } from '../models/Bookmark';
 import { TmpSettings } from '../models/TmpSettings';
-import { Settings } from '../models/Settings';
+import { CatalogPageMode, Settings } from '../models/Settings';
 import CatalogTouch from '../components/CatalogTouch';
 import CatalogDesktop from '../components/CatalogDesktop';
 
@@ -34,11 +34,8 @@ interface State {
 }
 
 class _CatalogPage extends React.Component<PageProps, State> {
-  fetchDataCatalogTouch: Function;
-
   constructor(props: any) {
     super(props);
-    this.fetchDataCatalogTouch = () => { console.log('Uninitialized!'); };
     this.state = {
       fetchError: false,
       catalogs: [],
@@ -89,7 +86,7 @@ class _CatalogPage extends React.Component<PageProps, State> {
       <IonPage>
           {this.state.fetchError ?
             Globals.fetchErrorContent :
-            this.props.match.params.type === 'desktop' ?
+            this.props.match.params.type === 'desktop' || this.props.settings.catalogPageMode === CatalogPageMode.Desktop ?
             <CatalogDesktop
               history={this.props.history}
               location={this.props.location}
@@ -100,7 +97,6 @@ class _CatalogPage extends React.Component<PageProps, State> {
               history={this.props.history}
               location={this.props.location}
               match={this.props.match}
-              setFetchData={(fetchData: Function) => { this.fetchDataCatalogTouch = fetchData; }}
             />
           }
       </IonPage>

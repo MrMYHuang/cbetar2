@@ -143,7 +143,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
   }
 
   async importBookcase(run: Function) {
-    this.setState({ isLoading: true, showToast: true, toastMessage: `請等待進度條結束。可能需1個多小時。`, cbetaBookZipLoadRatio: 0 });
+    this.setState({ isLoading: true, showToast: true, toastMessage: `請等待進度條結束。可能需2個小時。`, cbetaBookZipLoadRatio: 0 });
     try {
       const res = await Globals.axiosInstance.get(`${window.location.origin}/${Globals.pwaUrl}/assets.zip`, {
         responseType: 'blob',
@@ -152,11 +152,16 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
       console.log(new Date().toLocaleTimeString());
       await run();
       console.log(new Date().toLocaleTimeString());
-      this.setState({ isLoading: false, showAlert: true, alertMessage: `匯入 app 成功！您可以刪除原匯入檔以節省空間。` });
+      this.setState({ isLoading: false, showAlert: true, alertMessage: `匯入 app 成功！您可以刪除原匯入檔，以節省空間。` });
       this.props.dispatch({
         type: "SET_KEY_VAL",
         key: 'cbetaOfflineDbMode',
         val: CbetaDbMode.OfflineIndexedDb
+      });
+      this.props.dispatch({
+        type: "SET_KEY_VAL",
+        key: 'catalogPageMode',
+        val: 0,
       });
     } catch (e) {
       console.error(e);
@@ -262,6 +267,15 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                 header={'注意：1. Bookcase 資料格式與連線版資料不相同，會影響書籤定位。\n2. 若匯入失敗，可能是儲存空間不足。\n確定執行？'}
                 buttons={[
                   {
+                    text: '取消',
+                    cssClass: 'secondary uiFont',
+                    handler: (value) => {
+                      this.setState({
+                        showUseBookcaseAlert: false,
+                      });
+                    },
+                  },
+                  {
                     text: '確定',
                     cssClass: 'primary uiFont',
                     handler: async (value) => {
@@ -288,15 +302,6 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                     },
                   },
                   */
-                  {
-                    text: '取消',
-                    cssClass: 'secondary uiFont',
-                    handler: (value) => {
-                      this.setState({
-                        showUseBookcaseAlert: false,
-                      });
-                    },
-                  },
                 ]}
               />
               <IonAlert
