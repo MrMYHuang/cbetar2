@@ -108,7 +108,7 @@ class _CatalogDesktop extends React.Component<PageProps, State> {
             const id = `${node.work}_${ip1}`;
             const label = `卷${ip1}`;
             return <TreeItem nodeId={id} label={label} key={id} onClick={async () => {
-              const routeLink = `/catalog/desktop/${node.work}/${ip1}`;
+              const routeLink = `/catalog/juan/${node.work}/${ip1}`;
               this.props.history.push({
                 pathname: routeLink,
               });

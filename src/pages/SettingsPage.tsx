@@ -2,13 +2,13 @@ import React from 'react';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonRange, IonIcon, IonLabel, IonToggle, IonButton, IonAlert, IonSelect, IonSelectOption, IonProgressBar, IonToast, withIonLifeCycle, IonLoading } from '@ionic/react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
-import { helpCircle, text, documentText, refreshCircle, musicalNotes, colorPalette, bug, download, print, informationCircle } from 'ionicons/icons';
+import { helpCircle, text, documentText, refreshCircle, musicalNotes, colorPalette, bug, download, print, informationCircle, desktop } from 'ionicons/icons';
 
 import Globals from '../Globals';
 import './SettingsPage.css';
 import PackageInfos from '../../package.json';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
-import { CbetaDbMode, Settings } from '../models/Settings';
+import { CbetaDbMode, Settings, UiMode } from '../models/Settings';
 import { TmpSettings } from '../models/TmpSettings';
 import fetchJuan from '../fetchJuan';
 import IndexedDbFuncs from '../IndexedDbFuncs';
@@ -338,7 +338,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                 ]}
               />
             </IonItem>
-            <IonItem hidden={this.props.settings.cbetaOfflineDbMode !== CbetaDbMode.Online}>
+            <IonItem hidden={this.props.settings.cbetaOfflineDbMode === CbetaDbMode.OfflineIndexedDb}>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={refreshCircle} slot='start' />
               <div style={{ width: '100%' }}>
@@ -352,6 +352,15 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                 onDidDismiss={() => this.setState({ showUpdateAllJuansDone: false })}
                 message={`離線經文檔更新完畢！`}
                 duration={2000}
+              />
+            </IonItem>
+            <IonItem hidden={this.props.settings.cbetaOfflineDbMode !== CbetaDbMode.Online}>
+              <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
+              <IonIcon icon={desktop} slot='start' />
+                <IonLabel className='ion-text-wrap uiFont'>觸控/鍵鼠 UI</IonLabel>
+              <IonToggle slot='end' checked={this.props.settings.uiMode === UiMode.Desktop} onIonChange={e => {
+                const isChecked = e.detail.checked;
+              }}
               />
             </IonItem>
             <IonItem>

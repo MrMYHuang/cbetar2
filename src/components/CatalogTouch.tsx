@@ -73,7 +73,6 @@ class _CatalogTouch extends React.Component<PageProps, State> {
       case `/catalog`: topCatalogsType = 0; break;
       case `/catalog/volumes`: topCatalogsType = 1; break;
       case `/catalog/famous`: topCatalogsType = 2; break;
-      case `/catalog/desktop`: topCatalogsType = 3; break;
       default: topCatalogsType = -1; break;
     }
 
@@ -287,7 +286,6 @@ class _CatalogTouch extends React.Component<PageProps, State> {
                   case 0: nextPage = `/catalog`; break;
                   case 1: nextPage = `/catalog/volumes`; break;
                   case 2: nextPage = `/catalog/famous`; break;
-                  case 3: nextPage = `/catalog/desktop`; break;
                   case -1: nextPage = this.props.match.url; break;
                 }
                 if (this.props.match.url !== nextPage) {
@@ -299,12 +297,6 @@ class _CatalogTouch extends React.Component<PageProps, State> {
             <IonSelectOption className='uiFont' value={0}>部分類</IonSelectOption>
             <IonSelectOption className='uiFont' value={1}>冊分類</IonSelectOption>
             <IonSelectOption className='uiFont' value={2}>知名經典</IonSelectOption>
-            {
-              this.props.settings.cbetaOfflineDbMode === CbetaDbMode.OfflineIndexedDb ?
-                <IonSelectOption className='uiFont' value={3}>桌面模式</IonSelectOption>
-                :
-                null
-            }
           </IonSelect>
 
           <IonButton hidden={!this.state.fetchError} fill="clear" slot='end' onClick={e => this.fetchData(this.props.match.params.path)}>

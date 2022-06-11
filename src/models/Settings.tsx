@@ -13,6 +13,11 @@ export enum CatalogPageMode {
     Desktop,
 }
 
+export enum UiMode {
+    Touch,
+    Desktop,
+}
+
 export interface Settings {
     // version is the setting file version.
     version: number;
@@ -34,6 +39,7 @@ export interface Settings {
     wordDictionaryHistory: string[];
     cbetaOfflineDbMode: CbetaDbMode;
     catalogPageMode: CatalogPageMode;
+    uiMode: UiMode;
 }
 
 const defaultSettings = {
@@ -57,6 +63,7 @@ const defaultSettings = {
     wordDictionaryHistory: [],
     cbetaOfflineDbMode: CbetaDbMode.Online,
     catalogPageMode: CatalogPageMode.ByBu,
+    uiMode: UiMode.Desktop,
 } as Settings;
 
 export default defaultSettings;

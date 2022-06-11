@@ -8,7 +8,7 @@ import { Catalog } from '../models/Catalog';
 import Globals from '../Globals';
 import { Bookmark } from '../models/Bookmark';
 import { TmpSettings } from '../models/TmpSettings';
-import { CatalogPageMode, Settings } from '../models/Settings';
+import { CatalogPageMode, Settings, UiMode } from '../models/Settings';
 import CatalogTouch from '../components/CatalogTouch';
 import CatalogDesktop from '../components/CatalogDesktop';
 
@@ -84,21 +84,22 @@ class _CatalogPage extends React.Component<PageProps, State> {
 
     return (
       <IonPage>
-          {this.state.fetchError ?
+        {
+          this.state.fetchError ?
             Globals.fetchErrorContent :
-            this.props.match.params.type === 'desktop' || this.props.settings.catalogPageMode === CatalogPageMode.Desktop ?
-            <CatalogDesktop
-              history={this.props.history}
-              location={this.props.location}
-              match={this.props.match}
-            />
-            :
-            <CatalogTouch
-              history={this.props.history}
-              location={this.props.location}
-              match={this.props.match}
-            />
-          }
+            this.props.settings.uiMode === UiMode.Touch ?
+              <CatalogTouch
+                history={this.props.history}
+                location={this.props.location}
+                match={this.props.match}
+              />
+              :
+              <CatalogDesktop
+                history={this.props.history}
+                location={this.props.location}
+                match={this.props.match}
+              />
+        }
       </IonPage>
     );
   }

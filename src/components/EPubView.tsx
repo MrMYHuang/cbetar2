@@ -6,7 +6,7 @@ import * as uuid from 'uuid';
 import queryString from 'query-string';
 import './EPubView.css';
 import Globals from '../Globals';
-import { bookmark, arrowBack, home, search, ellipsisHorizontal, ellipsisVertical, arrowForward, musicalNotes, stopCircle, book, shareSocial, print, refreshCircle, copy, arrowUp, arrowDown, musicalNote, link, chevronUpOutline, playSkipForward, playSkipBack, expand, menu } from 'ionicons/icons';
+import { bookmark, arrowBack, home, search, ellipsisHorizontal, ellipsisVertical, arrowForward, musicalNotes, stopCircle, book, shareSocial, print, refreshCircle, copy, arrowUp, arrowDown, musicalNote, link, chevronUpOutline, playSkipForward, playSkipBack, expand, menu, list } from 'ionicons/icons';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
 import { Work } from '../models/Work';
 import SearchAlert from '../components/SearchAlert';
@@ -15,7 +15,7 @@ import * as nodepub from 'nodepub';
 import { TmpSettings } from '../models/TmpSettings';
 import { clearTimeout } from 'timers';
 import fetchJuan from '../fetchJuan';
-import { CbetaDbMode, Settings } from '../models/Settings';
+import { CbetaDbMode, Settings, UiMode } from '../models/Settings';
 import IndexedDbFuncs from '../IndexedDbFuncs';
 import VirtualHtml from '../models/VirtualHtml';
 
@@ -1352,19 +1352,19 @@ export class _EPubView extends React.Component<PageProps, State> {
           <IonTitle className='uiFont'></IonTitle>
 
           <IonButton fill="clear" slot='start'
-            hidden={this.props.settings.cbetaOfflineDbMode !== CbetaDbMode.OfflineIndexedDb}
+            hidden={this.props.settings.uiMode === UiMode.Touch}
             onClick={e => this.props.showMenu && this.props.showMenu()}>
-            <IonIcon icon={menu} slot='icon-only' />
+            <IonIcon icon={list} slot='icon-only' />
           </IonButton>
 
           <IonButton fill="clear" slot='start'
-            hidden={this.props.settings.cbetaOfflineDbMode !== CbetaDbMode.OfflineIndexedDb}
+            hidden={this.props.settings.uiMode === UiMode.Touch}
             onClick={e => this.props.history.push('/catalog')}>
             <IonIcon icon={home} slot='icon-only' />
           </IonButton>
 
           <IonButton fill="clear" slot='start'
-            hidden={this.props.settings.cbetaOfflineDbMode === CbetaDbMode.OfflineIndexedDb}
+            hidden={this.props.settings.uiMode === UiMode.Desktop}
             onClick={e => this.props.history.goBack()}>
             <IonIcon icon={arrowBack} slot='icon-only' />
           </IonButton>
