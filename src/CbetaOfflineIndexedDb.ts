@@ -27,7 +27,7 @@ interface CatalogDetails {
     sutra: string;
 }
 
-interface CatalogNode extends CatalogDetails {
+export interface CatalogNode extends CatalogDetails {
     n: string;
     label: string;
     children: CatalogNode[];
@@ -126,13 +126,17 @@ function fetchSubcatalogs(node: Node | ChildNode, n: string): CatalogNode {
         return Object.assign({ n, label }, catalog) as CatalogNode;
     }
     let children: CatalogNode[] = [];
-    const ele1 = node?.childNodes[1] as Element;
-    // Node containing subcatalogs.
-    if (ele1.nodeName === 'ol') {
-        ele1.childNodes.forEach((node, i) => {
-            const subN = `${n}.${(i + 1).toString().padStart(3, '0')}`;
-            children.push(fetchSubcatalogs(node, subN));
-        })
+    for (let c = 1; c < node.childNodes.length; c++) {
+        const ele = node.childNodes[c] as Element;
+        // Node containing subcatalogs.
+        if (ele.nodeName === 'ol') {
+            ele.childNodes.forEach((node, i) => {
+                const subN = `${n}.${(i + 1).toString().padStart(3, '0')}`;
+                if (node.hasChildNodes()) {
+                    children.push(fetchSubcatalogs(node, subN));
+                }
+            })
+        }
     }
     return { n, label, children } as CatalogNode;
 }
@@ -145,11 +149,11 @@ export async function fetchAllCatalogs(): Promise<CatalogNode> {
     try {
         const n = 'CBETA';
         const doc = (catalogTypeIsBulei ? navDocBulei : navDocVol);
-        const nodesSnapshot = doc.evaluate(`//nav/`, doc, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE);
-        const children = Array.from({ length: nodesSnapshot.snapshotLength }, (v, i) => {
-            const node = nodesSnapshot.snapshotItem(i);
+        const nodesSnapshot = doc.evaluate(`//nav`, doc, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE);
+        const nodeNav = nodesSnapshot.snapshotItem(0)!;
+        const children = Array.from({ length: nodeNav.childNodes.length }, (v, i) => {
             const subN = `${n}.${(i + 1).toString().padStart(3, '0')}`;
-            return fetchSubcatalogs(node!, subN)
+            return fetchSubcatalogs(nodeNav.childNodes[i], subN)
         });
         return { n, label: 'CBETA', children } as CatalogNode;
     } catch (error: any) {

@@ -72,6 +72,8 @@
     "semver": "^7.3.7"
   },
   "devDependencies": {
+    "@emotion/react": "^11.9.0",
+    "@emotion/styled": "^11.8.1",
     "@ionic/react": "^6.0.16",
     "@ionic/react-router": "^6.0.16",
     "@mui/icons-material": "^5.8.3",

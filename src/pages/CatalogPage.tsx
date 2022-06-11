@@ -9,8 +9,9 @@ import { Catalog } from '../models/Catalog';
 import Globals from '../Globals';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
 import { TmpSettings } from '../models/TmpSettings';
-import { Settings } from '../models/Settings';
+import { CbetaDbMode, Settings } from '../models/Settings';
 import CatalogTouch from '../components/CatalogTouch';
+import CatalogDesktop from '../components/CatalogDesktop';
 
 interface Props {
   dispatch: Function;
@@ -200,6 +201,15 @@ class _CatalogPage extends React.Component<PageProps, State> {
         <IonContent>
           {this.state.fetchError ?
             Globals.fetchErrorContent :
+            this.props.match.params.type === 'desktop' ?
+            <CatalogDesktop
+              history={this.props.history}
+              location={this.props.location}
+              match={this.props.match}
+              topCatalogsType={this.state.topCatalogsType}
+              setFetchData={(fetchData: Function) => { this.fetchDataCatalogTouch = fetchData; }}
+            />
+            :
             <CatalogTouch
               history={this.props.history}
               location={this.props.location}

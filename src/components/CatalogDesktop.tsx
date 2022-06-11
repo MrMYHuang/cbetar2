@@ -1,15 +1,16 @@
 import React from 'react';
-import { IonItem, IonLabel, IonList, IonLoading } from '@ionic/react';
+import { IonItem, IonLabel, IonMenu, IonLoading, IonButton } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
 import { SwipeableDrawer } from '@mui/material';
+import { ChevronRight, ExpandMore } from '@mui/icons-material';
+import { TreeView, TreeItem } from '@mui/lab';
 import queryString from 'query-string';
 
 import { Catalog } from '../models/Catalog';
-import SearchAlert from './SearchAlert';
 import { connect } from 'react-redux';
 import { CbetaDbMode, Settings } from '../models/Settings';
 import { TmpSettings } from '../models/TmpSettings';
-import CbetaOfflineIndexedDb from '../CbetaOfflineIndexedDb';
+import CbetaOfflineIndexedDb, { CatalogNode } from '../CbetaOfflineIndexedDb';
 import Globals from '../Globals';
 
 const electronBackendApi: any = (window as any).electronBackendApi;
@@ -48,19 +49,21 @@ interface PageProps extends Props, ReduxProps, RouteComponentProps<{
 interface State {
   showSearchAlert: boolean;
   fetchError: boolean;
-  catalogs: Array<Catalog>;
+  catalogTree: CatalogNode | null;
   isLoading: boolean;
 }
 
 class _CatalogDesktop extends React.Component<PageProps, State> {
+  menuRef: React.RefObject<HTMLIonMenuElement>;
   constructor(props: any) {
     super(props);
     this.state = {
       fetchError: false,
-      catalogs: [],
+      catalogTree: null,
       showSearchAlert: false,
       isLoading: false,
     };
+    this.menuRef = React.createRef<HTMLIonMenuElement>();
 
     this.props.setFetchData(this.fetchData.bind(this));
   }
@@ -68,58 +71,38 @@ class _CatalogDesktop extends React.Component<PageProps, State> {
   async fetchData() {
     //console.log('fetch');
     this.setState({ isLoading: true });
-    let catalogs = new Array<Catalog>();
+    let catalogTree: CatalogNode;
 
-        //electronBackendApi?.send("toMain", { event: 'ready' });
-        try {
-          let obj: any;
-          switch (this.props.settings.cbetaOfflineDbMode) {
-            case CbetaDbMode.OfflineIndexedDb:
-              obj = await CbetaOfflineIndexedDb.fetchAllCatalogs();
-              break;
-            case CbetaDbMode.OfflineFileSystem:
-              electronBackendApi?.send("toMain", { event: 'fetchAllCatalogs' });
-              obj = await new Promise((ok, fail) => {
-                electronBackendApi?.receiveOnce("fromMain", (data: any) => {
-                  switch (data.event) {
-                    case 'fetchAllCatalogs':
-                      ok(data);
-                      break;
-                  }
-                });
-              });
-              break;
-          }
-          const data = obj.results as [any];
-          catalogs = data.map((json) => new Catalog(json));
+    //electronBackendApi?.send("toMain", { event: 'ready' });
+    try {
+      let obj: any;
+      switch (this.props.settings.cbetaOfflineDbMode) {
+        case CbetaDbMode.OfflineIndexedDb:
+          obj = await CbetaOfflineIndexedDb.fetchAllCatalogs();
+          break;
+        case CbetaDbMode.OfflineFileSystem:
+          electronBackendApi?.send("toMain", { event: 'fetchAllCatalogs' });
+          obj = await new Promise((ok, fail) => {
+            electronBackendApi?.receiveOnce("fromMain", (data: any) => {
+              switch (data.event) {
+                case 'fetchAllCatalogs':
+                  ok(data);
+                  break;
+              }
+            });
+          });
+          break;
+      }
+      catalogTree = obj as CatalogNode;
 
-          this.setState({ fetchError: false, isLoading: false, catalogs: catalogs });
-          return true;
-        } catch (e) {
-          console.error(e);
-          console.error(new Error().stack);
-          this.setState({ fetchError: true, isLoading: false });
-          return false;
-        }
-  }
-
-  fetchTopCatalogs(topCatalogsType: number) {
-    let catalogs = Array<Catalog>();
-
-    const topCatalogs = topCatalogsType ? Globals.topCatalogsByVol : Globals.topCatalogsByCat;
-
-    Object.keys(topCatalogs).forEach((key) => {
-      const catalog: Catalog = {
-        n: key,
-        nodeType: null,
-        work: null,
-        label: topCatalogs[key],
-        file: null,
-      };
-      catalogs.push(catalog);
-    });
-    this.setState({ fetchError: false, isLoading: false, catalogs: catalogs });
-    return true;
+      this.setState({ fetchError: false, isLoading: false, catalogTree: catalogTree });
+      return true;
+    } catch (e) {
+      console.error(e);
+      console.error(new Error().stack);
+      this.setState({ fetchError: true, isLoading: false });
+      return false;
+    }
   }
 
   parentPath(path: string) {
@@ -128,9 +111,15 @@ class _CatalogDesktop extends React.Component<PageProps, State> {
     return paths.join('.');
   }
 
-  getRows() {
-    let rows = Array<JSX.Element>();
-    this.state.catalogs.forEach((catalog: Catalog, index: number) => {
+  getTreeView(node: CatalogNode): React.ReactNode {
+
+    return <TreeItem nodeId={node.n} label={node.label} key={node.label}>
+      {node.children?.map((childNode) => {
+        return childNode ? this.getTreeView(childNode) : null;
+      })}
+    </TreeItem>;
+    /*
+    this.state.catalogTree?.forEach((catalog: Catalog, index: number) => {
       let routeLink = '';
       const isHtmlNode = catalog.nodeType === 'html';
       if (isHtmlNode) {
@@ -148,14 +137,13 @@ class _CatalogDesktop extends React.Component<PageProps, State> {
             search: queryString.stringify(isHtmlNode ? { file: catalog.file!, title: catalog.label } : {}),
           });
         }}>
-          <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
           <IonLabel className='ion-text-wrap uiFont' key={`${catalog.n}label` + index}>
             {catalog.label}
           </IonLabel>
         </IonItem>
       );
     });
-    return rows;
+    return rows;*/
   }
 
   getFamousJuanRows() {
@@ -176,12 +164,31 @@ class _CatalogDesktop extends React.Component<PageProps, State> {
   }
 
   render() {
-    let list = <IonList>
-      {this.props.topCatalogsType === 2 ? this.getFamousJuanRows() : this.getRows()}
-    </IonList>
-
     return <>
-      {list}
+      <IonMenu
+      ref={this.menuRef}
+      contentId='abc'
+      type='overlay'
+        onIonWillClose={() => {
+          this.props.dispatch({
+            type: "SET_KEY_VAL",
+            key: 'drawerOpen',
+            val: false,
+          });
+        }}
+      >
+        <TreeView
+          defaultCollapseIcon={<ExpandMore />}
+          defaultExpandIcon={<ChevronRight />}
+          sx={{ height: '100%', flexGrow: 1, overflowY: 'auto' }}
+        >
+          {this.state.catalogTree && this.getTreeView(this.state.catalogTree)}
+        </TreeView>
+      </IonMenu>
+
+      <IonButton id='abc' onClick={() => {
+        this.menuRef.current?.open();
+      }}>Hi</IonButton>
 
       <IonLoading
         cssClass='uiFont'
