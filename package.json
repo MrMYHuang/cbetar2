@@ -74,6 +74,9 @@
   "devDependencies": {
     "@ionic/react": "^6.0.16",
     "@ionic/react-router": "^6.0.16",
+    "@mui/icons-material": "^5.8.3",
+    "@mui/lab": "^5.0.0-alpha.85",
+    "@mui/material": "^5.8.3",
     "@reduxjs/toolkit": "^1.8.1",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.0.1",
