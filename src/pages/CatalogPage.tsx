@@ -1,7 +1,7 @@
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { IonContent, IonPage, withIonLifeCycle } from '@ionic/react';
+import { IonPage, withIonLifeCycle } from '@ionic/react';
 
 import './CatalogPage.css';
 import { Catalog } from '../models/Catalog';

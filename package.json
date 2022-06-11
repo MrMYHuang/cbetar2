@@ -74,8 +74,8 @@
   "devDependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
-    "@ionic/react": "^6.0.16",
-    "@ionic/react-router": "^6.0.16",
+    "@ionic/react": "^6.1.9",
+    "@ionic/react-router": "^6.1.9",
     "@mui/icons-material": "^5.8.3",
     "@mui/lab": "^5.0.0-alpha.85",
     "@mui/material": "^5.8.3",

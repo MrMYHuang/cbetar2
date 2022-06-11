@@ -26,7 +26,6 @@ export interface Settings {
     dictionaryHistory: string[];
     wordDictionaryHistory: string[];
     cbetaOfflineDbMode: CbetaDbMode;
-    drawerOpen: boolean;
 }
 
 const defaultSettings = {
@@ -49,7 +48,6 @@ const defaultSettings = {
     dictionaryHistory: [],
     wordDictionaryHistory: [],
     cbetaOfflineDbMode: CbetaDbMode.Online,
-    drawerOpen: true,
 } as Settings;
 
 export default defaultSettings;
