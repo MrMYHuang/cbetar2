@@ -16,7 +16,7 @@ const filesFilter = [
 interface CatalogDetails {
     file: string;
     work: string;
-    juan: string;
+    juan: number;
     juan_start: 1;
     juan_list: string;
     category: string;
@@ -24,6 +24,8 @@ interface CatalogDetails {
     title: string;
     id: string;
     vol: string;
+    vols: string[];
+    vols_juans: number[];
     sutra: string;
 }
 
@@ -64,11 +66,27 @@ export async function init() {
 
     const catalogsString = await getFileAsStringFromIndexedDB(`/${cbetaBookcaseDir}/CBETA/catalog.txt`);
     const catalogsStrings = catalogsString.split(/\r\n/);
+    let lastWork = '';
+    let juan = 0;
+    let vols: string[] = [];
+    let vols_juans: number[] = [];
     catalogs = (Object).fromEntries(
         catalogsStrings.map((l: string) => {
             const f = l.split(/\s*,\s*/);
             const file = `${f[0]}${f[4]}`;
-            return [file, { file, work: `${f[0]}${f[4]}`, juan: f[5], juan_start: 1, category: f[1], creators: f[7], title: f[6], id: f[0], vol: `${f[0]}${f[3]}`, sutra: f[4] } as CatalogDetails];
+            const vol = `${f[0]}${f[3]}`;
+            const vol_jauns = +f[5];
+            if (lastWork !== file) {
+                lastWork = file;
+                juan = 0;
+                vols = [vol];
+                vols_juans = [vol_jauns];
+            } else {
+                vols.push(vol);
+                vols_juans.push(vol_jauns);
+            }
+            juan += vol_jauns;
+            return [file, { file, work: file, juan: juan, juan_start: 1, category: f[1], creators: f[7], title: f[6], id: f[0], vol, vols, vols_juans, sutra: f[4] } as CatalogDetails];
         })
     );
 
@@ -86,6 +104,7 @@ export async function init() {
 export async function fetchCatalogs(path: string) {
     isInit || await init();
 
+    let work = '';
     let subpaths = path.split('.');
     const catalogTypeIsBulei = subpaths.shift() === 'CBETA';
     const subcatalogsXPath = subpaths.map(s => +s).map(n => `[${n}]/ol/li`).join('');
@@ -101,7 +120,10 @@ export async function fetchCatalogs(path: string) {
             if (ele.nodeName === 'cblink') {
                 const href = ele.getAttribute('href')!;
                 const matches = /.*\/([A-Z]*).*n(.*)_.*.xml$/.exec(href)!;
-                const work = matches[1] + matches[2];
+                const thisWork = matches[1] + matches[2];
+                if (thisWork !== work) {
+                    work = thisWork;
+                }
                 const catalog = catalogs[work];
                 return Object.assign({ n, label }, catalog);
             }
@@ -188,8 +210,17 @@ export async function fetchJuan(work: string, juan: string) {
     isInit || await init();
 
     const work_info = (await fetchWork(work)).results[0];
+    let juanTemp = 0;
+    let vol = '';
+    for (let i = 0; i < work_info.vols.length; i++) {
+        juanTemp += work_info.vols_juans[i];
+        if (+juan <= juanTemp) {
+            vol = work_info.vols[i];
+            break;
+        }
+    }
     const stylesheetString = await getFileAsStringFromIndexedDB(`/${Globals.cbetar2AssetDir}/tei.xsl`);
-    const documentString = await getFileAsStringFromIndexedDB(`/${cbetaBookcaseDir}/CBETA/XML/${work_info.id}/${work_info.vol}/${work_info.vol}n${work_info.sutra}_${juan.toString().padStart(3, '0')}.xml`);
+    const documentString = await getFileAsStringFromIndexedDB(`/${cbetaBookcaseDir}/CBETA/XML/${work_info.id}/${vol}/${vol}n${work_info.sutra}_${juan.toString().padStart(3, '0')}.xml`);
 
     xsltProcessor.importStylesheet(stringToXml(stylesheetString));
 
