@@ -127,7 +127,7 @@ class _CatalogDesktop extends React.Component<PageProps, State> {
       const findWork = juan === -1;
       const vol_juan_end = node.vol_juan_start + node.vols_juans[node.volId] - 1;
       if (node.work === work) {
-        if  (findWork) {
+        if (findWork) {
           return [node.work2];
         } else if (node.vol_juan_start <= juan && juan <= vol_juan_end) {
           return [node.work2, `${node.work2}-${juan}`];
@@ -242,7 +242,7 @@ class _CatalogDesktop extends React.Component<PageProps, State> {
                   selectedText: work.title,
                   epubcfi: '',
                   fileName: '',
-                  work: {mulu: [], juan: +work.juan, juan_list: work.juan_list, title: work.title, vol: work.vol, work: work.work},
+                  work: { mulu: [], juan: +work.juan, juan_list: work.juan_list, title: work.title, vol: work.vol, work: work.work },
                 } as Bookmark,
               });
               this.setState({ showToast: true, toastMessage: '書籤新增成功！' });
@@ -272,14 +272,19 @@ class _CatalogDesktop extends React.Component<PageProps, State> {
         <IonLabel class='treeItem'>雙擊新增目錄書籤</IonLabel>
       </IonMenu>
 
-      <EPubView
-        history={this.props.history}
-        location={this.props.location}
-        match={this.props.match}
-        showMenu={() => {
-          this.openMenuAndSelectItem();
-        }}
-      />
+      {
+        this.props.match.params.type === 'juan' ?
+          <EPubView
+            history={this.props.history}
+            location={this.props.location}
+            match={this.props.match}
+            showMenu={() => {
+              this.openMenuAndSelectItem();
+            }}
+          />
+          :
+          null
+      }
 
       <IonLoading
         cssClass='uiFont'

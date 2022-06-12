@@ -2,6 +2,9 @@ import Constants from "./Constants";
 import Globals from "./Globals";
 import IndexedDbFuncs from "./IndexedDbFuncs";
 
+const cbetaBookcaseDir = 'Bookcase';
+const bookcaseInfosKey = 'bookcaseInfos';
+const bookcaseInfosVersion = 1;
 const filesFilter = [
     /.*rj-gif.*/,
     /.*sd-gif.*/,
@@ -38,16 +41,26 @@ export interface CatalogNode extends CatalogDetails {
     children: CatalogNode[];
 }
 
+interface BookcaseInfos {
+    catalogs: { [key: string]: CatalogDetails };
+    spines: string[];
+    gaijis: { [key: string]: { uni_char: string, composition: string } };
+    version: number;
+};
+
 const xmlParser = new DOMParser();
 const xsltProcessor = new XSLTProcessor();
 const textDecoder = new TextDecoder();
+let bookcaseInfos: BookcaseInfos = {
+    catalogs: {},
+    spines: [],
+    gaijis: {},
+    version: bookcaseInfosVersion,
+};
 let navDocBulei: Document;
 let navDocVol: Document;
-let catalogs: { [key: string]: CatalogDetails };
-let spines: Array<any>;
-const cbetaBookcaseDir = 'Bookcase';
-let gaijis: any;
 let isInit = false;
+let isInitializing = false;
 
 function stringToXml(str: string) {
     return xmlParser.parseFromString(str, 'text/xml');
@@ -58,6 +71,19 @@ async function getFileAsStringFromIndexedDB(file: string) {
 }
 
 export async function init() {
+    // Avoid multiple inits.
+    if (isInitializing) {
+        return new Promise<void>(ok => {
+            const timer = setInterval(() => {
+                if (isInit) {
+                    clearInterval(timer);
+                    ok();
+                }
+            }, 100);
+        });
+    }
+    isInitializing = true;
+
     const stylesheetString = await getFileAsStringFromIndexedDB(`/${Globals.cbetar2AssetDir}/nav_fix.xsl`);
     xsltProcessor.importStylesheet(stringToXml(stylesheetString));
 
@@ -67,40 +93,57 @@ export async function init() {
     documentString = await getFileAsStringFromIndexedDB(`/${cbetaBookcaseDir}/CBETA/advance_nav.xhtml`);
     navDocVol = xsltProcessor.transformToDocument(stringToXml(documentString));
 
-    const catalogsString = await getFileAsStringFromIndexedDB(`/${cbetaBookcaseDir}/CBETA/catalog.txt`);
-    const catalogsStrings = catalogsString.split(/\r\n/);
-    let lastWork = '';
-    let juan = 0;
-    let vols: string[] = [];
-    let vols_juans: number[] = [];
-    catalogs = (Object).fromEntries(
-        catalogsStrings.map((l: string) => {
-            const f = l.split(/\s*,\s*/);
-            const file = `${f[0]}${f[4]}`;
-            const vol = `${f[0]}${f[3]}`;
-            const vol_jauns = +f[5];
-            if (lastWork !== file) {
-                lastWork = file;
-                juan = 0;
-                vols = [vol];
-                vols_juans = [vol_jauns];
-            } else {
-                vols.push(vol);
-                vols_juans.push(vol_jauns);
+    // Try to load bookcaseInfos cache.
+    try {
+        if (await IndexedDbFuncs.checkKey(bookcaseInfosKey)) {
+            const bookcaseInfosTemp = await IndexedDbFuncs.getFile<BookcaseInfos>(bookcaseInfosKey);
+            if (bookcaseInfosTemp.version === bookcaseInfosVersion) {
+                bookcaseInfos = bookcaseInfosTemp;
             }
-            juan += vol_jauns;
-            return [file, { file, work: file, juan: juan, juan_start: 1, category: f[1], creators: f[7], title: f[6], id: f[0], vol, vols, vols_juans, sutra: f[4] } as CatalogDetails];
+        }
+    } catch (error) {
+        // Ignore.
+    }
+    
+    if (bookcaseInfos.spines.length === 0) {
+        const catalogsString = await getFileAsStringFromIndexedDB(`/${cbetaBookcaseDir}/CBETA/catalog.txt`);
+        const catalogsStrings = catalogsString.split(/\r\n/);
+        let lastWork = '';
+        let juan = 0;
+        let vols: string[] = [];
+        let vols_juans: number[] = [];
+        bookcaseInfos.catalogs = (Object).fromEntries(
+            catalogsStrings.map((l: string) => {
+                const f = l.split(/\s*,\s*/);
+                const file = `${f[0]}${f[4]}`;
+                const vol = `${f[0]}${f[3]}`;
+                const vol_jauns = +f[5];
+                if (lastWork !== file) {
+                    lastWork = file;
+                    juan = 0;
+                    vols = [vol];
+                    vols_juans = [vol_jauns];
+                } else {
+                    vols.push(vol);
+                    vols_juans.push(vol_jauns);
+                }
+                juan += vol_jauns;
+                return [file, { file, work: file, juan: juan, juan_start: 1, category: f[1], creators: f[7], title: f[6], id: f[0], vol, vols, vols_juans, sutra: f[4] } as CatalogDetails];
+            })
+        );
+
+        const spinesString = await getFileAsStringFromIndexedDB(`/${cbetaBookcaseDir}/CBETA/spine.txt`);
+        const spinesStrs = spinesString.split(/\r\n/);
+        bookcaseInfos.spines = spinesStrs.map((l: string) => {
+            const f = l.split(/\s*,\s*/);
+            return f[0];
         })
-    );
 
-    const spinesString = await getFileAsStringFromIndexedDB(`/${cbetaBookcaseDir}/CBETA/spine.txt`);
-    spines = spinesString.split(/\r\n/);
-    spines = spines.map((l: string) => {
-        const f = l.split(/\s*,\s*/);
-        return f[0];
-    })
+        bookcaseInfos.gaijis = JSON.parse(await getFileAsStringFromIndexedDB(`/${Globals.cbetar2AssetDir}/cbeta_gaiji.json`));
 
-    gaijis = JSON.parse(await getFileAsStringFromIndexedDB(`/${Globals.cbetar2AssetDir}/cbeta_gaiji.json`));
+        IndexedDbFuncs.saveFile(bookcaseInfosKey, bookcaseInfos);
+    }
+
     isInit = true;
 }
 
@@ -127,7 +170,7 @@ export async function fetchCatalogs(path: string) {
                 if (thisWork !== work) {
                     work = thisWork;
                 }
-                const catalog = catalogs[work];
+                const catalog = bookcaseInfos.catalogs[work];
                 return Object.assign({ n, label }, catalog);
             }
             return { n, label };
@@ -156,7 +199,7 @@ function fetchSubcatalogs(node: Node | ChildNode, n: string): CatalogNode {
             thisWorkVolId = 0;
             vol_juan_start = 1;
         }
-        const catalog = catalogs[work];
+        const catalog = bookcaseInfos.catalogs[work];
         let work2 = work;
         if (catalog.vols.length > 1) {
             work2 += String.fromCharCode('a'.charCodeAt(0) + thisWorkVolId);
@@ -164,7 +207,7 @@ function fetchSubcatalogs(node: Node | ChildNode, n: string): CatalogNode {
                 vol_juan_start += catalog.vols_juans[thisWorkVolId - 1];
             }
         }
-        return Object.assign({ n, label, work2, vol_juan_start, volId: thisWorkVolId}, catalog) as CatalogNode;
+        return Object.assign({ n, label, work2, vol_juan_start, volId: thisWorkVolId }, catalog) as CatalogNode;
     }
     let children: CatalogNode[] = [];
     for (let c = 1; c < node.childNodes.length; c++) {
@@ -174,7 +217,7 @@ function fetchSubcatalogs(node: Node | ChildNode, n: string): CatalogNode {
             let i = 1;
             ele.childNodes.forEach((node) => {
                 if (node.nodeType === Node.TEXT_NODE) {
-                    return ;
+                    return;
                 }
 
                 const subN = `${n}.${(i).toString().padStart(3, '0')}`;
@@ -215,11 +258,11 @@ export async function fetchWork(path: string) {
     const pathFieldMatches = /([A-Z]*)(.*)/.exec(path)!;
     const bookId = pathFieldMatches[1];
     const sutra = pathFieldMatches[2];
-    let work = catalogs[path];
+    let work = bookcaseInfos.catalogs[path];
     // E.g. XML/I/I01/I01n0012_001.xml.
     const re = new RegExp(`${bookId}[^n]*n${sutra}`);
     // eslint-disable-next-line no-useless-escape
-    const juans = spines.filter(s => re.test(s)).map(s => +(new RegExp(`${bookId}[^n]*n${sutra}_(.*)\.xml`).exec(s)![1]));
+    const juans = bookcaseInfos.spines.filter(s => re.test(s)).map(s => +(new RegExp(`${bookId}[^n]*n${sutra}_(.*)\.xml`).exec(s)![1]));
     work.juan_list = juans.join(',');
     work.work = path;
     return { results: [work] };
@@ -286,7 +329,7 @@ async function elementTPostprocessing(doc: Document, node: Node, parent: Node | 
             if (/^CB/.test(gaijiId)) {
                 parent?.removeChild(c2);
                 c2 = doc.createElement('span');
-                c2.textContent = gaijis[gaijiId].uni_char || gaijis[gaijiId].composition;
+                c2.textContent = bookcaseInfos.gaijis[gaijiId].uni_char || bookcaseInfos.gaijis[gaijiId].composition;
                 parent?.appendChild(c2);
             }
             return c2;
