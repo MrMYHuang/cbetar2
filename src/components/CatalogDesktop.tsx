@@ -166,6 +166,11 @@ class _CatalogDesktop extends React.Component<PageProps, State> {
       this.setState({ expandedNodeIds: parentNodeIds, selectedNodeIds: [this.props.match.params.path] }, () => {
         this.menuRef.current?.open();
       });
+    } else if (this.props.match.params.type === 'work') {
+      const parentNodeIds = this.findJuanParentNodeIds(this.props.match.params.path, this.state.catalogTree!);
+      this.setState({ expandedNodeIds: parentNodeIds, selectedNodeIds: [`${this.props.match.params.path}`] }, () => {
+        this.menuRef.current?.open();
+      });
     } else if (this.props.match.params.type === 'juan') {
       const parentNodeIds = this.findJuanParentNodeIds(this.props.match.params.work, this.state.catalogTree!);
       this.setState({ expandedNodeIds: parentNodeIds, selectedNodeIds: [`${this.props.match.params.work}-${this.props.match.params.path}`] }, () => {
@@ -180,6 +185,7 @@ class _CatalogDesktop extends React.Component<PageProps, State> {
     return <>
       <IonMenu
         ref={this.menuRef}
+        contentId='epubView'
       >
         <IonHeader>
           <IonToolbar>
@@ -255,6 +261,7 @@ class _CatalogDesktop extends React.Component<PageProps, State> {
       </IonMenu>
 
       <EPubView
+        id='epubView'
         history={this.props.history}
         location={this.props.location}
         match={this.props.match}

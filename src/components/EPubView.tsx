@@ -1,19 +1,20 @@
 import React from 'react';
-import { withIonLifeCycle, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonIcon, IonAlert, IonPopover, IonList, IonItem, IonLabel, IonFab, IonFabButton, IonToast, IonLoading, isPlatform, IonProgressBar, IonFabList } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { withIonLifeCycle, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonIcon, IonAlert, IonPopover, IonList, IonItem, IonLabel, IonFab, IonFabButton, IonToast, IonLoading, isPlatform, IonProgressBar, IonFabList } from '@ionic/react';
+import { bookmark, arrowBack, home, search, ellipsisHorizontal, ellipsisVertical, arrowForward, musicalNotes, stopCircle, book, shareSocial, print, refreshCircle, copy, arrowUp, arrowDown, musicalNote, link, chevronUpOutline, playSkipForward, playSkipBack, expand, list } from 'ionicons/icons';
 import * as uuid from 'uuid';
 import queryString from 'query-string';
-import './EPubView.css';
-import Globals from '../Globals';
-import { bookmark, arrowBack, home, search, ellipsisHorizontal, ellipsisVertical, arrowForward, musicalNotes, stopCircle, book, shareSocial, print, refreshCircle, copy, arrowUp, arrowDown, musicalNote, link, chevronUpOutline, playSkipForward, playSkipBack, expand, menu, list } from 'ionicons/icons';
-import { Bookmark, BookmarkType } from '../models/Bookmark';
-import { Work } from '../models/Work';
-import SearchAlert from '../components/SearchAlert';
 import ePub, { Book, Rendition, EVENTS } from 'epubjs-myh';
 import * as nodepub from 'nodepub';
-import { TmpSettings } from '../models/TmpSettings';
 import { clearTimeout } from 'timers';
+
+import './EPubView.css';
+import Globals from '../Globals';
+import SearchAlert from '../components/SearchAlert';
+import { Bookmark, BookmarkType } from '../models/Bookmark';
+import { Work } from '../models/Work';
+import { TmpSettings } from '../models/TmpSettings';
 import fetchJuan from '../fetchJuan';
 import { CbetaDbMode, Settings, UiMode } from '../models/Settings';
 import IndexedDbFuncs from '../IndexedDbFuncs';
@@ -231,6 +232,14 @@ export class _EPubView extends React.Component<PageProps, State> {
   epubcfiFromUrl = '';
   epubcfiFromUrlUpdated = false;
   ionViewWillEnter() {
+    // Rerender for working around an ePub displaying problem after switching to another page,
+    // that causes an unavoidable ePub resizing event.
+    const ePubIframeHtml = this.ePubIframe?.contentDocument?.getElementsByTagName('html')[0];
+    const rect = ePubIframeHtml?.getBoundingClientRect();
+    if (rect?.height === 0 || rect?.width === 0) {
+      this.fetchNewData = true;
+    }
+
     if (this.fetchNewData) {
       this.bookSettingsChanged = false;
       this.fetchNewData = false;
@@ -248,9 +257,7 @@ export class _EPubView extends React.Component<PageProps, State> {
     } else {
       if (this.savedPageIndex !== this.state.currentPage) {
         // Restore the saved page index.
-        this.html2Epub().then(() => {
-          this.jumpToPage(this.savedPageIndex);
-        });
+        this.jumpToPage(this.savedPageIndex);
       }
     }
   }
@@ -429,7 +436,12 @@ export class _EPubView extends React.Component<PageProps, State> {
     return this.epubcfiFromUrl !== '' || this.bookmark != null;
   }
 
-  epubcfiFirstPage = 'epubcfi(/6/6[s1]!/4/4/2/6[body]/6,/1:0,/1:1)';
+  get epubcfiFirstPage() {
+    return this.props.settings.cbetaOfflineDbMode === CbetaDbMode.Online ?
+      'epubcfi(/6/6[s1]!/4/4/2/6[body]/6,/1:0,/1:1)'
+      :
+      'epubcfi(/6/6[s1]!/4/4/2/4[body]/6/2,/1:0,/1:1)';
+  }
   get epubcfi() {
     const useUrlEpubcfi = this.epubcfiFromUrlUpdated && this.rendition?.book.spine.get(this.epubcfiFromUrl);
     const useBookmarkEpubcfi = this.bookmarkEpubcfiUpdated && this.bookmark;

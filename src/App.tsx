@@ -336,7 +336,7 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
               <Route path={`/:tab(catalog)/:type(juan)/:work/:path/`} render={(props: any) => <EPubViewPage {...props} />} exact={true} />
               {/* The following route is for backward compatibility. */}
               <Route path={`/:tab(catalog)/work/:path/:label`} render={(props: any) => <WorkPage {...props} />} exact={true} />
-              <Route path={`/:tab(catalog)/work/:path`} render={(props: any) => <WorkPage {...props} />} exact={true} />
+              <Route path={`/:tab(catalog)/:type(work)/:path`} render={(props: any) => <WorkPage {...props} />} exact={true} />
               {/* The following route is for backward compatibility. */}
               <Route path={`/:tab(catalog)/catalog/:path/:label`} render={(props: any) => <CatalogPage {...props} />} exact={true} />
               <Route path={`/:tab(catalog)`} render={(props: any) => <CatalogPage {...props} />} exact={true} />

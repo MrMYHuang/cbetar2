@@ -3,7 +3,6 @@ import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { IonPage, withIonLifeCycle } from '@ionic/react';
 
-import './CatalogPage.css';
 import { Catalog } from '../models/Catalog';
 import Globals from '../Globals';
 import { Bookmark } from '../models/Bookmark';

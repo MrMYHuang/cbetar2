@@ -188,8 +188,9 @@ ion-toast::part(message) {
     line-height: normal !important;
 }
 
-.Mui-selected {
+.Mui-selected .MuiTreeItem-label {
     background-color: var(--ion-color-primary) !important;
+    color: white;
 }
 
 .treeItem, .MuiTreeItem-label {

@@ -3,11 +3,11 @@ import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonReord
 import { ItemReorderEventDetail } from '@ionic/core';
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
-import './WorkPage.css';
+import '../components/WorkTouch.css';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
 import { download, swapVertical } from 'ionicons/icons';
 import queryString from 'query-string';
-import { Settings } from '../models/Settings';
+import { CbetaDbMode, Settings } from '../models/Settings';
 
 interface Props {
   dispatch: Function;
@@ -154,7 +154,7 @@ class _BookmarkPage extends React.Component<PageProps, State> {
             <IonLabel className='ion-text-wrap uiFont' key={`bookmarkItemLabel_` + i}>
               {label}
             </IonLabel>
-            {bookmark.type === BookmarkType.CATALOG ? '' : <IonIcon icon={download} slot='end' />}
+            {bookmark.type === BookmarkType.CATALOG && this.props.settings.cbetaOfflineDbMode === CbetaDbMode.Online ? '' : <IonIcon icon={download} slot='end' />}
             <IonReorder slot='end' />
           </IonItem>
 
