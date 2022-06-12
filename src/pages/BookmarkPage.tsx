@@ -7,7 +7,7 @@ import './WorkPage.css';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
 import { download, swapVertical } from 'ionicons/icons';
 import queryString from 'query-string';
-import { CbetaDbMode, Settings } from '../models/Settings';
+import { Settings } from '../models/Settings';
 
 interface Props {
   dispatch: Function;

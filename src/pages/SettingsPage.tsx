@@ -158,11 +158,6 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
         key: 'cbetaOfflineDbMode',
         val: CbetaDbMode.OfflineIndexedDb
       });
-      this.props.dispatch({
-        type: "SET_KEY_VAL",
-        key: 'catalogPageMode',
-        val: 0,
-      });
     } catch (e) {
       console.error(e);
       console.error(new Error().stack);
@@ -331,7 +326,12 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                       this.props.dispatch({
                         type: "SET_KEY_VAL",
                         key: 'cbetaOfflineDbMode',
-                        val: CbetaDbMode.Online
+                        val: CbetaDbMode.Online,
+                      });
+                      this.props.dispatch({
+                        type: "SET_KEY_VAL",
+                        key: 'uiMode',
+                        val: UiMode.Touch,
                       });
                     },
                   }
@@ -354,12 +354,20 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                 duration={2000}
               />
             </IonItem>
-            <IonItem hidden={this.props.settings.cbetaOfflineDbMode !== CbetaDbMode.Online}>
+            <IonItem hidden={this.props.settings.cbetaOfflineDbMode !== CbetaDbMode.OfflineIndexedDb}>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={desktop} slot='start' />
                 <IonLabel className='ion-text-wrap uiFont'>觸控/鍵鼠 UI</IonLabel>
               <IonToggle slot='end' checked={this.props.settings.uiMode === UiMode.Desktop} onIonChange={e => {
                 const isChecked = e.detail.checked;
+
+                this.props.dispatch({
+                  type: "SET_KEY_VAL",
+                  key: 'uiMode',
+                  val: isChecked ? UiMode.Desktop : UiMode.Touch,
+                });
+
+                this.setState({ showAlert: true, alertMessage: 'UI 模式已變更，請重啟 app!' });
               }}
               />
             </IonItem>

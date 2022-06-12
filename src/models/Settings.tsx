@@ -6,13 +6,6 @@ export enum CbetaDbMode {
     OfflineIndexedDb,
 }
 
-export enum CatalogPageMode {
-    ByBu,
-    ByVolume,
-    ByFamous,
-    Desktop,
-}
-
 export enum UiMode {
     Touch,
     Desktop,
@@ -38,7 +31,6 @@ export interface Settings {
     dictionaryHistory: string[];
     wordDictionaryHistory: string[];
     cbetaOfflineDbMode: CbetaDbMode;
-    catalogPageMode: CatalogPageMode;
     uiMode: UiMode;
 }
 
@@ -62,7 +54,6 @@ const defaultSettings = {
     dictionaryHistory: [],
     wordDictionaryHistory: [],
     cbetaOfflineDbMode: CbetaDbMode.Online,
-    catalogPageMode: CatalogPageMode.ByBu,
     uiMode: UiMode.Desktop,
 } as Settings;
 

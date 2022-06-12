@@ -1682,8 +1682,8 @@ export class _EPubView extends React.Component<PageProps, State> {
                   <IonLabel>
                     <div>
                       <div>請選擇經卷</div>
-                      <div style={{ fontSize: 'var(--ui-font-size)', paddingTop: 24 }}>
-                        請按左上方選單按鈕<IonIcon icon={menu} slot='icon-only' />。</div>
+                      <div style={{ display: 'flex', alignItems: 'center', fontSize: 'var(--ui-font-size)', paddingTop: 24 }}>
+                        請按左上方目錄按鈕<IonIcon icon={list} slot='icon-only' /></div>
                     </div>
                   </IonLabel>
                 </div>

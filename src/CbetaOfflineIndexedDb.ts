@@ -130,11 +130,17 @@ function fetchSubcatalogs(node: Node | ChildNode, n: string): CatalogNode {
         const ele = node.childNodes[c] as Element;
         // Node containing subcatalogs.
         if (ele.nodeName === 'ol') {
-            ele.childNodes.forEach((node, i) => {
-                const subN = `${n}.${(i + 1).toString().padStart(3, '0')}`;
+            let i = 1;
+            ele.childNodes.forEach((node) => {
+                if (node.nodeType === Node.TEXT_NODE) {
+                    return ;
+                }
+
+                const subN = `${n}.${(i).toString().padStart(3, '0')}`;
                 if (node.hasChildNodes()) {
                     children.push(fetchSubcatalogs(node, subN));
                 }
+                i++;
             })
         }
     }

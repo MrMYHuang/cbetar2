@@ -7,7 +7,7 @@ import queryString from 'query-string';
 import { Catalog } from '../models/Catalog';
 import SearchAlert from './SearchAlert';
 import { connect } from 'react-redux';
-import { CatalogPageMode, CbetaDbMode, Settings } from '../models/Settings';
+import { CbetaDbMode, Settings } from '../models/Settings';
 import { TmpSettings } from '../models/TmpSettings';
 import CbetaOfflineIndexedDb from '../CbetaOfflineIndexedDb';
 import Globals from '../Globals';
@@ -46,6 +46,7 @@ interface PageProps extends Props, ReduxProps, RouteComponentProps<{
 }> { }
 
 interface State {
+  topCatalogsType: number;
   showSearchAlert: boolean;
   fetchError: boolean;
   catalogs: Array<Catalog>;
@@ -57,6 +58,7 @@ class _CatalogTouch extends React.Component<PageProps, State> {
   constructor(props: any) {
     super(props);
     this.state = {
+      topCatalogsType: 0,
       fetchError: false,
       catalogs: [],
       pathLabel: '',
@@ -76,14 +78,9 @@ class _CatalogTouch extends React.Component<PageProps, State> {
       default: topCatalogsType = -1; break;
     }
 
-    this.props.dispatch({
-      type: "TMP_SET_KEY_VAL",
-      key: 'catalogPageMode',
-      val: topCatalogsType,
-    });
-    setTimeout(() => {
+    this.setState({ topCatalogsType }, () => {
       this.fetchData(this.props.match.params.path);
-    }, 0);
+    });
   }
 
   async fetchData(path: string) {
@@ -93,11 +90,11 @@ class _CatalogTouch extends React.Component<PageProps, State> {
     let pathLabel = '';
 
     if (this.isTopCatalog) {
-      switch (this.props.settings.catalogPageMode) {
-        case CatalogPageMode.ByBu:
-        case CatalogPageMode.ByVolume:
-          return this.fetchTopCatalogs(this.props.settings.catalogPageMode);
-        case CatalogPageMode.ByFamous:
+      switch (this.state.topCatalogsType) {
+        case 0:
+        case 1:
+          return this.fetchTopCatalogs(this.state.topCatalogsType);
+        case 2:
           this.setState({ fetchError: false, isLoading: false, pathLabel: '' });
           break;
       }
@@ -255,7 +252,7 @@ class _CatalogTouch extends React.Component<PageProps, State> {
 
   render() {
     let list = <IonList>
-      {this.props.settings.catalogPageMode === CatalogPageMode.ByFamous ? this.getFamousJuanRows() : this.getRows()}
+      {this.state.topCatalogsType === 2 ? this.getFamousJuanRows() : this.getRows()}
     </IonList>
 
     return <>
@@ -268,19 +265,14 @@ class _CatalogTouch extends React.Component<PageProps, State> {
 
           <IonSelect
             hidden={!this.isTopCatalog} slot='start'
-            value={this.props.settings.catalogPageMode}
+            value={this.state.topCatalogsType}
             className='buttonRounded'
             interface='popover'
             interfaceOptions={{ cssClass: 'cbetar2themes' }}
             onIonChange={e => {
               const value = +e.detail.value;
 
-              this.props.dispatch({
-                type: "SET_KEY_VAL",
-                key: 'catalogPageMode',
-                val: value,
-              });
-              setTimeout(() => {
+              this.setState({ topCatalogsType: value }, () => {
                 let nextPage = '';
                 switch (value) {
                   case 0: nextPage = `/catalog`; break;
@@ -291,8 +283,7 @@ class _CatalogTouch extends React.Component<PageProps, State> {
                 if (this.props.match.url !== nextPage) {
                   this.props.history.push(nextPage);
                 }
-
-              }, 0);
+              });
             }}>
             <IonSelectOption className='uiFont' value={0}>部分類</IonSelectOption>
             <IonSelectOption className='uiFont' value={1}>冊分類</IonSelectOption>
