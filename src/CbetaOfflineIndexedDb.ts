@@ -16,6 +16,7 @@ const filesFilter = [
 interface CatalogDetails {
     file: string;
     work: string;
+    work2: string;
     juan: number;
     juan_start: 1;
     juan_list: string;
@@ -24,6 +25,8 @@ interface CatalogDetails {
     title: string;
     id: string;
     vol: string;
+    vol_juan_start: number;
+    volId: number;
     vols: string[];
     vols_juans: number[];
     sutra: string;
@@ -137,6 +140,9 @@ export async function fetchCatalogs(path: string) {
     }
 }
 
+let thisWork = '';
+let thisWorkVolId = 0;
+let vol_juan_start = 1;
 function fetchSubcatalogs(node: Node | ChildNode, n: string): CatalogNode {
     const ele = node.childNodes[0] as Element;
     const label = ele.textContent;
@@ -144,8 +150,21 @@ function fetchSubcatalogs(node: Node | ChildNode, n: string): CatalogNode {
         const href = ele.getAttribute('href')!;
         const matches = /.*\/([A-Z]*).*n(.*)_.*.xml$/.exec(href)!;
         const work = matches[1] + matches[2];
+        thisWorkVolId++;
+        if (thisWork !== work) {
+            thisWork = work;
+            thisWorkVolId = 0;
+            vol_juan_start = 1;
+        }
         const catalog = catalogs[work];
-        return Object.assign({ n, label }, catalog) as CatalogNode;
+        let work2 = work;
+        if (catalog.vols.length > 1) {
+            work2 += String.fromCharCode('a'.charCodeAt(0) + thisWorkVolId);
+            if (thisWorkVolId > 0) {
+                vol_juan_start += catalog.vols_juans[thisWorkVolId - 1];
+            }
+        }
+        return Object.assign({ n, label, work2, vol_juan_start, volId: thisWorkVolId}, catalog) as CatalogNode;
     }
     let children: CatalogNode[] = [];
     for (let c = 1; c < node.childNodes.length; c++) {

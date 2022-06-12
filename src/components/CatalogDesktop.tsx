@@ -122,17 +122,25 @@ class _CatalogDesktop extends React.Component<PageProps, State> {
     return parentNodeIds;
   }
 
-  findJuanParentNodeIds(work: string, node: CatalogNode): string[] {
+  findJuanParentNodeIds(work: string, juan: number, node: CatalogNode): string[] {
     if (!node.children) {
+      const findWork = juan === -1;
+      const vol_juan_end = node.vol_juan_start + node.vols_juans[node.volId] - 1;
       if (node.work === work) {
-        return [work];
+        if  (findWork) {
+          return [node.work2];
+        } else if (node.vol_juan_start <= juan && juan <= vol_juan_end) {
+          return [node.work2, `${node.work2}-${juan}`];
+        } else {
+          return [];
+        }
       } else {
         return [];
       }
     }
 
     for (let i = 0; i < node.children.length; i++) {
-      let result = this.findJuanParentNodeIds(work, node.children[i]);
+      let result = this.findJuanParentNodeIds(work, juan, node.children[i]);
       if (result.length > 0) {
         result.unshift(node.n);
         return result;
@@ -142,15 +150,15 @@ class _CatalogDesktop extends React.Component<PageProps, State> {
   }
 
   getTreeView(node: CatalogNode): React.ReactNode {
-    return <TreeItem nodeId={node.work ? node.work : node.n} label={node.label} key={node.label}>
+    return <TreeItem nodeId={node.work2 ? node.work2 : node.n} label={node.label} key={node.label}>
       {
         node.children ?
           node.children.map((childNode) => {
             return childNode ? this.getTreeView(childNode) : null;
           }) :
-          node.work ? Array.from({ length: +node.juan }, (v, i) => {
-            const ip1 = i + 1;
-            const id = `${node.work}-${ip1}`;
+          node.work2 ? Array.from({ length: node.vols_juans[node.volId] }, (v, i) => {
+            const ip1 = node.vol_juan_start + i;
+            const id = `${node.work2}-${ip1}`;
             const label = `卷${ip1}`;
             return <TreeItem nodeId={id} label={label} key={id} onClick={async () => {
               const routeLink = `/catalog/juan/${node.work}/${ip1}`;
@@ -171,13 +179,13 @@ class _CatalogDesktop extends React.Component<PageProps, State> {
         this.menuRef.current?.open();
       });
     } else if (this.props.match.params.type === 'work') {
-      const parentNodeIds = this.findJuanParentNodeIds(this.props.match.params.path, this.state.catalogTree!);
-      this.setState({ expandedNodeIds: parentNodeIds, selectedNodeIds: [`${this.props.match.params.path}`] }, () => {
+      const parentNodeIds = this.findJuanParentNodeIds(this.props.match.params.path, -1, this.state.catalogTree!);
+      this.setState({ expandedNodeIds: parentNodeIds, selectedNodeIds: [`${parentNodeIds.pop()}`] }, () => {
         this.menuRef.current?.open();
       });
     } else if (this.props.match.params.type === 'juan') {
-      const parentNodeIds = this.findJuanParentNodeIds(this.props.match.params.work, this.state.catalogTree!);
-      this.setState({ expandedNodeIds: parentNodeIds, selectedNodeIds: [`${this.props.match.params.work}-${this.props.match.params.path}`] }, () => {
+      const parentNodeIds = this.findJuanParentNodeIds(this.props.match.params.work, +this.props.match.params.path, this.state.catalogTree!);
+      this.setState({ expandedNodeIds: parentNodeIds, selectedNodeIds: [`${parentNodeIds.pop()}`] }, () => {
         this.menuRef.current?.open();
       });
     } else {
@@ -224,12 +232,13 @@ class _CatalogDesktop extends React.Component<PageProps, State> {
 
             // node is work.
             if (n.search(/CBETA/) === -1) {
-              const work = (await CbetaOfflineIndexedDb.fetchWork(n)).results[0];
+              const matches = /([A-Z]*[0-9]*)/.exec(n)!;
+              const work = (await CbetaOfflineIndexedDb.fetchWork(matches[1])).results[0];
               this.props.dispatch({
                 type: "ADD_BOOKMARK",
                 bookmark: {
                   type: BookmarkType.WORK,
-                  uuid: n,
+                  uuid: matches[1],
                   selectedText: work.title,
                   epubcfi: '',
                   fileName: '',
