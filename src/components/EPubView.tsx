@@ -535,6 +535,10 @@ export class _EPubView extends React.Component<PageProps, State> {
     }
   };
 
+  get epubDivId() {
+    return `cbetarEPubView-${this.props.match.params.work || ''}-${this.props.match.params.path || ''}`;
+  }
+
   ePubIframe: HTMLIFrameElement | null = null;
   async html2Epub() {
     //this.destroyBook();
@@ -717,7 +721,7 @@ export class _EPubView extends React.Component<PageProps, State> {
         openAs: 'binary',
       });
 
-      this.rendition = this.book.renderTo('cbetarEPubView', {
+      this.rendition = this.book.renderTo(this.epubDivId, {
         method: process.env.NODE_ENV === 'production' ? 'srcFromSw' : 'srcdoc',
         sendToServiceWoker: ({ html }: VirtualHtml) => {
           const messageChannel = new MessageChannel();
@@ -1702,7 +1706,7 @@ export class _EPubView extends React.Component<PageProps, State> {
                 : <></>
           }
 
-          <div id='cbetarEPubView' style={{ width: '100%', height: '100%', userSelect: "text", WebkitUserSelect: "text" }}>
+          <div id={this.epubDivId} style={{ width: '100%', height: '100%', userSelect: "text", WebkitUserSelect: "text" }}>
           </div>
 
           <IonAlert

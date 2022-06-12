@@ -30,7 +30,7 @@ class _EPubViewPage extends React.Component<PageProps, State> {
 
   render() {
     return (
-      <IonPage>
+      <IonPage id='EPubViewPage'>
         {
           this.props.settings.uiMode === UiMode.Touch ?
             <EPubView

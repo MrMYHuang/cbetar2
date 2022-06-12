@@ -54,7 +54,7 @@ const defaultSettings = {
     dictionaryHistory: [],
     wordDictionaryHistory: [],
     cbetaOfflineDbMode: CbetaDbMode.Online,
-    uiMode: UiMode.Desktop,
+    uiMode: UiMode.Touch,
 } as Settings;
 
 export default defaultSettings;

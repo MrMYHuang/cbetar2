@@ -110,6 +110,10 @@ class _CatalogDesktop extends React.Component<PageProps, State> {
   }
 
   findCatalogParentNodeIds(path: string) {
+    if (!path) {
+      return [];
+    }
+
     const paths = path.split('.');
     const parentNodeIds: string[] = [];
     for (let i = 1; i <= paths.length; i++) {
@@ -185,7 +189,6 @@ class _CatalogDesktop extends React.Component<PageProps, State> {
     return <>
       <IonMenu
         ref={this.menuRef}
-        contentId='epubView'
       >
         <IonHeader>
           <IonToolbar>
@@ -261,7 +264,6 @@ class _CatalogDesktop extends React.Component<PageProps, State> {
       </IonMenu>
 
       <EPubView
-        id='epubView'
         history={this.props.history}
         location={this.props.location}
         match={this.props.match}

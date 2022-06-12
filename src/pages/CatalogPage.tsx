@@ -82,7 +82,7 @@ class _CatalogPage extends React.Component<PageProps, State> {
     //console.log(`${this.props.match.url} render`)
 
     return (
-      <IonPage>
+      <IonPage id='CatalogPage'>
         {
           this.state.fetchError ?
             Globals.fetchErrorContent :

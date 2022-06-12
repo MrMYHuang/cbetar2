@@ -333,7 +333,7 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
             <IonRouterOutlet id='ionRouterOutlet' animated={false}>
               {/* The following route is for backward compatibility. */}
               <Route path={`/:tab(catalog)/webview/:work/:path/:label`} render={(props: any) => <EPubViewPage {...props} />} exact={true} />
-              <Route path={`/:tab(catalog)/:type(juan)/:work/:path/`} render={(props: any) => <EPubViewPage {...props} />} exact={true} />
+              <Route path={`/:tab(catalog)/:type(juan)/:work/:path`} render={(props: any) => <EPubViewPage {...props} />} exact={true} />
               {/* The following route is for backward compatibility. */}
               <Route path={`/:tab(catalog)/work/:path/:label`} render={(props: any) => <WorkPage {...props} />} exact={true} />
               <Route path={`/:tab(catalog)/:type(work)/:path`} render={(props: any) => <WorkPage {...props} />} exact={true} />
