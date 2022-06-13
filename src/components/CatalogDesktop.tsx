@@ -11,6 +11,7 @@ import CbetaOfflineIndexedDb, { CatalogNode } from '../CbetaOfflineIndexedDb';
 import EPubView from './EPubView';
 import { arrowBackCircle, bookmark, list } from 'ionicons/icons';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
+import Constants from '../Constants';
 
 const electronBackendApi: any = (window as any).electronBackendApi;
 
@@ -44,6 +45,7 @@ interface State {
 }
 
 class _CatalogDesktop extends React.Component<PageProps, State> {
+  juanTreeNodeKeyword = '-';
   menuRef: React.RefObject<HTMLIonMenuElement>;
   constructor(props: any) {
     super(props);
@@ -130,7 +132,7 @@ class _CatalogDesktop extends React.Component<PageProps, State> {
         if (findWork) {
           return [node.work2];
         } else if (node.vol_juan_start <= juan && juan <= vol_juan_end) {
-          return [node.work2, `${node.work2}-${juan}`];
+          return [node.work2, `${node.work2}${this.juanTreeNodeKeyword}${juan}`];
         } else {
           return [];
         }
@@ -149,16 +151,16 @@ class _CatalogDesktop extends React.Component<PageProps, State> {
     return [];
   }
 
-  getTreeView(node: CatalogNode): React.ReactNode {
+  getCatalogsByBuleiTree(node: CatalogNode): React.ReactNode {
     return <TreeItem nodeId={node.work2 ? node.work2 : node.n} label={node.label} key={node.label}>
       {
         node.children ?
           node.children.map((childNode) => {
-            return childNode ? this.getTreeView(childNode) : null;
+            return childNode ? this.getCatalogsByBuleiTree(childNode) : null;
           }) :
           node.work2 ? Array.from({ length: node.vols_juans[node.volId] }, (v, i) => {
             const ip1 = node.vol_juan_start + i;
-            const id = `${node.work2}-${ip1}`;
+            const id = `${node.work2}${this.juanTreeNodeKeyword}${ip1}`;
             const label = `卷${ip1}`;
             return <TreeItem nodeId={id} label={label} key={id} onClick={async () => {
               const routeLink = `/catalog/juan/${node.work}/${ip1}`;
@@ -168,6 +170,21 @@ class _CatalogDesktop extends React.Component<PageProps, State> {
             }} />
           })
             : null
+      }
+    </TreeItem>;
+  }
+
+  getFamousJuansTree(): React.ReactNode {
+    return <TreeItem nodeId='famous' label='知名經典' key='famous'>
+      {
+        Constants.famousJuans.map((v, i) => {
+          const id = `${v.url}${this.juanTreeNodeKeyword}`;
+          return <TreeItem nodeId={id} label={v.title} key={id} onClick={async () => {
+            this.props.history.push({
+              pathname: v.url,
+            });
+          }} />
+        })
       }
     </TreeItem>;
   }
@@ -196,8 +213,13 @@ class _CatalogDesktop extends React.Component<PageProps, State> {
   async addBookmarkHandler() {
     const n = (this.state.selectedNodeIds as any) as string;
 
+    if (n === 'famous') {
+      this.setState({ showToast: true, toastMessage: '此項目不可加入書籤。' });
+      return;
+    }
+
     // node is juan.
-    if (n.search(/-/) !== -1) {
+    if (n.search(new RegExp(this.juanTreeNodeKeyword)) !== -1) {
       this.setState({ showToast: true, toastMessage: '請用右上方書籤按鈕新增經文書籤。' });
       return;
     }
@@ -277,7 +299,8 @@ class _CatalogDesktop extends React.Component<PageProps, State> {
           }}
           sx={{ height: '100%', flexGrow: 1, overflowY: 'auto' }}
         >
-          {this.state.catalogTree && this.getTreeView(this.state.catalogTree)}
+          {this.getFamousJuansTree()}
+          {this.state.catalogTree && this.getCatalogsByBuleiTree(this.state.catalogTree)}
         </TreeView>
       </IonMenu>
 
