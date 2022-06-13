@@ -149,7 +149,7 @@ export async function init() {
 
 export async function fetchCatalogs(path: string) {
     isInit || await init();
-
+    let isTop = path === 'CBETA';
     let work = '';
     let subpaths = path.split('.');
     const catalogTypeIsBulei = subpaths.shift() === 'CBETA';
@@ -176,7 +176,7 @@ export async function fetchCatalogs(path: string) {
             return { n, label };
         });
         const catalogLabel = doc.evaluate(`//nav/${catalogXPath}/../span`, doc, null, XPathResult.STRING_TYPE).stringValue || '';
-        return { label: catalogLabel, results };
+        return { label: isTop ? 'CBETA 部類目錄' : catalogLabel, results };
     } catch (error: any) {
         error.message = `path = ${path}\n${error.message}`;
         throw (error);

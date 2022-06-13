@@ -155,6 +155,7 @@ body.dark {
     display: flex;
     align-items: center;
     justify-content: center;
+    color: var(--color);
 }
 
 .alert-title {

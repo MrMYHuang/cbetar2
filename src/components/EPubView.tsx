@@ -88,7 +88,6 @@ enum SpeechState {
 interface State {
   isLoading: boolean;
   fetchError: boolean;
-  noJuanSelected: boolean;
   workInfo: Work;
   htmlStr: string | null;
   currentPage: number;
@@ -125,7 +124,6 @@ export class _EPubView extends React.Component<PageProps, State> {
     this.state = {
       isLoading: false,
       fetchError: false,
-      noJuanSelected: false,
       workInfo: ({} as Work),
       htmlStr: null,
       currentPage: 1,
@@ -359,12 +357,12 @@ export class _EPubView extends React.Component<PageProps, State> {
 
   async fetchData() {
     if (!this.props.match.params.work) {
-      this.setState({ isLoading: false, noJuanSelected: true });
+      this.setState({ isLoading: false });
       return false;
     }
 
     return new Promise<boolean>(async (ok, fail) => {
-      this.setState({ isLoading: true, noJuanSelected: false });
+      this.setState({ isLoading: true });
       try {
         const res = await fetchJuan(
           this.props.match.params.work,
@@ -1374,12 +1372,6 @@ export class _EPubView extends React.Component<PageProps, State> {
           </IonButton>
 
           <IonButton fill="clear" slot='start'
-            hidden={this.props.settings.uiMode === UiMode.Touch}
-            onClick={e => this.props.history.push('/catalog')}>
-            <IonIcon icon={home} slot='icon-only' />
-          </IonButton>
-
-          <IonButton fill="clear" slot='start'
             hidden={this.props.settings.uiMode === UiMode.Desktop}
             onClick={e => this.props.history.goBack()}>
             <IonIcon icon={arrowBack} slot='icon-only' />
@@ -1693,17 +1685,8 @@ export class _EPubView extends React.Component<PageProps, State> {
           {
             this.state.fetchError ?
               Globals.fetchErrorContent
-              : this.state.noJuanSelected ?
-                <div className='contentCenter'>
-                  <IonLabel>
-                    <div>
-                      <div>請選擇經卷</div>
-                      <div style={{ display: 'flex', alignItems: 'center', fontSize: 'var(--ui-font-size)', paddingTop: 24 }}>
-                        請按左上方目錄按鈕<IonIcon icon={list} slot='icon-only' /></div>
-                    </div>
-                  </IonLabel>
-                </div>
-                : <></>
+              :
+              <></>
           }
 
           <div id={this.epubDivId} style={{ width: '100%', height: '100%', userSelect: "text", WebkitUserSelect: "text" }}>

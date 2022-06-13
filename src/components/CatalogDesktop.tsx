@@ -5,11 +5,11 @@ import { ChevronRight, ExpandMore } from '@mui/icons-material';
 import { TreeView, TreeItem } from '@mui/lab';
 
 import { connect } from 'react-redux';
-import { CbetaDbMode, Settings } from '../models/Settings';
+import { CbetaDbMode, Settings, UiMode } from '../models/Settings';
 import { TmpSettings } from '../models/TmpSettings';
 import CbetaOfflineIndexedDb, { CatalogNode } from '../CbetaOfflineIndexedDb';
 import EPubView from './EPubView';
-import { arrowBackCircle } from 'ionicons/icons';
+import { arrowBackCircle, bookmark, list } from 'ionicons/icons';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
 
 const electronBackendApi: any = (window as any).electronBackendApi;
@@ -193,6 +193,50 @@ class _CatalogDesktop extends React.Component<PageProps, State> {
     }
   }
 
+  async addBookmarkHandler() {
+    const n = (this.state.selectedNodeIds as any) as string;
+
+    // node is juan.
+    if (n.search(/-/) !== -1) {
+      this.setState({ showToast: true, toastMessage: '請用右上方書籤按鈕新增經文書籤。' });
+      return;
+    }
+
+    // node is work.
+    if (n.search(/CBETA/) === -1) {
+      const matches = /([A-Z]*[0-9]*)/.exec(n)!;
+      const work = (await CbetaOfflineIndexedDb.fetchWork(matches[1])).results[0];
+      this.props.dispatch({
+        type: "ADD_BOOKMARK",
+        bookmark: {
+          type: BookmarkType.WORK,
+          uuid: matches[1],
+          selectedText: work.title,
+          epubcfi: '',
+          fileName: '',
+          work: { mulu: [], juan: +work.juan, juan_list: work.juan_list, title: work.title, vol: work.vol, work: work.work },
+        } as Bookmark,
+      });
+      this.setState({ showToast: true, toastMessage: '書籤新增成功！' });
+      return;
+    }
+
+    // node is catalog.
+    const catalog = await CbetaOfflineIndexedDb.fetchCatalogs(n);
+    this.props.dispatch({
+      type: "ADD_BOOKMARK",
+      bookmark: {
+        type: BookmarkType.CATALOG,
+        uuid: n,
+        selectedText: catalog.label,
+        epubcfi: '',
+        fileName: '',
+        work: null,
+      } as Bookmark,
+    });
+    this.setState({ showToast: true, toastMessage: '書籤新增成功！' });
+  }
+
   render() {
     return <>
       <IonMenu
@@ -206,6 +250,16 @@ class _CatalogDesktop extends React.Component<PageProps, State> {
             </IonButton>
 
             <IonTitle className='uiFont'>目錄</IonTitle>
+
+            <IonButton hidden={this.state.fetchError} fill="clear" slot='end' onClick={e => {
+              if (this.state.selectedNodeIds.length === 0) {
+                this.setState({ showToast: true, toastMessage: '請選擇目錄項目，再按此新增書籤！' });
+                return;
+              }
+              this.addBookmarkHandler();
+            }}>
+              <IonIcon icon={bookmark} slot='icon-only' />
+            </IonButton>
           </IonToolbar>
         </IonHeader>
 
@@ -221,55 +275,10 @@ class _CatalogDesktop extends React.Component<PageProps, State> {
           onNodeSelect={(event: React.SyntheticEvent, nodeIds: string[]) => {
             this.setState({ selectedNodeIds: nodeIds })
           }}
-          onDoubleClick={async () => {
-            const n = (this.state.selectedNodeIds as any) as string;
-
-            // node is juan.
-            if (n.search(/-/) !== -1) {
-              this.setState({ showToast: true, toastMessage: '請用右上方書籤按鈕新增經文書籤。' });
-              return;
-            }
-
-            // node is work.
-            if (n.search(/CBETA/) === -1) {
-              const matches = /([A-Z]*[0-9]*)/.exec(n)!;
-              const work = (await CbetaOfflineIndexedDb.fetchWork(matches[1])).results[0];
-              this.props.dispatch({
-                type: "ADD_BOOKMARK",
-                bookmark: {
-                  type: BookmarkType.WORK,
-                  uuid: matches[1],
-                  selectedText: work.title,
-                  epubcfi: '',
-                  fileName: '',
-                  work: { mulu: [], juan: +work.juan, juan_list: work.juan_list, title: work.title, vol: work.vol, work: work.work },
-                } as Bookmark,
-              });
-              this.setState({ showToast: true, toastMessage: '書籤新增成功！' });
-              return;
-            }
-
-            // node is catalog.
-            const catalog = await CbetaOfflineIndexedDb.fetchCatalogs(n);
-            this.props.dispatch({
-              type: "ADD_BOOKMARK",
-              bookmark: {
-                type: BookmarkType.CATALOG,
-                uuid: n,
-                selectedText: catalog.label,
-                epubcfi: '',
-                fileName: '',
-                work: null,
-              } as Bookmark,
-            });
-            this.setState({ showToast: true, toastMessage: '書籤新增成功！' });
-          }}
           sx={{ height: '100%', flexGrow: 1, overflowY: 'auto' }}
         >
           {this.state.catalogTree && this.getTreeView(this.state.catalogTree)}
         </TreeView>
-
-        <IonLabel class='treeItem'>雙擊新增目錄書籤</IonLabel>
       </IonMenu>
 
       {
@@ -283,7 +292,26 @@ class _CatalogDesktop extends React.Component<PageProps, State> {
             }}
           />
           :
-          null
+          <>
+            <IonHeader>
+              <IonToolbar>
+                <IonButton fill="clear" slot='start'
+                  hidden={this.props.settings.uiMode === UiMode.Touch}
+                  onClick={e => this.openMenuAndSelectItem()}>
+                  <IonIcon icon={list} slot='icon-only' />
+                </IonButton>
+              </IonToolbar>
+            </IonHeader>
+            <div className='contentCenter'>
+              <IonLabel>
+                <div>
+                  <div>請選擇經卷</div>
+                  <div style={{ display: 'flex', alignItems: 'center', fontSize: 'var(--ui-font-size)', paddingTop: 24 }}>
+                    請按左上方目錄按鈕<IonIcon icon={list} slot='icon-only' /></div>
+                </div>
+              </IonLabel>
+            </div>
+          </>
       }
 
       <IonLoading

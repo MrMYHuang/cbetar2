@@ -286,7 +286,12 @@ class _CatalogTouch extends React.Component<PageProps, State> {
               });
             }}>
             <IonSelectOption className='uiFont' value={0}>部分類</IonSelectOption>
-            <IonSelectOption className='uiFont' value={1}>冊分類</IonSelectOption>
+            {
+              this.props.settings.cbetaOfflineDbMode === CbetaDbMode.Online ?
+                <IonSelectOption className='uiFont' value={1}>冊分類</IonSelectOption>
+                :
+                null
+            }
             <IonSelectOption className='uiFont' value={2}>知名經典</IonSelectOption>
           </IonSelect>
 

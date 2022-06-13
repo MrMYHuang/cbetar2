@@ -215,7 +215,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={download} slot='start' />
               <div style={{ width: '100%' }}>
-                <IonLabel className='ion-text-wrap uiFont'><a href='https://github.com/MrMYHuang/cbetar2-bookcase' target="_new">離線經文 DB 下載 </a></IonLabel>
+                <IonLabel className='ion-text-wrap uiFont'><a href='https://github.com/MrMYHuang/cbetar2-bookcase' target="_new">離線經文下載</a></IonLabel>
                 <IonProgressBar value={this.state.cbetaBookZipLoadRatio} />
               </div>
               <input id='importCbetaBookcaseInput' type='file' accept='.zip' style={{ display: 'none' }} onChange={async (ev) => {
