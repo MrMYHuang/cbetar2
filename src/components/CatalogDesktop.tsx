@@ -9,9 +9,10 @@ import { CbetaDbMode, Settings, UiMode } from '../models/Settings';
 import { TmpSettings } from '../models/TmpSettings';
 import CbetaOfflineIndexedDb, { CatalogNode } from '../CbetaOfflineIndexedDb';
 import EPubView from './EPubView';
-import { arrowBackCircle, bookmark, list } from 'ionicons/icons';
+import { arrowBackCircle, bookmark, list, shareSocial } from 'ionicons/icons';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
 import Constants from '../Constants';
+import Globals from '../Globals';
 
 const electronBackendApi: any = (window as any).electronBackendApi;
 
@@ -152,7 +153,18 @@ class _CatalogDesktop extends React.Component<PageProps, State> {
   }
 
   getCatalogsByBuleiTree(node: CatalogNode): React.ReactNode {
-    return <TreeItem nodeId={node.work2 ? node.work2 : node.n} label={node.label} key={node.label}>
+    return <TreeItem
+      nodeId={node.work2 ? node.work2 : node.n}
+      label={node.label}
+      key={node.label} onClick={async (e) => {
+        e.preventDefault();
+
+        const routeLink = node.work2 ? `/catalog/work/${node.work2}` : `/catalog/catalog/${node.n}`;
+        this.props.history.push({
+          pathname: routeLink,
+        });
+      }}
+    >
       {
         node.children ?
           node.children.map((childNode) => {
@@ -162,12 +174,15 @@ class _CatalogDesktop extends React.Component<PageProps, State> {
             const ip1 = node.vol_juan_start + i;
             const id = `${node.work2}${this.juanTreeNodeKeyword}${ip1}`;
             const label = `卷${ip1}`;
-            return <TreeItem nodeId={id} label={label} key={id} onClick={async () => {
+            return <TreeItem nodeId={id} label={label} key={id} onClick={async (e) => {
+              e.preventDefault();
+
               const routeLink = `/catalog/juan/${node.work}/${ip1}`;
               this.props.history.push({
                 pathname: routeLink,
               });
-            }} />
+            }}
+            />
           })
             : null
       }
@@ -189,29 +204,25 @@ class _CatalogDesktop extends React.Component<PageProps, State> {
     </TreeItem>;
   }
 
-  openMenuAndSelectItem() {
-    if (this.props.match.params.type === 'catalog') {
-      const parentNodeIds = this.findCatalogParentNodeIds(this.props.match.params.path);
-      this.setState({ expandedNodeIds: parentNodeIds, selectedNodeIds: [this.props.match.params.path] }, () => {
-        this.menuRef.current?.open();
-      });
-    } else if (this.props.match.params.type === 'work') {
-      const parentNodeIds = this.findJuanParentNodeIds(this.props.match.params.path, -1, this.state.catalogTree!);
-      this.setState({ expandedNodeIds: parentNodeIds, selectedNodeIds: [`${parentNodeIds.pop()}`] }, () => {
-        this.menuRef.current?.open();
-      });
-    } else if (this.props.match.params.type === 'juan') {
-      const parentNodeIds = this.findJuanParentNodeIds(this.props.match.params.work, +this.props.match.params.path, this.state.catalogTree!);
-      this.setState({ expandedNodeIds: parentNodeIds, selectedNodeIds: [`${parentNodeIds.pop()}`] }, () => {
-        this.menuRef.current?.open();
-      });
-    } else {
-      this.menuRef.current?.open();
+  async openMenuAndSelectItem() {
+    const isOpen = await this.menuRef.current?.isOpen();
+    if (!isOpen) {
+      await this.menuRef.current?.open();
     }
+
+    let parentToThisNodeIds: string[] = [];
+    if (this.props.match.params.type === 'catalog') {
+      parentToThisNodeIds = this.findCatalogParentNodeIds(this.props.match.params.path);
+    } else if (this.props.match.params.type === 'work') {
+      parentToThisNodeIds = this.findJuanParentNodeIds(this.props.match.params.path, -1, this.state.catalogTree!);
+    } else if (this.props.match.params.type === 'juan') {
+      parentToThisNodeIds = this.findJuanParentNodeIds(this.props.match.params.work, +this.props.match.params.path, this.state.catalogTree!);
+    }
+    this.setState({ expandedNodeIds: parentToThisNodeIds, selectedNodeIds: [`${parentToThisNodeIds[parentToThisNodeIds.length - 1]}`] });
   }
 
   async addBookmarkHandler() {
-    const n = (this.state.selectedNodeIds as any) as string;
+    const n = this.state.selectedNodeIds[0];
 
     if (n === 'famous') {
       this.setState({ showToast: true, toastMessage: '此項目不可加入書籤。' });
@@ -295,7 +306,8 @@ class _CatalogDesktop extends React.Component<PageProps, State> {
             this.setState({ expandedNodeIds: nodeIds })
           }}
           onNodeSelect={(event: React.SyntheticEvent, nodeIds: string[]) => {
-            this.setState({ selectedNodeIds: nodeIds })
+            //event.preventDefault();
+            //this.setState({ selectedNodeIds: nodeIds })
           }}
           sx={{ height: '100%', flexGrow: 1, overflowY: 'auto' }}
         >
@@ -322,6 +334,10 @@ class _CatalogDesktop extends React.Component<PageProps, State> {
                   hidden={this.props.settings.uiMode === UiMode.Touch}
                   onClick={e => this.openMenuAndSelectItem()}>
                   <IonIcon icon={list} slot='icon-only' />
+                </IonButton>
+
+                <IonButton fill='clear' slot='end' onClick={e => Globals.shareByLink(this.props.dispatch)}>
+                  <IonIcon icon={shareSocial} slot='icon-only' />
                 </IonButton>
               </IonToolbar>
             </IonHeader>

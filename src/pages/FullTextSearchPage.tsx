@@ -129,16 +129,7 @@ class _SearchPage extends React.Component<PageProps, State> {
               <IonIcon icon={search} slot='icon-only' />
             </IonButton>
 
-            <IonButton fill="clear" slot='end' onClick={e => {
-              this.props.dispatch({
-                type: "TMP_SET_KEY_VAL",
-                key: 'shareTextModal',
-                val: {
-                  show: true,
-                  text: decodeURIComponent(window.location.href),
-                },
-              });
-            }}>
+            <IonButton fill="clear" slot='end' onClick={e => Globals.shareByLink(this.props.dispatch)}>
               <IonIcon icon={shareSocial} slot='icon-only' />
             </IonButton>
           </IonToolbar>

@@ -30,7 +30,7 @@ class _WorkPage extends React.Component<PageProps, State> {
 
   render() {
     return (
-      <IonPage>
+      <IonPage id='WorkPage'>
         {
           this.props.settings.uiMode === UiMode.Touch ?
             <WorkTouch

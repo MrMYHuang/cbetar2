@@ -1564,14 +1564,7 @@ export class _EPubView extends React.Component<PageProps, State> {
                   sharedUrl += `?bookmark=${this.epubcfiFromSelectedString}`;
                 }
 
-                this.props.dispatch({
-                  type: "TMP_SET_KEY_VAL",
-                  key: 'shareTextModal',
-                  val: {
-                    show: true,
-                    text: decodeURIComponent(sharedUrl),
-                  },
-                });
+                Globals.shareByLink(this.props.dispatch, sharedUrl);
               }}>
                 <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
                 <IonIcon icon={shareSocial} slot='start' />

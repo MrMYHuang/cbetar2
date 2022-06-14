@@ -164,17 +164,6 @@ class _WorkTouch extends React.Component<PageProps, State> {
     return this.bookmark != null;
   }
 
-  shareByLink() {
-    this.props.dispatch({
-      type: 'TMP_SET_KEY_VAL',
-      key: 'shareTextModal',
-      val: {
-        show: true,
-        text: decodeURIComponent(window.location.href),
-      },
-    });
-  }
-
   getRowsByChapter() {
     let work = this.state.work;
     const mulu = work?.mulu;
@@ -261,7 +250,7 @@ class _WorkTouch extends React.Component<PageProps, State> {
               <IonIcon icon={search} slot='icon-only' />
             </IonButton>
 
-            <IonButton className='narrowScreenHide' fill='clear' slot='end' onClick={e => this.shareByLink}>
+            <IonButton className='narrowScreenHide' fill='clear' slot='end' onClick={e => Globals.shareByLink(this.props.dispatch)}>
               <IonIcon icon={shareSocial} slot='icon-only' />
             </IonButton>
 
@@ -297,7 +286,7 @@ class _WorkTouch extends React.Component<PageProps, State> {
 
                 <IonItem button onClick={ev => {
                   this.setState({ popover: { show: false, event: null } });
-                  this.shareByLink();
+                  Globals.shareByLink(this.props.dispatch);
                 }}>
                   <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
                   <IonIcon icon={shareSocial} slot='start' />
