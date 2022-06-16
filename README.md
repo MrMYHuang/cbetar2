@@ -304,8 +304,8 @@ sudo dnf install cbetar2
   3. 合成語音選項濾掉非離線語音，以避開非離線語音單次播放最長字串過小的問題。
   4. 合成語音功能在 Linux 無作用。
 
-## <a id='history'></a><a href='https://github.com/MrMYHuang/cbetar2/raw/master/VERSIONS.md'>版本歷史</a>
-## <a href='https://github.com/MrMYHuang/cbetar2/raw/master/Development.md'>程式開發</a>
+## <a id='history' href='https://github.com/MrMYHuang/cbetar2/blob/master/VERSIONS.md'>版本歷史</a>
+## <a href='https://github.com/MrMYHuang/cbetar2/blob/master/Development.md'>程式開發</a>
 
 ## <a id='privacy'>隱私政策聲明</a>
 

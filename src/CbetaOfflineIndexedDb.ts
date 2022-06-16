@@ -149,7 +149,7 @@ export async function fetchCatalogs(path: string) {
         for (let i = 0; i < subpaths.length; i++) {
             node = node.children[+subpaths[i]];
         }
-        return {...node};
+        return {n: node.n, label: node.label, results: node.children};
     } catch (error: any) {
         error.message = `path = ${path}\n${error.message}`;
         throw (error);

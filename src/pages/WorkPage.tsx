@@ -4,9 +4,8 @@ import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Bookmark } from '../models/Bookmark';
 import { TmpSettings } from '../models/TmpSettings';
-import { Settings, UiMode } from '../models/Settings';
+import { Settings } from '../models/Settings';
 import WorkTouch from '../components/WorkTouch';
-import CatalogDesktop from '../components/CatalogDesktop';
 
 interface Props {
   dispatch: Function;
@@ -16,6 +15,9 @@ interface Props {
 }
 
 interface PageProps extends Props, RouteComponentProps<{
+  tab: string;
+  path: string;
+  label: string;
 }> { }
 
 interface State {
@@ -31,20 +33,11 @@ class _WorkPage extends React.Component<PageProps, State> {
   render() {
     return (
       <IonPage id='WorkPage'>
-        {
-          this.props.settings.uiMode === UiMode.Touch ?
-            <WorkTouch
-              history={this.props.history}
-              location={this.props.location}
-              match={this.props.match}
-            />
-            :
-            <CatalogDesktop
-              history={this.props.history}
-              location={this.props.location}
-              match={this.props.match}
-            />
-        }
+        <WorkTouch
+          history={this.props.history}
+          location={this.props.location}
+          match={this.props.match}
+        />
       </IonPage>
     );
   }

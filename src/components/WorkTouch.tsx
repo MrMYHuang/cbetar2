@@ -7,7 +7,7 @@ import { Work, WorkChapter, WorkListType } from '../models/Work';
 import Globals from '../Globals';
 import { bookmark, arrowBack, home, search, shareSocial, refreshCircle, ellipsisVertical, ellipsisHorizontal } from 'ionicons/icons';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
-import SearchAlert from '../components/SearchAlert';
+import SearchAlert from './SearchAlert';
 import { TmpSettings } from '../models/TmpSettings';
 import fetchJuan from '../fetchJuan';
 import { CbetaDbMode, Settings } from '../models/Settings';
@@ -38,7 +38,7 @@ interface State {
   fetchError: boolean;
 }
 
-class _WorkTouch extends React.Component<PageProps, State> {
+class _WorkTouchPage extends React.Component<PageProps, State> {
   constructor(props: any) {
     super(props);
     this.state = {
@@ -55,7 +55,7 @@ class _WorkTouch extends React.Component<PageProps, State> {
   }
 
   ionViewWillEnter() {
-    //console.log( `${this.props.match.params} will enter` );
+    console.log( `work ${this.props.match.path} will enter` );
     this.fetchWork(this.props.match.params.path);
   }
 
@@ -332,7 +332,7 @@ class _WorkTouch extends React.Component<PageProps, State> {
   }
 };
 
-const WorkTouch = withIonLifeCycle(_WorkTouch);
+const WorkTouchPage = withIonLifeCycle(_WorkTouchPage);
 
 const mapStateToProps = (state: any /*, ownProps*/) => {
   return {
@@ -346,4 +346,4 @@ const mapStateToProps = (state: any /*, ownProps*/) => {
 
 export default connect(
   mapStateToProps,
-)(WorkTouch);
+)(WorkTouchPage);

@@ -3,8 +3,7 @@ import { IonPage, withIonLifeCycle } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import EPubView from '../components/EPubView';
-import { Settings, UiMode } from '../models/Settings';
-import CatalogDesktop from '../components/CatalogDesktop';
+import { Settings } from '../models/Settings';
 
 interface Props {
   dispatch: Function;
@@ -31,20 +30,11 @@ class _EPubViewPage extends React.Component<PageProps, State> {
   render() {
     return (
       <IonPage id='EPubViewPage'>
-        {
-          this.props.settings.uiMode === UiMode.Touch ?
-            <EPubView
-              history={this.props.history}
-              location={this.props.location}
-              match={this.props.match}
-            />
-            :
-            <CatalogDesktop
-              history={this.props.history}
-              location={this.props.location}
-              match={this.props.match}
-            />
-        }
+        <EPubView
+          history={this.props.history}
+          location={this.props.location}
+          match={this.props.match}
+        />
       </IonPage>
     );
   }
