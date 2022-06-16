@@ -74,8 +74,8 @@ interface Props {
 
 interface PageProps extends Props, RouteComponentProps<{
   tab: string;
-  work: string;
   path: string;
+  juan: string;
   label: string;
 }> { }
 
@@ -222,7 +222,7 @@ export class _EPubView extends React.Component<PageProps, State> {
   }
 
   get workJuanId() {
-    return `${this.props.match.params.work}/${this.props.match.params.path}`;
+    return `${this.props.match.params.path}/${this.props.match.params.juan}`;
   }
 
   oldWorkJuanId = '';
@@ -350,13 +350,13 @@ export class _EPubView extends React.Component<PageProps, State> {
 
   get fileName() {
     return Globals.getFileName(
-      this.props.match.params.work,
-      this.props.match.params.path
+      this.props.match.params.path,
+      this.props.match.params.juan
     );
   }
 
   async fetchData() {
-    if (!this.props.match.params.work) {
+    if (!this.props.match.params.path) {
       this.setState({ isLoading: false });
       return false;
     }
@@ -365,8 +365,8 @@ export class _EPubView extends React.Component<PageProps, State> {
       this.setState({ isLoading: true });
       try {
         const res = await fetchJuan(
-          this.props.match.params.work,
           this.props.match.params.path,
+          this.props.match.params.juan,
           this.htmlFile,
           false,
           this.props.settings.cbetaOfflineDbMode,
@@ -380,7 +380,7 @@ export class _EPubView extends React.Component<PageProps, State> {
         });
       } catch (e) {
         this.setState({ isLoading: false, fetchError: true });
-        console.error(`Not found: work ${this.props.match.params.work}, juan ${this.props.match.params.path}`);
+        console.error(`Not found: work ${this.props.match.params.path}, juan ${this.props.match.params.juan}`);
         console.error(e);
         console.error(new Error().stack);
         fail(e);
@@ -407,10 +407,10 @@ export class _EPubView extends React.Component<PageProps, State> {
         uuid: uuidStr,
         selectedText: selectedText,
         epubcfi: this.epubcfiFromSelectedString,
-        fileName: this.props.settings.cbetaOfflineDbMode !== CbetaDbMode.Online ? null : this.htmlFile || `${this.props.match.params.work}_juan${this.props.match.params.path}.html`,
+        fileName: this.props.settings.cbetaOfflineDbMode !== CbetaDbMode.Online ? null : this.htmlFile || `${this.props.match.params.path}_juan${this.props.match.params.juan}.html`,
         work: Object.assign(this.state.workInfo, {
           title: this.htmlFile ? this.htmlTitle : this.state.workInfo.title,
-          juan: this.props.match.params.path,
+          juan: this.props.match.params.juan,
         }
         ),
       } as Bookmark,
@@ -534,7 +534,7 @@ export class _EPubView extends React.Component<PageProps, State> {
   };
 
   get epubDivId() {
-    return `cbetarEPubView-${this.props.match.params.work || ''}-${this.props.match.params.path || ''}`;
+    return `cbetarEPubView-${this.props.match.params.path || ''}-${this.props.match.params.juan || ''}`;
   }
 
   ePubIframe: HTMLIFrameElement | null = null;
@@ -1236,7 +1236,7 @@ export class _EPubView extends React.Component<PageProps, State> {
   }
 
   get currentJuan() {
-    return +this.props.match.params.path;
+    return +this.props.match.params.juan;
   }
 
   get juanList() {
@@ -1246,7 +1246,7 @@ export class _EPubView extends React.Component<PageProps, State> {
   juanPrev() {
     if (this.currentJuan > Math.min(...this.juanList)) {
       const prevJuan = this.juanList[this.juanList.findIndex(v => v === this.currentJuan) - 1];
-      const routeLink = `/catalog/juan/${this.props.match.params.work}/${prevJuan}`;
+      const routeLink = `/catalog/juan/${this.props.match.params.path}/${prevJuan}`;
       this.ionViewWillLeave();
       this.props.history.push({
         pathname: routeLink,
@@ -1259,7 +1259,7 @@ export class _EPubView extends React.Component<PageProps, State> {
   juanNext() {
     if (this.currentJuan < Math.max(...this.juanList)) {
       const nextJuan = this.juanList[this.juanList.findIndex(v => v === this.currentJuan) + 1];
-      const routeLink = `/catalog/juan/${this.props.match.params.work}/${nextJuan}`;
+      const routeLink = `/catalog/juan/${this.props.match.params.path}/${nextJuan}`;
       this.ionViewWillLeave();
       this.props.history.push({
         pathname: routeLink,
@@ -1428,7 +1428,7 @@ export class _EPubView extends React.Component<PageProps, State> {
 
               <IonItem button onClick={e => {
                 this.setState({ popover: { show: false, event: null } });
-                this.props.history.push(`/catalog/work/${this.props.match.params.work}`);
+                this.props.history.push(`/catalog/work/${this.props.match.params.path}`);
               }}>
                 <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
                 <IonIcon icon={home} slot='start' />
@@ -1517,7 +1517,7 @@ export class _EPubView extends React.Component<PageProps, State> {
 
               <IonItem button onClick={e => {
                 this.setState({ popover: { show: false, event: null } });
-                window.open(`https://cbetaonline.dila.edu.tw/zh/${this.props.match.params.work}_${this.props.match.params.path.padStart(3, '0')}`, '_bank');
+                window.open(`https://cbetaonline.dila.edu.tw/zh/${this.props.match.params.path}_${this.props.match.params.juan.padStart(3, '0')}`, '_bank');
               }}>
                 <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
                 <IonIcon icon={link} slot='start' />
@@ -1548,7 +1548,7 @@ export class _EPubView extends React.Component<PageProps, State> {
                 if (startLine !== endLine) {
                   lineInfo += `-${endLineModified}`;
                 }
-                const citation = `《${this.state.workInfo.title}》卷${this.props.match.params.path}：「${selectedText}」(CBETA, ${this.state.workInfo.vol}, no. ${+(/[^0-9]*(.*)/.exec(this.state.workInfo.work)![1])}, p. ${lineInfo})`;
+                const citation = `《${this.state.workInfo.title}》卷${this.props.match.params.juan}：「${selectedText}」(CBETA, ${this.state.workInfo.vol}, no. ${+(/[^0-9]*(.*)/.exec(this.state.workInfo.work)![1])}, p. ${lineInfo})`;
                 Globals.copyToClipboard(citation);
                 this.setState({ showToast: true, toastMessage: '已複製到剪貼簿！' });
               }}>

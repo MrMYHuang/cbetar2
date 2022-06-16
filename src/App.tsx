@@ -48,9 +48,10 @@ import ShareTextModal from './components/ShareTextModal';
 import WordDictionaryPage from './pages/WordDictionaryPage';
 import DownloadModal from './components/DownloadModal';
 import { TmpSettings } from './models/TmpSettings';
-import { CbetaDbMode, Settings } from './models/Settings';
+import { CbetaDbMode, Settings, UiMode } from './models/Settings';
 import CbetaOfflineIndexedDb from './CbetaOfflineIndexedDb';
 import IndexedDbFuncs from './IndexedDbFuncs';
+import CatalogDesktopPage from './pages/CatalogDesktopPage';
 
 const electronBackendApi: any = (window as any).electronBackendApi;
 /*
@@ -332,15 +333,22 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
           <IonTabs>
             <IonRouterOutlet id='ionRouterOutlet' animated={false}>
               {/* The following route is for backward compatibility. */}
-              <Route path={`/:tab(catalog)/webview/:work/:path/:label`} render={(props: any) => <EPubViewPage {...props} />} exact={true} />
-              <Route path={`/:tab(catalog)/:type(juan)/:work/:path`} render={(props: any) => <EPubViewPage {...props} />} exact={true} />
+              <Route path={`/:tab(catalog)/webview/:path/:juan/:label`} render={(props: any) => <EPubViewPage {...props} />} exact={true} />
               {/* The following route is for backward compatibility. */}
               <Route path={`/:tab(catalog)/work/:path/:label`} render={(props: any) => <WorkPage {...props} />} exact={true} />
-              <Route path={`/:tab(catalog)/:type(work)/:path`} render={(props: any) => <WorkPage {...props} />} exact={true} />
               {/* The following route is for backward compatibility. */}
               <Route path={`/:tab(catalog)/catalog/:path/:label`} render={(props: any) => <CatalogPage {...props} />} exact={true} />
-              <Route path={`/:tab(catalog)`} render={(props: any) => <CatalogPage {...props} />} exact={true} />
-              <Route path={`/:tab(catalog)/:type(catalog|volumes|famous)/:path?`} render={(props: any) => <CatalogPage {...props} />} exact={true} />
+              {
+                this.props.settings.uiMode === UiMode.Touch ?
+                  <>
+                    <Route path={`/:tab(catalog)`} render={(props: any) => <CatalogPage {...props} />} exact={true} />
+                    <Route path={`/:tab(catalog)/:type(catalog|volumes|famous)/:path?`} render={(props: any) => <CatalogPage {...props} />} exact={true} />
+                    <Route path={`/:tab(catalog)/:type(work)/:path`} render={(props: any) => <WorkPage {...props} />} exact={true} />
+                    <Route path={`/:tab(catalog)/:type(juan)/:path/:juan`} render={(props: any) => <EPubViewPage {...props} />} exact={true} />
+                  </>
+                  :
+                  <Route path={`/:tab(catalog)/:type(catalog|work|juan|volumes|famous)?/:path?/:juan?`} render={(props: any) => <CatalogDesktopPage {...props} />} exact={true} />
+              }
               <Route path={`/:tab(bookmarks)`} render={(props: any) => <BookmarkPage {...props} />} exact={true} />
               <Route path={`/:tab(dictionary)/search/:keyword?`} render={(props: any) => <DictionaryPage {...props} />} exact={true} />
               <Route path={`/:tab(dictionary)/searchWord/:keyword?`} render={(props: any) => <WordDictionaryPage {...props} />} exact={true} />
