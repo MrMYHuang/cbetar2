@@ -1677,7 +1677,10 @@ export class _EPubView extends React.Component<PageProps, State> {
 
           {
             this.state.fetchError ?
-              Globals.fetchErrorContent
+              (this.props.settings.cbetaOfflineDbMode === CbetaDbMode.Online ?
+                Globals.fetchErrorContent
+                :
+                Globals.fetchErrorContentOfflineMode)
               :
               <></>
           }

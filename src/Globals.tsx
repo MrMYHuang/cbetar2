@@ -295,8 +295,23 @@ const Globals = {
       <IonLabel>
         <div>
           <div>連線失敗!</div>
-          <div style={{ fontSize: 'var(--ui-font-size)', paddingTop: 24 }}>請試上方重新整理按鈕<IonIcon icon={refreshCircle} slot='icon-only' />。</div>
-          <div style={{ fontSize: 'var(--ui-font-size)', paddingTop: 24 }}>如果問題持續發生，請執行<a href="/settings" target="_self">設定頁</a>的app異常回報功能。</div>
+          <div style={{ display: 'flex', alignItems: 'center', fontSize: 'var(--ui-font-size)', paddingTop: 24 }}>
+            請試上方重新整理按鈕<IonIcon icon={refreshCircle} slot='icon-only' />。
+          </div>
+          <div style={{ fontSize: 'var(--ui-font-size)', paddingTop: 24 }}>如果問題持續發生，請執行<a href="/settings" target="_self">設定頁</a>的 app 異常回報功能。</div>
+        </div>
+      </IonLabel>
+    </div>
+  ),
+  fetchErrorContentOfflineMode: (
+    <div className='contentCenter'>
+      <IonLabel>
+        <div>
+          <div>開啟失敗!</div>
+          <div style={{ display: 'flex', alignItems: 'center', fontSize: 'var(--ui-font-size)', paddingTop: 24 }}>
+            離線經文檔不存在。請確認匯入的離線經文檔是最新版。
+          </div>
+          <div style={{ fontSize: 'var(--ui-font-size)', paddingTop: 24 }}>如果問題持續發生，請執行<a href="/settings" target="_self">設定頁</a>的 app 異常回報功能。</div>
         </div>
       </IonLabel>
     </div>

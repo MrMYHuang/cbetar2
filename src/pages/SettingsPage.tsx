@@ -396,7 +396,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                 backdropDismiss={false}
                 isOpen={this.state.showBugReportAlert}
                 header={'異常回報'}
-                subHeader='輸入您的 E-mail，以後續聯絡'
+                subHeader='輸入您的 E-mail (必填)，以後續聯絡'
                 inputs={[
                   {
                     name: 'name0',

@@ -117,12 +117,55 @@ class _App extends React.Component<PageProps> {
 
 class _AppOrig extends React.Component<AppOrigProps, State> {
   originalAppSettingsStr: string | null | undefined;
+  routes: React.ReactNode;
 
   constructor(props: any) {
     super(props);
 
     if (!this.props.settings.hasAppLog) {
       Globals.disableAppLog();
+    }
+
+    // Unfortunately, using dynamically generated routes by JS interpolation (double curly braces) causes strange  component remounting problems. Thus, using the following generated static routes to work around the problems.
+    if (this.props.settings.uiMode === UiMode.Touch) {
+      this.routes =
+        <IonRouterOutlet id='ionRouterOutlet' animated={false}>
+          {/* The following route is for backward compatibility. */}
+          <Route path={`/:tab(catalog)/webview/:path/:juan/:label`} render={(props: any) => <EPubViewPage {...props} />} exact={true} />
+          {/* The following route is for backward compatibility. */}
+          <Route path={`/:tab(catalog)/work/:path/:label`} render={(props: any) => <WorkPage {...props} />} exact={true} />
+          {/* The following route is for backward compatibility. */}
+          <Route path={`/:tab(catalog)/catalog/:path/:label`} render={(props: any) => <CatalogPage {...props} />} exact={true} />
+          <Route path={`/:tab(catalog)`} render={(props: any) => <CatalogPage {...props} />} exact={true} />
+          <Route path={`/:tab(catalog)/:type(catalog|volumes|famous)/:path?`} render={(props: any) => <CatalogPage {...props} />} exact={true} />
+          <Route path={`/:tab(catalog)/:type(work)/:path`} render={(props: any) => <WorkPage {...props} />} exact={true} />
+          <Route path={`/:tab(catalog)/:type(juan)/:path/:juan`} render={(props: any) => <EPubViewPage {...props} />} exact={true} />
+          <Route path={`/:tab(bookmarks)`} render={(props: any) => <BookmarkPage {...props} />} exact={true} />
+          <Route path={`/:tab(dictionary)/search/:keyword?`} render={(props: any) => <DictionaryPage {...props} />} exact={true} />
+          <Route path={`/:tab(dictionary)/searchWord/:keyword?`} render={(props: any) => <WordDictionaryPage {...props} />} exact={true} />
+          <Route path={`/:tab(catalog)/search/:keyword`} render={props => <SearchPage {...props} />} exact={true} />
+          <Route path={`/:tab(catalog)/fulltextsearch/:keyword`} render={props => <FullTextSearchPage {...props} />} exact={true} />
+          <Route path={`/settings`} render={(props: any) => <SettingsPage {...props} />} />
+          <Route path={`/`} render={() => { return this.routeByQueryString(); }} exact={true} />
+        </IonRouterOutlet>;
+    } else {
+      this.routes =
+        <IonRouterOutlet id='ionRouterOutlet' animated={false}>
+          {/* The following route is for backward compatibility. */}
+          <Route path={`/:tab(catalog)/webview/:path/:juan/:label`} render={(props: any) => <EPubViewPage {...props} />} exact={true} />
+          {/* The following route is for backward compatibility. */}
+          <Route path={`/:tab(catalog)/work/:path/:label`} render={(props: any) => <WorkPage {...props} />} exact={true} />
+          {/* The following route is for backward compatibility. */}
+          <Route path={`/:tab(catalog)/catalog/:path/:label`} render={(props: any) => <CatalogPage {...props} />} exact={true} />
+          <Route path={`/:tab(catalog)/:type(catalog|work|juan|volumes|famous)?/:path?/:juan?`} render={(props: any) => <CatalogDesktopPage {...props} />} exact={true} />
+          <Route path={`/:tab(bookmarks)`} render={(props: any) => <BookmarkPage {...props} />} exact={true} />
+          <Route path={`/:tab(dictionary)/search/:keyword?`} render={(props: any) => <DictionaryPage {...props} />} exact={true} />
+          <Route path={`/:tab(dictionary)/searchWord/:keyword?`} render={(props: any) => <WordDictionaryPage {...props} />} exact={true} />
+          <Route path={`/:tab(catalog)/search/:keyword`} render={props => <SearchPage {...props} />} exact={true} />
+          <Route path={`/:tab(catalog)/fulltextsearch/:keyword`} render={props => <FullTextSearchPage {...props} />} exact={true} />
+          <Route path={`/settings`} render={(props: any) => <SettingsPage {...props} />} />
+          <Route path={`/`} render={() => { return this.routeByQueryString(); }} exact={true} />
+        </IonRouterOutlet>;
     }
 
     if (this.props.settings.cbetaOfflineDbMode === CbetaDbMode.OfflineIndexedDb) {
@@ -331,32 +374,7 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
       }>
         <IonReactRouter basename={Globals.pwaUrl}>
           <IonTabs>
-            <IonRouterOutlet id='ionRouterOutlet' animated={false}>
-              {/* The following route is for backward compatibility. */}
-              <Route path={`/:tab(catalog)/webview/:path/:juan/:label`} render={(props: any) => <EPubViewPage {...props} />} exact={true} />
-              {/* The following route is for backward compatibility. */}
-              <Route path={`/:tab(catalog)/work/:path/:label`} render={(props: any) => <WorkPage {...props} />} exact={true} />
-              {/* The following route is for backward compatibility. */}
-              <Route path={`/:tab(catalog)/catalog/:path/:label`} render={(props: any) => <CatalogPage {...props} />} exact={true} />
-              {
-                this.props.settings.uiMode === UiMode.Touch ?
-                  <>
-                    <Route path={`/:tab(catalog)`} render={(props: any) => <CatalogPage {...props} />} exact={true} />
-                    <Route path={`/:tab(catalog)/:type(catalog|volumes|famous)/:path?`} render={(props: any) => <CatalogPage {...props} />} exact={true} />
-                    <Route path={`/:tab(catalog)/:type(work)/:path`} render={(props: any) => <WorkPage {...props} />} exact={true} />
-                    <Route path={`/:tab(catalog)/:type(juan)/:path/:juan`} render={(props: any) => <EPubViewPage {...props} />} exact={true} />
-                  </>
-                  :
-                  <Route path={`/:tab(catalog)/:type(catalog|work|juan|volumes|famous)?/:path?/:juan?`} render={(props: any) => <CatalogDesktopPage {...props} />} exact={true} />
-              }
-              <Route path={`/:tab(bookmarks)`} render={(props: any) => <BookmarkPage {...props} />} exact={true} />
-              <Route path={`/:tab(dictionary)/search/:keyword?`} render={(props: any) => <DictionaryPage {...props} />} exact={true} />
-              <Route path={`/:tab(dictionary)/searchWord/:keyword?`} render={(props: any) => <WordDictionaryPage {...props} />} exact={true} />
-              <Route path={`/:tab(catalog)/search/:keyword`} render={props => <SearchPage {...props} />} exact={true} />
-              <Route path={`/:tab(catalog)/fulltextsearch/:keyword`} render={props => <FullTextSearchPage {...props} />} exact={true} />
-              <Route path={`/settings`} render={(props: any) => <SettingsPage {...props} />} />
-              <Route path={`/`} render={() => { return this.routeByQueryString(); }} exact={true} />
-            </IonRouterOutlet>
+            {this.routes}
             <IonTabBar hidden={this.props.tmpSettings.fullScreen} slot="bottom">
               <IonTabButton tab="bookmarks" href={`/bookmarks`}>
                 <IonIcon icon={bookmark} />

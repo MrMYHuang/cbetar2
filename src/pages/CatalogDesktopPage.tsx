@@ -209,6 +209,8 @@ class _CatalogDesktopPage extends React.Component<PageProps, State> {
     const isOpen = await this.menuRef.current?.isOpen();
     if (!isOpen) {
       await this.menuRef.current?.open();
+    } else {
+      return;
     }
 
     let parentToThisNodeIds: string[] = [];
@@ -304,11 +306,10 @@ class _CatalogDesktopPage extends React.Component<PageProps, State> {
           expanded={this.state.expandedNodeIds}
           selected={this.state.selectedNodeIds}
           onNodeToggle={(event: React.SyntheticEvent, nodeIds: string[]) => {
-            this.setState({ expandedNodeIds: nodeIds })
+            this.setState({ expandedNodeIds: nodeIds });
           }}
           onNodeSelect={(event: React.SyntheticEvent, nodeIds: string[]) => {
-            //event.preventDefault();
-            //this.setState({ selectedNodeIds: nodeIds })
+            this.setState({ selectedNodeIds: nodeIds })
           }}
           sx={{ height: '100%', flexGrow: 1, overflowY: 'auto' }}
         >
@@ -347,7 +348,8 @@ class _CatalogDesktopPage extends React.Component<PageProps, State> {
                 <div>
                   <div>請選擇經卷</div>
                   <div style={{ display: 'flex', alignItems: 'center', fontSize: 'var(--ui-font-size)', paddingTop: 24 }}>
-                    請按左上方目錄按鈕<IonIcon icon={list} slot='icon-only' /></div>
+                    請按左上方目錄按鈕<IonIcon icon={list} slot='icon-only' />
+                  </div>
                 </div>
               </IonLabel>
             </div>
