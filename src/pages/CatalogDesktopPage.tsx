@@ -309,7 +309,13 @@ class _CatalogDesktopPage extends React.Component<PageProps, State> {
             this.setState({ expandedNodeIds: nodeIds });
           }}
           onNodeSelect={(event: React.SyntheticEvent, nodeIds: string[]) => {
-            this.setState({ selectedNodeIds: nodeIds })
+            let nodeIdsTemp: any;
+            if (nodeIds instanceof Array) {
+              nodeIdsTemp = nodeIds;
+            } else {
+              nodeIdsTemp = [nodeIds];
+            }
+            this.setState({ selectedNodeIds: nodeIdsTemp })
           }}
           sx={{ height: '100%', flexGrow: 1, overflowY: 'auto' }}
         >
