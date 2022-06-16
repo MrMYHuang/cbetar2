@@ -4,7 +4,7 @@ import IndexedDbFuncs from "./IndexedDbFuncs";
 
 const cbetaBookcaseDir = 'Bookcase';
 const bookcaseInfosKey = 'bookcaseInfos';
-const bookcaseInfosVersion = 1;
+const bookcaseInfosVersion = 3;
 const filesFilter = [
     /.*rj-gif.*/,
     /.*sd-gif.*/,
@@ -43,6 +43,7 @@ export interface CatalogNode extends CatalogDetails {
 
 interface BookcaseInfos {
     catalogs: { [key: string]: CatalogDetails };
+    catalogTree: CatalogNode;
     spines: string[];
     gaijis: { [key: string]: { uni_char: string, composition: string } };
     version: number;
@@ -53,12 +54,11 @@ const xsltProcessor = new XSLTProcessor();
 const textDecoder = new TextDecoder();
 let bookcaseInfos: BookcaseInfos = {
     catalogs: {},
+    catalogTree: {} as CatalogNode,
     spines: [],
     gaijis: {},
     version: bookcaseInfosVersion,
 };
-let navDocBulei: Document;
-let navDocVol: Document;
 let isInit = false;
 let isInitializing = false;
 
@@ -83,15 +83,6 @@ export async function init() {
         });
     }
     isInitializing = true;
-
-    const stylesheetString = await getFileAsStringFromIndexedDB(`/${Globals.cbetar2AssetDir}/nav_fix.xsl`);
-    xsltProcessor.importStylesheet(stringToXml(stylesheetString));
-
-    let documentString = await getFileAsStringFromIndexedDB(`/${cbetaBookcaseDir}/CBETA/bulei_nav.xhtml`);
-    navDocBulei = xsltProcessor.transformToDocument(stringToXml(documentString));
-
-    documentString = await getFileAsStringFromIndexedDB(`/${cbetaBookcaseDir}/CBETA/advance_nav.xhtml`);
-    navDocVol = xsltProcessor.transformToDocument(stringToXml(documentString));
 
     // Try to load bookcaseInfos cache.
     try {
@@ -141,6 +132,8 @@ export async function init() {
 
         bookcaseInfos.gaijis = JSON.parse(await getFileAsStringFromIndexedDB(`/${Globals.cbetar2AssetDir}/cbeta_gaiji.json`));
 
+        bookcaseInfos.catalogTree = await fetchAllCatalogsInternal();
+
         IndexedDbFuncs.saveFile(bookcaseInfosKey, bookcaseInfos);
     }
 
@@ -149,34 +142,14 @@ export async function init() {
 
 export async function fetchCatalogs(path: string) {
     isInit || await init();
-    let isTop = path === 'CBETA';
-    let work = '';
-    let subpaths = path.split('.');
-    const catalogTypeIsBulei = subpaths.shift() === 'CBETA';
-    const subcatalogsXPath = subpaths.map(s => +s).map(n => `[${n}]/ol/li`).join('');
-    const catalogXPath = subpaths.map(s => +s).map(n => `li[${n}]/ol`).join('/');
+    let paths = path.split('.');
+    let subpaths = paths.slice(1);
     try {
-        const doc = (catalogTypeIsBulei ? navDocBulei : navDocVol);
-        const nodesSnapshot = doc.evaluate(`//nav/li${subcatalogsXPath}`, doc, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE);
-        const results = Array.from({ length: nodesSnapshot.snapshotLength }, (v, i) => {
-            const node = nodesSnapshot.snapshotItem(i);
-            const n: string = `${path}.${(i + 1).toString().padStart(3, '0')}`;
-            const ele = node?.childNodes[0] as Element;
-            const label = ele.textContent;
-            if (ele.nodeName === 'cblink') {
-                const href = ele.getAttribute('href')!;
-                const matches = /.*\/([A-Z]*).*n(.*)_.*.xml$/.exec(href)!;
-                const thisWork = matches[1] + matches[2];
-                if (thisWork !== work) {
-                    work = thisWork;
-                }
-                const catalog = bookcaseInfos.catalogs[work];
-                return Object.assign({ n, label }, catalog);
-            }
-            return { n, label };
-        });
-        const catalogLabel = doc.evaluate(`//nav/${catalogXPath}/../span`, doc, null, XPathResult.STRING_TYPE).stringValue || '';
-        return { label: isTop ? 'CBETA 部類目錄' : catalogLabel, results };
+        let node = bookcaseInfos.catalogTree;
+        for (let i = 0; i < subpaths.length; i++) {
+            node = node.children[+subpaths[i]];
+        }
+        return {...node};
     } catch (error: any) {
         error.message = `path = ${path}\n${error.message}`;
         throw (error);
@@ -231,14 +204,17 @@ function fetchSubcatalogs(node: Node | ChildNode, n: string): CatalogNode {
     return { n, label, children } as CatalogNode;
 }
 
-export async function fetchAllCatalogs(): Promise<CatalogNode> {
-    isInit || await init();
+async function fetchAllCatalogsInternal(): Promise<CatalogNode> {
 
     //const catalogTypeIsBulei = subpaths.shift() === 'CBETA';
-    const catalogTypeIsBulei = true;
     try {
         const n = 'CBETA';
-        const doc = (catalogTypeIsBulei ? navDocBulei : navDocVol);
+        let navDocBulei: Document;
+        const stylesheetString = await getFileAsStringFromIndexedDB(`/${Globals.cbetar2AssetDir}/nav_fix.xsl`);
+        xsltProcessor.importStylesheet(stringToXml(stylesheetString));
+        let documentString = await getFileAsStringFromIndexedDB(`/${cbetaBookcaseDir}/CBETA/bulei_nav.xhtml`);
+        navDocBulei = xsltProcessor.transformToDocument(stringToXml(documentString));
+        const doc = navDocBulei;
         const nodesSnapshot = doc.evaluate(`//nav`, doc, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE);
         const nodeNav = nodesSnapshot.snapshotItem(0)!;
         const children = Array.from({ length: nodeNav.childNodes.length }, (v, i) => {
@@ -250,6 +226,12 @@ export async function fetchAllCatalogs(): Promise<CatalogNode> {
         error.message = `${error.message}`;
         throw (error);
     }
+}
+
+export async function fetchAllCatalogs(): Promise<CatalogNode> {
+    isInit || await init();
+
+    return bookcaseInfos.catalogTree;
 }
 
 export async function fetchWork(path: string) {
