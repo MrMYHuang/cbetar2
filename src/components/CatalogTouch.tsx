@@ -75,22 +75,15 @@ class _CatalogTouch extends React.Component<PageProps, State> {
     let catalogs = new Array<Catalog>();
     let pathLabel = '';
 
-    if (this.isTopCatalog) {
-      switch (this.state.topCatalogsType) {
-        case 0:
-        case 1:
-          return this.fetchTopCatalogs(this.state.topCatalogsType);
-        case 2:
-          this.setState({ fetchError: false, isLoading: false, pathLabel: '' });
-          break;
-      }
+    if (this.state.topCatalogsType === 2) {
+      this.setState({ fetchError: false, isLoading: false, pathLabel: '' });
     } else {
       //electronBackendApi?.send("toMain", { event: 'ready' });
       try {
         let obj: any;
         switch (this.props.settings.cbetaOfflineDbMode) {
           case CbetaDbMode.OfflineIndexedDb:
-            obj = await CbetaOfflineIndexedDb.fetchCatalogs(path);
+            obj = await CbetaOfflineIndexedDb.fetchCatalogs(path || 'CBETA');
             break;
           case CbetaDbMode.OfflineFileSystem:
             electronBackendApi?.send("toMain", { event: 'fetchCatalog', path: path });
@@ -105,6 +98,16 @@ class _CatalogTouch extends React.Component<PageProps, State> {
             });
             break;
           case CbetaDbMode.Online:
+            if (this.isTopCatalog) {
+              switch (this.state.topCatalogsType) {
+                case 0:
+                  path = 'root';
+                  break;
+                case 1:
+                  path = 'vol';
+                  break;
+              }
+            }
             const res = await Globals.axiosInstance.get(`/catalog_entry?q=${path}`, {
               responseType: 'arraybuffer',
             });
@@ -113,15 +116,7 @@ class _CatalogTouch extends React.Component<PageProps, State> {
         }
         const data = obj.results as [any];
         catalogs = data.map((json) => new Catalog(json));
-
-        const parentPath = this.parentPath(path);
-        // path is not a top catalog.
-        if (parentPath !== '') {
-          pathLabel = obj.label;
-        } else {
-          const topCatalogsByCatLabel = Globals.topCatalogsByCat[path];
-          pathLabel = (topCatalogsByCatLabel !== undefined) ? topCatalogsByCatLabel : Globals.topCatalogsByVol[path];
-        }
+        pathLabel = obj.label;
 
         this.setState({ fetchError: false, isLoading: false, catalogs: catalogs, pathLabel });
         return true;
@@ -132,31 +127,6 @@ class _CatalogTouch extends React.Component<PageProps, State> {
         return false;
       }
     }
-  }
-
-  fetchTopCatalogs(topCatalogsType: number) {
-    let catalogs = Array<Catalog>();
-
-    const topCatalogs = topCatalogsType ? Globals.topCatalogsByVol : Globals.topCatalogsByCat;
-
-    Object.keys(topCatalogs).forEach((key) => {
-      const catalog: Catalog = {
-        n: key,
-        nodeType: null,
-        work: null,
-        label: topCatalogs[key],
-        file: null,
-      };
-      catalogs.push(catalog);
-    });
-    this.setState({ fetchError: false, isLoading: false, catalogs: catalogs, pathLabel: '' });
-    return true;
-  }
-
-  parentPath(path: string) {
-    let paths = path.split('.');
-    paths.pop();
-    return paths.join('.');
   }
 
   addBookmarkHandler() {
