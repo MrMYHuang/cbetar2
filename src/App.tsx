@@ -177,11 +177,13 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
     electronBackendApi?.receive("fromMain", (data: any) => {
       switch (data.event) {
         case 'version':
+          // Backend is ready.
           this.props.dispatch({
             type: "TMP_SET_KEY_VAL",
             key: 'mainVersion',
             val: data.version,
           });
+          CbetaOfflineDb.setOfflineFileSystemV2Ready();
           break;
         case 'cbetaOfflineDbMode':
           let dbMode = CbetaDbMode.Online;
