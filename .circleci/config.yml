@@ -52,18 +52,6 @@ jobs:
           at: ~/workspace
 
       - run:
-          name: Decrypt credentials
-          command: |
-            openssl aes-256-cbc -d \
-              -in .circleci/credentials.enc \
-              -out credentials \
-              -k $SNAPCRAFT_CREDENTIALS_KEY
-
-      - run:
-          name: Authenticate snapcraft
-          command: snapcraft login --with credentials
-
-      - run:
           name: Push/release snap
           command: find dist -name "*.snap" | xargs -I {} snapcraft upload {} --release beta
 
