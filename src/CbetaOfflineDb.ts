@@ -3,6 +3,12 @@ import Globals from "./Globals";
 import IndexedDbFuncs from "./IndexedDbFuncs";
 import { CbetaDbMode } from "./models/Settings";
 
+async function wait(ms: number = 1000) {
+    return new Promise<void>(ok => {
+        setTimeout(ok, ms);
+    });
+}
+
 const electronBackendApi: any = (window as any).electronBackendApi;
 
 const cbetaBookcaseDir = 'Bookcase';
@@ -126,10 +132,15 @@ export async function init(mode: CbetaDbMode) {
             });
 
             const catalogsString = (await readBookcaseFromFileSystem(`CBETA/catalog.txt`));
+            await wait();
             const spinesString = (await readBookcaseFromFileSystem(`CBETA/spine.txt`));
+            await wait();
             const gaijisString = (await readResourceFromFileSystem(`cbeta_gaiji/cbeta_gaiji.json`));
+            await wait();
             const stylesheetString = (await readResourceFromFileSystem(`buildElectron/nav_fix.xsl`));
+            await wait();
             const documentString = (await readBookcaseFromFileSystem(`CBETA/bulei_nav.xhtml`));
+            await wait();
             const teiStylesheetString = await readResourceFromFileSystem(`buildElectron/tei.xsl`);
             await initFromFiles(catalogsString, spinesString, gaijisString, stylesheetString, documentString, teiStylesheetString);
         }
