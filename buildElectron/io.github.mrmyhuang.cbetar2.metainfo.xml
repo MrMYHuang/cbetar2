@@ -26,6 +26,13 @@
   </screenshots>
   <content_rating type="oars-1.1"/>
   <releases>
+    <release version="20.0.1" date="2022-06-17">
+      <description>
+        <ul>
+          <li>[修正] Electron app 啟動時偶爾讀取離線 DB 失敗。</li>
+        </ul>
+      </description>
+    </release>
     <release version="20.0.0" date="2022-06-17">
       <description>
         <ul>

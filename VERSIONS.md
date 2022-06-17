@@ -1,4 +1,7 @@
 # <a id='history'>版本歷史</a>
+* PWA 9.0.1, Electron app 20.0.1:
+  * [修正] Electron app 啟動時偶爾讀取離線 DB 失敗。
+
 * PWA 9.0.0, Electron app 20.0.0:
   * [變更] 用 JS 改寫讀取檔案系統離線 DB 程式碼。
   * [新增] 樹狀目錄新增知名經典目錄。

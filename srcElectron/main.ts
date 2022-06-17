@@ -225,10 +225,21 @@ async function createWindow() {
         mainWindow?.webContents.send('fromMain', { event: 'version', version: PackageInfos.version });
         break;
       case 'readResource':
-        mainWindow?.webContents.send('fromMain', Object.assign({ event: args.event }, { data: fs.readFileSync(`${isDevMode() ? '.' : resourcesPath}/${args.path}`).toString() }));
+        try {
+          const str = fs.readFileSync(`${isDevMode() ? '.' : resourcesPath}/${args.path}`).toString();
+          mainWindow?.webContents.send('fromMain', Object.assign({ event: args.event }, { data: str }));
+        } catch (error) {
+          mainWindow?.webContents.send('fromMain', Object.assign({ event: args.event }, { error: error }));
+        }
         break;
       case 'readBookcase':
-        mainWindow?.webContents.send('fromMain', Object.assign({ event: args.event }, { data: fs.readFileSync(`${settings.cbetaBookcaseDir}/${args.path}`).toString() }));
+        try {
+          const str = fs.readFileSync(`${settings.cbetaBookcaseDir}/${args.path}`).toString();
+          mainWindow?.webContents.send('fromMain', Object.assign({ event: args.event }, { data: str }));
+        } catch (error) {
+          mainWindow?.webContents.send('fromMain', Object.assign({ event: args.event }, { error: error }));
+        }
+
         break;
     }
   });

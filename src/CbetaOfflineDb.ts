@@ -75,6 +75,11 @@ async function getFileAsStringFromIndexedDB(file: string) {
     return textDecoder.decode((await IndexedDbFuncs.getZippedFile(file)) as Uint8Array);
 }
 
+let isOfflineFileSystemV2Ready = false;
+export async function setOfflineFileSystemV2Ready() {
+    isOfflineFileSystemV2Ready = true;
+}
+
 export async function init(mode: CbetaDbMode) {
     // Avoid multiple inits.
     if (isInitializing) {
@@ -111,6 +116,15 @@ export async function init(mode: CbetaDbMode) {
             const teiStylesheetString = await getFileAsStringFromIndexedDB(`/${Globals.cbetar2AssetDir}/tei.xsl`);
             await initFromFiles(catalogsString, spinesString, gaijisString, stylesheetString, documentString, teiStylesheetString);
         } else if (mode === CbetaDbMode.OfflineFileSystemV2) {
+            await new Promise<void>(ok => {
+                const timer = setInterval(() => {
+                    if (isOfflineFileSystemV2Ready) {
+                        clearInterval(timer);
+                        ok();
+                    }
+                }, 100);
+            });
+
             const catalogsString = (await readBookcaseFromFileSystem(`CBETA/catalog.txt`));
             const spinesString = (await readBookcaseFromFileSystem(`CBETA/spine.txt`));
             const gaijisString = (await readResourceFromFileSystem(`cbeta_gaiji/cbeta_gaiji.json`));
@@ -363,7 +377,11 @@ async function readResourceFromFileSystem(path: string) {
         electronBackendApi?.receiveOnce('fromMain', (data: any) => {
             switch (data.event) {
                 case 'readResource':
-                    ok(data.data);
+                    if (data.error) {
+                        fail(data.error);
+                    } else {
+                        ok(data.data);
+                    }
                     break;
             }
         });
@@ -376,7 +394,11 @@ async function readBookcaseFromFileSystem(path: string) {
         electronBackendApi?.receiveOnce('fromMain', (data: any) => {
             switch (data.event) {
                 case 'readBookcase':
-                    ok(data.data);
+                    if (data.error) {
+                        fail(data.error);
+                    } else {
+                        ok(data.data);
+                    }
                     break;
             }
         });
@@ -389,7 +411,8 @@ const CbetaOfflineDb = {
     fetchCatalogs,
     fetchAllCatalogs,
     fetchWork,
-    fetchJuan
+    fetchJuan,
+    setOfflineFileSystemV2Ready,
 };
 
 export default CbetaOfflineDb;
