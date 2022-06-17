@@ -1,7 +1,7 @@
 # Development
 
 ## Technology Keywords
-Frontend, TypeScript, CSS, Ionic, React, Redux, react-app-rewired, Webpack Alias, in-memory file system, server side redirection, IndexedDB, web font, Service Worker, workbox, speechSynthesis, ePub Viewer, Progressive Web App (PWA), Android, Google Play Store, Windows 10, Microsoft Store, iPhone, iPad, iOS, iPadOS, App Store, WKWebView, macOS, Mac App Store (MAS), Electron, Linux, Snap Store, Backend, XML, XSLT
+Frontend, TypeScript, JavaScript, CSS, Ionic, Material-UI, React, Redux, react-app-rewired, Webpack 5, in-memory file system, server side redirection, IndexedDB, zip.js (read large zip by file stream on mobile device), web font, Service Worker, workbox, speechSynthesis, ePub Viewer, Progressive Web App (PWA), Android, Google Play Store, Windows 10, Microsoft Store, iPhone, iPad, iOS, iPadOS, App Store, WKWebView, macOS, Mac App Store (MAS), Linux, Snap Store, Flathub, Copr, Electron, electron-builder, Backend, XML, XSLT, GitHub Actions, CircleCI
 
 ## Run Locally
 ### Progressive Web App
@@ -128,9 +128,9 @@ cd cbetar2
 # x.y.z from version in package.json.
 git tag x.y.z
 git clone https://github.com/flathub/io.github.mrmyhuang.cbetar2.git flatpak
-npm i
-npm run prepare-flatpak
-npm run dist-flatpak-dev
+yarn
+yarn run prepare-flatpak
+yarn run dist-flatpak-dev
 ```
 
 ### Flathub (Linux) built by Flathub CI/CD
@@ -149,8 +149,8 @@ npm run dist-flatpak-dev
 cd cbetar2
 # x.y.z from version in package.json.
 git tag x.y.z
-npm i
-npm run prepare-flatpak
+yarn i
+yarn run prepare-flatpak
 cd flatpak
 git add *
 git commit -m "* Version x.y.z"
