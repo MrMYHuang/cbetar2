@@ -213,9 +213,10 @@ class _WorkTouchPage extends React.Component<PageProps, State> {
   }
 
   //work = this.works[0] as Work;
-  // Default to WorkListType.BY_JUAN, because work list by chapter might be empty.
   workListType = this.props.tmpSettings.workListType !== undefined ? this.props.tmpSettings.workListType : WorkListType.BY_JUAN;
   render() {
+    // Default to WorkListType.BY_JUAN, because work list by chapter might be empty.
+    this.workListType = this.props.tmpSettings.workListType !== undefined ? this.props.tmpSettings.workListType : WorkListType.BY_JUAN;
     return (
       <>
         <IonHeader>

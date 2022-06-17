@@ -234,6 +234,7 @@ function setServiceWorkerRegUpdated(serviceWorkerRegUpdated: ServiceWorkerRegist
 }
 
 const Globals = {
+  localFileProtocolName: 'safe-file-protocol',
   cbetar2AssetDir: 'cbetar2/assets',
   storeFile: Store.storeFile,
   store,
