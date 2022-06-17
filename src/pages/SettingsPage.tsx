@@ -162,7 +162,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
       console.error(e);
       console.error(new Error().stack);
       this.setState({ isLoading: false, showAlert: true, alertMessage: `匯入錯誤，將清空 app 離線 DB: ${e}` });
-      await IndexedDbFuncs.clear();
+      await IndexedDbFuncs.clearStore(IndexedDbFuncs.dataStore);
     }
   }
 
@@ -314,7 +314,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                     cssClass: 'secondary uiFont',
                     handler: async (value) => {
                       this.setState({ isLoading: true, showClearBookcaseAlert: false });
-                      await IndexedDbFuncs.clear();
+                      await IndexedDbFuncs.clearStore(IndexedDbFuncs.dataStore);
                       this.setState({ isLoading: false, showClearBookcaseAlert: false, showAlert: true, alertMessage: '清除成功!' });
                       this.props.dispatch({
                         type: "SET_KEY_VAL",

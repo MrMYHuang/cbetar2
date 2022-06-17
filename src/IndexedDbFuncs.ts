@@ -2,18 +2,88 @@
 import * as zip from 'zip.js-myh';
 
 const cbetardb = 'cbetardb';
+// Increase this if a new store is added.
+const version = 1;
+const dataStore = 'store';
+// Increase this if font store content is changed.
+const twKaiFontVersion = 5;
+const fontStore = 'font';
+let dbOpenReq: IDBOpenDBRequest;
+let db: IDBDatabase;
 
-async function saveFile(fileName: string, data: any) {
-  const dbOpenReq = indexedDB.open(cbetardb);
+async function ready() {
+  if (db) {
+    return;
+  }
+
+  return new Promise<void>(ok => {
+    const timer = setInterval(() => {
+      if (db) {
+        clearInterval(timer);
+        ok();
+      }
+    }, 20);
+  });
+}
+
+async function open() {
+  return new Promise<void>((ok, fail) => {
+    dbOpenReq = indexedDB.open(cbetardb, version);
+    // Init store in indexedDB if necessary.
+    dbOpenReq.onupgradeneeded = function (ev: IDBVersionChangeEvent) {
+      db = (ev.target as any).result as IDBDatabase;
+      db.createObjectStore(dataStore);
+      db.createObjectStore(fontStore);
+      ok();
+    };
+    dbOpenReq.onsuccess = (ev: Event) => {
+      db = (ev.target as any).result as IDBDatabase;
+      ok();
+    }
+    dbOpenReq.onerror = (ev: Event) => {
+      fail('Fail to create IndexedDB.');
+    }
+  });
+}
+
+async function clear() {
+  db.close();
+  const dbOpenReq = indexedDB.deleteDatabase(cbetardb);
   return new Promise<void>((ok, fail) => {
     dbOpenReq.onsuccess = async (ev: Event) => {
-      const db = dbOpenReq.result;
+      try {
+        open().then(ok);
+      } catch (err) {
+        fail(err);
+      }
+    };
+    dbOpenReq.onerror = async (ev: Event) => {
+      fail('Fail to delete database.');
+    }
+  });
+}
 
-      const transWrite = db.transaction(["store"], 'readwrite')
-      const reqWrite = transWrite.objectStore('store').put(data, fileName);
+async function clearStore(store: string) {
+  return new Promise<void>((ok, fail) => {
+    const transWrite = db.transaction([store], 'readwrite')
+    const reqWrite = transWrite.objectStore(store).clear();
+    reqWrite.onsuccess = (_ev: any) => ok();
+    reqWrite.onerror = (_ev: any) => fail(`Clear IndexedDB failed: ${(_ev.target as any).error}`);
+  });
+}
+
+async function saveFile(fileName: string, data: any, store: string = dataStore) {
+  await ready();
+
+  return new Promise<void>((ok, fail) => {
+    try {
+      const transWrite = db.transaction([store], 'readwrite')
+      const reqWrite = transWrite.objectStore(store).put(data, fileName);
       reqWrite.onsuccess = (_ev: any) => ok();
       reqWrite.onerror = (_ev: Event) => fail(`File ${fileName} saving failed: ${(_ev.target as any).error}`);
-    };
+    } catch (err) {
+      fail(err);
+    }
   });
 }
 
@@ -21,57 +91,34 @@ async function saveZippedFile(fileName: string, data: Uint8Array) {
   /*const zip = new AdmZip();
   zip.addFile('file', data);
   return saveFile(fileName, zip.toBuffer());*/
-  
+
   const zipFile = new zip.ZipWriter(new zip.Uint8ArrayWriter());
   await zipFile.add('file', new zip.Uint8ArrayReader(data));
   return saveFile(fileName, await zipFile.close());
 }
 
-async function removeFile(fileName: string) {
-  const dbOpenReq = indexedDB.open(cbetardb);
+async function removeFile(fileName: string, store: string = dataStore) {
+  await ready();
+
   return new Promise<void>((ok, fail) => {
     try {
-      dbOpenReq.onsuccess = (ev: Event) => {
-        const db = dbOpenReq.result;
-
-        const transWrite = db.transaction(["store"], 'readwrite')
-        try {
-          const reqWrite = transWrite.objectStore('store').delete(fileName);
-          reqWrite.onsuccess = (_ev: any) => ok();
-          reqWrite.onerror = (_ev: any) => fail(`File ${fileName} removing failed: ${(_ev.target as any).error}`);
-        } catch (err) {
-          console.error(err);
-        }
-      };
+      const transWrite = db.transaction([store], 'readwrite');
+      const reqWrite = transWrite.objectStore(store).delete(fileName);
+      reqWrite.onsuccess = (_ev: any) => ok();
+      reqWrite.onerror = (_ev: any) => fail(`File ${fileName} removing failed: ${(_ev.target as any).error}`);
     } catch (err) {
       fail(err);
     }
   });
 }
 
-async function clear() {
-  const dbOpenReq = indexedDB.open(cbetardb);
-  return new Promise<void>((ok, fail) => {
-    dbOpenReq.onsuccess = async (ev: Event) => {
-      const db = dbOpenReq.result;
-
-      const transWrite = db.transaction(["store"], 'readwrite')
-      const reqWrite = transWrite.objectStore('store').clear();
-      reqWrite.onsuccess = (_ev: any) => ok();
-      reqWrite.onerror = (_ev: any) => fail(`Clear IndexedDB failed: ${(_ev.target as any).error}`);
-    };
-  });
-}
-
-async function checkKey(key: string) {
-  const dbOpenReq = indexedDB.open(cbetardb);
+async function checkKey(key: string, store: string = dataStore) {
+  await ready();
 
   return new Promise(function (ok, fail) {
-    dbOpenReq.onsuccess = async function (ev) {
-      const db = dbOpenReq.result;
-
-      const trans = db.transaction(["store"], 'readonly');
-      let req = trans.objectStore('store').getKey(key);
+    try {
+      const trans = db.transaction([store], 'readonly');
+      let req = trans.objectStore(store).getKey(key);
       req.onsuccess = async function (_ev) {
         const data = req.result;
         if (!data) {
@@ -79,19 +126,19 @@ async function checkKey(key: string) {
         }
         return ok(data);
       };
-    };
+    } catch (err) {
+      fail(err);
+    }
   });
 }
 
-async function getFile<T>(fileName: string): Promise<T> {
-  const dbOpenReq = indexedDB.open(cbetardb);
+async function getFile<T>(fileName: string, store: string = dataStore): Promise<T> {
+  await ready();
 
   return new Promise(function (ok, fail) {
-    dbOpenReq.onsuccess = async function (ev) {
-      const db = dbOpenReq.result;
-
-      const trans = db.transaction(["store"], 'readwrite');
-      let req = trans.objectStore('store').get(fileName);
+    try {
+      const trans = db.transaction([store], 'readwrite');
+      let req = trans.objectStore(store).get(fileName);
       req.onsuccess = async function (_ev) {
         const data = req.result;
         if (!data) {
@@ -99,11 +146,13 @@ async function getFile<T>(fileName: string): Promise<T> {
         }
         return ok(data as T);
       };
-    };
+    } catch (err) {
+      fail(err);
+    }
   });
 }
 
-async function getZippedFile(fileName: string) {  
+async function getZippedFile(fileName: string) {
   const data = await getFile<Uint8Array>(fileName);
   const entry = (await new zip.ZipReader(new zip.Uint8ArrayReader(data)).getEntries())[0];
   return entry.getData!(new zip.Uint8ArrayWriter());
@@ -176,6 +225,12 @@ async function loadFolderToZips(dirHandle: FileSystemDirectoryHandle, filter: Re
 
 const IndexedDbFuncs = {
   cbetardb,
+  dataStore,
+  twKaiFontVersion,
+  fontStore,
+  open,
+  clear,
+  clearStore,
   saveFile,
   saveZippedFile,
   extractZipToZips,
@@ -184,7 +239,6 @@ const IndexedDbFuncs = {
   getFile,
   getZippedFile,
   checkKey,
-  clear,
 }
 
 export default IndexedDbFuncs;

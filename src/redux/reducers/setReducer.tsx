@@ -14,7 +14,7 @@ function updateUi(newSettings: Settings) {
 
 // Used to store settings. They will be saved to file.
 export default function reducer(state = { ...defaultSettings }, action: any) {
-  let newSettings: Settings = { ...state };
+  let newSettings: Settings = JSON.parse(JSON.stringify(state));
   switch (action.type) {
     case "LOAD_SETTINGS":
       newSettings = JSON.parse(localStorage.getItem(Globals.storeFile)!).settings;
@@ -53,7 +53,7 @@ export default function reducer(state = { ...defaultSettings }, action: any) {
       localStorage.setItem(Globals.storeFile, JSON.stringify({ settings: newSettings }));
       break;
     case "ADD_BOOKMARK":
-      const oldBookmarks = newSettings.bookmarks as [Bookmark];
+      const oldBookmarks = newSettings.bookmarks as Bookmark[];
       let fileName = action.bookmark.fileName;
       if (fileName !== null && fileName !== '' &&
         !oldBookmarks.some((bookmark: Bookmark) => bookmark.fileName === fileName)
@@ -64,7 +64,7 @@ export default function reducer(state = { ...defaultSettings }, action: any) {
       localStorage.setItem(Globals.storeFile, JSON.stringify({ settings: newSettings }));
       break;
     case "DEL_BOOKMARK":
-      let bookmarksTemp = newSettings.bookmarks as [Bookmark];
+      let bookmarksTemp = newSettings.bookmarks as Bookmark[];
       const idxToDel = bookmarksTemp.findIndex((b) => { return b.uuid === action.uuid });
       if (idxToDel !== -1) {
         let deletedBookmarks = bookmarksTemp.splice(idxToDel, 1);

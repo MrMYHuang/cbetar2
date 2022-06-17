@@ -254,22 +254,24 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
 
     let showToastInit = false;
     let toastMessageInit = '';
-    if (Globals.twKaiFontNeedUpgrade() && this.props.settings.useFontKai) {
-      this.props.dispatch({
-        type: "SET_KEY_VAL",
-        key: 'useFontKai',
-        val: false
-      });
-      localStorage.setItem('twKaiFontVersion', "0");
-      let settingsTemp = this.props.settings;
-      settingsTemp.useFontKai = false;
-      Globals.updateCssVars(settingsTemp);
+    IndexedDbFuncs.open().then(() => {
+      if (Globals.twKaiFontNeedUpgrade() && this.props.settings.useFontKai) {
+        this.props.dispatch({
+          type: "SET_KEY_VAL",
+          key: 'useFontKai',
+          val: false
+        });
+        localStorage.setItem('twKaiFontVersion', "0");
+        let settingsTemp = this.props.settings;
+        settingsTemp.useFontKai = false;
+        Globals.updateCssVars(settingsTemp);
 
-      showToastInit = true;
-      toastMessageInit = '楷書字型已更新，請至設定頁開啟楷書！';
-    } else if (this.props.settings.useFontKai) {
-      Globals.loadTwKaiFonts();
-    }
+        showToastInit = true;
+        toastMessageInit = '楷書字型已更新，請至設定頁開啟楷書！';
+      } else if (this.props.settings.useFontKai) {
+        Globals.loadTwKaiFonts();
+      }
+    });
 
     this.state = {
       // Work around a window.innerHeight update problem on Android 9.
@@ -316,13 +318,6 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
         }
       });
     }
-
-    const dbOpenReq = indexedDB.open(IndexedDbFuncs.cbetardb);
-    // Init store in indexedDB if necessary.
-    dbOpenReq.onupgradeneeded = function (event: IDBVersionChangeEvent) {
-      var db = (event.target as any).result;
-      db.createObjectStore('store');
-    };
   }
 
   restoreAppSettings() {

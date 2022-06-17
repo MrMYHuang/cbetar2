@@ -12,7 +12,7 @@ import { CbetaDbMode, Settings } from '../models/Settings';
 interface Props {
   dispatch: Function;
   settings: Settings;
-  bookmarks: [Bookmark];
+  bookmarks: Bookmark[];
   fontSize: number;
 }
 
@@ -158,10 +158,12 @@ class _BookmarkPage extends React.Component<PageProps, State> {
             <IonReorder slot='end' />
           </IonItem>
 
-          <IonItemOptions side="end">
+          <IonItemOptions side='end'>
             <IonItemOption className='uiFont' color='danger' onClick={(e) => {
               this.delBookmarkHandler(bookmark.uuid);
-              this.bookmarkListRef.current?.closeSlidingItems();
+              setTimeout(() => {
+                this.bookmarkListRef.current?.closeSlidingItems();
+              }, 0);
             }}>刪除</IonItemOption>
           </IonItemOptions>
         </IonItemSliding>
@@ -201,7 +203,7 @@ class _BookmarkPage extends React.Component<PageProps, State> {
               </IonList>
             </>
           }
-          <div style={{ fontSize: 'var(--ui-font-size)', textAlign: 'center' }}>可離線瀏覽圖示 <IonIcon icon={download}/></div>
+          <div style={{ fontSize: 'var(--ui-font-size)', textAlign: 'center' }}>可離線瀏覽圖示 <IonIcon icon={download} /></div>
 
           <IonToast
             cssClass='uiFont'

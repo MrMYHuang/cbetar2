@@ -9,7 +9,6 @@ const bugReportApiUrl = 'https://vh6ud1o56g.execute-api.ap-northeast-1.amazonaws
 const apiVersion = 'v1.2';
 const cbetaApiUrl = `https://cbdata.dila.edu.tw/${apiVersion}`;
 const dilaDictApiUrl = `https://glossaries.dila.edu.tw/search.json`;
-const twKaiFontVersion = 4;
 // Disable problematic fonts.
 //const twKaiFonts = ['Kai'];
 let twKaiFontsCache: { [key: string]: FontFace } = {};
@@ -29,13 +28,13 @@ const axiosInstance = axios.create({
 });
 
 function twKaiFontNeedUpgrade() {
-  return +(localStorage.getItem('twKaiFontVersion') ?? 1) < twKaiFontVersion;
+  return +(localStorage.getItem('twKaiFontVersion') ?? 1) < IndexedDbFuncs.twKaiFontVersion;
 }
 
 async function loadTwKaiFonts(progressCallback: Function | null = null, win: Window = window) {
   let forceUpdate = false;
   if (twKaiFontNeedUpgrade()) {
-    localStorage.setItem('twKaiFontVersion', twKaiFontVersion + "");
+    localStorage.setItem('twKaiFontVersion', IndexedDbFuncs.twKaiFontVersion + "");
     forceUpdate = true;
   }
 
@@ -67,8 +66,8 @@ async function loadTwKaiFont(font: string, key: string, path: string, forceUpdat
       timeout: 0,
     }).then(res => {
       const fontData = res.data;
-      IndexedDbFuncs.saveFile(key, fontData);
-      localStorage.setItem('twKaiFontVersion', twKaiFontVersion + "");
+      IndexedDbFuncs.saveFile(key, fontData, IndexedDbFuncs.fontStore);
+      localStorage.setItem('twKaiFontVersion', IndexedDbFuncs.twKaiFontVersion + "");
       return new window.FontFace(font, fontData)
     });
   };
@@ -78,7 +77,7 @@ async function loadTwKaiFont(font: string, key: string, path: string, forceUpdat
     if (fontFaceCache) {
       updateFontOrNot = Promise.resolve(fontFaceCache);
     } else {
-      updateFontOrNot = (IndexedDbFuncs.getFile(key) as Promise<ArrayBuffer>).then((data) => {
+      updateFontOrNot = (IndexedDbFuncs.getFile<ArrayBuffer>(key, IndexedDbFuncs.fontStore)).then((data) => {
         return new window.FontFace(font, data);
       }).catch(err => {
         return updateFont();
@@ -252,7 +251,6 @@ const Globals = {
   twKaiFontsCache,
   twKaiFonts,
   twKaiFontKeys,
-  twKaiFontVersion,
   loadTwKaiFonts,
   axiosInstance,
   appSettings: {

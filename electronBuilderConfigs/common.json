@@ -6,9 +6,6 @@
     "!**/node_modules/**/*.{h,c,cpp,py,pl,a,mk,Makefile,m4,hbs,gypi,sh,in,vms}",
     "!**/node_modules/**/tests/*"
   ],
-  "asarUnpack": [
-    "node_modules/{libxslt-myh,node1-libxmljsmt-myh}/**/*.{js,json,node}"
-  ],
   "icon": "buildElectron/icon.icns",
   "linux": {
     "artifactName": "${name}_${version}_linux_${arch}.${ext}",

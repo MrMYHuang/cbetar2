@@ -1,4 +1,12 @@
 # <a id='history'>版本歷史</a>
+* PWA 9.2.0:
+  * [新增] 重置設定支援重建 IndexedDB。
+  * [變更] 經文資料、字型資料使用獨立 IndexedDB stores。
+  * [優化] IndexedDB 效能。
+
+* PWA 9.0.2:
+  * [修正] Electron app 啟動時讀取離線 DB 失敗。
+
 * PWA 9.0.1, Electron app 20.0.1:
   * [修正] Electron app 啟動時偶爾讀取離線 DB 失敗。
 
