@@ -9,7 +9,7 @@ import SearchAlert from './SearchAlert';
 import { connect } from 'react-redux';
 import { CbetaDbMode, Settings } from '../models/Settings';
 import { TmpSettings } from '../models/TmpSettings';
-import CbetaOfflineIndexedDb from '../CbetaOfflineIndexedDb';
+import CbetaOfflineDb from '../CbetaOfflineDb';
 import Globals from '../Globals';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
 import Constants from '../Constants';
@@ -83,7 +83,8 @@ class _CatalogTouch extends React.Component<PageProps, State> {
         let obj: any;
         switch (this.props.settings.cbetaOfflineDbMode) {
           case CbetaDbMode.OfflineIndexedDb:
-            obj = await CbetaOfflineIndexedDb.fetchCatalogs(path || 'CBETA');
+          case CbetaDbMode.OfflineFileSystemV2:
+            obj = await CbetaOfflineDb.fetchCatalogs(path || 'CBETA', this.props.settings.cbetaOfflineDbMode);
             break;
           case CbetaDbMode.OfflineFileSystem:
             electronBackendApi?.send("toMain", { event: 'fetchCatalog', path: path });

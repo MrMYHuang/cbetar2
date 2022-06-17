@@ -1,6 +1,9 @@
 import Constants from "./Constants";
 import Globals from "./Globals";
 import IndexedDbFuncs from "./IndexedDbFuncs";
+import { CbetaDbMode } from "./models/Settings";
+
+const electronBackendApi: any = (window as any).electronBackendApi;
 
 const cbetaBookcaseDir = 'Bookcase';
 const bookcaseInfosKey = 'bookcaseInfos';
@@ -70,7 +73,7 @@ async function getFileAsStringFromIndexedDB(file: string) {
     return textDecoder.decode((await IndexedDbFuncs.getZippedFile(file)) as Uint8Array);
 }
 
-export async function init() {
+export async function init(mode: CbetaDbMode) {
     // Avoid multiple inits.
     if (isInitializing) {
         return new Promise<void>(ok => {
@@ -95,53 +98,69 @@ export async function init() {
     } catch (error) {
         // Ignore.
     }
-    
+
     if (bookcaseInfos.spines.length === 0) {
-        const catalogsString = await getFileAsStringFromIndexedDB(`/${cbetaBookcaseDir}/CBETA/catalog.txt`);
-        const catalogsStrings = catalogsString.split(/\r\n/);
-        let lastWork = '';
-        let juan = 0;
-        let vols: string[] = [];
-        let vols_juans: number[] = [];
-        bookcaseInfos.catalogs = (Object).fromEntries(
-            catalogsStrings.map((l: string) => {
-                const f = l.split(/\s*,\s*/);
-                const file = `${f[0]}${f[4]}`;
-                const vol = `${f[0]}${f[3]}`;
-                const vol_jauns = +f[5];
-                if (lastWork !== file) {
-                    lastWork = file;
-                    juan = 0;
-                    vols = [vol];
-                    vols_juans = [vol_jauns];
-                } else {
-                    vols.push(vol);
-                    vols_juans.push(vol_jauns);
-                }
-                juan += vol_jauns;
-                return [file, { file, work: file, juan: juan, juan_start: 1, category: f[1], creators: f[7], title: f[6], id: f[0], vol, vols, vols_juans, sutra: f[4] } as CatalogDetails];
-            })
-        );
-
-        const spinesString = await getFileAsStringFromIndexedDB(`/${cbetaBookcaseDir}/CBETA/spine.txt`);
-        const spinesStrs = spinesString.split(/\r\n/);
-        bookcaseInfos.spines = spinesStrs.map((l: string) => {
-            const f = l.split(/\s*,\s*/);
-            return f[0];
-        })
-
-        bookcaseInfos.gaijis = JSON.parse(await getFileAsStringFromIndexedDB(`/${Globals.cbetar2AssetDir}/cbeta_gaiji.json`));
-
-        bookcaseInfos.catalogTree = await fetchAllCatalogsInternal();
-
-        IndexedDbFuncs.saveFile(bookcaseInfosKey, bookcaseInfos);
+        if (mode === CbetaDbMode.OfflineIndexedDb) {
+            const catalogsString = await getFileAsStringFromIndexedDB(`/${cbetaBookcaseDir}/CBETA/catalog.txt`);
+            const spinesString = await getFileAsStringFromIndexedDB(`/${cbetaBookcaseDir}/CBETA/spine.txt`);
+            const gaijisString = await getFileAsStringFromIndexedDB(`/${Globals.cbetar2AssetDir}/cbeta_gaiji.json`);
+            const stylesheetString = await getFileAsStringFromIndexedDB(`/${Globals.cbetar2AssetDir}/nav_fix.xsl`);
+            const documentString = await getFileAsStringFromIndexedDB(`/${cbetaBookcaseDir}/CBETA/bulei_nav.xhtml`);
+            await initFromFiles(catalogsString, spinesString, gaijisString, stylesheetString, documentString);
+        } else if (mode === CbetaDbMode.OfflineFileSystemV2) {
+            const catalogsString = await readBookcaseFromFileSystem(`CBETA/catalog.txt`);
+            const spinesString = await readBookcaseFromFileSystem(`CBETA/spine.txt`);
+            const gaijisString = await readResourceFromFileSystem(`cbeta_gaiji/cbeta_gaiji.json`);
+            const stylesheetString = await readResourceFromFileSystem(`buildElectron/nav_fix.xsl`);
+            const documentString = await readBookcaseFromFileSystem(`CBETA/bulei_nav.xhtml`);
+            await initFromFiles(catalogsString, spinesString, gaijisString, stylesheetString, documentString);
+        }
     }
 
     isInit = true;
 }
 
-export async function fetchCatalogs(path: string) {
-    isInit || await init();
+export async function initFromFiles(catalogsString: string, spinesString: string, gaijisString: string, stylesheetString: string, documentString: string) {
+    const catalogsStrings = catalogsString.split(/\r\n/);
+    let lastWork = '';
+    let juan = 0;
+    let vols: string[] = [];
+    let vols_juans: number[] = [];
+    bookcaseInfos.catalogs = (Object).fromEntries(
+        catalogsStrings.map((l: string) => {
+            const f = l.split(/\s*,\s*/);
+            const file = `${f[0]}${f[4]}`;
+            const vol = `${f[0]}${f[3]}`;
+            const vol_jauns = +f[5];
+            if (lastWork !== file) {
+                lastWork = file;
+                juan = 0;
+                vols = [vol];
+                vols_juans = [vol_jauns];
+            } else {
+                vols.push(vol);
+                vols_juans.push(vol_jauns);
+            }
+            juan += vol_jauns;
+            return [file, { file, work: file, juan: juan, juan_start: 1, category: f[1], creators: f[7], title: f[6], id: f[0], vol, vols, vols_juans, sutra: f[4] } as CatalogDetails];
+        })
+    );
+
+    const spinesStrs = spinesString.split(/\r\n/);
+    bookcaseInfos.spines = spinesStrs.map((l: string) => {
+        const f = l.split(/\s*,\s*/);
+        return f[0];
+    })
+
+    bookcaseInfos.gaijis = JSON.parse(gaijisString);
+
+    bookcaseInfos.catalogTree = await fetchAllCatalogsInternal(stylesheetString, documentString);
+
+    IndexedDbFuncs.saveFile(bookcaseInfosKey, bookcaseInfos);
+}
+
+export async function fetchCatalogs(path: string, mode: CbetaDbMode) {
+    isInit || await init(mode);
     let paths = path.split('.');
     let subpaths = paths.slice(1);
     try {
@@ -149,7 +168,7 @@ export async function fetchCatalogs(path: string) {
         for (let i = 0; i < subpaths.length; i++) {
             node = node.children[+subpaths[i]];
         }
-        return {n: node.n, label: node.label, results: node.children};
+        return { n: node.n, label: node.label, results: node.children };
     } catch (error: any) {
         error.message = `path = ${path}\n${error.message}`;
         throw (error);
@@ -204,15 +223,13 @@ function fetchSubcatalogs(node: Node | ChildNode, n: string): CatalogNode {
     return { n, label, children } as CatalogNode;
 }
 
-async function fetchAllCatalogsInternal(): Promise<CatalogNode> {
+async function fetchAllCatalogsInternal(stylesheetString: string, documentString: string): Promise<CatalogNode> {
 
     //const catalogTypeIsBulei = subpaths.shift() === 'CBETA';
     try {
         const n = 'CBETA';
         let navDocBulei: Document;
-        const stylesheetString = await getFileAsStringFromIndexedDB(`/${Globals.cbetar2AssetDir}/nav_fix.xsl`);
         xsltProcessor.importStylesheet(stringToXml(stylesheetString));
-        let documentString = await getFileAsStringFromIndexedDB(`/${cbetaBookcaseDir}/CBETA/bulei_nav.xhtml`);
         navDocBulei = xsltProcessor.transformToDocument(stringToXml(documentString));
         const doc = navDocBulei;
         const nodesSnapshot = doc.evaluate(`//nav`, doc, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE);
@@ -228,14 +245,14 @@ async function fetchAllCatalogsInternal(): Promise<CatalogNode> {
     }
 }
 
-export async function fetchAllCatalogs(): Promise<CatalogNode> {
-    isInit || await init();
+export async function fetchAllCatalogs(mode: CbetaDbMode): Promise<CatalogNode> {
+    isInit || await init(mode);
 
     return bookcaseInfos.catalogTree;
 }
 
-export async function fetchWork(path: string) {
-    isInit || await init();
+export async function fetchWork(path: string, mode: CbetaDbMode) {
+    isInit || await init(mode);
 
     const pathFieldMatches = /([A-Z]*)(.*)/.exec(path)!;
     const bookId = pathFieldMatches[1];
@@ -250,10 +267,10 @@ export async function fetchWork(path: string) {
     return { results: [work] };
 }
 
-export async function fetchJuan(work: string, juan: string) {
-    isInit || await init();
+export async function fetchJuan(work: string, juan: string, mode: CbetaDbMode) {
+    isInit || await init(mode);
 
-    const work_info = (await fetchWork(work)).results[0];
+    const work_info = (await fetchWork(work, mode)).results[0];
     let juanTemp = 0;
     let vol = '';
     for (let i = 0; i < work_info.vols.length; i++) {
@@ -326,7 +343,33 @@ async function elementTPostprocessing(doc: Document, node: Node, parent: Node | 
     }
 }
 
-const CbetaOfflineIndexedDb = {
+async function readResourceFromFileSystem(path: string) {
+    electronBackendApi?.send('toMain', { event: 'readResource', path: path });
+    return new Promise<string>((ok, fail) => {
+      electronBackendApi?.receiveOnce('fromMain', (data: any) => {
+        switch (data.event) {
+          case 'readResource':
+            ok(data);
+            break;
+        }
+      });
+    });
+}
+
+async function readBookcaseFromFileSystem(path: string) {
+    electronBackendApi?.send('toMain', { event: 'readBookcase', path: path });
+    return new Promise<string>((ok, fail) => {
+      electronBackendApi?.receiveOnce('fromMain', (data: any) => {
+        switch (data.event) {
+          case 'readBookcase':
+            ok(data);
+            break;
+        }
+      });
+    });
+}
+
+const CbetaOfflineDb = {
     filesFilter,
     init,
     fetchCatalogs,
@@ -335,4 +378,4 @@ const CbetaOfflineIndexedDb = {
     fetchJuan
 };
 
-export default CbetaOfflineIndexedDb;
+export default CbetaOfflineDb;

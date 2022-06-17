@@ -7,7 +7,7 @@ import { TreeView, TreeItem } from '@mui/lab';
 import { connect } from 'react-redux';
 import { CbetaDbMode, Settings, UiMode } from '../models/Settings';
 import { TmpSettings } from '../models/TmpSettings';
-import CbetaOfflineIndexedDb, { CatalogNode } from '../CbetaOfflineIndexedDb';
+import CbetaOfflineDb, { CatalogNode } from '../CbetaOfflineDb';
 import EPubView from '../components/EPubView';
 import { arrowBackCircle, bookmark, list, shareSocial } from 'ionicons/icons';
 import { Bookmark, BookmarkType } from '../models/Bookmark';
@@ -83,7 +83,8 @@ class _CatalogDesktopPage extends React.Component<PageProps, State> {
       let obj: any;
       switch (this.props.settings.cbetaOfflineDbMode) {
         case CbetaDbMode.OfflineIndexedDb:
-          obj = await CbetaOfflineIndexedDb.fetchAllCatalogs();
+        case CbetaDbMode.OfflineFileSystemV2:
+          obj = await CbetaOfflineDb.fetchAllCatalogs(this.props.settings.cbetaOfflineDbMode);
           break;
         case CbetaDbMode.OfflineFileSystem:
           electronBackendApi?.send("toMain", { event: 'fetchAllCatalogs' });
@@ -241,7 +242,7 @@ class _CatalogDesktopPage extends React.Component<PageProps, State> {
     // node is work.
     if (n.search(/CBETA/) === -1) {
       const matches = /([A-Z]*[0-9]*)/.exec(n)!;
-      const work = (await CbetaOfflineIndexedDb.fetchWork(matches[1])).results[0];
+      const work = (await CbetaOfflineDb.fetchWork(matches[1], this.props.settings.cbetaOfflineDbMode)).results[0];
       this.props.dispatch({
         type: "ADD_BOOKMARK",
         bookmark: {
@@ -258,7 +259,7 @@ class _CatalogDesktopPage extends React.Component<PageProps, State> {
     }
 
     // node is catalog.
-    const catalog = await CbetaOfflineIndexedDb.fetchCatalogs(n);
+    const catalog = await CbetaOfflineDb.fetchCatalogs(n, this.props.settings.cbetaOfflineDbMode);
     this.props.dispatch({
       type: "ADD_BOOKMARK",
       bookmark: {

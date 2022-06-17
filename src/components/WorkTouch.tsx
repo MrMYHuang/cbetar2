@@ -11,7 +11,7 @@ import SearchAlert from './SearchAlert';
 import { TmpSettings } from '../models/TmpSettings';
 import fetchJuan from '../fetchJuan';
 import { CbetaDbMode, Settings } from '../models/Settings';
-import CbetaOfflineIndexedDb from '../CbetaOfflineIndexedDb';
+import CbetaOfflineDb from '../CbetaOfflineDb';
 import IndexedDbFuncs from '../IndexedDbFuncs';
 
 const electronBackendApi: any = (window as any).electronBackendApi;
@@ -55,7 +55,7 @@ class _WorkTouchPage extends React.Component<PageProps, State> {
   }
 
   ionViewWillEnter() {
-    console.log( `work ${this.props.match.path} will enter` );
+    console.log(`work ${this.props.match.path} will enter`);
     this.fetchWork(this.props.match.params.path);
   }
 
@@ -72,7 +72,8 @@ class _WorkTouchPage extends React.Component<PageProps, State> {
         let data: any;
         switch (this.props.settings.cbetaOfflineDbMode) {
           case CbetaDbMode.OfflineIndexedDb:
-            data = await CbetaOfflineIndexedDb.fetchWork(path);
+          case CbetaDbMode.OfflineFileSystemV2:
+            data = await CbetaOfflineDb.fetchWork(path, this.props.settings.cbetaOfflineDbMode);
             break;
           case CbetaDbMode.OfflineFileSystem:
             electronBackendApi?.send("toMain", { event: 'fetchWork', path: path });

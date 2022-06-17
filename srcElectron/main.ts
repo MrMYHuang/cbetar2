@@ -3,11 +3,12 @@ import { app, BrowserWindow, dialog, ipcMain, Menu, MenuItem, protocol, shell } 
 import * as fs from 'fs';
 import * as os from 'os';
 import * as update from './Update';
-import * as cbetaOfflineDb from './CbetaOfflineDb';
 import * as Globals from './Globals';
 const windowStateKeeper = require('electron-window-state');
 const path = require('path');
 const PackageInfos = require('../package.json');
+
+const resourcesPath = (process as any).resourcesPath;
 
 // Workaround an issue of Linux wmclass not supporting the UTF-8 productName in package.json.
 if (process.platform === 'linux') {
@@ -36,7 +37,7 @@ function notifyFrontendCbetaOfflineDbMode() {
       notifyFrontendCbetaOfflineDbMode();
     }, 10);
   } else {
-    mainWindow?.webContents.send('fromMain', { event: 'cbetaOfflineDbMode', isOn: settings.cbetaBookcaseDir !== undefined });
+    mainWindow?.webContents.send('fromMain', { event: 'cbetaOfflineDbMode', isOn: settings.cbetaBookcaseDir !== undefined, backendVersion: PackageInfos.version });
   }
 }
 
@@ -50,14 +51,13 @@ async function setCbetaBookcase() {
     if (fs.existsSync(`${res.filePaths[0]}/CBETA`)) {
       settings.cbetaBookcaseDir = res.filePaths[0];
       try {
-        cbetaOfflineDb.init(settings.cbetaBookcaseDir, isDevMode());
         fs.writeFileSync(backendAppSettingsFile, JSON.stringify(settings));
         notifyFrontendCbetaOfflineDbMode();
       } catch (error: any) {
         dialog.showErrorBox('錯誤', `${error.message}`);
       }
     } else {
-      dialog.showErrorBox('目錄無效', '所選的目錄不是有效的CBETA經文資料檔目錄(Bookcase目錄)！');
+      dialog.showErrorBox('目錄無效', '所選的目錄不是有效的 CBETA 經文資料檔目錄(Bookcase 目錄)！');
     }
   } else {
     dialog.showMessageBox({
@@ -74,7 +74,6 @@ function loadSettings() {
     if (settings.cbetaBookcaseDir === undefined) {
       // Do nothing.
     } else if (fs.existsSync(`${settings.cbetaBookcaseDir}/CBETA`)) {
-      cbetaOfflineDb.init(settings.cbetaBookcaseDir, isDevMode());
       notifyFrontendCbetaOfflineDbMode();
     } else {
       // Remove invalid cbetaBookcaseDir.
@@ -97,7 +96,7 @@ const template = [
     label: '檔案',
     submenu: [
       {
-        label: '設定Bookcase目錄',
+        label: '設定 Bookcase 目錄',
         click: setCbetaBookcase,
       },
       {
@@ -225,14 +224,11 @@ async function createWindow() {
         }
         mainWindow?.webContents.send('fromMain', { event: 'version', version: PackageInfos.version });
         break;
-      case 'fetchCatalog':
-        mainWindow?.webContents.send('fromMain', Object.assign({ event: args.event }, cbetaOfflineDb.fetchCatalogs(args.path)));
+      case 'readResource':
+        mainWindow?.webContents.send('fromMain', Object.assign({ event: args.event }, fs.readFileSync(`${isDevMode() ? '.' : resourcesPath}/${args.path}`)));
         break;
-      case 'fetchWork':
-        mainWindow?.webContents.send('fromMain', Object.assign({ event: args.event }, cbetaOfflineDb.fetchWork(args.path)));
-        break;
-      case 'fetchJuan':
-        mainWindow?.webContents.send('fromMain', Object.assign({ event: args.event }, cbetaOfflineDb.fetchJuan(args.work, args.juan)));
+      case 'readBookcase':
+        mainWindow?.webContents.send('fromMain', Object.assign({ event: args.event }, fs.readFileSync(`${settings.cbetaBookcaseDir}/${args.path}`)));
         break;
     }
   });

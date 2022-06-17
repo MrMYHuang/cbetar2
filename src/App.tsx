@@ -16,6 +16,8 @@ import { IonReactRouter } from '@ionic/react-router';
 import { connect, Provider } from 'react-redux';
 import queryString from 'query-string';
 import { bookmark, settings, library, book } from 'ionicons/icons';
+import * as semver from 'semver';
+
 import CatalogPage from './pages/CatalogPage';
 import WorkPage from './pages/WorkPage';
 import EPubViewPage from './pages/EPubViewPage';
@@ -49,7 +51,7 @@ import WordDictionaryPage from './pages/WordDictionaryPage';
 import DownloadModal from './components/DownloadModal';
 import { TmpSettings } from './models/TmpSettings';
 import { CbetaDbMode, Settings, UiMode } from './models/Settings';
-import CbetaOfflineIndexedDb from './CbetaOfflineIndexedDb';
+import CbetaOfflineDb from './CbetaOfflineDb';
 import IndexedDbFuncs from './IndexedDbFuncs';
 import CatalogDesktopPage from './pages/CatalogDesktopPage';
 
@@ -169,7 +171,7 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
     }
 
     if (this.props.settings.cbetaOfflineDbMode === CbetaDbMode.OfflineIndexedDb) {
-      CbetaOfflineIndexedDb.init();
+      CbetaOfflineDb.init(CbetaDbMode.OfflineIndexedDb);
     }
 
     electronBackendApi?.receive("fromMain", (data: any) => {
@@ -182,10 +184,19 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
           });
           break;
         case 'cbetaOfflineDbMode':
+          let dbMode = CbetaDbMode.Online;
+          if (data.isOn) {
+            if (semver.gte(data.backendVersion, '20.0.0')) {
+              dbMode = CbetaDbMode.OfflineFileSystemV2;
+              CbetaOfflineDb.init(CbetaDbMode.OfflineFileSystemV2);
+            } else {
+              dbMode = CbetaDbMode.OfflineFileSystem;
+            }
+          }
           this.props.dispatch({
             type: "SET_KEY_VAL",
             key: 'cbetaOfflineDbMode',
-            val: data.isOn,
+            val: dbMode,
           });
           break;
         case 'DownloadingBackend':

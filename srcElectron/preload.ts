@@ -1,7 +1,4 @@
 // All of the Node.js APIs are available in the preload process.
-
-import { removeListener } from "process";
-
 // It has the same sandbox as a Chrome extension.
 const {
   contextBridge,

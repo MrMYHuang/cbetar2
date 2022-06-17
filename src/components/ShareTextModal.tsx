@@ -30,8 +30,8 @@ class _ShareTextModal extends React.Component<PageProps, State> {
     }
   }
 
-  updateQrCode() {
-    const appSettingsExport = Object.keys(Globals.appSettings).filter((key, i) => this.state.isAppSettingsExport[i]).map((key, i) => { return { key: key, val: this.props.settings[key] }; });
+  updateQrCode(isAppSettingsExport: boolean[]) {
+    const appSettingsExport = Object.keys(Globals.appSettings).filter((key, i) => isAppSettingsExport[i]).map((key, i) => { return { key: key, val: this.props.settings[key] }; });
     let appSettingsString: string | null = appSettingsExport.map(keyVal => `${keyVal.key}=${+keyVal.val}`).join(',');
     appSettingsString = appSettingsString !== '' ? `settings=${appSettingsString}` : null;
     let appUrl = this.props.text;
@@ -52,14 +52,13 @@ class _ShareTextModal extends React.Component<PageProps, State> {
         isOpen={this.props.showModal}
         canDismiss={true}
         //presentingElement={router || undefined}
-        onWillPresent={() => {
+        onDidPresent={() => {
           let isAppSettingsExport: Array<boolean> = [];
           for (let i = 0; i < this.state.isAppSettingsExport.length; i++) {
             isAppSettingsExport.push(false);
           }
-          this.setState({ isAppSettingsExport: isAppSettingsExport }, () => {
-            this.updateQrCode();
-          });
+          this.updateQrCode(isAppSettingsExport);
+          this.setState({ isAppSettingsExport: isAppSettingsExport });
         }}
         onDidDismiss={() => this.props.finish()}>
         <IonContent>
@@ -83,9 +82,8 @@ class _ShareTextModal extends React.Component<PageProps, State> {
                       <IonToggle slot='end' onIonChange={e => {
                         const isAppSettingsExport = this.state.isAppSettingsExport;
                         isAppSettingsExport[i] = e.detail.checked;
-                        this.setState({ isAppSettingsExport: isAppSettingsExport }, () => {
-                          this.updateQrCode();
-                        });
+                        this.updateQrCode(isAppSettingsExport);
+                        this.setState({ isAppSettingsExport: isAppSettingsExport });
                       }} />
                     </IonItem>
                   )
