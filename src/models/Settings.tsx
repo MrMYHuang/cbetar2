@@ -25,6 +25,7 @@ export interface Settings {
     useFontKai: boolean;
     fontSize: number;
     uiFontSize: number;
+    useTextBorder: boolean;
     showComments: boolean;
     printStyle: number;
     voiceURI: string;
@@ -48,6 +49,7 @@ const defaultSettings = {
     useFontKai: false,
     fontSize: 32,
     uiFontSize: 24,
+    useTextBorder: true,
     showComments: false,
     printStyle: 0,
     voiceURI: '',

@@ -314,6 +314,7 @@ export class _EPubView extends React.Component<PageProps, State> {
       'paginated',
       'rtlVerticalLayout',
       'scrollbarSize',
+      'useTextBorder',
       'useFontKai',
       'fontSize',
       'uiFontSize',
@@ -513,7 +514,7 @@ export class _EPubView extends React.Component<PageProps, State> {
     }
 
     // Right/top Key
-    if (e.code === (this.props.rtlVerticalLayout ? 'ArrowRight' : 'ArrowTop')) {
+    if (e.code === (this.props.rtlVerticalLayout ? 'ArrowRight' : 'ArrowUp')) {
       this.buttonPrev();
       return;
     }
@@ -700,6 +701,10 @@ export class _EPubView extends React.Component<PageProps, State> {
     .t, p, div {
       font-family: ${getComputedStyle(document.body).getPropertyValue('--ion-font-family')};
       font-size: ${this.props.fontSize}px;
+    }
+
+    .t {
+      border-${this.props.settings.rtlVerticalLayout ? 'left' : 'bottom'}: ${this.props.settings.useTextBorder ? 2 : 0}px solid;
     }
 
     .bold {

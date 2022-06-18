@@ -604,6 +604,20 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={documentText} slot='start' />
+              <IonLabel className='ion-text-wrap uiFont'>文字隔線</IonLabel>
+              <IonToggle slot='end' checked={this.props.settings.useTextBorder} onIonChange={e => {
+                const isChecked = e.detail.checked;
+
+                this.props.dispatch({
+                  type: "SET_KEY_VAL",
+                  key: 'useTextBorder',
+                  val: isChecked
+                });
+              }} />
+            </IonItem>
+            <IonItem>
+              <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
+              <IonIcon icon={documentText} slot='start' />
               <IonLabel className='ion-text-wrap uiFont'>{Globals.appSettings['showComments']}</IonLabel>
               <IonToggle slot='end' checked={this.props.settings.showComments} onIonChange={e => {
                 const isChecked = e.detail.checked;
