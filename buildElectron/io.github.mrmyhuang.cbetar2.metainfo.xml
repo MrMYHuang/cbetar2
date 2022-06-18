@@ -26,6 +26,13 @@
   </screenshots>
   <content_rating type="oars-1.1"/>
   <releases>
+    <release version="21.0.0" date="2022-06-18">
+      <description>
+        <ul>
+          <li>[優化] 使檔案系統離線 DB 載入更可靠。</li>
+        </ul>
+      </description>
+    </release>
     <release version="20.0.1" date="2022-06-17">
       <description>
         <ul>
