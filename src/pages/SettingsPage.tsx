@@ -653,7 +653,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                   if (isChecked) {
                     // Check missing fonts.
                     for (let i = 0; i < Globals.twKaiFontKeys.length; i++) {
-                      await IndexedDbFuncs.checkKey(Globals.twKaiFontKeys[i]);
+                      await IndexedDbFuncs.checkKey(Globals.twKaiFontKeys[i], IndexedDbFuncs.fontStore);
                     }
                     Globals.loadTwKaiFonts();
                   }
