@@ -603,6 +603,22 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
             </IonItem>
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
+              <IonIcon icon={text} slot='start' />
+              <div className="contentBlock">
+                <div style={{ flexDirection: "column" }}>
+                  <IonLabel className='ion-text-wrap uiFont'>行距: {this.props.settings.lineSpacing.toFixed(1)}</IonLabel>
+                  <IonRange min={0} max={2} step={0.1} pin={true} pinFormatter={(n) => n.toFixed(1)} snaps={true} value={this.props.settings.lineSpacing} onIonChange={e => {
+                    this.props.dispatch({
+                      type: "SET_KEY_VAL",
+                      key: 'lineSpacing',
+                      val: +e.detail.value,
+                    });
+                  }} />
+                </div>
+              </div>
+            </IonItem>
+            <IonItem>
+              <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={documentText} slot='start' />
               <IonLabel className='ion-text-wrap uiFont'>文字隔線</IonLabel>
               <IonToggle slot='end' checked={this.props.settings.useTextBorder} onIonChange={e => {
@@ -639,7 +655,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
               <div className="contentBlock">
                 <div style={{ flexDirection: "column" }}>
                   <IonLabel className='ion-text-wrap uiFont'>經文頁按鈕透明度: {this.props.settings.fabButtonAlpha.toFixed(1)}</IonLabel>
-                  <IonRange min={0} max={1} step={0.1} pin={true} snaps={true} value={this.props.settings.fabButtonAlpha} onIonChange={e => {
+                  <IonRange min={0} max={1} step={0.1} pin={true} pinFormatter={(n) => n.toFixed(1)} snaps={true} value={this.props.settings.fabButtonAlpha} onIonChange={e => {
                     this.props.dispatch({
                       type: "SET_KEY_VAL",
                       key: 'fabButtonAlpha',
@@ -807,7 +823,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
               <div className="contentBlock">
                 <div style={{ flexDirection: "column" }}>
                   <IonLabel className='ion-text-wrap uiFont'><a href="https://github.com/MrMYHuang/cbetar2#text2speech" target="_new">合成語音語速</a>: {this.props.settings.speechRate}</IonLabel>
-                  <IonRange min={0.1} max={1.5} step={0.1} snaps={true} value={this.props.settings.speechRate} onIonChange={e => {
+                  <IonRange min={0.1} max={1.5} step={0.1} pin={true} pinFormatter={(n) => n.toFixed(1)} snaps={true} value={this.props.settings.speechRate} onIonChange={e => {
                     this.props.dispatch({
                       type: "SET_KEY_VAL",
                       key: 'speechRate',

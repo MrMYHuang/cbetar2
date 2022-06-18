@@ -315,6 +315,7 @@ export class _EPubView extends React.Component<PageProps, State> {
       'rtlVerticalLayout',
       'scrollbarSize',
       'useTextBorder',
+      'lineSpacing',
       'useFontKai',
       'fontSize',
       'uiFontSize',
@@ -701,6 +702,7 @@ export class _EPubView extends React.Component<PageProps, State> {
     .t, p, div {
       font-family: ${getComputedStyle(document.body).getPropertyValue('--ion-font-family')};
       font-size: ${this.props.fontSize}px;
+      line-height: ${this.props.settings.lineSpacing};
     }
 
     .t {

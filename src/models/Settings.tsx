@@ -26,6 +26,7 @@ export interface Settings {
     fontSize: number;
     uiFontSize: number;
     useTextBorder: boolean;
+    lineSpacing: number;
     showComments: boolean;
     printStyle: number;
     voiceURI: string;
@@ -50,6 +51,7 @@ const defaultSettings = {
     fontSize: 32,
     uiFontSize: 24,
     useTextBorder: true,
+    lineSpacing: 1.5,
     showComments: false,
     printStyle: 0,
     voiceURI: '',
