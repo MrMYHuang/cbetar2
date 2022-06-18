@@ -2,10 +2,11 @@
 import { app, BrowserWindow, dialog, ipcMain, Menu, MenuItem, protocol, shell } from 'electron';
 import * as fs from 'fs';
 import * as os from 'os';
+import * as path from 'path';
 import * as update from './Update';
 import * as Globals from './Globals';
 const windowStateKeeper = require('electron-window-state');
-const path = require('path');
+
 const PackageInfos = require('../package.json');
 
 const resourcesPath = (process as any).resourcesPath;
@@ -44,26 +45,37 @@ function notifyFrontendCbetaOfflineDbMode() {
 async function setCbetaBookcase() {
   const res = await dialog.showOpenDialog({
     properties: ['openDirectory'],
-    message: '設定Bookcase目錄',
+    message: '設定 Bookcase 目錄',
   });
 
-  if (!res.canceled) {
-    if (fs.existsSync(`${res.filePaths[0]}/CBETA`)) {
-      settings.cbetaBookcaseDir = res.filePaths[0];
-      try {
-        fs.writeFileSync(backendAppSettingsFile, JSON.stringify(settings));
-        notifyFrontendCbetaOfflineDbMode();
-      } catch (error: any) {
-        dialog.showErrorBox('錯誤', `${error.message}`);
-      }
-    } else {
-      dialog.showErrorBox('目錄無效', '所選的目錄不是有效的 CBETA 經文資料檔目錄(Bookcase 目錄)！');
-    }
-  } else {
+  if (res.canceled) {
     dialog.showMessageBox({
       type: 'info',
       message: '設定取消'
     });
+    return;
+  }
+
+  const downloadsPath = path.resolve(os.homedir(), 'Downloads');
+  if (process.platform === 'darwin' && !path.resolve(res.filePaths[0]).includes(downloadsPath)) {
+    dialog.showErrorBox('目錄無效', '由於 Mac store app 限制，請將 Bookcase 目錄置於您的家目錄的下載 (Downloads) 目錄！');
+    return;
+  }
+
+  try {
+    if (!fs.existsSync(`${res.filePaths[0]}/CBETA`)) {
+      dialog.showErrorBox('目錄無效', '所選的目錄不是有效的 CBETA 經文資料檔目錄 (Bookcase 目錄)！');
+      return;
+    }
+
+    settings.cbetaBookcaseDir = res.filePaths[0];
+    fs.writeFileSync(backendAppSettingsFile, JSON.stringify(settings));
+    notifyFrontendCbetaOfflineDbMode();
+    dialog.showMessageBox({
+      message: '設定成功！',
+    });
+  } catch (error: any) {
+    dialog.showErrorBox('錯誤', `${error.message}`);
   }
 }
 
@@ -211,6 +223,10 @@ async function createWindow() {
 
   // Open the DevTools.
   //mainWindow.webContents.openDevTools()
+  mainWindow.on('close', () => {
+    ipcMain.removeAllListeners();
+    ipcMain.removeHandler('toMainV3');
+  });
 
   ipcMain.on('toMain', async (ev, args) => {
     switch (args.event) {

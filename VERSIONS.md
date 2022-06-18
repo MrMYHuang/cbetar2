@@ -1,4 +1,8 @@
 # <a id='history'>版本歷史</a>
+* MAS 21.0.1:
+  * [修正] 關閉視窗，從 Dock 重啟後異常。
+  * [修正] 提示 Mac store app 限制 Bookcase 必須置於 Downloads 目錄。
+
 * PWA 10.2.5:
   * [修正] 設定頁項目圖示。
 
