@@ -3,7 +3,7 @@ import * as zip from 'zip.js-myh';
 
 const cbetardb = 'cbetardb';
 // Increase this if a new store is added.
-const version = 1;
+const version = 3;
 const dataStore = 'store';
 // Increase this if font store content is changed.
 const twKaiFontVersion = 5;
@@ -32,8 +32,11 @@ async function open() {
     // Init store in indexedDB if necessary.
     dbOpenReq.onupgradeneeded = function (ev: IDBVersionChangeEvent) {
       db = (ev.target as any).result as IDBDatabase;
-      db.createObjectStore(dataStore);
-      db.createObjectStore(fontStore);
+      [dataStore, fontStore].forEach((s) => {
+        if (!db.objectStoreNames.contains(s)) {
+          db.createObjectStore(s);
+        }
+      });
       ok();
     };
     dbOpenReq.onsuccess = (ev: Event) => {
