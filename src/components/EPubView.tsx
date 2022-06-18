@@ -87,6 +87,7 @@ enum SpeechState {
 
 interface State {
   isLoading: boolean;
+  loadingMessage: string;
   fetchError: boolean;
   workInfo: Work;
   htmlStr: string | null;
@@ -123,6 +124,7 @@ export class _EPubView extends React.Component<PageProps, State> {
     super(props);
     this.state = {
       isLoading: false,
+      loadingMessage: '',
       fetchError: false,
       workInfo: ({} as Work),
       htmlStr: null,
@@ -242,11 +244,15 @@ export class _EPubView extends React.Component<PageProps, State> {
       this.bookSettingsChanged = false;
       this.fetchNewData = false;
       this.fetchData().then((hasData) => {
-        hasData && this.html2Epub();
+        hasData && this.html2Epub().catch(error => {
+          console.error(error);
+        });
       });
     } else if (this.bookSettingsChanged) {
       this.bookSettingsChanged = false;
-      this.html2Epub();
+      this.html2Epub().catch(error => {
+        console.error(error);
+      });
     } else if (this.bookmarkEpubcfiUpdated) {
       this.bookmarkEpubcfiUpdated = false;
       this.moveToEpubcfi(this.bookmarkEpubcfi).then(() => {
@@ -297,7 +303,10 @@ export class _EPubView extends React.Component<PageProps, State> {
 
       this.savedPageIndex = this.state.currentPage;
       waitFullscreenSwitching.then(() => {
-        this.html2Epub();
+        this.html2Epub().catch(error => {
+          console.error(error);
+          this.setState({ isLoading: false });
+        });
       });
     }
     //console.log( 'view will enter' );
@@ -364,7 +373,7 @@ export class _EPubView extends React.Component<PageProps, State> {
     }
 
     return new Promise<boolean>(async (ok, fail) => {
-      this.setState({ isLoading: true });
+      //this.setState({ isLoading: true, loadingMessage: '讀檔中...' });
       try {
         const res = await fetchJuan(
           this.props.match.params.path,
@@ -542,61 +551,62 @@ export class _EPubView extends React.Component<PageProps, State> {
   ePubIframe: HTMLIFrameElement | null = null;
   async html2Epub() {
     //this.destroyBook();
-    this.setState({ isLoading: true });
-    (this.rendition as any)?.manager?.stage?.destroy();
-    this.epub = nodepub.document({
-      id: '123-123456789',
-      cover: './logo.png',
-      title: 'Title',
-      series: '',
-      sequence: 1,
-      author: 'Author',
-      fileAs: '',
-      genre: 'genre',
-      tags: '',
-      copyright: '',
-      publisher: '',
-      published: '',
-      language: 'en',
-      description: 'A temp book.',
-      contents: this.state.workInfo.title,
-      source: '',
-      images: ['logo.png'],
-    });
+    this.setState({ isLoading: true, loadingMessage: '載入中...' });
+    try {
+      (this.rendition as any)?.manager?.stage?.destroy();
+      this.epub = nodepub.document({
+        id: '123-123456789',
+        cover: './logo.png',
+        title: 'Title',
+        series: '',
+        sequence: 1,
+        author: 'Author',
+        fileAs: '',
+        genre: 'genre',
+        tags: '',
+        copyright: '',
+        publisher: '',
+        published: '',
+        language: 'en',
+        description: 'A temp book.',
+        contents: this.state.workInfo.title,
+        source: '',
+        images: ['logo.png'],
+      });
 
-    let htmlStrModifiedStyles = this.state.htmlStr!;
-    if (this.props.rtlVerticalLayout) {
-      htmlStrModifiedStyles = htmlStrModifiedStyles.replace(/(margin|border)-left/g, '$1-temp');
-      htmlStrModifiedStyles = htmlStrModifiedStyles.replace(/(margin|border)-bottom/g, '$1-left');
-      htmlStrModifiedStyles = htmlStrModifiedStyles.replace(/(margin|border)-right/g, '$1-bottom');
-      htmlStrModifiedStyles = htmlStrModifiedStyles.replace(/(margin|border)-top/g, '$1-right');
-      htmlStrModifiedStyles = htmlStrModifiedStyles.replace(/(margin|border)-temp/g, '$1-top');
-      // The custome tag 'mulu' causes text nodes have abnormal x/y values by getBoundingClientRect.
-      // It causes findTextsInPage abnormal!
-      // Rewrite it to p tag.
-      htmlStrModifiedStyles = htmlStrModifiedStyles.replace(/mulu/g, 'p');
-    }
-    /* else {
-      htmlStrModifiedStyles = htmlStrModifiedStyles.replace(/margin-top/g, 'margin-left');
-    }*/
+      let htmlStrModifiedStyles = this.state.htmlStr!;
+      if (this.props.rtlVerticalLayout) {
+        htmlStrModifiedStyles = htmlStrModifiedStyles.replace(/(margin|border)-left/g, '$1-temp');
+        htmlStrModifiedStyles = htmlStrModifiedStyles.replace(/(margin|border)-bottom/g, '$1-left');
+        htmlStrModifiedStyles = htmlStrModifiedStyles.replace(/(margin|border)-right/g, '$1-bottom');
+        htmlStrModifiedStyles = htmlStrModifiedStyles.replace(/(margin|border)-top/g, '$1-right');
+        htmlStrModifiedStyles = htmlStrModifiedStyles.replace(/(margin|border)-temp/g, '$1-top');
+        // The custome tag 'mulu' causes text nodes have abnormal x/y values by getBoundingClientRect.
+        // It causes findTextsInPage abnormal!
+        // Rewrite it to p tag.
+        htmlStrModifiedStyles = htmlStrModifiedStyles.replace(/mulu/g, 'p');
+      }
+      /* else {
+        htmlStrModifiedStyles = htmlStrModifiedStyles.replace(/margin-top/g, 'margin-left');
+      }*/
 
-    //htmlStrModifiedStyles = htmlStrModifiedStyles.replace(/<span class="lb">[^<]*<\/span>/g, 'ㄇ');
+      //htmlStrModifiedStyles = htmlStrModifiedStyles.replace(/<span class="lb">[^<]*<\/span>/g, 'ㄇ');
 
-    const htmlStrWithCssJs = htmlStrModifiedStyles + `
+      const htmlStrWithCssJs = htmlStrModifiedStyles + `
     <script>
     </script>
     `;
 
-    this.epub.addSection('', htmlStrWithCssJs, true, false);
+      this.epub.addSection('', htmlStrWithCssJs, true, false);
 
-    let rtlVerticalStyles = `
+      let rtlVerticalStyles = `
     html {
       writing-mode: vertical-rl;
       direction: ltr;
     }
     `;
 
-    this.epub.addCSS(`
+      this.epub.addCSS(`
     @page {
       size: A4;
       margin: 0.5in;
@@ -720,7 +730,6 @@ export class _EPubView extends React.Component<PageProps, State> {
     }
     `);
 
-    try {
       await this.epub.writeEPUB('.', 'temp');
       let fs = require('fs');
       let tempEpubBuffer = fs.readFileSync('temp.epub');
@@ -803,32 +812,27 @@ export class _EPubView extends React.Component<PageProps, State> {
         //console.log(`EVENTS.VIEWS.RENDERED`);
         this.updateEPubIframe();
       });
+      // Make his.rendition?.book.spine ready.
+      await this.rendition.display();
 
-      try {
-        // Make his.rendition?.book.spine ready.
-        await this.rendition.display();
+      // For !paginated.
+      const pagestoSkipCoverToc = 2;
+      // Jump to epubcfi or the content pages.
 
-        // For !paginated.
-        const pagestoSkipCoverToc = 2;
-        // Jump to epubcfi or the content pages.
-
-        if (this.props.paginated) {
-          await this.moveToEpubcfi(this.epubcfi).then(() => {
-            return this.updatePageInfos();
-          }).then(() => {
-            this.updateEPubIframe();
-            this.findTextsInPage(this.state.currentPage);
-          });
-        } else {
-          await (this.rendition as any)._display(pagestoSkipCoverToc);
-        }
-      } catch (error) {
-        console.error(error);
+      if (this.props.paginated) {
+        await this.moveToEpubcfi(this.epubcfi).then(() => {
+          return this.updatePageInfos();
+        }).then(() => {
+          this.updateEPubIframe();
+          this.findTextsInPage(this.state.currentPage);
+        });
+      } else {
+        await (this.rendition as any)._display(pagestoSkipCoverToc);
       }
 
       this.book?.locations.generate(150);
     } catch (e) {
-      console.log(e);
+      throw e;
     } finally {
       this.setState({ isLoading: false });
     }
@@ -1388,7 +1392,9 @@ export class _EPubView extends React.Component<PageProps, State> {
 
           <IonButton hidden={!this.state.fetchError} fill="clear" slot='end' onClick={e => {
             this.fetchData().then((hasData) => {
-              hasData && this.html2Epub();
+              hasData && this.html2Epub().catch(error => {
+                console.error(error);
+              });
             });
           }}>
             <IonIcon icon={refreshCircle} slot='icon-only' />
@@ -1681,7 +1687,7 @@ export class _EPubView extends React.Component<PageProps, State> {
             cssClass='uiFont'
             isOpen={this.state.isLoading}
             onDidDismiss={() => this.setState({ isLoading: false })}
-            message={'載入中...'}
+            message={this.state.loadingMessage}
           />
 
           {
