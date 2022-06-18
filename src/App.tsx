@@ -77,6 +77,7 @@ setupIonicReact({
 });
 
 export var serviceWorkCallbacks = {
+  onLoad: function (registration: ServiceWorkerRegistration) { },
   onSuccess: function (registration: ServiceWorkerRegistration) { },
   onUpdate: function (registration: ServiceWorkerRegistration) { },
 };
@@ -297,6 +298,12 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
       }
     }, 500);
 
+    serviceWorkCallbacks.onLoad = (registration: ServiceWorkerRegistration) => {
+      if (registration.installing || registration.waiting) {
+        this.setState({ showUpdateAlert: true });
+      }
+    };
+
     serviceWorkCallbacks.onUpdate = (registration: ServiceWorkerRegistration) => {
       this.setState({ showUpdateAlert: true });
     };
@@ -409,6 +416,9 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
           onDidPresent={async (ev) => {
             // Run SKIP_WAITING at onDidPresent event to avoid a race condition of
             // an old page fetching old JS chunks with a new service worker!
+            // Which causes this alert fails to show.
+            (await Globals.getServiceWorkerReg()).installing?.postMessage({ type: 'SKIP_WAITING' });
+            (await Globals.getServiceWorkerReg()).waiting?.postMessage({ type: 'SKIP_WAITING' });
             Globals.getServiceWorkerRegUpdated().installing?.postMessage({ type: 'SKIP_WAITING' });
             Globals.getServiceWorkerRegUpdated().waiting?.postMessage({ type: 'SKIP_WAITING' });
           }}

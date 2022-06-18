@@ -88,10 +88,6 @@ async function saveFile(fileName: string, data: any, store: string = dataStore) 
 }
 
 async function saveZippedFile(fileName: string, data: Uint8Array) {
-  /*const zip = new AdmZip();
-  zip.addFile('file', data);
-  return saveFile(fileName, zip.toBuffer());*/
-
   const zipFile = new zip.ZipWriter(new zip.Uint8ArrayWriter());
   await zipFile.add('file', new zip.Uint8ArrayReader(data));
   return saveFile(fileName, await zipFile.close());
