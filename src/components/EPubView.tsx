@@ -373,7 +373,7 @@ export class _EPubView extends React.Component<PageProps, State> {
     }
 
     return new Promise<boolean>(async (ok, fail) => {
-      //this.setState({ isLoading: true, loadingMessage: '讀檔中...' });
+      this.setState({ isLoading: true, loadingMessage: '讀檔中...' });
       try {
         const res = await fetchJuan(
           this.props.match.params.path,
@@ -737,8 +737,9 @@ export class _EPubView extends React.Component<PageProps, State> {
         openAs: 'binary',
       });
 
+      const useSrcFromSw = process.env.NODE_ENV === 'production' && this.props.settings.cbetaOfflineDbMode !== CbetaDbMode.Online;
       this.rendition = this.book.renderTo(this.epubDivId, {
-        method: process.env.NODE_ENV === 'production' ? 'srcFromSw' : 'srcdoc',
+        method: useSrcFromSw ? 'srcFromSw' : 'srcdoc',
         sendToServiceWoker: ({ html }: VirtualHtml) => {
           const messageChannel = new MessageChannel();
 

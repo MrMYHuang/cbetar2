@@ -1,4 +1,7 @@
 # <a id='history'>版本歷史</a>
+* PWA 10.2.6:
+  * [修正] iOS app 偶爾無法開啟經文。
+
 * MAS 21.0.1:
   * [修正] 關閉視窗，從 Dock 重啟後異常。
   * [修正] 提示 Mac store app 限制 Bookcase 必須置於 Downloads 目錄。
