@@ -42,6 +42,7 @@ export default async function fetchJuan(work: string, juan: string, htmlFile: st
       switch (cbetaOfflineDbMode) {
         case CbetaDbMode.OfflineIndexedDb:
         case CbetaDbMode.OfflineFileSystemV2:
+        case CbetaDbMode.OfflineFileSystemV3:
           data = await fetchJuanFromIndexedDB(work, juan, cbetaOfflineDbMode);
           break;
         case CbetaDbMode.OfflineFileSystem:

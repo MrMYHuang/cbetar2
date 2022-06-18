@@ -41,6 +41,14 @@ contextBridge.exposeInMainWorld(
               ipcRenderer.once(channel, (event: any, ...args: any[]) => func(...args));
           }
       },
+      invoke: (channel: string, data: any) => {
+          let validChannels = ["toMainV3"];
+          if (validChannels.includes(channel)) {
+              // Deliberately strip event as it includes `sender` 
+              return ipcRenderer.invoke(channel, data);
+          }
+          return Promise.reject('Invalid invoke channel.');
+      },
       removeAllListeners: (channel: string) => {
         ipcRenderer.removeAllListeners(channel);
       }

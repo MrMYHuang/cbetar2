@@ -239,8 +239,26 @@ async function createWindow() {
         } catch (error) {
           mainWindow?.webContents.send('fromMain', Object.assign({ event: args.event }, { error: error }));
         }
-
         break;
+    }
+  });
+
+  ipcMain.handle('toMainV3', async (ev, args) => {
+    switch (args.event) {
+      case 'readResource':
+        try {
+          const str = fs.readFileSync(`${isDevMode() ? '.' : resourcesPath}/${args.path}`).toString();
+          return { event: args.event, data: str };
+        } catch (error) {
+          return { event: args.event, error: error };
+        }
+      case 'readBookcase':
+        try {
+          const str = fs.readFileSync(`${settings.cbetaBookcaseDir}/${args.path}`).toString();
+          return { event: args.event, data: str };
+        } catch (error) {
+          return { event: args.event, error: error };
+        }
     }
   });
 

@@ -1,4 +1,7 @@
 # <a id='history'>版本歷史</a>
+* PWA 10.0.0, Electron app 21.0.0:
+  * [變更] 使檔案系統離線 DB 載入更可靠。
+
 * PWA 9.2.0:
   * [新增] 重置設定支援重建 IndexedDB。
   * [變更] 經文資料、字型資料使用獨立 IndexedDB stores。

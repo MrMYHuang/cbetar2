@@ -5,6 +5,7 @@ export enum CbetaDbMode {
     OfflineFileSystem,
     OfflineIndexedDb,
     OfflineFileSystemV2,
+    OfflineFileSystemV3,
 }
 
 export enum UiMode {

@@ -73,6 +73,7 @@ class _WorkTouchPage extends React.Component<PageProps, State> {
         switch (this.props.settings.cbetaOfflineDbMode) {
           case CbetaDbMode.OfflineIndexedDb:
           case CbetaDbMode.OfflineFileSystemV2:
+          case CbetaDbMode.OfflineFileSystemV3:
             data = await CbetaOfflineDb.fetchWork(path, this.props.settings.cbetaOfflineDbMode);
             break;
           case CbetaDbMode.OfflineFileSystem:

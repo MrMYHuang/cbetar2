@@ -84,6 +84,7 @@ class _CatalogTouch extends React.Component<PageProps, State> {
         switch (this.props.settings.cbetaOfflineDbMode) {
           case CbetaDbMode.OfflineIndexedDb:
           case CbetaDbMode.OfflineFileSystemV2:
+          case CbetaDbMode.OfflineFileSystemV3:
             obj = await CbetaOfflineDb.fetchCatalogs(path || 'CBETA', this.props.settings.cbetaOfflineDbMode);
             break;
           case CbetaDbMode.OfflineFileSystem:

@@ -188,9 +188,12 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
         case 'cbetaOfflineDbMode':
           let dbMode = CbetaDbMode.Online;
           if (data.isOn) {
-            if (semver.gte(data.backendVersion, '20.0.0')) {
+            if (semver.gte(data.backendVersion, '21.0.0')) {
+              dbMode = CbetaDbMode.OfflineFileSystemV3;
+              CbetaOfflineDb.init(dbMode);
+            } else if (semver.gte(data.backendVersion, '20.0.0')) {
               dbMode = CbetaDbMode.OfflineFileSystemV2;
-              CbetaOfflineDb.init(CbetaDbMode.OfflineFileSystemV2);
+              CbetaOfflineDb.init(dbMode);
             } else {
               dbMode = CbetaDbMode.OfflineFileSystem;
             }

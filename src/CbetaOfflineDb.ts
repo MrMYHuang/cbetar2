@@ -9,7 +9,12 @@ async function wait(ms: number = 1000) {
     });
 }
 
-const electronBackendApi: any = (window as any).electronBackendApi;
+const electronBackendApi: {
+    send: (channel: string, data: any) => {},
+    receive: (channel: string, func: Function) => {},
+    receiveOnce: (channel: string, func: Function) => {},
+    invoke: (channel: string, data: any) => Promise<any>,
+} = (window as any).electronBackendApi;
 
 const cbetaBookcaseDir = 'Bookcase';
 const bookcaseInfosKey = 'bookcaseInfos';
@@ -131,17 +136,34 @@ export async function init(mode: CbetaDbMode) {
                 }, 100);
             });
 
-            const catalogsString = (await readBookcaseFromFileSystem(`CBETA/catalog.txt`));
+            const catalogsString = (await readBookcaseFromFileSystemV2(`CBETA/catalog.txt`));
             await wait();
-            const spinesString = (await readBookcaseFromFileSystem(`CBETA/spine.txt`));
+            const spinesString = (await readBookcaseFromFileSystemV2(`CBETA/spine.txt`));
             await wait();
-            const gaijisString = (await readResourceFromFileSystem(`cbeta_gaiji/cbeta_gaiji.json`));
+            const gaijisString = (await readResourceFromFileSystemV2(`cbeta_gaiji/cbeta_gaiji.json`));
             await wait();
-            const stylesheetString = (await readResourceFromFileSystem(`buildElectron/nav_fix.xsl`));
+            const stylesheetString = (await readResourceFromFileSystemV2(`buildElectron/nav_fix.xsl`));
             await wait();
-            const documentString = (await readBookcaseFromFileSystem(`CBETA/bulei_nav.xhtml`));
+            const documentString = (await readBookcaseFromFileSystemV2(`CBETA/bulei_nav.xhtml`));
             await wait();
-            const teiStylesheetString = await readResourceFromFileSystem(`buildElectron/tei.xsl`);
+            const teiStylesheetString = await readResourceFromFileSystemV2(`buildElectron/tei.xsl`);
+            await initFromFiles(catalogsString, spinesString, gaijisString, stylesheetString, documentString, teiStylesheetString);
+        } else if (mode === CbetaDbMode.OfflineFileSystemV3) {
+            await new Promise<void>(ok => {
+                const timer = setInterval(() => {
+                    if (isOfflineFileSystemV2Ready) {
+                        clearInterval(timer);
+                        ok();
+                    }
+                }, 100);
+            });
+
+            const catalogsString = (await readBookcaseFromFileSystemV3(`CBETA/catalog.txt`));
+            const spinesString = (await readBookcaseFromFileSystemV3(`CBETA/spine.txt`));
+            const gaijisString = (await readResourceFromFileSystemV3(`cbeta_gaiji/cbeta_gaiji.json`));
+            const stylesheetString = (await readResourceFromFileSystemV3(`buildElectron/nav_fix.xsl`));
+            const documentString = (await readBookcaseFromFileSystemV3(`CBETA/bulei_nav.xhtml`));
+            const teiStylesheetString = await readResourceFromFileSystemV3(`buildElectron/tei.xsl`);
             await initFromFiles(catalogsString, spinesString, gaijisString, stylesheetString, documentString, teiStylesheetString);
         }
     }
@@ -318,7 +340,10 @@ export async function fetchJuan(work: string, juan: string, mode: CbetaDbMode) {
         documentString = await getFileAsStringFromIndexedDB(`/${cbetaBookcaseDir}/${xmlPath}`);
         figurePath = `https://${Constants.indexedDBHost}/${cbetaBookcaseDir}/CBETA/figures`;
     } else if (mode === CbetaDbMode.OfflineFileSystemV2) {
-        documentString = await readBookcaseFromFileSystem(xmlPath);
+        documentString = await readBookcaseFromFileSystemV2(xmlPath);
+        figurePath = `${Globals.localFileProtocolName}://${cbetaBookcaseDir}/CBETA/figures`;
+    } else if (mode === CbetaDbMode.OfflineFileSystemV3) {
+        documentString = await readBookcaseFromFileSystemV3(xmlPath);
         figurePath = `${Globals.localFileProtocolName}://${cbetaBookcaseDir}/CBETA/figures`;
     }
 
@@ -382,7 +407,7 @@ async function elementTPostprocessing(doc: Document, node: Node, parent: Node | 
     }
 }
 
-async function readResourceFromFileSystem(path: string) {
+async function readResourceFromFileSystemV2(path: string) {
     electronBackendApi?.send('toMain', { event: 'readResource', path: path });
     return new Promise<any>((ok, fail) => {
         electronBackendApi?.receiveOnce('fromMain', (data: any) => {
@@ -399,7 +424,7 @@ async function readResourceFromFileSystem(path: string) {
     });
 }
 
-async function readBookcaseFromFileSystem(path: string) {
+async function readBookcaseFromFileSystemV2(path: string) {
     electronBackendApi?.send('toMain', { event: 'readBookcase', path: path });
     return new Promise<any>((ok, fail) => {
         electronBackendApi?.receiveOnce('fromMain', (data: any) => {
@@ -413,6 +438,26 @@ async function readBookcaseFromFileSystem(path: string) {
                     break;
             }
         });
+    });
+}
+
+async function readResourceFromFileSystemV3(path: string) {
+    return electronBackendApi?.invoke('toMainV3', { event: 'readResource', path: path }).then((data: any) => {
+        if (data.error) {
+            return Promise.reject(data.error);
+        } else {
+            return Promise.resolve(data.data);
+        }
+    });
+}
+
+async function readBookcaseFromFileSystemV3(path: string) {
+    return electronBackendApi?.invoke('toMainV3', { event: 'readBookcase', path: path }).then((data: any) => {
+        if (data.error) {
+            return Promise.reject(data.error);
+        } else {
+            return Promise.resolve(data.data);
+        }
     });
 }
 
