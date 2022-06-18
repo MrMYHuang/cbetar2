@@ -631,7 +631,7 @@ export class _EPubView extends React.Component<PageProps, State> {
       This problem causes the total page count is incorrect.
       Fortunately, we can set the line height based on the same font size as below.
       */
-      line-height: 1.2;
+      line-height: ${this.props.settings.lineSpacing};
       -webkit-text-size-adjust: none;
       text-size-adjust: none;
     }
@@ -641,6 +641,8 @@ export class _EPubView extends React.Component<PageProps, State> {
       background: ${getComputedStyle(document.body).getPropertyValue('--ion-background-color')};
       /* Disable browser's swipe to forward / backward page navigation. */
       overscroll-behavior-x: none;
+      /* Fix an issue in epub.js causing iOS Safari not using line-height. */
+      -webkit-line-box-contain: inline block glyphs replaced !important;
     }
 
     @font-face {

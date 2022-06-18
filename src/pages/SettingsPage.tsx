@@ -607,7 +607,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
               <div className="contentBlock">
                 <div style={{ flexDirection: "column" }}>
                   <IonLabel className='ion-text-wrap uiFont'>行距: {this.props.settings.lineSpacing.toFixed(1)}</IonLabel>
-                  <IonRange min={0} max={2} step={0.1} pin={true} pinFormatter={(n) => n.toFixed(1)} snaps={true} value={this.props.settings.lineSpacing} onIonChange={e => {
+                  <IonRange min={0} max={3} step={0.1} pin={true} pinFormatter={(n) => n.toFixed(1)} snaps={true} value={this.props.settings.lineSpacing} onIonChange={e => {
                     this.props.dispatch({
                       type: "SET_KEY_VAL",
                       key: 'lineSpacing',
