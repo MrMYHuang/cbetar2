@@ -30,6 +30,7 @@
     "rebuild-native-for-electron": "electron-builder install-app-deps",
     "start": "react-app-rewired start",
     "build": "zip -r public/assets.zip cbetar2 && react-app-rewired build && node ./tools/build.js",
+    "start-sw": "npm run build && serve -s build",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject",
     "build-electron": "tsc -b tsconfigElectron.json",

@@ -15,6 +15,13 @@ npm i
 npm run start
 ```
 
+### Debug Service Worker
+1. Run Shell script:
+```
+cd cbetar2
+npm run start-sw
+```
+
 ### Mac Store App
 0. Generate and install the following certificates from https://developer.apple.com/account/resources/certificates/list
    1. Apple Development
