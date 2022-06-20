@@ -21,7 +21,18 @@ const backendAppSettingsFile = `${cbetar2SettingsPath}/BackendAppSettings.json`;
 
 app.commandLine.appendSwitch('ignore-certificate-errors', 'true');
 let mainWindow: BrowserWindow | null | undefined;
-let settings: any = {};
+
+interface Settings {
+  lastCheckedVersion: string;
+  cbetaBookcaseDir: string;
+  cbetaBookcaseDirSecurityScopedBookmark: string;
+}
+
+let settings: Settings = {
+  lastCheckedVersion: '',
+  cbetaBookcaseDir: '',
+  cbetaBookcaseDirSecurityScopedBookmark: '',
+};
 let frontendIsReady = false;
 
 function isDevMode() {
@@ -46,6 +57,7 @@ async function setCbetaBookcase() {
   const res = await dialog.showOpenDialog({
     properties: ['openDirectory'],
     message: '設定 Bookcase 目錄',
+    securityScopedBookmarks: true,
   });
 
   if (res.canceled) {
@@ -56,12 +68,6 @@ async function setCbetaBookcase() {
     return;
   }
 
-  const downloadsPath = path.resolve(os.homedir(), 'Downloads');
-  if (process.platform === 'darwin' && !path.resolve(res.filePaths[0]).includes(downloadsPath)) {
-    dialog.showErrorBox('目錄無效', '由於 Mac store app 限制，請將 Bookcase 目錄置於您的家目錄的下載 (Downloads) 目錄！');
-    return;
-  }
-
   try {
     if (!fs.existsSync(`${res.filePaths[0]}/CBETA`)) {
       dialog.showErrorBox('目錄無效', '所選的目錄不是有效的 CBETA 經文資料檔目錄 (Bookcase 目錄)！');
@@ -69,6 +75,9 @@ async function setCbetaBookcase() {
     }
 
     settings.cbetaBookcaseDir = res.filePaths[0];
+    if (res.bookmarks && res.bookmarks[0]) {
+      settings.cbetaBookcaseDirSecurityScopedBookmark = res.bookmarks[0];
+    }
     fs.writeFileSync(backendAppSettingsFile, JSON.stringify(settings));
     notifyFrontendCbetaOfflineDbMode();
     dialog.showMessageBox({
@@ -89,9 +98,9 @@ function loadSettings() {
       notifyFrontendCbetaOfflineDbMode();
     } else {
       // Remove invalid cbetaBookcaseDir.
-      delete settings.cbetaBookcaseDir;
+      settings.cbetaBookcaseDir = '';
       fs.writeFileSync(backendAppSettingsFile, JSON.stringify(settings));
-      dialog.showErrorBox('目錄無效', '儲存的Bookcase目錄設定無效！請重新選擇Bookcase目錄。');
+      dialog.showErrorBox('目錄無效', '儲存的 Bookcase 目錄設定無效！請重新選擇 Bookcase 目錄。');
     }
   }
 }
@@ -250,7 +259,9 @@ async function createWindow() {
         break;
       case 'readBookcase':
         try {
+          const stopAccessingSecurityScopedResource = app.startAccessingSecurityScopedResource(settings.cbetaBookcaseDirSecurityScopedBookmark);
           const str = fs.readFileSync(`${settings.cbetaBookcaseDir}/${args.path}`).toString();
+          stopAccessingSecurityScopedResource();
           mainWindow?.webContents.send('fromMain', Object.assign({ event: args.event }, { data: str }));
         } catch (error) {
           mainWindow?.webContents.send('fromMain', Object.assign({ event: args.event }, { error: error }));
@@ -270,6 +281,8 @@ async function createWindow() {
         }
       case 'readBookcase':
         try {
+          const stopAccessingSecurityScopedResource = app.startAccessingSecurityScopedResource(settings.cbetaBookcaseDirSecurityScopedBookmark);
+          stopAccessingSecurityScopedResource();
           const str = fs.readFileSync(`${settings.cbetaBookcaseDir}/${args.path}`).toString();
           return { event: args.event, data: str };
         } catch (error) {
