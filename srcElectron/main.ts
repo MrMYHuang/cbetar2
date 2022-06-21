@@ -259,7 +259,7 @@ async function createWindow() {
         break;
       case 'readBookcase':
         try {
-          const stopAccessingSecurityScopedResource = app.startAccessingSecurityScopedResource(settings.cbetaBookcaseDirSecurityScopedBookmark);
+          const stopAccessingSecurityScopedResource = process.mas ? app.startAccessingSecurityScopedResource(settings.cbetaBookcaseDirSecurityScopedBookmark) : () => { };
           const str = fs.readFileSync(`${settings.cbetaBookcaseDir}/${args.path}`).toString();
           stopAccessingSecurityScopedResource();
           mainWindow?.webContents.send('fromMain', Object.assign({ event: args.event }, { data: str }));
@@ -272,6 +272,14 @@ async function createWindow() {
 
   ipcMain.handle('toMainV3', async (ev, args) => {
     switch (args.event) {
+      case 'disableBookcase':
+        try {
+          settings.cbetaBookcaseDir = '';
+          fs.writeFileSync(backendAppSettingsFile, JSON.stringify(settings));
+          return { event: args.event, data: {} };
+        } catch (error) {
+          return { event: args.event, data: { error } };
+        }
       case 'readResource':
         try {
           const str = fs.readFileSync(`${isDevMode() ? '.' : resourcesPath}/${args.path}`).toString();
@@ -281,9 +289,9 @@ async function createWindow() {
         }
       case 'readBookcase':
         try {
-          const stopAccessingSecurityScopedResource = app.startAccessingSecurityScopedResource(settings.cbetaBookcaseDirSecurityScopedBookmark);
-          stopAccessingSecurityScopedResource();
+          const stopAccessingSecurityScopedResource = process.mas ? app.startAccessingSecurityScopedResource(settings.cbetaBookcaseDirSecurityScopedBookmark) : () => { };
           const str = fs.readFileSync(`${settings.cbetaBookcaseDir}/${args.path}`).toString();
+          stopAccessingSecurityScopedResource();
           return { event: args.event, data: str };
         } catch (error) {
           return { event: args.event, error: error };
