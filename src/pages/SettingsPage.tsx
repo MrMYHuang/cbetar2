@@ -3,6 +3,7 @@ import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem,
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { helpCircle, text, documentText, refreshCircle, musicalNotes, colorPalette, bug, download, print, informationCircle, desktop, settings, documents } from 'ionicons/icons';
+import * as semver from 'semver';
 
 import Globals from '../Globals';
 import './SettingsPage.css';
@@ -198,11 +199,32 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
               <IonLabel className='ion-text-wrap uiFont'>Backend app版本: {this.props.tmpSettings.mainVersion}</IonLabel>
             </IonItem>
           */}
-            <IonItem hidden={!this.props.tmpSettings.mainVersion}>
+            <IonItem hidden={!this.props.tmpSettings.mainVersion || this.props.settings.cbetaOfflineDbMode === CbetaDbMode.OfflineIndexedDb}>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={informationCircle} slot='start' />
-              <IonLabel className='ion-text-wrap uiFont'>使用 CBETA 離線經文資料檔</IonLabel>
-              <IonToggle slot='end' disabled checked={this.props.settings.cbetaOfflineDbMode !== CbetaDbMode.Online} />
+              <IonLabel className='ion-text-wrap uiFont'>直接讀取離線 CBETA Bookcase</IonLabel>
+              <IonToggle slot='end' disabled={this.props.settings.cbetaOfflineDbMode === CbetaDbMode.Online} checked={this.props.settings.cbetaOfflineDbMode !== CbetaDbMode.Online}
+                onIonChange={async e => {
+                  if (semver.lt(this.props.tmpSettings.mainVersion || '0', '21.1.0')) {
+                    return;
+                  }
+
+                  const isChecked = e.detail.checked;
+
+                  try {
+                    await CbetaOfflineDb.electronBackendApi.invoke('toMainV3', { event: 'disableBookcase' });
+                    if (!isChecked) {
+                      this.props.dispatch({
+                        type: "SET_KEY_VAL",
+                        key: 'cbetaOfflineDbMode',
+                        val: CbetaDbMode.Online,
+                      });
+                    }
+                  } catch (error) {
+                    this.setState({ showAlert: true, alertMessage: `${error}` });
+                  }
+                }}
+              />
             </IonItem>
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
@@ -350,7 +372,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
             <IonItem hidden={this.props.settings.cbetaOfflineDbMode !== CbetaDbMode.OfflineIndexedDb}>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={desktop} slot='start' />
-                <IonLabel className='ion-text-wrap uiFont'>觸控/鍵鼠 UI</IonLabel>
+              <IonLabel className='ion-text-wrap uiFont'>觸控/鍵鼠 UI</IonLabel>
               <IonToggle slot='end' checked={this.props.settings.uiMode === UiMode.Desktop} onIonChange={e => {
                 const isChecked = e.detail.checked;
 

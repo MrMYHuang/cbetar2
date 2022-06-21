@@ -1,7 +1,7 @@
 import Globals from "./Globals";
 import { Work } from './models/Work';
 import { Bookmark } from './models/Bookmark';
-import { fetchJuan as fetchJuanFromIndexedDB } from './CbetaOfflineDb';
+import { fetchJuan as fetchJuanFromOfflineDb } from './CbetaOfflineDb';
 import IndexedDbFuncs from "./IndexedDbFuncs";
 import { CbetaDbMode } from "./models/Settings";
 
@@ -43,7 +43,7 @@ export default async function fetchJuan(work: string, juan: string, htmlFile: st
         case CbetaDbMode.OfflineIndexedDb:
         case CbetaDbMode.OfflineFileSystemV2:
         case CbetaDbMode.OfflineFileSystemV3:
-          data = await fetchJuanFromIndexedDB(work, juan, cbetaOfflineDbMode);
+          data = await fetchJuanFromOfflineDb(work, juan, cbetaOfflineDbMode);
           break;
         case CbetaDbMode.OfflineFileSystem:
           Globals.electronBackendApi?.send("toMain", { event: 'fetchJuan', work, juan });

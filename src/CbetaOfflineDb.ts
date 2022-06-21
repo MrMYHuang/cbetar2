@@ -462,6 +462,7 @@ async function readBookcaseFromFileSystemV3(path: string) {
 }
 
 const CbetaOfflineDb = {
+    electronBackendApi,
     filesFilter,
     init,
     fetchCatalogs,

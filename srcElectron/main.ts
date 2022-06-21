@@ -24,13 +24,13 @@ let mainWindow: BrowserWindow | null | undefined;
 
 interface Settings {
   lastCheckedVersion: string;
-  cbetaBookcaseDir: string;
+  cbetaBookcaseDir: string | undefined;
   cbetaBookcaseDirSecurityScopedBookmark: string;
 }
 
 let settings: Settings = {
   lastCheckedVersion: '',
-  cbetaBookcaseDir: '',
+  cbetaBookcaseDir: undefined,
   cbetaBookcaseDirSecurityScopedBookmark: '',
 };
 let frontendIsReady = false;
@@ -98,7 +98,7 @@ function loadSettings() {
       notifyFrontendCbetaOfflineDbMode();
     } else {
       // Remove invalid cbetaBookcaseDir.
-      settings.cbetaBookcaseDir = '';
+      settings.cbetaBookcaseDir = undefined;
       fs.writeFileSync(backendAppSettingsFile, JSON.stringify(settings));
       dialog.showErrorBox('目錄無效', '儲存的 Bookcase 目錄設定無效！請重新選擇 Bookcase 目錄。');
     }
@@ -274,7 +274,7 @@ async function createWindow() {
     switch (args.event) {
       case 'disableBookcase':
         try {
-          settings.cbetaBookcaseDir = '';
+          settings.cbetaBookcaseDir = undefined;
           fs.writeFileSync(backendAppSettingsFile, JSON.stringify(settings));
           return { event: args.event, data: {} };
         } catch (error) {

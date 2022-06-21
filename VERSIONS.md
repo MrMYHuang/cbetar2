@@ -1,5 +1,9 @@
 # <a id='history'>版本歷史</a>
-* MAS 21.0.3:
+* PWA 10.3.0:
+  * [新增] 支援 Electron app >= 21.1.0 關閉直接讀取離線 CBETA Bookcase。
+
+* MAS 21.1.0:
+  * [新增] disableBookcase backend API。
   * [修正] security scoped bookmark 相關 bugs。
 
 * MAS 21.0.2:
