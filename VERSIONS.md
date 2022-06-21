@@ -1,4 +1,7 @@
 # <a id='history'>版本歷史</a>
+* MAS 21.0.3:
+  * [修正] security scoped bookmark 相關 bugs。
+
 * MAS 21.0.2:
   * [修正] 使用 security scoped bookmark 解決 Bookcase 存取問題。
 
