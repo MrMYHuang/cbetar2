@@ -1,3 +1,5 @@
+import FlexSearch from 'flexsearch';
+
 import Constants from "./Constants";
 import Globals from "./Globals";
 import IndexedDbFuncs from "./IndexedDbFuncs";
@@ -77,6 +79,32 @@ let bookcaseInfos: BookcaseInfos = {
 };
 let isInit = false;
 let isInitializing = false;
+
+const flexSearch = new FlexSearch.Document({
+    document: {
+        id: 'id',
+        index: 'content'
+    },
+    encode: str => {
+        const cjkItems = str.replace(/[\x00-\x7F]/g, '').split('');
+        const asciiItems = str.split(/\W+/);
+        return cjkItems.concat(asciiItems);
+    },
+});
+
+async function fullSearchIndexing() {
+    const files = (await IndexedDbFuncs.getAllKeys(IndexedDbFuncs.dataStore)).filter(file => file.includes('xml'));
+
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const documentString = await getFileAsStringFromIndexedDB(file);
+        const doc = await cbetaXmlToHtmlDoc(documentString, CbetaDbMode.OfflineIndexedDb);
+        flexSearch.add({
+            id: file,
+            content: doc.getElementById('body')?.textContent,
+        })
+    }
+}
 
 function stringToXml(str: string) {
     return xmlParser.parseFromString(str, 'text/xml');
@@ -334,18 +362,33 @@ export async function fetchJuan(work: string, juan: string, mode: CbetaDbMode) {
         }
     }
     let documentString = '';
-    let figurePath = '';
     const xmlPath = `CBETA/XML/${work_info.id}/${vol}/${vol}n${work_info.sutra}_${juan.toString().padStart(3, '0')}.xml`;
     if (mode === CbetaDbMode.OfflineIndexedDb) {
         documentString = await getFileAsStringFromIndexedDB(`/${cbetaBookcaseDir}/${xmlPath}`);
-        figurePath = `https://${Constants.indexedDBHost}/${cbetaBookcaseDir}/CBETA/figures`;
     } else if (mode === CbetaDbMode.OfflineFileSystemV2) {
         documentString = await readBookcaseFromFileSystemV2(xmlPath);
-        figurePath = `${Globals.localFileProtocolName}://${cbetaBookcaseDir}/CBETA/figures`;
     } else if (mode === CbetaDbMode.OfflineFileSystemV3) {
         documentString = await readBookcaseFromFileSystemV3(xmlPath);
+    }
+
+    const doc = await cbetaXmlToHtmlDoc(documentString, mode);
+
+    return {
+        work_info,
+        results: [doc.documentElement.outerHTML],
+    };
+}
+
+async function cbetaXmlToHtmlDoc(documentString: string, mode: CbetaDbMode) {
+    let figurePath = '';
+    if (mode === CbetaDbMode.OfflineIndexedDb) {
+        figurePath = `https://${Constants.indexedDBHost}/${cbetaBookcaseDir}/CBETA/figures`;
+    } else if (mode === CbetaDbMode.OfflineFileSystemV2) {
+        figurePath = `${Globals.localFileProtocolName}://${cbetaBookcaseDir}/CBETA/figures`;
+    } else if (mode === CbetaDbMode.OfflineFileSystemV3) {
         figurePath = `${Globals.localFileProtocolName}://${cbetaBookcaseDir}/CBETA/figures`;
     }
+    documentString = documentString.replace(/\.\.\/figures/g, figurePath);
 
     xsltProcessor.importStylesheet(stringToXml(bookcaseInfos.teiStylesheetString));
 
@@ -354,12 +397,7 @@ export async function fetchJuan(work: string, juan: string, mode: CbetaDbMode) {
     const rootNode = await elementTPostprocessing(xhtmlDoc, originalRootNode);
     xhtmlDoc.getRootNode().removeChild(originalRootNode);
     xhtmlDoc.getRootNode().appendChild(rootNode!);
-    const result = xhtmlDoc.documentElement.outerHTML;
-
-    return {
-        work_info,
-        results: [result.replace(/\.\.\/figures/g, figurePath)],
-    };
+    return xhtmlDoc;
 }
 
 let lb = '';
@@ -470,6 +508,7 @@ const CbetaOfflineDb = {
     fetchWork,
     fetchJuan,
     setOfflineFileSystemV2Ready,
+    fullSearchIndexing,
 };
 
 export default CbetaOfflineDb;

@@ -19,6 +19,7 @@ import fetchJuan from '../fetchJuan';
 import { CbetaDbMode, Settings, UiMode } from '../models/Settings';
 import IndexedDbFuncs from '../IndexedDbFuncs';
 import VirtualHtml from '../models/VirtualHtml';
+import CbetaOfflineDb from '../CbetaOfflineDb';
 
 // Load TW-Kai font in iframe.
 async function loadTwKaiFonts(this: Window) {
@@ -542,6 +543,8 @@ export class _EPubView extends React.Component<PageProps, State> {
         val: !this.props.tmpSettings.fullScreen,
       });
     }
+
+    CbetaOfflineDb.fullSearchIndexing();
   };
 
   get epubDivId() {

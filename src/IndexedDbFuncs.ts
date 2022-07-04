@@ -3,11 +3,12 @@ import * as zip from 'zip.js-myh';
 
 const cbetardb = 'cbetardb';
 // Increase this if a new store is added.
-const version = 3;
+const version = 4;
 const dataStore = 'store';
 // Increase this if font store content is changed.
 const twKaiFontVersion = 5;
 const fontStore = 'font';
+const fullTextSearchStore = 'fullSearch';
 let dbOpenReq: IDBOpenDBRequest;
 let db: IDBDatabase;
 
@@ -32,7 +33,7 @@ async function open() {
     // Init store in indexedDB if necessary.
     dbOpenReq.onupgradeneeded = function (ev: IDBVersionChangeEvent) {
       db = (ev.target as any).result as IDBDatabase;
-      [dataStore, fontStore].forEach((s) => {
+      [dataStore, fontStore, fullTextSearchStore].forEach((s) => {
         if (!db.objectStoreNames.contains(s)) {
           db.createObjectStore(s);
         }
@@ -124,6 +125,26 @@ async function checkKey(key: string, store: string = dataStore) {
           return fail(`Key ${key} not found in IndexedDB`);
         }
         return ok(data);
+      };
+    } catch (err) {
+      fail(err);
+    }
+  });
+}
+
+async function getAllKeys(store: string = dataStore) {
+  await ready();
+
+  return new Promise<string[]>(function (ok, fail) {
+    try {
+      const trans = db.transaction([store], 'readonly');
+      let req = trans.objectStore(store).getAllKeys();
+      req.onsuccess = async function (_ev) {
+        const data = req.result;
+        if (!data) {
+          return fail(`Fail to get all keys from IndexedDB store ${store}`);
+        }
+        return ok(data.map(v => v.toString()));
       };
     } catch (err) {
       fail(err);
@@ -227,6 +248,7 @@ const IndexedDbFuncs = {
   dataStore,
   twKaiFontVersion,
   fontStore,
+  fullTextSearchStore,
   open,
   clear,
   clearStore,
@@ -238,6 +260,7 @@ const IndexedDbFuncs = {
   getFile,
   getZippedFile,
   checkKey,
+  getAllKeys,
 }
 
 export default IndexedDbFuncs;
