@@ -212,8 +212,8 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                   const isChecked = e.detail.checked;
 
                   try {
-                    await CbetaOfflineDb.electronBackendApi.invoke('toMainV3', { event: 'disableBookcase' });
                     if (!isChecked) {
+                      await CbetaOfflineDb.electronBackendApi.invoke('toMainV3', { event: 'disableBookcase' });
                       this.props.dispatch({
                         type: "SET_KEY_VAL",
                         key: 'cbetaOfflineDbMode',

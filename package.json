@@ -2,7 +2,7 @@
   "name": "cbetar2",
   "productName": "電子佛典",
   "homepage": "/",
-  "pwaVersion": "10.3.0",
+  "pwaVersion": "10.3.2",
   "version": "21.1.0",
   "license": "MIT",
   "keywords": [
@@ -35,6 +35,7 @@
     "eject": "react-scripts eject",
     "build-electron": "tsc -b tsconfigElectron.json",
     "start-electron": "npm run build-electron && npm run rebuild-native-for-electron && electron .",
+    "debug-electron": "npm run start-electron -- --inspect-brk",
     "dist-win": "npm run build-electron && electron-builder -w -c electronBuilderConfigs/win.json",
     "build-env": "docker buildx build --platform linux/arm64,linux/amd64 --tag mrmyh/bionic:cbetar2 -f tools/Dockerfile --push .",
     "dist-appImage": "npm run build-electron && electron-builder -l AppImage -c electronBuilderConfigs/appImage.json",
