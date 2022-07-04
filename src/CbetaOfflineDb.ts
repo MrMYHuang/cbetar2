@@ -390,10 +390,10 @@ async function elementTPostprocessing(doc: Document, node: Node, parent: Node | 
         } else if (c2.tagName === 'g') {
             const gaijiId = c2.getAttribute('ref')?.substring(1) || '';
             if (/^CB/.test(gaijiId)) {
-                parent?.removeChild(c2);
-                c2 = doc.createElement('span');
-                c2.textContent = bookcaseInfos.gaijis[gaijiId].uni_char || bookcaseInfos.gaijis[gaijiId].composition;
-                parent?.appendChild(c2);
+                const newC2 = doc.createElement('span');
+                newC2.setAttribute('class', 't');
+                newC2.textContent = bookcaseInfos.gaijis[gaijiId].uni_char || bookcaseInfos.gaijis[gaijiId].composition;
+                parent?.replaceChild(newC2, c2);
             }
             return c2;
         } else {
