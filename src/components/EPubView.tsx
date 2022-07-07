@@ -747,7 +747,7 @@ export class _EPubView extends React.Component<PageProps, State> {
           // The virtual HTML file is sent to the service worker.
           const pathname = "/_" + Math.floor(Math.random() * 1e9);
 
-          return new Promise<string>(ok => {
+          return new Promise<string>((ok, fail) => {
             // Wait VIRTUAL_HTML.
             messageChannel.port1.onmessage = (event) => {
               if (event.data.type === 'VIRTUAL_HTML' && event.data.pathname === pathname) {
@@ -762,7 +762,7 @@ export class _EPubView extends React.Component<PageProps, State> {
                 pathname,
                 html,
               }, [messageChannel.port2]);
-            });
+            }).catch(fail);
           });
         },
         width: "100%", height: "100%",
