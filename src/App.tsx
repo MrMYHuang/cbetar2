@@ -417,8 +417,13 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
             // Run SKIP_WAITING at onDidPresent event to avoid a race condition of
             // an old page fetching old JS chunks with a new service worker!
             // Which causes this alert fails to show.
-            (await Globals.getServiceWorkerReg()).installing?.postMessage({ type: 'SKIP_WAITING' });
-            (await Globals.getServiceWorkerReg()).waiting?.postMessage({ type: 'SKIP_WAITING' });
+            try {
+              (await Globals.getServiceWorkerReg()).installing?.postMessage({ type: 'SKIP_WAITING' });
+              (await Globals.getServiceWorkerReg()).waiting?.postMessage({ type: 'SKIP_WAITING' });
+            } catch (error) {
+              console.error(error);
+            }
+            
             Globals.getServiceWorkerRegUpdated().installing?.postMessage({ type: 'SKIP_WAITING' });
             Globals.getServiceWorkerRegUpdated().waiting?.postMessage({ type: 'SKIP_WAITING' });
           }}
