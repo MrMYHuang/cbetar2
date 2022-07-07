@@ -204,20 +204,26 @@ function zhVoices() {
   return speechSynthesis.getVoices().filter(v => ['zh-TW', 'zh_TW', 'zh-CN', 'zh_CN', 'zh-HK', 'zh_HK'].some(name => v.localService && v.lang.indexOf(name) > -1));
 }
 
+const checkServiceWorkerInterval = 20;
 let serviceWorkerLoaded = false;
 let _serviceWorkerReg: ServiceWorkerRegistration;
 async function getServiceWorkerReg() {
-  if (serviceWorkerLoaded) {
+  if (serviceWorkerLoaded) { 
     return _serviceWorkerReg;
   }
 
-  return new Promise<ServiceWorkerRegistration>(ok => {
+  return new Promise<ServiceWorkerRegistration>((ok, fail) => {
+    let waitTime = 0;
     const waitLoading = setInterval(() => {
       if (navigator.serviceWorker.controller != null) {
         clearInterval(waitLoading);
         ok(_serviceWorkerReg);
+      } else if (waitTime > 1e3 * 10) {
+        clearInterval(waitLoading);
+        fail('getServiceWorkerReg timeout!');
       }
-    }, 10);
+      waitTime += checkServiceWorkerInterval;
+    }, checkServiceWorkerInterval);
   });
 }
 function setServiceWorkerReg(serviceWorkerReg: ServiceWorkerRegistration) {
