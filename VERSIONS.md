@@ -1,4 +1,7 @@
 # <a id='history'>版本歷史</a>
+* PWA 10.4.0:
+  * [新增] App 連結分享支援 OS 分享 QR code。
+
 * PWA 10.3.2:
   * [修正] 經文頁顯示離線 DB 經文的"缺字"位置不正確問題。
   * [修正] 直接讀取 CBETA Bookcase 功能異常。
