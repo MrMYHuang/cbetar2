@@ -1,12 +1,12 @@
-# CBETA 電子佛典閱讀器2(非官方)
+# CBETA 電子佛典閱讀器 2 (非官方)
 
 ## <a id='feature'>特色</a>
 
-搜尋目錄、全文檢索、書籤功能、網址分享、離線瀏覽、語音播放、佛學詞典、佈景主題切換、經文分頁、字型調整、楷書字型、直排文字、列印經文/抄經本、連線/離線DB支援、跨平台、無廣告、開放原始碼。
+搜尋目錄、全文檢索、書籤功能、網址分享、離線瀏覽、語音播放、佛學詞典、佈景主題切換、經文分頁、字型調整、楷書字型、直排文字、列印經文/抄經本、連線/離線 DB 支援、跨平台、無廣告、開放原始碼。
 
 ## 說明
 
-CBETA 電子佛典閱讀器2(非官方) (Chinese Buddhist Electronic Text Association Reader 2)，簡寫 cbetar2，使用連線 CBETA API 或離線 CBETA 經文檔存取電子佛經，支援以下功能
+CBETA 電子佛典閱讀器 2 (非官方) (Chinese Buddhist Electronic Text Association Reader 2)，簡寫 cbetar2，使用連線 CBETA API 或離線 CBETA 經文檔存取電子佛經，支援以下功能
 
 * <a id='search'>搜尋、瀏覽(線上查詢)</a>
   1. 搜索目錄：在目錄頁，按下右上角放大鏡圖示。在對話框輸入經文部分(或全部)標題，按下"搜索目錄"後會列出相關經文。
@@ -248,12 +248,12 @@ sudo dnf install cbetar2
 
 ## TODO
 1. 離線版 app 未完成或不支援功能：
-  1. 搜尋目錄
-  2. 全文搜索
-  3. 查字典
-  4. 查詞典
-  5. 經文顯示缺字
-  6. 初次啟動 app 仍須網路連線(自動下載前端 app)。
+    1. 搜尋目錄
+    2. 全文搜索
+    3. 查字典
+    4. 查詞典
+    5. 經文顯示缺字
+    6. 初次啟動 app 仍須網路連線(自動下載前端 app)。
 
 ## <a id='knownIssues'>已知問題</a>
 1. iOS
@@ -265,10 +265,10 @@ sudo dnf install cbetar2
     6. iOS Safari 選擇文字後，仍會閃爍彈出式選單才消失。
     7. 不支援"避免螢幕自動鎖定"。
 2. 其它
-  1. 目前多數 Chrome 無法暫停合成語音播放，因此此 app 目前經文語音播放功能不支援暫停，只支援停止。
-  2. 語音播放速度受限不同引擎、語音限制，可能無法達到指定速度。
-  3. 合成語音選項濾掉非離線語音，以避開非離線語音單次播放最長字串過小的問題。
-  4. 合成語音功能在 Linux 無作用。
+    1. 目前多數 Chrome 無法暫停合成語音播放，因此此 app 目前經文語音播放功能不支援暫停，只支援停止。
+    2. 語音播放速度受限不同引擎、語音限制，可能無法達到指定速度。
+    3. 合成語音選項濾掉非離線語音，以避開非離線語音單次播放最長字串過小的問題。
+    4. 合成語音功能在 Linux 無作用。
 
 ## <a id='history' href='https://github.com/MrMYHuang/cbetar2/blob/master/VERSIONS.md'>版本歷史</a>
 ## <a href='https://github.com/MrMYHuang/cbetar2/blob/master/Development.md'>程式開發</a>

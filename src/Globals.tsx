@@ -16,7 +16,10 @@ const twKaiFonts = ['Kai', 'Kai', 'Kai', 'KaiExtB', 'KaiExtB', 'KaiExtB', 'KaiPl
 const twKaiFontKeys = ['twKaiFont-1', 'twKaiFont-2', 'twKaiFont-3', 'twKaiExtBFont-1', 'twKaiExtBFont-2', 'twKaiExtBFont-3', 'twKaiPlusFont-1', 'twKaiPlusFont-2',];
 /* Font source: https://data.gov.tw/dataset/5961 */
 //const twKaiFontPaths = [`${pwaUrl}/assets/TW-Kai-98_1.woff`, `${pwaUrl}/assets/TW-Kai-Ext-B-98_1.woff`, `${pwaUrl}/assets/TW-Kai-Plus-98_1.woff`, ];
-const twKaiFontPaths = [`${pwaUrl}/assets/TW-Kai-98_1-1.woff2`, `${pwaUrl}/assets/TW-Kai-98_1-2.woff2`, `${pwaUrl}/assets/TW-Kai-98_1-3.woff2`, `${pwaUrl}/assets/TW-Kai-Ext-B-98_1-1.woff2`, `${pwaUrl}/assets/TW-Kai-Ext-B-98_1-2.woff2`, `${pwaUrl}/assets/TW-Kai-Ext-B-98_1-3.woff2`, `${pwaUrl}/assets/TW-Kai-Plus-98_1-1.woff2`, `${pwaUrl}/assets/TW-Kai-Plus-98_1-2.woff2`,];
+const fontBaseUrl = process.env.NODE_ENV === 'production' ?
+  'https://objectstorage.ap-osaka-1.oraclecloud.com/n/axq0jpnkikfn/b/myh/o'
+  : `${window.location.origin}${pwaUrl}/assets`;
+const twKaiFontFiles = [`TW-Kai-98_1-1.woff2`, `TW-Kai-98_1-2.woff2`, `TW-Kai-98_1-3.woff2`, `TW-Kai-Ext-B-98_1-1.woff2`, `TW-Kai-Ext-B-98_1-2.woff2`, `TW-Kai-Ext-B-98_1-3.woff2`, `TW-Kai-Plus-98_1-1.woff2`, `TW-Kai-Plus-98_1-2.woff2`,];
 let log = '';
 
 
@@ -39,29 +42,26 @@ async function loadTwKaiFonts(progressCallback: Function | null = null, win: Win
   }
 
   let finishCount = 0;
-  let load: Promise<any>[] = [];
   for (let i = 0; i < twKaiFonts.length; i++) {
-    load.push(loadTwKaiFont(
+    const fontFace = await loadTwKaiFont(
       twKaiFonts[i],
       twKaiFontKeys[i],
-      twKaiFontPaths[i],
+      twKaiFontFiles[i],
       forceUpdate,
-    ).then(
-      // eslint-disable-next-line no-loop-func
-      (fontFace) => {
-        win.document.fonts.add(fontFace);
-        //console.log(`[Main] ${twKaiFontKeys[i]} font loading success!`);
-        finishCount += 1;
-        progressCallback && progressCallback(finishCount / twKaiFonts.length);
-      }));
+    );
+
+    win.document.fonts.add(fontFace);
+    //console.log(`[Main] ${twKaiFontKeys[i]} font loading success!`);
+    finishCount += 1;
+    progressCallback && progressCallback(finishCount / twKaiFonts.length);
   }
-  return Promise.all(load);
+  return Promise.resolve();
 }
 
-async function loadTwKaiFont(font: string, key: string, path: string, forceUpdate: boolean) {
+async function loadTwKaiFont(font: string, key: string, fileName: string, forceUpdate: boolean) {
   const fontFaceCache = twKaiFontsCache[key];
   const updateFont = () => {
-    return axiosInstance.get(`${window.location.origin}/${path}`, {
+    return axiosInstance.get(`${fontBaseUrl}/${fileName}`, {
       responseType: 'arraybuffer',
       timeout: 0,
     }).then(res => {
@@ -208,7 +208,7 @@ const checkServiceWorkerInterval = 20;
 let serviceWorkerLoaded = false;
 let _serviceWorkerReg: ServiceWorkerRegistration;
 async function getServiceWorkerReg() {
-  if (serviceWorkerLoaded) { 
+  if (serviceWorkerLoaded) {
     return _serviceWorkerReg;
   }
 
