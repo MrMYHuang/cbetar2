@@ -23,6 +23,7 @@ interface StateProps {
   showUpdateAllJuansDone: boolean;
   showBugReportAlert: boolean;
   showDownloadKaiFontAlert: boolean;
+  showPaginationChangeAlert: boolean;
   isLoading: boolean;
   showAlert: boolean;
   showUseBookcaseAlert: boolean;
@@ -57,6 +58,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
       showBugReportAlert: false,
       showUpdateAllJuansDone: false,
       showDownloadKaiFontAlert: false,
+      showPaginationChangeAlert: false,
       isLoading: false,
       showAlert: false,
       showUseBookcaseAlert: false,
@@ -585,12 +587,41 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                   return;
                 }
 
-                this.props.dispatch({
-                  type: "SET_KEY_VAL",
-                  key: 'paginated',
-                  val: isChecked
-                });
+                this.setState({ showPaginationChangeAlert: true });
+
               }} />
+              <IonAlert
+                cssClass='uiFont'
+                isOpen={this.state.showPaginationChangeAlert}
+                backdropDismiss={false}
+                onDidPresent={(ev) => {
+                }}
+                header={'書籤相依單頁/分頁模式，切換後可能失去卷內定位、剩卷定位，確定切換？'}
+                buttons={[
+                  {
+                    text: '取消',
+                    cssClass: 'primary uiFont',
+                    handler: (value) => {
+                      this.setState({
+                        showPaginationChangeAlert: false,
+                      });
+                    },
+                  },
+                  {
+                    text: '確定',
+                    cssClass: 'secondary uiFont',
+                    handler: async (value) => {
+                      this.setState({ showPaginationChangeAlert: false });
+
+                      this.props.dispatch({
+                        type: "SET_KEY_VAL",
+                        key: 'paginated',
+                        val: !this.props.settings.paginated
+                      });
+                    },
+                  }
+                ]}
+              />
             </IonItem>
             <IonItem>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
