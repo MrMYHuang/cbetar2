@@ -148,10 +148,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
   async importBookcase(run: Function) {
     this.setState({ isLoading: true, showToast: true, toastMessage: `請等待進度條結束。可能需2個小時。`, cbetaBookZipLoadRatio: 0 });
     try {
-      const res = await Globals.axiosInstance.get(`${window.location.origin}/${Globals.pwaUrl}/assets.zip`, {
-        responseType: 'blob',
-      });
-      await IndexedDbFuncs.extractZipToZips(res.data);
+      await Globals.downloadCbetaBookcaseAssets();
       console.log(new Date().toLocaleTimeString());
       await run();
       console.log(new Date().toLocaleTimeString());
@@ -207,20 +204,15 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
               <IonLabel className='ion-text-wrap uiFont'>直接讀取離線 CBETA Bookcase</IonLabel>
               <IonToggle slot='end' disabled={this.props.settings.cbetaOfflineDbMode === CbetaDbMode.Online} checked={this.props.settings.cbetaOfflineDbMode !== CbetaDbMode.Online}
                 onIonChange={async e => {
-                  if (semver.lt(this.props.tmpSettings.mainVersion || '0', '21.1.0')) {
+                  if (semver.lt(this.props.tmpSettings.mainVersion || '0.0.0', '21.1.0')) {
                     return;
                   }
 
                   const isChecked = e.detail.checked;
 
                   try {
-                    if (!isChecked) {
-                      await CbetaOfflineDb.electronBackendApi.invoke('toMainV3', { event: 'disableBookcase' });
-                      this.props.dispatch({
-                        type: "SET_KEY_VAL",
-                        key: 'cbetaOfflineDbMode',
-                        val: CbetaDbMode.Online,
-                      });
+                    if (!isChecked && this.props.settings.cbetaOfflineDbMode !== CbetaDbMode.Online) {
+                      this.setState({ showClearBookcaseAlert: true });
                     }
                   } catch (error) {
                     this.setState({ showAlert: true, alertMessage: `${error}` });
@@ -338,6 +330,15 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                     cssClass: 'secondary uiFont',
                     handler: async (value) => {
                       this.setState({ isLoading: true, showClearBookcaseAlert: false });
+                      try {
+                        if (this.props.settings.cbetaOfflineDbMode === CbetaDbMode.OfflineFileSystem ||
+                          this.props.settings.cbetaOfflineDbMode === CbetaDbMode.OfflineFileSystemV2 ||
+                          this.props.settings.cbetaOfflineDbMode === CbetaDbMode.OfflineFileSystemV3) {
+                          await CbetaOfflineDb.electronBackendApi.invoke('toMainV3', { event: 'disableBookcase' });
+                        }
+                      } catch (error) {
+                        console.error(error);
+                      }
                       await IndexedDbFuncs.clearStore(IndexedDbFuncs.dataStore);
                       this.setState({ isLoading: false, showClearBookcaseAlert: false, showAlert: true, alertMessage: '清除成功!' });
                       this.props.dispatch({

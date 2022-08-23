@@ -175,7 +175,7 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
       CbetaOfflineDb.init(CbetaDbMode.OfflineIndexedDb);
     }
 
-    electronBackendApi?.receive("fromMain", (data: any) => {
+    electronBackendApi?.receive("fromMain", async (data: any) => {
       switch (data.event) {
         case 'version':
           // Backend is ready.
@@ -189,6 +189,23 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
         case 'cbetaOfflineDbMode':
           let dbMode = CbetaDbMode.Online;
           if (data.isOn) {
+            try {
+              try {
+                await IndexedDbFuncs.checkKey(`/${Globals.cbetar2AssetDir}/tei.xsl`);
+              } catch (error) {
+                await Globals.downloadCbetaBookcaseAssets();
+              }
+            } catch (error) {
+              await CbetaOfflineDb.electronBackendApi.invoke('toMainV3', { event: 'disableBookcase' });
+              this.setState({showToast: true, toastMessage: `離線 CBETA Bookcase 異常，請重新設定載入！`});
+              this.props.dispatch({
+                type: "SET_KEY_VAL",
+                key: 'cbetaOfflineDbMode',
+                val: CbetaDbMode.Online,
+              });
+              break;
+            }
+
             if (semver.gte(data.backendVersion, '21.0.0')) {
               dbMode = CbetaDbMode.OfflineFileSystemV3;
               CbetaOfflineDb.init(dbMode);
@@ -198,6 +215,7 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
             } else {
               dbMode = CbetaDbMode.OfflineFileSystem;
             }
+
           }
           this.props.dispatch({
             type: "SET_KEY_VAL",
@@ -423,7 +441,7 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
             } catch (error) {
               console.error(error);
             }
-            
+
             Globals.getServiceWorkerRegUpdated().installing?.postMessage({ type: 'SKIP_WAITING' });
             Globals.getServiceWorkerRegUpdated().waiting?.postMessage({ type: 'SKIP_WAITING' });
           }}

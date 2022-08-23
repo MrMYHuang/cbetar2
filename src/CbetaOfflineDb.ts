@@ -121,9 +121,9 @@ export async function init(mode: CbetaDbMode) {
         if (mode === CbetaDbMode.OfflineIndexedDb) {
             const catalogsString = await getFileAsStringFromIndexedDB(`/${cbetaBookcaseDir}/CBETA/catalog.txt`);
             const spinesString = await getFileAsStringFromIndexedDB(`/${cbetaBookcaseDir}/CBETA/spine.txt`);
+            const documentString = await getFileAsStringFromIndexedDB(`/${cbetaBookcaseDir}/CBETA/bulei_nav.xhtml`);
             const gaijisString = await getFileAsStringFromIndexedDB(`/${Globals.cbetar2AssetDir}/cbeta_gaiji.json`);
             const stylesheetString = await getFileAsStringFromIndexedDB(`/${Globals.cbetar2AssetDir}/nav_fix.xsl`);
-            const documentString = await getFileAsStringFromIndexedDB(`/${cbetaBookcaseDir}/CBETA/bulei_nav.xhtml`);
             const teiStylesheetString = await getFileAsStringFromIndexedDB(`/${Globals.cbetar2AssetDir}/tei.xsl`);
             await initFromFiles(catalogsString, spinesString, gaijisString, stylesheetString, documentString, teiStylesheetString);
         } else if (mode === CbetaDbMode.OfflineFileSystemV2) {
@@ -140,13 +140,11 @@ export async function init(mode: CbetaDbMode) {
             await wait();
             const spinesString = (await readBookcaseFromFileSystemV2(`CBETA/spine.txt`));
             await wait();
-            const gaijisString = (await readResourceFromFileSystemV2(`cbeta_gaiji/cbeta_gaiji.json`));
-            await wait();
-            const stylesheetString = (await readResourceFromFileSystemV2(`buildElectron/nav_fix.xsl`));
-            await wait();
             const documentString = (await readBookcaseFromFileSystemV2(`CBETA/bulei_nav.xhtml`));
             await wait();
-            const teiStylesheetString = await readResourceFromFileSystemV2(`buildElectron/tei.xsl`);
+            const gaijisString = await getFileAsStringFromIndexedDB(`/${Globals.cbetar2AssetDir}/cbeta_gaiji.json`);
+            const stylesheetString = await getFileAsStringFromIndexedDB(`/${Globals.cbetar2AssetDir}/nav_fix.xsl`);
+            const teiStylesheetString = await getFileAsStringFromIndexedDB(`/${Globals.cbetar2AssetDir}/tei.xsl`);
             await initFromFiles(catalogsString, spinesString, gaijisString, stylesheetString, documentString, teiStylesheetString);
         } else if (mode === CbetaDbMode.OfflineFileSystemV3) {
             await new Promise<void>(ok => {
@@ -160,10 +158,10 @@ export async function init(mode: CbetaDbMode) {
 
             const catalogsString = (await readBookcaseFromFileSystemV3(`CBETA/catalog.txt`));
             const spinesString = (await readBookcaseFromFileSystemV3(`CBETA/spine.txt`));
-            const gaijisString = (await readResourceFromFileSystemV3(`cbeta_gaiji/cbeta_gaiji.json`));
-            const stylesheetString = (await readResourceFromFileSystemV3(`buildElectron/nav_fix.xsl`));
             const documentString = (await readBookcaseFromFileSystemV3(`CBETA/bulei_nav.xhtml`));
-            const teiStylesheetString = await readResourceFromFileSystemV3(`buildElectron/tei.xsl`);
+            const gaijisString = await getFileAsStringFromIndexedDB(`/${Globals.cbetar2AssetDir}/cbeta_gaiji.json`);
+            const stylesheetString = await getFileAsStringFromIndexedDB(`/${Globals.cbetar2AssetDir}/nav_fix.xsl`);
+            const teiStylesheetString = await getFileAsStringFromIndexedDB(`/${Globals.cbetar2AssetDir}/tei.xsl`);
             await initFromFiles(catalogsString, spinesString, gaijisString, stylesheetString, documentString, teiStylesheetString);
         }
     }

@@ -293,8 +293,6 @@
         </xsl:choose>
     </xsl:template>
 
-    <xsl:template match="cb:t[not(@xml:lang='zh-Hant')]" />
-
     <!-- <text> or <term> TODO -->
 
     <xsl:template match="tei:trailer">
@@ -303,7 +301,15 @@
         </p>
     </xsl:template>
 
-    <xsl:template match="cb:tt" />
+    <xsl:template match="cb:tt">
+        <xsl:apply-templates />
+    </xsl:template>
+
+    <xsl:template match="cb:t[not(@xml:lang='zh-Hant')]" />
+
+    <xsl:template match="cb:t[(@xml:lang='zh-Hant')]">
+        <xsl:apply-templates />
+    </xsl:template>
 
     <!-- TODO -->
     <xsl:template match="tei:unclear">

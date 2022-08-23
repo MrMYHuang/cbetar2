@@ -93,6 +93,13 @@ async function loadTwKaiFont(font: string, key: string, fileName: string, forceU
   })
 }
 
+async function downloadCbetaBookcaseAssets() {
+  const res = await axiosInstance.get(`${window.location.origin}/${pwaUrl}/assets.zip`, {
+    responseType: 'blob',
+  });
+  await IndexedDbFuncs.extractZipToZips(res.data);
+}
+
 function scrollbarSizeIdToValue(id: number) {
   switch (id) {
     case 0: return 0;
@@ -258,6 +265,7 @@ const Globals = {
   twKaiFonts,
   twKaiFontKeys,
   loadTwKaiFonts,
+  downloadCbetaBookcaseAssets,
   axiosInstance,
   appSettings: {
     'theme': '佈景主題',
