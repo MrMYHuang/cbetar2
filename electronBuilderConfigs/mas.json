@@ -5,9 +5,7 @@
       "from": "electronBuilderConfigs",
       "to": ".",
       "filter": ["IsMas.txt"]
-    },
-    "buildElectron/*.xsl",
-    "cbeta_gaiji/cbeta_gaiji.json"
+    }
   ],
   "mac": {
     "type": "distribution",

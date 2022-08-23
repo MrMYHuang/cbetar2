@@ -16,6 +16,7 @@ export enum UiMode {
 export interface Settings {
     // version is the setting file version.
     version: number;
+    cbetaBookcaseProcessingAssetsVersion: number;
     hasAppLog: boolean;
     theme: number;
     paginated: boolean;
@@ -41,6 +42,7 @@ export interface Settings {
 const defaultSettings = {
     // version is the setting file version.
     version: 1,
+    cbetaBookcaseProcessingAssetsVersion: 0,
     hasAppLog: true,
     theme: 0,
     paginated: true,

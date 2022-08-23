@@ -93,6 +93,7 @@ async function loadTwKaiFont(font: string, key: string, fileName: string, forceU
   })
 }
 
+const cbetaBookcaseProcessingAssetsVersion = 1;
 async function downloadCbetaBookcaseAssets() {
   const res = await axiosInstance.get(`${window.location.origin}/${pwaUrl}/assets.zip`, {
     responseType: 'blob',
@@ -265,6 +266,7 @@ const Globals = {
   twKaiFonts,
   twKaiFontKeys,
   loadTwKaiFonts,
+  cbetaBookcaseProcessingAssetsVersion,
   downloadCbetaBookcaseAssets,
   axiosInstance,
   appSettings: {

@@ -220,7 +220,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                 }}
               />
             </IonItem>
-            <IonItem>
+            <IonItem hidden={!(this.props.settings.cbetaOfflineDbMode === CbetaDbMode.Online || this.props.settings.cbetaOfflineDbMode === CbetaDbMode.OfflineIndexedDb)}>
               <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
               <IonIcon icon={download} slot='start' />
               <div style={{ width: '100%' }}>

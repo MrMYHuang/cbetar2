@@ -5,8 +5,6 @@
       "from": "electronBuilderConfigs",
       "to": ".",
       "filter": ["IsAppImage.txt"]
-    },
-    "buildElectron/*.xsl",
-    "cbeta_gaiji/cbeta_gaiji.json"
+    }
   ]
 }

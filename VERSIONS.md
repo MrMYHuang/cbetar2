@@ -1,4 +1,7 @@
 # <a id='history'>版本歷史</a>
+* PWA 10.7.0:
+  * [新增] app 啟動時自動更新 Bookcase 內容處理 assets。
+
 * PWA 10.6.0:
   * [調整] 離線 DB 模式統一連網下載 Bookcase 內容處理 assets。
   * [修正] Bookcase XML 處理 xslt 程式漏掉部分經文內容。（已修正金剛經漏字問題）

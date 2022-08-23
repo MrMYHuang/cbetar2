@@ -15,9 +15,7 @@
       "from": "electronBuilderConfigs",
       "to": ".",
       "filter": ["IsWin.txt"]
-    },
-    "buildElectron/*.xsl",
-    "cbeta_gaiji/cbeta_gaiji.json"
+    }
   ],
   "icon": "buildElectron/icon.png",
   "win": {

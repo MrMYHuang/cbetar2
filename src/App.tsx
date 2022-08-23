@@ -171,9 +171,30 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
         </IonRouterOutlet>;
     }
 
-    if (this.props.settings.cbetaOfflineDbMode === CbetaDbMode.OfflineIndexedDb) {
-      CbetaOfflineDb.init(CbetaDbMode.OfflineIndexedDb);
+    let updateCbetaBookcaseProcessingAssets = Promise.resolve();
+    if (this.props.settings.cbetaBookcaseProcessingAssetsVersion < Globals.cbetaBookcaseProcessingAssetsVersion) {
+      updateCbetaBookcaseProcessingAssets = Globals.downloadCbetaBookcaseAssets().then(async () => {
+        this.props.dispatch({
+          type: "SET_KEY_VAL",
+          key: 'cbetaBookcaseProcessingAssetsVersion',
+          val: Globals.cbetaBookcaseProcessingAssetsVersion,
+        });
+
+        // Remove for updating bookcaseInfos.
+        try {
+          await IndexedDbFuncs.removeFile(CbetaOfflineDb.bookcaseInfosKey);
+        } catch (error) {
+          console.error(error);
+        }
+      });
     }
+    updateCbetaBookcaseProcessingAssets.then(() => {
+      if (this.props.settings.cbetaOfflineDbMode !== CbetaDbMode.Online) {
+        CbetaOfflineDb.init(CbetaDbMode.OfflineIndexedDb);
+      }
+    }).catch((error) => {
+      console.error(error);
+    });
 
     electronBackendApi?.receive("fromMain", async (data: any) => {
       switch (data.event) {
@@ -197,7 +218,7 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
               }
             } catch (error) {
               await CbetaOfflineDb.electronBackendApi.invoke('toMainV3', { event: 'disableBookcase' });
-              this.setState({showToast: true, toastMessage: `離線 CBETA Bookcase 異常，請重新設定載入！`});
+              this.setState({ showToast: true, toastMessage: `離線 CBETA Bookcase 異常，請重新設定載入！` });
               this.props.dispatch({
                 type: "SET_KEY_VAL",
                 key: 'cbetaOfflineDbMode',

@@ -460,6 +460,7 @@ async function readBookcaseFromFileSystemV3(path: string) {
 }
 
 const CbetaOfflineDb = {
+    bookcaseInfosKey,
     electronBackendApi,
     filesFilter,
     init,
@@ -468,6 +469,8 @@ const CbetaOfflineDb = {
     fetchWork,
     fetchJuan,
     setOfflineFileSystemV2Ready,
+    readResourceFromFileSystemV2,
+    readResourceFromFileSystemV3,
 };
 
 export default CbetaOfflineDb;
