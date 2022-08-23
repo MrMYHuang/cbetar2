@@ -1,7 +1,7 @@
 # vim: syntax=spec
 
 Name:       {{{ git_dir_name }}}
-Version:    21.0.0
+Version:    21.2.0
 Release:    1%{?dist}
 Summary:    A Buddhist text reader using CBETA APIs.
 URL:        https://github.com/MrMYHuang/%{name}
@@ -81,6 +81,9 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/*.metainfo.xml
 %{_datadir}/icons/%{name}.png
 
 %changelog
+* Tue Aug 23 2022 Meng-Yuan Huang <myh@live.com> 21.2.0-1
+- 21.2.0: Support to disable file system offline DB modes.
+
 * Sat Jun 18 2022 Meng-Yuan Huang <myh@live.com> 21.0.0-1
 - 21.0.0: Increase reliability.
 
