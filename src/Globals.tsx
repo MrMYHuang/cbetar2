@@ -3,6 +3,7 @@ import { isPlatform, IonLabel, IonIcon } from '@ionic/react';
 import { refreshCircle } from 'ionicons/icons';
 import Store from './redux/store';
 import IndexedDbFuncs from './IndexedDbFuncs';
+import IndexedDbZipFuncs from './IndexedDbZipFuncs';
 
 const pwaUrl = process.env.PUBLIC_URL || '';
 const bugReportApiUrl = 'https://vh6ud1o56g.execute-api.ap-northeast-1.amazonaws.com/bugReportMailer';
@@ -98,7 +99,7 @@ async function downloadCbetaBookcaseAssets() {
   const res = await axiosInstance.get(`${window.location.origin}/${pwaUrl}/assets.zip`, {
     responseType: 'blob',
   });
-  await IndexedDbFuncs.extractZipToZips(res.data);
+  await IndexedDbZipFuncs.extractZipToZips(res.data);
 }
 
 function scrollbarSizeIdToValue(id: number) {

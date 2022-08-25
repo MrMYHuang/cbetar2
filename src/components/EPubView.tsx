@@ -8,6 +8,7 @@ import queryString from 'query-string';
 import ePub, { Book, Rendition, EVENTS } from 'epubjs-myh';
 import * as nodepub from 'nodepub';
 import { clearTimeout } from 'timers';
+import fs from 'fs';
 
 import './EPubView.css';
 import Globals from '../Globals';
@@ -19,6 +20,7 @@ import fetchJuan from '../fetchJuan';
 import { CbetaDbMode, Settings, UiMode } from '../models/Settings';
 import IndexedDbFuncs from '../IndexedDbFuncs';
 import VirtualHtml from '../models/VirtualHtml';
+import swiped from 'swiped-events-myh/src/add';
 
 // Load TW-Kai font in iframe.
 async function loadTwKaiFonts(this: Window) {
@@ -33,7 +35,7 @@ function addCbetaLineBreaks(this: any) {
 }
 
 function addSwpiedEvents(this: Window) {
-  require('swiped-events-myh/src/add')(this.window, this.document);
+  swiped(this.window, this.document);
 }
 
 let clicksInInterval = 0;
@@ -219,7 +221,6 @@ export class _EPubView extends React.Component<PageProps, State> {
     } else {
       logoArray = await IndexedDbFuncs.getFile<Uint8Array>(`/${Globals.cbetar2AssetDir}/icon.png`);
     }
-    let fs = require('fs');
     fs.writeFileSync('logo.png', logoArray);
   }
 
@@ -731,9 +732,8 @@ export class _EPubView extends React.Component<PageProps, State> {
     `);
 
       await this.epub.writeEPUB('.', 'temp');
-      let fs = require('fs');
       let tempEpubBuffer = fs.readFileSync('temp.epub');
-      this.book = ePub(tempEpubBuffer.buffer, {
+      this.book = ePub(tempEpubBuffer.buffer as any, {
         openAs: 'binary',
       });
 

@@ -14,6 +14,7 @@ import { TmpSettings } from '../models/TmpSettings';
 import fetchJuan from '../fetchJuan';
 import IndexedDbFuncs from '../IndexedDbFuncs';
 import CbetaOfflineDb from '../CbetaOfflineDb';
+import IndexedDbZipFuncs from '../IndexedDbZipFuncs';
 
 interface StateProps {
   showFontLicense: boolean;
@@ -234,7 +235,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                 }
 
                 await this.importBookcase(async () => {
-                  await IndexedDbFuncs.extractZipToZips(file, CbetaOfflineDb.filesFilter, undefined, (ratio: number) => {
+                  await IndexedDbZipFuncs.extractZipToZips(file, CbetaOfflineDb.filesFilter, undefined, (ratio: number) => {
                     this.setState({ cbetaBookZipLoadRatio: ratio });
                   });
                 });
@@ -248,7 +249,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                 }
 
                 await this.importBookcase(async () => {
-                  await IndexedDbFuncs.extractZipToZips(file, CbetaOfflineDb.filesFilter, undefined, (ratio: number) => {
+                  await IndexedDbZipFuncs.extractZipToZips(file, CbetaOfflineDb.filesFilter, undefined, (ratio: number) => {
                     this.setState({ cbetaBookZipLoadRatio: ratio });
                   });
                 });
