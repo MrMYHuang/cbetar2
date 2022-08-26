@@ -1,16 +1,17 @@
 import Constants from "./Constants";
 import Globals from "./Globals";
 import IndexedDbFuncs from "./IndexedDbFuncs";
+import IndexedDbZipFuncs from "./IndexedDbZipFuncs";
 import { CbetaDbMode } from "./models/Settings";
 
-async function wait(ms: number = 1000) {
+async function wait(ms = 1000) {
     return new Promise<void>(ok => {
         setTimeout(ok, ms);
     });
 }
 
 const electronBackendApi: {
-    send: (channel: string, data: any) => {},
+    send: (channel: string, data: any) => any,
     receive: (channel: string, func: Function) => {},
     receiveOnce: (channel: string, func: Function) => {},
     invoke: (channel: string, data: any) => Promise<any>,
@@ -62,7 +63,7 @@ interface BookcaseInfos {
     gaijis: { [key: string]: { uni_char: string, composition: string } };
     teiStylesheetString: string;
     version: number;
-};
+}
 
 const xmlParser = new DOMParser();
 const xsltProcessor = new XSLTProcessor();
@@ -83,7 +84,7 @@ function stringToXml(str: string) {
 }
 
 async function getFileAsStringFromIndexedDB(file: string) {
-    return textDecoder.decode((await IndexedDbFuncs.getZippedFile(file)) as Uint8Array);
+    return textDecoder.decode((await IndexedDbZipFuncs.getZippedFile(file)) as Uint8Array);
 }
 
 let isOfflineFileSystemV2Ready = false;
@@ -212,8 +213,8 @@ export async function initFromFiles(catalogsString: string, spinesString: string
 
 export async function fetchCatalogs(path: string, mode: CbetaDbMode) {
     isInit || await init(mode);
-    let paths = path.split('.');
-    let subpaths = paths.slice(1);
+    const paths = path.split('.');
+    const subpaths = paths.slice(1);
     try {
         let node = bookcaseInfos.catalogTree;
         for (let i = 0; i < subpaths.length; i++) {
@@ -252,7 +253,7 @@ function fetchSubcatalogs(node: Node | ChildNode, n: string): CatalogNode {
         }
         return Object.assign({ n, label, work2, vol_juan_start, volId: thisWorkVolId }, catalog) as CatalogNode;
     }
-    let children: CatalogNode[] = [];
+    const children: CatalogNode[] = [];
     for (let c = 1; c < node.childNodes.length; c++) {
         const ele = node.childNodes[c] as Element;
         // Node containing subcatalogs.
@@ -308,7 +309,7 @@ export async function fetchWork(path: string, mode: CbetaDbMode) {
     const pathFieldMatches = /([A-Z]*)(.*)/.exec(path)!;
     const bookId = pathFieldMatches[1];
     const sutra = pathFieldMatches[2];
-    let work = bookcaseInfos.catalogs[path];
+    const work = bookcaseInfos.catalogs[path];
     // E.g. XML/I/I01/I01n0012_001.xml.
     const re = new RegExp(`${bookId}[^n]*n${sutra}`);
     // eslint-disable-next-line no-useless-escape
@@ -347,8 +348,8 @@ export async function fetchJuan(work: string, juan: string, mode: CbetaDbMode) {
 
     xsltProcessor.importStylesheet(stringToXml(bookcaseInfos.teiStylesheetString));
 
-    let xhtmlDoc = xsltProcessor.transformToDocument(stringToXml(documentString));
-    let originalRootNode = xhtmlDoc.getRootNode().firstChild!;
+    const xhtmlDoc = xsltProcessor.transformToDocument(stringToXml(documentString));
+    const originalRootNode = xhtmlDoc.getRootNode().firstChild!;
     const rootNode = await elementTPostprocessing(xhtmlDoc, originalRootNode);
     xhtmlDoc.getRootNode().removeChild(originalRootNode);
     xhtmlDoc.getRootNode().appendChild(rootNode!);
@@ -364,7 +365,7 @@ let lb = '';
 async function elementTPostprocessing(doc: Document, node: Node, parent: Node | null = null) {
     const c = node;
     if (c.nodeType === Node.ELEMENT_NODE) {
-        let c2 = c as Element;
+        const c2 = c as Element;
         if (c2.tagName === 'span') {
             if (c2.getAttribute('class') === 'lb') {
                 lb = c2.getAttribute('l') || '';
