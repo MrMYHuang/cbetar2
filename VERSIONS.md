@@ -1,4 +1,8 @@
 # <a id='history'>版本歷史</a>
+* PWA 10.7.2:
+  * [修正] 修正「離線 DB + PWA模」可能圖片無法載入問題。
+  * [修正] 修正 IndexedDB schema 升級時，app 異常。
+
 * PWA 10.7.0, Electron apps 21.2.0:
   * [新增] app 啟動時自動更新 Bookcase 內容處理 assets。
 

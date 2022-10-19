@@ -7,15 +7,16 @@ const twKaiFontVersion = 5;
 const fontStore = 'font';
 let dbOpenReq: IDBOpenDBRequest;
 let db: IDBDatabase;
+let dbIsReady = false;
 
 async function ready() {
-  if (db) {
+  if (dbIsReady) {
     return;
   }
 
   return new Promise<void>(ok => {
     const timer = setInterval(() => {
-      if (db) {
+      if (dbIsReady) {
         clearInterval(timer);
         ok();
       }
@@ -26,19 +27,47 @@ async function ready() {
 async function open() {
   return new Promise<void>((ok, fail) => {
     dbOpenReq = indexedDB.open(cbetardb, version);
+
     // Init store in indexedDB if necessary.
-    dbOpenReq.onupgradeneeded = function (ev: IDBVersionChangeEvent) {
+    dbOpenReq.onupgradeneeded = async (ev: IDBVersionChangeEvent) => {
       db = (ev.target as any).result as IDBDatabase;
-      [dataStore, fontStore].forEach((s) => {
-        if (!db.objectStoreNames.contains(s)) {
-          db.createObjectStore(s);
+      const storeNames = [dataStore, fontStore];
+
+      let objectStore: IDBObjectStore | undefined;
+      for (let i = 0; i < storeNames.length; i++) {
+        const s = storeNames[i];
+        if (db.objectStoreNames.contains(s)) {
+          continue;
         }
+
+        objectStore = db.createObjectStore(s);
+      }
+
+      await new Promise<void>((ok, fail) => {
+        if (!objectStore) {
+          ok();
+          return;
+        }
+
+        objectStore.transaction.oncomplete = () => {
+          ok();
+        };
+        objectStore.transaction.onerror = (ev) => {
+          fail(`createObjectStore error: ${(ev.target as any).error}`);
+        };
       });
-      ok();
+
+      dbIsReady = true;
+      console.log(`IndexedDB upgraded to version: ${version}`);
     };
+
     dbOpenReq.onsuccess = (ev: Event) => {
       db = (ev.target as any).result as IDBDatabase;
+      if (db.version === version) {
+        dbIsReady = true;
+      }
       ok();
+      console.log(`IndexedDB opened successfully.`);
     }
     dbOpenReq.onerror = (ev: Event) => {
       fail('Fail to create IndexedDB.');
