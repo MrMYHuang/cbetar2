@@ -1,4 +1,7 @@
 # <a id='history'>版本歷史</a>
+* PWA 10.8.0:
+  * [更新] CBETA API 改為 stable 版。 
+
 * PWA 10.7.2:
   * [修正] 修正「離線 DB + PWA模」可能圖片無法載入問題。
   * [修正] 修正 IndexedDB schema 升級時，app 異常。

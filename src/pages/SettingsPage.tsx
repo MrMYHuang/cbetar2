@@ -890,8 +890,7 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                 <div>關於</div>
                 <div><a href="https://github.com/MrMYHuang/cbetar2" target="_new">操作說明</a></div>
                 <div hidden={Globals.isMacCatalyst()}>版本：{PackageInfos.pwaVersion}</div>
-                <div>CBETA API 版本: {Globals.apiVersion}</div>
-                <div><a href="http://cbdata.dila.edu.tw/v1.2/" target="_new">CBETA API 參考文件</a></div>
+                <div><a href="http://cbdata.dila.edu.tw/stable/" target="_new">CBETA API 參考文件</a></div>
                 <div><a href="http://glossaries.dila.edu.tw/?locale=zh-TW" target="_new">DILA 佛學術語字辭典</a></div>
                 <div>作者: Meng-Yuan Huang</div>
                 <div><a href="mailto:myh@live.com" target="_new">myh@live.com</a></div>

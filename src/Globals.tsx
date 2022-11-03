@@ -7,8 +7,7 @@ import IndexedDbZipFuncs from './IndexedDbZipFuncs';
 
 const pwaUrl = process.env.PUBLIC_URL || '';
 const bugReportApiUrl = 'https://vh6ud1o56g.execute-api.ap-northeast-1.amazonaws.com/bugReportMailer';
-const apiVersion = 'v1.2';
-const cbetaApiUrl = `https://cbdata.dila.edu.tw/${apiVersion}`;
+const cbetaApiUrl = `https://cbdata.dila.edu.tw/stable`;
 const dilaDictApiUrl = `https://glossaries.dila.edu.tw/search.json`;
 // Disable problematic fonts.
 //const twKaiFonts = ['Kai'];
@@ -259,7 +258,6 @@ const Globals = {
   disableAppLog,
   pwaUrl,
   bugReportApiUrl,
-  apiVersion,
   cbetaApiUrl,
   dilaDictApiUrl,
   twKaiFontNeedUpgrade,
