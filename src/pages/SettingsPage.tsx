@@ -479,16 +479,18 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                     <input id='importJsonInput' type='file' accept='.json' style={{ display: 'none' }} onChange={async (ev) => {
                       const file = ev.target.files?.item(0);
                       const fileText = await file?.text() || '';
+                      this.setState({ isLoading: true });
                       try {
                         // JSON text validation.
                         JSON.parse(fileText);
                         localStorage.setItem(Globals.storeFile, fileText);
                         this.props.dispatch({ type: 'LOAD_SETTINGS' });
-                        this.updateAllJuans();
+                        await this.updateAllJuans();
                       } catch (e) {
                         console.error(e);
                         console.error(new Error().stack);
                       }
+                      this.setState({ isLoading: false });
                       (document.getElementById('importJsonInput') as HTMLInputElement).value = '';
                     }} />
 
@@ -519,13 +521,13 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
                           text: '重置',
                           cssClass: 'secondary uiFont',
                           handler: async (value) => {
-                            this.setState({ isLoading: true });
+                            this.setState({ isLoading: true, showClearAlert: false });
                             try {
                               await Globals.clearAppData();
                               this.props.dispatch({ type: 'DEFAULT_SETTINGS' });
-                              this.setState({ isLoading: false, showClearAlert: false, showToast: true, toastMessage: "清除成功!" });
+                              this.setState({ isLoading: false, showToast: true, toastMessage: "清除成功!" });
                             } catch (error) {
-                              this.setState({ isLoading: false });
+                              this.setState({ isLoading: false, showToast: true, toastMessage: `Error: ${error}` });
                             }
                           },
                         }
