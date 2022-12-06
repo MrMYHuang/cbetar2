@@ -5,6 +5,7 @@ const dataStore = 'store';
 // Increase this if font store content is changed.
 const twKaiFontVersion = 5;
 const fontStore = 'font';
+const storeNames = [dataStore, fontStore];
 let dbOpenReq: IDBOpenDBRequest;
 let db: IDBDatabase;
 let dbIsReady = false;
@@ -25,13 +26,16 @@ async function ready() {
 }
 
 async function open() {
+  if (dbIsReady) {
+    return;
+  }
+
   return new Promise<void>((ok, fail) => {
     dbOpenReq = indexedDB.open(cbetardb, version);
 
     // Init store in indexedDB if necessary.
     dbOpenReq.onupgradeneeded = async (ev: IDBVersionChangeEvent) => {
       db = (ev.target as any).result as IDBDatabase;
-      const storeNames = [dataStore, fontStore];
 
       let objectStore: IDBObjectStore | undefined;
       for (let i = 0; i < storeNames.length; i++) {
@@ -68,28 +72,18 @@ async function open() {
       }
       ok();
       console.log(`IndexedDB opened successfully.`);
-    }
+    };
+
     dbOpenReq.onerror = (ev: Event) => {
       fail('Fail to create IndexedDB.');
-    }
+    };
   });
 }
 
 async function clear() {
-  db.close();
-  const dbOpenReq = indexedDB.deleteDatabase(cbetardb);
-  return new Promise<void>((ok, fail) => {
-    dbOpenReq.onsuccess = async (ev: Event) => {
-      try {
-        open().then(ok);
-      } catch (err) {
-        fail(err);
-      }
-    };
-    dbOpenReq.onerror = async (ev: Event) => {
-      fail('Fail to delete database.');
-    }
-  });
+  for (let i = 0; i < storeNames.length; i++) {
+    await clearStore(storeNames[i]);
+  }
 }
 
 async function clearStore(store: string) {
