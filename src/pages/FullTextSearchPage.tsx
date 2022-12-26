@@ -40,6 +40,7 @@ class _SearchPage extends React.Component<PageProps, State> {
 
   ionViewWillEnter() {
     //console.log( 'view will enter' );
+    this.page = 0;
     this.search(this.props.match.params.keyword, true);
   }
 
@@ -48,6 +49,7 @@ class _SearchPage extends React.Component<PageProps, State> {
 
   page = 0;
   rows = 20;
+  loadMoreLock = false;
   async search(keyword: string, newSearch: boolean = false) {
     this.setState({ isLoading: true });
     if (newSearch) {
@@ -56,6 +58,11 @@ class _SearchPage extends React.Component<PageProps, State> {
     }
 
     try {
+      if (this.loadMoreLock) {
+        return;
+      }
+      this.loadMoreLock = true;
+
       console.log(`Loading page ${this.page}`);
 
       const res = await Globals.axiosInstance.get(`/sphinx?q=${keyword}&start=${this.page * this.rows}&rows=${this.rows}`, {
@@ -63,17 +70,20 @@ class _SearchPage extends React.Component<PageProps, State> {
       });
       const data = JSON.parse(new TextDecoder().decode(res.data)).results as [any];
       const searches = data.map((json) => new FullTextSearch(json));
+      const newSearches = newSearch ? searches : [...this.state.searches, ...searches];
 
       this.setState({
-        fetchError: false, isLoading: false, searches: [...this.state.searches, ...searches],
+        fetchError: false, isLoading: false, searches: newSearches,
         isScrollOn: searches.length === this.rows,
+      }, () => {
+        this.page += 1;
+        this.loadMoreLock = false;
       });
-
-      this.page += 1;
       return true;
     } catch (e) {
       console.error(e);
       console.error(new Error().stack);
+      this.loadMoreLock = false;
       this.setState({ fetchError: true, isLoading: false, isScrollOn: false });
       return false;
     }

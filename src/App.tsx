@@ -146,8 +146,8 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
           <Route path={`/:tab(bookmarks)`} render={(props: any) => <BookmarkPage {...props} />} exact={true} />
           <Route path={`/:tab(dictionary)/search/:keyword?`} render={(props: any) => <DictionaryPage {...props} />} exact={true} />
           <Route path={`/:tab(dictionary)/searchWord/:keyword?`} render={(props: any) => <WordDictionaryPage {...props} />} exact={true} />
-          <Route path={`/:tab(catalog)/search/:keyword`} render={props => <SearchPage {...props} />} exact={true} />
-          <Route path={`/:tab(catalog)/fulltextsearch/:keyword`} render={props => <FullTextSearchPage {...props} />} exact={true} />
+          <Route path={`/:tab(catalog)/search/:keyword?`} render={props => <SearchPage {...props} />} exact={true} />
+          <Route path={`/:tab(catalog)/fulltextsearch/:keyword?`} render={props => <FullTextSearchPage {...props} />} exact={true} />
           <Route path={`/settings`} render={(props: any) => <SettingsPage {...props} />} />
           <Route path={`/`} render={() => { return this.routeByQueryString(); }} exact={true} />
         </IonRouterOutlet>;
@@ -164,8 +164,8 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
           <Route path={`/:tab(bookmarks)`} render={(props: any) => <BookmarkPage {...props} />} exact={true} />
           <Route path={`/:tab(dictionary)/search/:keyword?`} render={(props: any) => <DictionaryPage {...props} />} exact={true} />
           <Route path={`/:tab(dictionary)/searchWord/:keyword?`} render={(props: any) => <WordDictionaryPage {...props} />} exact={true} />
-          <Route path={`/:tab(catalog)/search/:keyword`} render={props => <SearchPage {...props} />} exact={true} />
-          <Route path={`/:tab(catalog)/fulltextsearch/:keyword`} render={props => <FullTextSearchPage {...props} />} exact={true} />
+          <Route path={`/:tab(catalog)/search/:keyword?`} render={props => <SearchPage {...props} />} exact={true} />
+          <Route path={`/:tab(catalog)/fulltextsearch/:keyword?`} render={props => <FullTextSearchPage {...props} />} exact={true} />
           <Route path={`/settings`} render={(props: any) => <SettingsPage {...props} />} />
           <Route path={`/`} render={() => { return this.routeByQueryString(); }} exact={true} />
         </IonRouterOutlet>;

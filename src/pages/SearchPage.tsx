@@ -1,5 +1,5 @@
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonLabel, withIonLifeCycle, IonButton, IonIcon, IonLoading } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonLabel, withIonLifeCycle, IonButton, IonIcon, IonLoading, IonInfiniteScroll, IonInfiniteScrollContent } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Globals from '../Globals';
@@ -23,6 +23,7 @@ interface State {
   showSearchAlert: boolean;
   searches: Array<Search>;
   isLoading: boolean;
+  isScrollOn: boolean;  
 }
 
 class _SearchPage extends React.Component<PageProps, State> {
@@ -33,6 +34,7 @@ class _SearchPage extends React.Component<PageProps, State> {
       showSearchAlert: false,
       searches: [],
       isLoading: false,
+      isScrollOn: false,
     }
   }
 
@@ -44,20 +46,43 @@ class _SearchPage extends React.Component<PageProps, State> {
   componentDidMount() {
   }
 
+  page = 0;
+  rows = 20;
+  loadMoreLock = false;
+  searchesAll: Search[] = [];
   async search(keyword: string) {
     this.setState({ isLoading: true });
-    try {
-      const res = await Globals.axiosInstance.get(`/toc?q=${keyword}`, {
-        responseType: 'arraybuffer',
-      });
-      const data = JSON.parse(new TextDecoder().decode(res.data)).results as [any];
-      const searches = data.map((json) => new Search(json));
 
-      this.setState({ fetchError: false, isLoading: false, searches: searches });
+    try {
+      if (this.loadMoreLock) {
+        return;
+      }
+      this.loadMoreLock = true;
+
+      if (this.page === 0) {
+        const res = await Globals.axiosInstance.get(`/toc?q=${keyword}`, {
+          responseType: 'arraybuffer',
+        });
+        const data = JSON.parse(new TextDecoder().decode(res.data)).results as [any];
+        this.searchesAll = data.map((json) => new Search(json));
+      }
+
+      const newAppendSearchesRangeEnd = Math.min((this.page + 1) * this.rows, this.searchesAll.length);
+      const newAppendSearches = this.searchesAll.slice(this.page * this.rows, newAppendSearchesRangeEnd);
+      const newSearches = this.page === 0 ? newAppendSearches : [...this.state.searches, ...newAppendSearches];
+
+      this.setState({ fetchError: false, isLoading: false,
+        searches: newSearches,
+        isScrollOn: newSearches.length < this.searchesAll.length,
+       }, () => {
+        this.page += 1;
+        this.loadMoreLock = false;
+      });
       return true;
     } catch (e) {
       console.error(e);
       console.error(new Error().stack);
+      this.loadMoreLock = false;
       this.setState({ fetchError: true, isLoading: false });
       return false;
     }
@@ -128,6 +153,16 @@ class _SearchPage extends React.Component<PageProps, State> {
 
                 <IonList>
                   {rows}
+                  <IonInfiniteScroll threshold="100px"
+                    disabled={!this.state.isScrollOn}
+                    onIonInfinite={(ev: CustomEvent<void>) => {
+                      this.search(this.props.match.params.keyword);
+                      (ev.target as HTMLIonInfiniteScrollElement).complete();
+                    }}>
+                    <IonInfiniteScrollContent
+                      loadingText={`載入中...`}>
+                    </IonInfiniteScrollContent>
+                  </IonInfiniteScroll>
                 </IonList>
               </>
           }

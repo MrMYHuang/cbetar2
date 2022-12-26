@@ -1,10 +1,10 @@
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonToolbar, withIonLifeCycle, IonButton, IonIcon, IonSearchbar, IonAlert, IonPopover, IonList, IonItem, IonLabel, IonLoading, IonToast } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonToolbar, withIonLifeCycle, IonButton, IonIcon, IonSearchbar, IonAlert, IonPopover, IonList, IonItem, IonLabel, IonLoading, IonToast, IonInput } from '@ionic/react';
 import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as uuid from 'uuid';
 import Globals from '../Globals';
-import { home, shareSocial, book, ellipsisHorizontal, ellipsisVertical, refreshCircle, copy, arrowBack } from 'ionicons/icons';
+import { home, shareSocial, book, ellipsisHorizontal, ellipsisVertical, refreshCircle, copy, arrowBack, search } from 'ionicons/icons';
 import { DictWordDefItem, DictWordItem, WordType } from '../models/DictWordItem';
 import { AxiosError } from 'axios';
 
@@ -31,7 +31,6 @@ interface State {
 }
 
 class _WordDictionaryPage extends React.Component<PageProps, State> {
-  searchBarRef: React.RefObject<HTMLIonSearchbarElement>;
   constructor(props: any) {
     super(props);
     this.state = {
@@ -47,7 +46,6 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
       showToast: false,
       toastMessage: '',
     }
-    this.searchBarRef = React.createRef<HTMLIonSearchbarElement>();
   }
 
   ionViewWillEnter() {
@@ -99,6 +97,14 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
         this.setState({ fetchError: true, isLoading: false });
       }
       return false;
+    }
+  }
+
+  clickToSearch() {
+    if (this.state.keyword === this.props.match.params.keyword) {
+      this.lookupDict(this.state.keyword);
+    } else {
+      this.props.history.push(`/dictionary/searchWord/${this.state.keyword}`);
     }
   }
 
@@ -248,23 +254,35 @@ class _WordDictionaryPage extends React.Component<PageProps, State> {
         </IonHeader>
         <IonContent>
           <div style={{ display: 'flex', flexFlow: 'column', height: '100%' }}>
-            <IonSearchbar ref={this.searchBarRef} placeholder='請輸入字，再按鍵盤Enter鍵' value={this.state.keyword}
-              onIonClear={ev => {
-                this.setState({ search: null, keyword: '' });
-              }}
-              onKeyUp={(ev: any) => {
-                const value = ev.target.value;
-                if (value === '') {
-                  this.setState({ search: null, keyword: value });
-                } else if (ev.key === 'Enter') {
-                  if (value === this.props.match.params.keyword) {
-                    this.setState({ keyword: value });
-                    this.lookupDict(value);
-                  } else {
-                    this.props.history.push(`/dictionary/searchWord/${value}`);
-                  }
-                }
-              }} />
+            <div style={{ display: 'flex', flexDirection: 'row' }}>
+              <IonInput className='uiFont' placeholder='輸入後，按搜尋' value={this.state.keyword}
+                clearInput={(this.state.keyword?.length || 0) > 0}
+                onKeyUp={(ev: any) => {
+                  const value = ev.target.value;
+                  this.setState({ keyword: value }, () => {
+                    if (ev.key === 'Enter') {
+                      this.clickToSearch();
+                    }
+                  });
+                }}
+                onIonChange={ev => {
+                  const value = `${ev.target.value || ''}`;
+                  this.setState({ keyword: value }, () => {
+                    if (value === '') {
+                      this.props.history.push({
+                        pathname: `${Globals.pwaUrl}/dictionary/searchWord`,
+                      });
+                    }
+                  });
+                }}
+              />
+              <IonButton fill='outline' size='large' onClick={() => {
+                this.clickToSearch();
+              }}>
+                <IonIcon slot='icon-only' icon={search} />
+              </IonButton>
+            </div>
+
             {/*
               <IonButton slot='end' size='large' className='uiFont' onClick={e => {
                 this.lookupDict(this.state.keyword);
