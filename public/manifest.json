@@ -18,8 +18,12 @@
   "start_url": "/",
   "url_handlers": [
     {
-      "origin": "https://myhpwa.github.io"
+      "origin": "https://mrmyhuang.github.io"
     }
+  ],
+  "handle_links": "preferred",
+  "scope_extensions": [
+    {"origin": "mrmyhuang.github.io"}
   ],
   "shortcuts": [
     {

@@ -1,11 +1,7 @@
 {
-  "web_apps": [
-    {
-      "manifest": "https://mrmyhuang.github.io/manifest.json",
-      "details": {
-        "paths": ["/*"],
-        "exclude_paths": []
-      }
+  "web_apps": {
+    "https://mrmyhuang.github.io/": {
+      "scope": "/"
     }
-  ]
+  }
 }
