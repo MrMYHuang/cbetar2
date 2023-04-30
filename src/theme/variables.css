@@ -181,6 +181,10 @@ body.dark {
     font-size: var(--ui-font-size) !important;
 }
 
+ion-fab-button::part(native) {
+    touch-action: none;
+}
+
 ion-toast::part(button) {
     font-size: var(--ui-font-size) !important;
 }

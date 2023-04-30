@@ -607,7 +607,7 @@ export class _EPubView extends React.Component<PageProps, State> {
     }
     `;
 
-      this.epub.addCSS(`
+      this.epub.addCSS(`    
     @page {
       size: A4;
       margin: 0.5in;
@@ -652,8 +652,6 @@ export class _EPubView extends React.Component<PageProps, State> {
       background: ${getComputedStyle(document.body).getPropertyValue('--ion-background-color')};
       /* Disable browser's swipe to forward / backward page navigation. */
       overscroll-behavior-x: none;
-      /* Fix an issue in epub.js causing iOS Safari not using line-height. */
-      -webkit-line-box-contain: inline block glyphs replaced !important;
     }
 
     @font-face {
