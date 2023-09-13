@@ -7,7 +7,7 @@ jobs:
   build-snap-amd64:
     <<: *defaults
     machine:
-      image: ubuntu-2004:202101-01
+      image: ubuntu-2204:2023.07.2
     steps:
       - checkout
       - run: git submodule sync
@@ -16,7 +16,7 @@ jobs:
       - run:
           name: Build snap
           command: |
-            npm run dist-snap
+            npm run dist-snap -- --use-lxd
 
       - persist_to_workspace:
           root: ~/workspace
@@ -25,7 +25,7 @@ jobs:
   build-snap-arm64:
     <<: *defaults
     machine:
-      image: ubuntu-2004:202101-01
+      image: ubuntu-2204:2023.07.2
     resource_class: arm.medium
     steps:
       - checkout
@@ -35,7 +35,7 @@ jobs:
       - run:
           name: Build snap
           command: |
-            npm run dist-snap
+            npm run dist-snap -- --use-lxd
 
       - persist_to_workspace:
           root: ~/workspace
@@ -44,7 +44,7 @@ jobs:
   publish:
     <<: *defaults
     machine:
-      image: ubuntu-2004:202101-01
+      image: ubuntu-2204:2023.07.2
     steps:
       - checkout
 
@@ -58,7 +58,7 @@ jobs:
   build-appImage-arm64:
     <<: *defaults
     machine:
-      image: ubuntu-2004:202101-01
+      image: ubuntu-2204:2023.07.2
     resource_class: arm.medium
     steps:
       - checkout
@@ -73,7 +73,7 @@ jobs:
   test-build-appImage-arm64:
     <<: *defaults
     machine:
-      image: ubuntu-2004:202101-01
+      image: ubuntu-2204:2023.07.2
     resource_class: arm.medium
     steps:
       - checkout
@@ -91,7 +91,7 @@ jobs:
   build-deb-arm64:
     <<: *defaults
     machine:
-      image: ubuntu-2004:202101-01
+      image: ubuntu-2204:2023.07.2
     resource_class: arm.medium
     steps:
       - checkout
@@ -110,7 +110,7 @@ jobs:
   build-rpm-aarch64:
     <<: *defaults
     machine:
-      image: ubuntu-2004:202101-01
+      image: ubuntu-2204:2023.07.2
     resource_class: arm.medium
     steps:
       - checkout
