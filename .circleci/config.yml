@@ -7,7 +7,7 @@ jobs:
   build-snap-amd64:
     <<: *defaults
     machine:
-      image: ubuntu-2204:2023.07.2
+      image: ubuntu-2204:2023.07.1
     steps:
       - checkout
       - run: git submodule sync
@@ -29,7 +29,7 @@ jobs:
   build-snap-arm64:
     <<: *defaults
     machine:
-      image: ubuntu-2204:2023.07.2
+      image: ubuntu-2204:2023.07.1
     resource_class: arm.medium
     steps:
       - checkout
@@ -52,7 +52,7 @@ jobs:
   publish:
     <<: *defaults
     machine:
-      image: ubuntu-2204:2023.07.2
+      image: ubuntu-2204:2023.07.1
     steps:
       - checkout
 
@@ -69,7 +69,7 @@ jobs:
   build-appImage-arm64:
     <<: *defaults
     machine:
-      image: ubuntu-2204:2023.07.2
+      image: ubuntu-2204:2023.07.1
     resource_class: arm.medium
     steps:
       - checkout
@@ -84,7 +84,7 @@ jobs:
   test-build-appImage-arm64:
     <<: *defaults
     machine:
-      image: ubuntu-2204:2023.07.2
+      image: ubuntu-2204:2023.07.1
     resource_class: arm.medium
     steps:
       - checkout
@@ -102,7 +102,7 @@ jobs:
   build-deb-arm64:
     <<: *defaults
     machine:
-      image: ubuntu-2204:2023.07.2
+      image: ubuntu-2204:2023.07.1
     resource_class: arm.medium
     steps:
       - checkout
@@ -121,7 +121,7 @@ jobs:
   build-rpm-aarch64:
     <<: *defaults
     machine:
-      image: ubuntu-2204:2023.07.2
+      image: ubuntu-2204:2023.07.1
     resource_class: arm.medium
     steps:
       - checkout
