@@ -11,3 +11,4 @@ flatpak-node-generator --electron-node-headers -o flatpak/generated-sources.json
 
 # Verify metainfo.
 flatpak run org.freedesktop.appstream-glib validate ./buildElectron/io.github.mrmyhuang.cbetar2.metainfo.xml
+flatpak run --command=flatpak-builder-lint org.flatpak.Builder --exceptions ${flatpakFile}
