@@ -7,7 +7,7 @@ jobs:
   build-snap-amd64:
     <<: *defaults
     machine:
-      image: ubuntu-2204:2023.07.2
+      image: ubuntu-2004:202101-01
     steps:
       - checkout
       - run: git submodule sync
@@ -16,8 +16,6 @@ jobs:
       - run:
           name: Build snap
           command: |
-            sudo apt install -y snapd
-            sudo snap install --classic snapcraft
             npm run dist-snap -- --use-lxd
 
       - persist_to_workspace:
@@ -27,7 +25,7 @@ jobs:
   build-snap-arm64:
     <<: *defaults
     machine:
-      image: ubuntu-2204:2023.07.2
+      image: ubuntu-2004:202101-01
     resource_class: arm.medium
     steps:
       - checkout
@@ -37,8 +35,6 @@ jobs:
       - run:
           name: Build snap
           command: |
-            sudo apt install -y snapd
-            sudo snap install --classic snapcraft
             npm run dist-snap -- --use-lxd
 
       - persist_to_workspace:
