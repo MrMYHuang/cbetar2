@@ -126,7 +126,14 @@ npm run publish-snap
     2. flatpak:
     ```
     sudo dnf install flatpak flatpak-builder python3-aiohttp
-    flatpak install --user org.freedesktop.appstream-glib org.freedesktop.Sdk//21.08 org.electronjs.Electron2.BaseApp//21.08 org.freedesktop.Sdk.Extension.node16//21.08
+    flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+    flatpak install --user org.freedesktop.appstream-glib org.freedesktop.Sdk//22.08 org.electronjs.Electron2.BaseApp//22.08 org.freedesktop.Sdk.Extension.node16//22.08
+    ```
+    3. flatpak-node-generator:
+    ```
+    git clone https://github.com/flatpak/flatpak-builder-tools.git
+    cd flatpak-builder-tools/node
+    pipx install .
     ```
 
 1. Run shell script :
