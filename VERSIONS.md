@@ -1,4 +1,7 @@
 # <a id='history'>版本歷史</a>
+* Installer apps 22.0.0:
+  * [優化] 升級至 Electron 26。
+
 * PWA 10.10.0:
   * [優化] 升級至 Ionic v7。
   * [修正] 移除已無效的"冊分類"。

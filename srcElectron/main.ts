@@ -1,5 +1,5 @@
 // Modules to control application life and create native browser window
-import { app, BrowserWindow, dialog, ipcMain, Menu, MenuItem, protocol, shell } from 'electron';
+import { app, BrowserWindow, dialog, ipcMain, Menu, MenuItem, protocol, net, shell } from 'electron';
 import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
@@ -322,7 +322,7 @@ async function createWindow() {
 
         try {
           if (isDevMode()) {
-            await mainWindow?.loadURL('http://localhost:3000');
+            await mainWindow?.loadURL('http://localhost:5173');
           } else {
             await mainWindow?.loadURL('https://mrmyhuang.github.io');
           }
@@ -357,15 +357,9 @@ async function createWindow() {
 app.whenReady().then(() => {
   createWindow();
 
-  protocol.registerFileProtocol(Globals.localFileProtocolName, (request, callback) => {
-    const url = request.url.replace(`${Globals.localFileProtocolName}://`, '')
-    try {
-      return callback(decodeURIComponent(url))
-    }
-    catch (error) {
-      // Handle the error as needed
-      console.error(error)
-    }
+  protocol.handle(Globals.localFileProtocolName, (request) => {
+    const url = request.url.replace(`${Globals.localFileProtocolName}://`, `file://${settings.cbetaBookcaseDir}/../`);
+    return net.fetch(decodeURIComponent(url));
   });
 
   app.on('activate', function () {
