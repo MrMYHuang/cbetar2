@@ -16,6 +16,8 @@ jobs:
       - run:
           name: Build snap
           command: |
+            sudo apt install -y snapd
+            sudo snap install --classic snapcraft
             npm run dist-snap -- --use-lxd
 
       - persist_to_workspace:
@@ -35,6 +37,8 @@ jobs:
       - run:
           name: Build snap
           command: |
+            sudo apt install -y snapd
+            sudo snap install --classic snapcraft
             npm run dist-snap -- --use-lxd
 
       - persist_to_workspace:
