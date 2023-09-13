@@ -17,6 +17,7 @@ jobs:
           name: Build snap
           command: |
             sudo apt install -y snapd
+            sudo snap install lxd
             sudo snap install --classic snapcraft
             sudo lxd init --auto --storage-backend zfs
             npm run dist-snap -- --use-lxd
@@ -39,6 +40,7 @@ jobs:
           name: Build snap
           command: |
             sudo apt install -y snapd
+            sudo snap install lxd
             sudo snap install --classic snapcraft
             sudo lxd init --auto --storage-backend zfs
             npm run dist-snap -- --use-lxd
