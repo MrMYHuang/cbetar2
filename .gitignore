@@ -55,3 +55,4 @@ pkg
 cbeta_epub_2022q1
 public/assets.zip
 *.xcuserstate
+.flatpak-builder
