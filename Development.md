@@ -15,10 +15,20 @@ npm i
 npm run start
 ```
 
+### Debug Electron app
+1. Run Shell script:
+```
+cd cbetar2
+npm i
+npm run debug-electron
+```
+2. Attach to the NodeJS app by VS Code
+
 ### Debug Service Worker
 1. Run Shell script:
 ```
 cd cbetar2
+npm i
 npm run start-sw
 ```
 
@@ -43,13 +53,9 @@ npm run dist-mas-dev
 
 ## Publish App
 ### Progressive Web App
-#### Build on Windows
+#### Build
 ```
 npm run build
-```
-#### Build on macOS or Linux
-```
-npm run build_linux
 ```
 #### Publish to GitHub
 Upload files under build folder to your github.io.
@@ -114,6 +120,8 @@ npm run dist-mac
 cd cbetar2
 npm i
 npm run dist-snap
+# or
+#npm run dist-snap -- --use-lxd
 ```
 2. Upload by this example command:
 ```
@@ -123,13 +131,7 @@ npm run publish-snap
 ### Flathub (Linux) built on local
 0. Required software:
     1. Fedora is recommended.
-    2. flatpak:
-    ```
-    sudo dnf install flatpak flatpak-builder python3-aiohttp
-    flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-    flatpak install --user org.freedesktop.appstream-glib org.freedesktop.Sdk//22.08 org.electronjs.Electron2.BaseApp//22.08 org.freedesktop.Sdk.Extension.node16//22.08
-    ```
-    3. flatpak-node-generator:
+    2. flatpak-node-generator:
     ```
     git clone https://github.com/flatpak/flatpak-builder-tools.git
     cd flatpak-builder-tools/node
@@ -144,17 +146,14 @@ git tag x.y.z
 git clone https://github.com/flathub/io.github.mrmyhuang.cbetar2.git flatpak
 yarn
 yarn run prepare-flatpak
+flatpak install -y org.freedesktop.Sdk//22.08 org.electronjs.Electron2.BaseApp//22.08 org.freedesktop.Sdk.Extension.node16//22.08
 yarn run dist-flatpak-dev
 ```
 
 ### Flathub (Linux) built by Flathub CI/CD
 0. Required software:
     1. Fedora is recommended.
-    2. flatpak:
-    ```
-    sudo dnf install flatpak python3-aiohttp
-    flatpak install --user org.freedesktop.appstream-glib
-    ```
+    2. flatpak-node-generator:
 
 1. Update package.json version to x.y.z. Then, commit it and tag with x.y.z.
 
