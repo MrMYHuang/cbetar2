@@ -116,15 +116,14 @@ class _WorkTouchPage extends React.Component<PageProps, State> {
     return true;
   }
 
-  fetchJuan = '';
   async saveJuans() {
     let work = this.state.work!;
     let juans = work.juan_list.split(',');
     for (let i = 0; i < juans.length; i++) {
-      this.fetchJuan = juans[i];
+      const juan = juans[i];
       try {
-        const res = await fetchJuan(work.work, this.fetchJuan, null);
-        IndexedDbFuncs.saveFile(Globals.getFileName(work.work, this.fetchJuan), res.htmlStr);
+        const res = await fetchJuan(work.work, juan, null);
+        IndexedDbFuncs.saveFile(Globals.getFileName(work.work, juan), res.htmlStr);
       } catch (err) {
         console.error(`Fetching juan ${i} failed! ${err}`);
         console.error(new Error().stack);
@@ -133,10 +132,11 @@ class _WorkTouchPage extends React.Component<PageProps, State> {
   }
 
   async addBookmarkHandler() {
+    this.setState({ isLoading: true });
     if (this.props.settings.cbetaOfflineDbMode === CbetaDbMode.Online) {
       await this.saveJuans();
     }
-    this.setState({ showAddBookmarkDone: true });
+    this.setState({ showAddBookmarkDone: true, isLoading: false });
     this.props.dispatch({
       type: "ADD_BOOKMARK",
       bookmark: {
