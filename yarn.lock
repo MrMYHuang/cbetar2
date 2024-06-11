@@ -2830,10 +2830,10 @@ env-paths@^2.2.0:
   resolved "https://registry.npmjs.org/env-paths/-/env-paths-2.2.1.tgz"
   integrity sha512-+h1lkLKhZMTYjog1VEpJNG7NZJWcuc2DDk/qsqSTRRCOXiLjeQ1d1/udrUGhqMxUgAlwKNZ0cf2uqan5GLuS2A==
 
-epubjs-myh@^0.3.124:
-  version "0.3.124"
-  resolved "https://registry.npmjs.org/epubjs-myh/-/epubjs-myh-0.3.124.tgz"
-  integrity sha512-z2omajDUm2kz1awW+NeAus54ISL8jhMQIZDawa5hDCsFygAn5OMT0m410PqfBx8LKuHVC6hJ+a7VRXNSbnzCbw==
+epubjs-myh@^0.3.125:
+  version "0.3.125"
+  resolved "https://registry.npmjs.org/epubjs-myh/-/epubjs-myh-0.3.125.tgz"
+  integrity sha512-+rUSLhSMrdT1yC4X6+4k7YNGEr8Zjm9RR/gAFBBzzaZSAzSZgwE1OM+TTMlqDA0eTAg5oOvwoqaSMi6XbWboow==
   dependencies:
     "@types/localforage" "0.0.34"
     "@xmldom/xmldom" "^0.8.2"
