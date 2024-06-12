@@ -311,9 +311,9 @@ export async function fetchWork(path: string, mode: CbetaDbMode) {
     const sutra = pathFieldMatches[2];
     const work = bookcaseInfos.catalogs[path];
     // E.g. XML/I/I01/I01n0012_001.xml.
-    const re = new RegExp(`${bookId}[^n]*n${sutra}`);
+    const re = new RegExp(`${bookId}[0-9]*n${sutra}`);
     // eslint-disable-next-line no-useless-escape
-    const juans = bookcaseInfos.spines.filter(s => re.test(s)).map(s => +(new RegExp(`${bookId}[^n]*n${sutra}_(.*)\.xml`).exec(s)![1]));
+    const juans = bookcaseInfos.spines.filter(s => re.test(s)).map(s => +(new RegExp(`${bookId}[0-9]*n${sutra}_(.*)\.xml`).exec(s)![1]));
     work.juan_list = juans.join(',');
     work.work = path;
     return { results: [work] };
