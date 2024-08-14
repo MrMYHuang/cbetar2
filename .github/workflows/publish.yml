@@ -25,16 +25,19 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           submodules: "recursive"
 
-      - name: Build and publish
-        uses: actions/setup-node@v1
+      - name: Setup nodejs
+        if: ${{ success() }}
+        uses: actions/setup-node@v4
         with:
-          node-version: 14
+          node-version: 20
 
-      - run: |
+      - name: Build and publish
+        if: ${{ success() }}
+        run: |
           npm i --ignore-scripts
           npm run dist-win -- -p always --x64
 
@@ -43,16 +46,19 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           submodules: "recursive"
 
-      - name: Build and publish
-        uses: actions/setup-node@v1
+      - name: Setup nodejs
+        if: ${{ success() }}
+        uses: actions/setup-node@v4
         with:
-          node-version: 14
+          node-version: 20
 
-      - run: |
+      - name: Build and publish
+        if: ${{ success() }}
+        run: |
           npm i --ignore-scripts
           npm run dist-win -- -p always --arm64 "-c.win.publish.provider=github" "-c.win.publish.publishAutoUpdate=false"
 
@@ -61,16 +67,19 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           submodules: "recursive"
 
-      - name: Build and publish
-        uses: actions/setup-node@v1
+      - name: Setup nodejs
+        if: ${{ success() }}
+        uses: actions/setup-node@v4
         with:
-          node-version: 16
+          node-version: 20
 
-      - shell: 'script -q -e -c "bash {0}"'
+      - name: Build and publish
+        if: ${{ success() }}
+        shell: 'script -q -e -c "bash {0}"'
         run: |
           npm run docker-dist-appImage -- -- -p always --x64
 
@@ -79,16 +88,19 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           submodules: "recursive"
 
-      - name: Build and publish
-        uses: actions/setup-node@v1
+      - name: Setup nodejs
+        if: ${{ success() }}
+        uses: actions/setup-node@v4
         with:
-          node-version: 16
+          node-version: 20
 
-      - run: |
+      - name: Build and publish
+        if: ${{ success() }}
+        run: |
           sudo apt -y install ruby ruby-dev
           sudo gem install fpm -f
           npm i --ignore-scripts
@@ -99,16 +111,19 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           submodules: "recursive"
 
-      - name: Build and publish
-        uses: actions/setup-node@v1
+      - name: Setup nodejs
+        if: ${{ success() }}
+        uses: actions/setup-node@v4
         with:
-          node-version: 16
+          node-version: 20
 
-      - run: |
+      - name: Build and publish
+        if: ${{ success() }}
+        run: |
           sudo apt -y install ruby ruby-dev rpm
           sudo gem install fpm -f
           npm i --ignore-scripts
@@ -119,15 +134,18 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           submodules: "recursive"
 
-      - name: Build and publish
-        uses: actions/setup-node@v1
+      - name: Setup nodejs
+        if: ${{ success() }}
+        uses: actions/setup-node@v4
         with:
-          node-version: 16
+          node-version: 20
 
-      - run: |
+      - name: Build and publish
+        if: ${{ success() }}
+        run: |
           npm i --ignore-scripts
           npm run dist-mac -- -p always --universal

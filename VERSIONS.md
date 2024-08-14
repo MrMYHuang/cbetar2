@@ -1,4 +1,8 @@
 # <a id='history'>版本歷史</a>
+* Installer apps 23.0.0:
+  * [優化] 升級至 Electron 31.3.1。
+  * [修正] Snap 版匯入／匯出存取權限問題.
+
 * PWA 10.10.3:
   * [修正] 修正「離線 DB」模式，卷數異常的 bug.
 

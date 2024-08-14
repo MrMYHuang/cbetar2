@@ -26,6 +26,13 @@
   </screenshots>
   <content_rating type="oars-1.1"/>
   <releases>
+    <release version="23.0.0" date="2024-08-14">
+      <description>
+        <ul>
+          <li>[優化] 升級 Electron 31.3.1</li>
+        </ul>
+      </description>
+    </release>
     <release version="22.0.0" date="2023-09-12">
       <description>
         <ul>

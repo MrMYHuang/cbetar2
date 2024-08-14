@@ -16,6 +16,7 @@ apps:
     - browser-support
     - network
     - network-bind
+    - home
     environment:
       # Correct the TMPDIR path for Chromium Framework/Electron to ensure
       # libappindicator has readable resources.
@@ -30,7 +31,7 @@ parts:
         mkdir -p nvm
         wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | NVM_DIR=`pwd`/nvm bash
         . nvm/nvm.sh
-        nvm install 16
+        nvm install 20
         npm i --ignore-scripts
         npm run build-electron
         npm x -- electron-builder -l dir -c electronBuilderConfigs/snap.json
