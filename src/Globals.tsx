@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 import { isPlatform, IonLabel, IonIcon } from '@ionic/react';
 import { refreshCircle } from 'ionicons/icons';
 import Store from './redux/store';
@@ -60,11 +60,20 @@ async function loadTwKaiFonts(progressCallback: Function | null = null, win: Win
 
 async function loadTwKaiFont(font: string, key: string, fileName: string, forceUpdate: boolean) {
   const fontFaceCache = twKaiFontsCache[key];
+  const config: AxiosRequestConfig = { 
+    responseType: 'arraybuffer',
+    timeout: 0,
+  };
+  if (forceUpdate) {
+    config.headers = {
+      'Cache-Control': 'no-cache',
+      'Pragma': 'no-cache',
+      'Expires': '0',
+    };
+  };
+  
   const updateFont = () => {
-    return axiosInstance.get(`${fontBaseUrl}/${fileName}`, {
-      responseType: 'arraybuffer',
-      timeout: 0,
-    }).then(res => {
+    return axiosInstance.get(`${fontBaseUrl}/${fileName}`, config).then(res => {
       const fontData = res.data;
       IndexedDbFuncs.saveFile(key, fontData, IndexedDbFuncs.fontStore);
       localStorage.setItem('twKaiFontVersion', IndexedDbFuncs.twKaiFontVersion + "");

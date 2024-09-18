@@ -295,8 +295,6 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
     }
     Globals.updateCssVars(this.props.settings);
 
-    let showToastInit = false;
-    let toastMessageInit = '';
     IndexedDbFuncs.open().then(() => {
       if (Globals.twKaiFontNeedUpgrade() && this.props.settings.useFontKai) {
         this.props.dispatch({
@@ -304,13 +302,19 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
           key: 'useFontKai',
           val: false
         });
+        Globals.twKaiFontKeys.forEach(key => {
+          IndexedDbFuncs.removeFile(key, IndexedDbFuncs.fontStore).catch((error) => {
+            console.error(error);
+          });
+        });
         localStorage.setItem('twKaiFontVersion', "0");
         let settingsTemp = this.props.settings;
         settingsTemp.useFontKai = false;
         Globals.updateCssVars(settingsTemp);
 
-        showToastInit = true;
-        toastMessageInit = '楷書字型已更新，請至設定頁開啟楷書！';
+        setTimeout(() => {
+          this.setState({showToast: true, toastMessage: '楷書字型已更新，請至設定頁重新開啟！'});
+        }, 1000);
       } else if (this.props.settings.useFontKai) {
         Globals.loadTwKaiFonts();
       }
@@ -325,8 +329,8 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
       windowInnerHeight: null,
       showUpdateAlert: false,
       showRestoreAppSettingsToast: (queryParams.settings != null && this.originalAppSettingsStr != null) || false,
-      showToast: showToastInit,
-      toastMessage: toastMessageInit,
+      showToast: false,
+      toastMessage: '',
       downloadModal: { progress: 0, show: false }
     };
 
