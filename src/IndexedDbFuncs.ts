@@ -3,7 +3,7 @@ const cbetardb = 'cbetardb';
 const version = 3;
 const dataStore = 'store';
 // Increase this if font store content is changed.
-const twKaiFontVersion = 5;
+const twKaiFontVersion = 6;
 const fontStore = 'font';
 const storeNames = [dataStore, fontStore];
 let dbOpenReq: IDBOpenDBRequest;

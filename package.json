@@ -2,7 +2,7 @@
   "name": "cbetar2",
   "productName": "電子佛典",
   "homepage": "/",
-  "pwaVersion": "10.10.3",
+  "pwaVersion": "10.10.4",
   "version": "23.0.0",
   "license": "MIT",
   "keywords": [
@@ -56,7 +56,8 @@
     "icons-mas": "cd buildElectron && iconutil -c icns icon.iconset",
     "dist-mas-arm64": "npm run build-electron && electron-builder -m mas --arm64 -c electronBuilderConfigs/mas.json",
     "dist-mas-dev": "npm run build-electron && electron-builder -m mas-dev --arm64 -c electronBuilderConfigs/masDev.json",
-    "dist-mas": "npm run build-electron && electron-builder -m mas --universal -c electronBuilderConfigs/mas.json"
+    "dist-mas": "npm run build-electron && electron-builder -m mas --universal -c electronBuilderConfigs/mas.json",
+    "split-fonts": "/Applications/FontForge.app/Contents/MacOS/FFPython tools/font-splitter.py && mv fonts/*.woff2 public/assets"
   },
   "eslintConfig": {
     "extends": [
