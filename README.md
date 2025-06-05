@@ -213,7 +213,7 @@ CBETA 電子佛典閱讀器 2 (非官方) (Chinese Buddhist Electronic Text Asso
 
 #### Linux (amd64 & arm64) - 使用 Snap Store
 <a href='https://snapcraft.io/cbetar2' target='_blank'>
-<img width="auto" height='60px' src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/[TW]-snap-store-black@2x.png' />
+<img width="auto" height='60px' src='https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/tw-snap-store-black@2x.png' />
 </a>
 
 #### Linux (x86_64 & aarch64) - 使用 Flathub
