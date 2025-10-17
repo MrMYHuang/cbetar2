@@ -1,4 +1,7 @@
 # <a id='history'>版本歷史</a>
+* PWA 10.10.9:
+  * [修正] CBETA API 3.5.3 /toc?work 變更為 /works/toc?work
+
 * PWA 10.10.8:
   * [更新] 更新全字庫楷書字型 (CNS11643 2025-09-30 版)。
 

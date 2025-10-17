@@ -60,7 +60,7 @@ class _SearchPage extends React.Component<PageProps, State> {
       this.loadMoreLock = true;
 
       if (this.page === 0) {
-        const res = await Globals.axiosInstance.get(`/toc?q=${keyword}`, {
+        const res = await Globals.axiosInstance.get(`/works/toc?q=${keyword}`, {
           responseType: 'arraybuffer',
         });
         const data = JSON.parse(new TextDecoder().decode(res.data)).results as [any];

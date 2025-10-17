@@ -100,7 +100,7 @@ class _WorkTouchPage extends React.Component<PageProps, State> {
 
         // [TODO]
         if (this.props.settings.cbetaOfflineDbMode === CbetaDbMode.Online) {
-          const resToc = await Globals.axiosInstance.get(`/toc?work=${path}`) as any;
+          const resToc = await Globals.axiosInstance.get(`/works/toc?work=${path}`) as any;
           work.mulu = (resToc.data.results[0].mulu as WorkChapter[]).map((wc) => (wc as WorkChapter));
         }
 
