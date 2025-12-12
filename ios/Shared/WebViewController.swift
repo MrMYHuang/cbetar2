@@ -93,6 +93,7 @@ class WebViewController: UIViewController {
 
 extension WebViewController: UIDocumentPickerDelegate {
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+        debugPrint(urls)
         try? FileManager.default.removeItem(at: fileURL! )
     }
 }
@@ -111,7 +112,56 @@ extension WebViewController: WKScriptMessageHandler {
     }
 }
 
-extension WebViewController: WKNavigationDelegate {
+extension WebViewController: WKNavigationDelegate, WKDownloadDelegate {
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, preferences: WKWebpagePreferences, decisionHandler: @escaping (WKNavigationActionPolicy, WKWebpagePreferences) -> Void) {
+        if navigationAction.shouldPerformDownload {
+            decisionHandler(.download, preferences)
+        } else {
+            decisionHandler(.allow, preferences)
+        }
+    }
+    
+    func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
+        if navigationResponse.canShowMIMEType {
+            decisionHandler(.allow)
+        } else {
+            decisionHandler(.download)
+        }
+    }
+    
+    func webView(_ webView: WKWebView, navigationAction: WKNavigationAction, didBecome download: WKDownload) {
+        download.delegate = self
+    }
+        
+    func webView(_ webView: WKWebView, navigationResponse: WKNavigationResponse, didBecome download: WKDownload) {
+        download.delegate = self
+    }
+    
+    func download(_ download: WKDownload, decideDestinationUsing response: URLResponse, suggestedFilename: String, completionHandler: @escaping (URL?) -> Void) {
+        //let url = // the URL where you want to save the file, optionally appending `suggestedFileName`
+        //completionHandler(url)
+        if let url = response.url {
+            if url.absoluteString.contains(jsonUriPrefix) {
+                if let text = url.absoluteString.replacingOccurrences(of: jsonUriPrefix, with: "").removingPercentEncoding {
+                    
+                    if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+                        fileURL = dir.appendingPathComponent(suggestedFilename)
+                        do {
+                            try text.write(to: fileURL!, atomically: false, encoding: .utf8)
+                            let controller = UIDocumentPickerViewController(forExporting: [fileURL!])
+                            controller.delegate = self
+                            present(controller, animated: true)
+                        }
+                        catch {/* error handling here */}
+                        completionHandler(fileURL)
+                    }
+                }
+            }
+        }
+        debugPrint(suggestedFilename)
+    }
+    
+    /*
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         if let url = navigationAction.request.url {
             if navigationAction.navigationType == .linkActivated {
@@ -130,7 +180,7 @@ extension WebViewController: WKNavigationDelegate {
         }
         
         decisionHandler(.allow)
-    }
+    }*/
 }
 
 extension WebViewController: WKUIDelegate {
