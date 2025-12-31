@@ -22,12 +22,32 @@ const fontBaseUrl = process.env.NODE_ENV === 'production' ?
 const twKaiFontFiles = [`TW-Kai-98_1-1.woff2`, `TW-Kai-98_1-2.woff2`, `TW-Kai-98_1-3.woff2`, `TW-Kai-Ext-B-98_1-1.woff2`, `TW-Kai-Ext-B-98_1-2.woff2`, `TW-Kai-Ext-B-98_1-3.woff2`, `TW-Kai-Plus-98_1-1.woff2`, `TW-Kai-Plus-98_1-2.woff2`,];
 let log = '';
 
-
 let store = Store.getSavedStore();
 
 const axiosInstance = axios.create({
   baseURL: cbetaApiUrl,
   timeout: 10000,
+});
+
+// Rate limit.
+let queue: (() => void)[] = [];
+let active = 0;
+const MAX = 5;
+const INTERVAL = 1000;
+
+setInterval(() => {
+  active = 0;
+  while (queue.length && active < MAX) {
+    active++;
+    const request = queue.shift();
+    request && request();
+  }
+}, INTERVAL);
+
+axiosInstance.interceptors.request.use(config => {
+  return new Promise(resolve => {
+    queue.push(() => resolve(config));
+  });
 });
 
 function twKaiFontNeedUpgrade() {

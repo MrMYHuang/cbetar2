@@ -1,4 +1,7 @@
 # <a id='history'>版本歷史</a>
+* PWA 10.11.0:
+  * [修正] 實作 API 速率限制。
+
 * PWA 10.10.9:
   * [修正] CBETA API 3.5.3 /toc?work 變更為 /works/toc?work
 
