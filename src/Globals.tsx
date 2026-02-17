@@ -6,7 +6,7 @@ import IndexedDbFuncs from './IndexedDbFuncs';
 import IndexedDbZipFuncs from './IndexedDbZipFuncs';
 
 const pwaUrl = process.env.PUBLIC_URL || '';
-const bugReportApiUrl = 'https://vh6ud1o56g.execute-api.ap-northeast-1.amazonaws.com/bugReportMailer';
+const bugReportApiUrl = 'https://bug-report.mrmyh.eu.org/bugReportMailer';
 const cbetaApiUrl = `https://cbdata.dila.edu.tw/stable`;
 const dilaDictApiUrl = `https://glossaries.dila.edu.tw/search.json`;
 // Disable problematic fonts.
