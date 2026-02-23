@@ -146,7 +146,7 @@ git tag x.y.z
 git clone https://github.com/flathub/io.github.mrmyhuang.cbetar2.git flatpak
 yarn
 yarn run prepare-flatpak
-flatpak install -y org.freedesktop.Sdk//22.08 org.electronjs.Electron2.BaseApp//22.08 org.freedesktop.Sdk.Extension.node16//22.08
+flatpak install -y org.freedesktop.Sdk//25.08 org.electronjs.Electron2.BaseApp//25.08 org.freedesktop.Sdk.Extension.node24//25.08
 yarn run dist-flatpak-dev
 ```
 
