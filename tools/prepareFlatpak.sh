@@ -2,8 +2,10 @@
 
 # Update manifest.
 version=$(jq -r .version package.json)
+commit=$(git -C /home/myh/cbetar2 rev-list -n 1 ${version})
 flatpakFile=flatpak/io.github.mrmyhuang.cbetar2.yml
 sed "s/tag: .*$/tag: ${version}/" ${flatpakFile} -i
+sed "s/commit: .*$/commit: ${commit}/" ${flatpakFile} -i
 
 sudo dnf install -y flatpak python3-aiohttp
 sudo flatpak remote-modify --no-filter flathub
