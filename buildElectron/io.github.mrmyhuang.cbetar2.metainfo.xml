@@ -14,19 +14,24 @@
     </p>
   </description>
   <url type="homepage">https://github.com/MrMYHuang/cbetar2</url>
+  <url type="vcs-browser">https://github.com/MrMYHuang/cbetar2</url>
   <launchable type="desktop-id">io.github.mrmyhuang.cbetar2.desktop</launchable>
   <developer_name>Meng-Yuan Huang</developer_name>
   <screenshots>
     <screenshot type="default">
+      <caption>目錄導覽 / Catalog navigation</caption>
       <image>https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/Fedora/1.png</image>
     </screenshot>
     <screenshot>
+      <caption>經文閱讀與工具列 / Sutra reading with toolbar tools</caption>
       <image>https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/Fedora/2.png</image>
     </screenshot>
     <screenshot>
+      <caption>佛學詞典 / Buddhism dictionary</caption>
       <image>https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/Fedora/3.png</image>
     </screenshot>
     <screenshot>
+      <caption>設定與功能選項 / Settings and feature options</caption>
       <image>https://github.com/MrMYHuang/cbetar2/raw/master/docs/images/Fedora/4.png</image>
     </screenshot>
   </screenshots>
