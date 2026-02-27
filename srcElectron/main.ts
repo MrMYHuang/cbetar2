@@ -310,7 +310,7 @@ async function createWindow() {
   while (!loadUrlSuccess) {
     try {
       await new Promise<any>(async (ok, fail) => {
-        mainWindow?.webContents.once('did-finish-load', (res: any) => {
+        mainWindow?.webContents.once('did-finish-load', () => {
           loadUrlSuccess = true;
           clearListeners();
           ok('');
