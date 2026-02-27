@@ -7,6 +7,26 @@ on:
     tags:
       - "v[0-9]+.[0-9]+.[0-9]+"
   workflow_dispatch:
+    inputs:
+      target_job:
+        description: "Select which job to run"
+        required: true
+        default: all
+        type: choice
+        options:
+          - all
+          - publish-win-x64
+          - publish-win-arm64
+          - publish-mac-universal
+          - publish-appImage-x86_64
+          - publish-appImage-arm64
+          - publish-deb-amd64
+          - publish-deb-arm64
+          - publish-rpm-x86_64
+          - publish-rpm-aarch64
+          - build-snap-amd64
+          - build-snap-arm64
+          - publish-snap
 
 env:
   DEFAULT_BRANCH: master
@@ -19,6 +39,7 @@ env:
 
 jobs:
   publish-win-x64:
+    if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.target_job == 'all' || github.event.inputs.target_job == 'publish-win-x64' }}
     runs-on: windows-2025
 
     steps:
@@ -40,6 +61,7 @@ jobs:
           npm run dist-win -- -p always --x64
 
   publish-win-arm64:
+    if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.target_job == 'all' || github.event.inputs.target_job == 'publish-win-arm64' }}
     runs-on: windows-11-arm
 
     steps:
@@ -61,6 +83,7 @@ jobs:
           npm run dist-win -- -p always --arm64 "-c.win.publish.provider=github" "-c.win.publish.publishAutoUpdate=false"
 
   publish-mac-universal:
+    if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.target_job == 'all' || github.event.inputs.target_job == 'publish-mac-universal' }}
     runs-on: macos-latest
 
     steps:
@@ -82,6 +105,7 @@ jobs:
           npm run dist-mac -- -p always --universal
 
   publish-appImage-x86_64:
+    if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.target_job == 'all' || github.event.inputs.target_job == 'publish-appImage-x86_64' }}
     runs-on: ubuntu-latest
 
     steps:
@@ -103,6 +127,7 @@ jobs:
           npm run docker-dist-appImage -- -- -p always --x64
 
   publish-appImage-arm64:
+    if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.target_job == 'all' || github.event.inputs.target_job == 'publish-appImage-arm64' }}
     runs-on: ubuntu-24.04-arm
 
     steps:
@@ -121,6 +146,7 @@ jobs:
           npm run docker-dist-appImage -- -- -p always --arm64
 
   publish-deb-amd64:
+    if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.target_job == 'all' || github.event.inputs.target_job == 'publish-deb-amd64' }}
     runs-on: ubuntu-latest
 
     steps:
@@ -144,6 +170,7 @@ jobs:
           npm run dist-deb -- -p always --x64
 
   publish-deb-arm64:
+    if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.target_job == 'all' || github.event.inputs.target_job == 'publish-deb-arm64' }}
     runs-on: ubuntu-24.04-arm
 
     steps:
@@ -166,6 +193,7 @@ jobs:
           npm run dist-deb -- -p always --arm64
 
   publish-rpm-x86_64:
+    if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.target_job == 'all' || github.event.inputs.target_job == 'publish-rpm-x86_64' }}
     runs-on: ubuntu-latest
 
     steps:
@@ -189,6 +217,7 @@ jobs:
           npm run dist-rpm -- -p always --x64
 
   publish-rpm-aarch64:
+    if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.target_job == 'all' || github.event.inputs.target_job == 'publish-rpm-aarch64' }}
     runs-on: ubuntu-24.04-arm
 
     steps:
@@ -211,6 +240,7 @@ jobs:
           npm run dist-rpm -- -p always --arm64
 
   build-snap-amd64:
+    if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.target_job == 'all' || github.event.inputs.target_job == 'build-snap-amd64' || github.event.inputs.target_job == 'publish-snap' }}
     runs-on: ubuntu-latest
 
     steps:
@@ -236,6 +266,7 @@ jobs:
           if-no-files-found: error
 
   build-snap-arm64:
+    if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.target_job == 'all' || github.event.inputs.target_job == 'build-snap-arm64' || github.event.inputs.target_job == 'publish-snap' }}
     runs-on: ubuntu-24.04-arm
 
     steps:
@@ -261,6 +292,7 @@ jobs:
           if-no-files-found: error
 
   publish-snap:
+    if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.target_job == 'all' || github.event.inputs.target_job == 'publish-snap' }}
     runs-on: ubuntu-latest
     needs:
       - build-snap-amd64
