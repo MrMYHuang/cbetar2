@@ -252,12 +252,13 @@ jobs:
 
       - name: Build snap
         run: |
-          sudo apt update
-          sudo apt install -y snapd
-          sudo snap install lxd
-          sudo snap install --classic snapcraft
-          sudo lxd init --auto
-          npm run dist-snap -- --use-lxd
+          #sudo apt update
+          #sudo apt install -y snapd
+          #sudo snap install lxd
+          #sudo snap install --classic snapcraft
+          #sudo lxd init --auto
+          npm run dist-snap
+          # -- --use-lxd
 
       - name: Upload snap artifact
         uses: actions/upload-artifact@v4
@@ -278,12 +279,13 @@ jobs:
 
       - name: Build snap
         run: |
-          sudo apt update
-          sudo apt install -y snapd
-          sudo snap install lxd
-          sudo snap install --classic snapcraft
-          sudo lxd init --auto
-          npm run dist-snap -- --use-lxd
+          #sudo apt update
+          #sudo apt install -y snapd
+          #sudo snap install lxd
+          #sudo snap install --classic snapcraft
+          #sudo lxd init --auto
+          npm run dist-snap
+          # -- --use-lxd
 
       - name: Upload snap artifact
         uses: actions/upload-artifact@v4
