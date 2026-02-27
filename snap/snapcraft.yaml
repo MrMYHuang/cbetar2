@@ -1,5 +1,5 @@
 name: cbetar2
-base: core20
+base: core24
 confinement: strict
 grade: stable
 adopt-info: cbetar2
@@ -31,7 +31,7 @@ parts:
         mkdir -p nvm
         wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | NVM_DIR=`pwd`/nvm bash
         . nvm/nvm.sh
-        nvm install 20
+        nvm install 24
         npm i --ignore-scripts
         npm run build-electron
         npm x -- electron-builder -l dir -c electronBuilderConfigs/snap.json
