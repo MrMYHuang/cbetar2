@@ -103,7 +103,7 @@ jobs:
         if: ${{ success() }}
         run: |
           npm i --ignore-scripts
-          npm run dist-mac-unsigned -- -p always --universal
+          npm run dist-mac -- -p always --universal
 
   publish-appImage-x86_64:
     if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.target_job == 'all' || github.event.inputs.target_job == 'publish-appImage-x86_64' }}
