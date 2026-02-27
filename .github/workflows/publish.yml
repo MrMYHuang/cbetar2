@@ -33,6 +33,7 @@ env:
   GH_TOKEN: ${{ secrets.GH_TOKEN }}
   APPLE_ID: ${{ secrets.APPLE_ID }}
   APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
+  APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
   APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
   CSC_LINK: ${{ secrets.MAC_CERTS }}
   CSC_KEY_PASSWORD: ${{ secrets.MAC_CERTS_PASSWORD }}
@@ -102,7 +103,7 @@ jobs:
         if: ${{ success() }}
         run: |
           npm i --ignore-scripts
-          npm run dist-mac -- -p always --universal
+          npm run dist-mac-unsigned -- -p always --universal
 
   publish-appImage-x86_64:
     if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.target_job == 'all' || github.event.inputs.target_job == 'publish-appImage-x86_64' }}
