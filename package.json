@@ -43,7 +43,7 @@
     "dist-rpm": "export USE_SYSTEM_FPM=true && npm run build-electron && electron-builder -l rpm -c electronBuilderConfigs/rpm.json",
     "eb-dist-snap": "npm run build-electron && rm -f dist/*.snap && electron-builder -l snap -c electronBuilderConfigs/snap.json",
     "eb-dist-snap-arm64": "export SNAPCRAFT_BUILD_ENVIRONMENT=lxd && npm run build-electron && rm -f dist/*.snap && electron-builder -l snap -c electronBuilderConfigs/snap.json --arm64",
-    "dist-snap": "mkdir -p dist && snapcraft snap -o dist",
+    "dist-snap": "mkdir -p dist && sudo snapcraft snap -o dist",
     "publish-snap": "snapcraft upload --release=stable dist/*.snap",
     "prepare-flatpak": "tools/prepareFlatpak.sh",
     "dist-flatpak-dev": "cd flatpak && flatpak-builder build io.github.mrmyhuang.cbetar2.yml --install --force-clean --user",

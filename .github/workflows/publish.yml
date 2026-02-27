@@ -30,6 +30,7 @@ on:
 
 env:
   DEFAULT_BRANCH: master
+  NODE_VERSION: 20
   GH_TOKEN: ${{ secrets.GH_TOKEN }}
   APPLE_ID: ${{ secrets.APPLE_ID }}
   APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
@@ -53,7 +54,7 @@ jobs:
         if: ${{ success() }}
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Build and publish
         if: ${{ success() }}
@@ -75,7 +76,7 @@ jobs:
         if: ${{ success() }}
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Build and publish
         if: ${{ success() }}
@@ -97,7 +98,7 @@ jobs:
         if: ${{ success() }}
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Build and publish
         if: ${{ success() }}
@@ -119,7 +120,7 @@ jobs:
         if: ${{ success() }}
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Build and publish
         if: ${{ success() }}
@@ -140,7 +141,7 @@ jobs:
       - name: Setup nodejs
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Build and publish
         run: |
@@ -160,7 +161,7 @@ jobs:
         if: ${{ success() }}
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Build and publish
         if: ${{ success() }}
@@ -183,7 +184,7 @@ jobs:
       - name: Setup nodejs
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Build and publish
         run: |
@@ -207,7 +208,7 @@ jobs:
         if: ${{ success() }}
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Build and publish
         if: ${{ success() }}
@@ -230,7 +231,7 @@ jobs:
       - name: Setup nodejs
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Build and publish
         run: |
@@ -256,9 +257,8 @@ jobs:
           #sudo apt install -y snapd
           #sudo snap install lxd
           sudo snap install --classic snapcraft
-          #sudo lxd init --auto
-          npm run dist-snap
-          # -- --use-lxd
+          sudo lxd init --auto
+          npm run dist-snap -- --use-lxd
 
       - name: Upload snap artifact
         uses: actions/upload-artifact@v4
