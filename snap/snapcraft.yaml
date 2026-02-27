@@ -8,7 +8,7 @@ apps:
   cbetar2:
     command: cbetar2/cbetar2 --no-sandbox
     desktop: cbetar2/io.github.mrmyhuang.cbetar2.desktop
-    extensions: [gnome-3-38]
+    extensions: [gnome]
     plugs:
     - desktop
     - desktop-legacy
