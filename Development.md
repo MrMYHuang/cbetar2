@@ -41,8 +41,8 @@ npm run start-sw
    5. 3rd Party Mac Developer Installer (for dist-mas)
    6. Developer ID Application (for dist-mac)
    7. Developer ID Installer (for dist-mac)
-   8. Development provisionprofile with cert Mac Development (for dist-mas-dev)
-   9. App Store provisionprofile with cert Apple Distribution (for dist-mas)
+   8. Development provisionprofile with cert Mac Development - cbetar2Dev.provisionprofile (for dist-mas-dev)
+   9. App Store provisionprofile with cert Apple Distribution - cbetar2.provisionprofile (for dist-mas)
 1. Run Shell script:
 ```
 cd cbetar2

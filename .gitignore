@@ -56,6 +56,8 @@ cbeta_epub_2022q1
 public/assets.zip
 *.xcuserstate
 .flatpak-builder
-credentials
 fonts/
 apple.sh
+credentials
+Certificates.p12
+envValue.txt
