@@ -280,6 +280,8 @@ jobs:
 
       - name: Build snap
         run: |
+          sudo /sbin/iptables  -I DOCKER-USER -i lxdbr0 -j ACCEPT
+          sudo /sbin/iptables  -I DOCKER-USER -o lxdbr0 -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
           sudo apt update
           sudo snap install lxd
           sudo snap install --classic snapcraft
