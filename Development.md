@@ -171,7 +171,22 @@ git push
 ```
 
 ### Build by GitHub Actions and CircleCI
-0. CI/CD setting files:
+1. Add GitHub Actions Secrets:
+    GH_TOKEN: from https://github.com/settings/personal-access-tokens/new
+    APPLE_ID: your-apple-id@example.com
+    APPLE_ID_PASSWORD: from https://account.apple.com/account/manage
+    APPLE_TEAM_ID: from https://developer.apple.com/account/#!/membership
+    MAC_CERTS:
+        1. Download and install these two Apple certificates from 
+            1. Developer ID Application (for dist-mac and dist-win)
+            2. Developer ID Installer (for dist-mac and dist-win)
+        1. Export these two Apple certificates to Certificates.p12 by macOS Keychain Access
+        2. Convert p12 file to envValue.txt (base64): npm run cert-mac-win
+        3. Copy content of envValue.txt as MAC_CERTS
+    MAC_CERTS_PASSWORD: The password of Certificates.p12
+    SNAPCRAFT_STORE_CREDENTIALS: npm run update-secrets-snap
+     
+2. CI/CD setting files:
     GitHub Actions: .github/workflows/publish.yml
     CircleCI:
     1. .circleci/config.yml

@@ -253,6 +253,7 @@ jobs:
 
       - name: Build snap
         run: |
+          # Workaround an LXD network access issue with Docker.
           sudo /sbin/iptables  -I DOCKER-USER -i lxdbr0 -j ACCEPT
           sudo /sbin/iptables  -I DOCKER-USER -o lxdbr0 -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
           sudo apt update
