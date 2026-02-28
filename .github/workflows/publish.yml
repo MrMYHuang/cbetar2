@@ -30,7 +30,7 @@ on:
 
 env:
   DEFAULT_BRANCH: master
-  NODE_VERSION: 20
+  NODE_VERSION: 24
   GH_TOKEN: ${{ secrets.GH_TOKEN }}
   APPLE_ID: ${{ secrets.APPLE_ID }}
   APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
