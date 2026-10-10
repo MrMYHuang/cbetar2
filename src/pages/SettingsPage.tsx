@@ -1,8 +1,8 @@
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonRange, IonIcon, IonLabel, IonToggle, IonButton, IonAlert, IonSelect, IonSelectOption, IonProgressBar, IonToast, withIonLifeCycle, IonLoading } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonRange, IonIcon, IonLabel, IonToggle, IonButton, IonAlert, IonSelect, IonSelectOption, IonProgressBar, IonToast, withIonLifeCycle, IonLoading, IonInput } from '@ionic/react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
-import { helpCircle, text, documentText, refreshCircle, musicalNotes, colorPalette, bug, download, print, informationCircle, desktop, settings, documents } from 'ionicons/icons';
+import { helpCircle, text, documentText, refreshCircle, musicalNotes, colorPalette, bug, download, print, informationCircle, desktop, settings, documents, key } from 'ionicons/icons';
 import * as semver from 'semver';
 
 import Globals from '../Globals';
@@ -178,6 +178,26 @@ class _SettingsPage extends React.Component<PageProps, StateProps> {
         </IonHeader>
         <IonContent>
           <IonList>
+            <IonItem>
+              <div tabIndex={0}></div>{/* Workaround for macOS Safari 14 bug. */}
+              <IonIcon icon={key} slot='start' />
+              <IonLabel className='ion-text-wrap uiFont' position='stacked'>CBETA API Key</IonLabel>
+              <IonInput type='password' className='uiFont' autocomplete='off' placeholder='CBETA API Key'
+                value={this.props.settings.cbetaApiKey}
+                onIonChange={e => {
+                  const value = `${e.detail.value ?? ''}`;
+
+                  if (this.props.settings.cbetaApiKey === value) {
+                    return;
+                  }
+
+                  this.props.dispatch({
+                    type: "SET_KEY_VAL",
+                    key: 'cbetaApiKey',
+                    val: value,
+                  });
+                }} />
+            </IonItem>
             {/*
             // Disable this for Apple App Store submissions!
             <IonItem hidden={Globals.isMacCatalyst()}>

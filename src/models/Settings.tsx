@@ -37,6 +37,7 @@ export interface Settings {
     wordDictionaryHistory: string[];
     cbetaOfflineDbMode: CbetaDbMode;
     uiMode: UiMode;
+    cbetaApiKey: string;
 }
 
 const defaultSettings = {
@@ -63,6 +64,7 @@ const defaultSettings = {
     wordDictionaryHistory: [],
     cbetaOfflineDbMode: CbetaDbMode.Online,
     uiMode: UiMode.Touch,
+    cbetaApiKey: '',
 } as Settings;
 
 export default defaultSettings;

@@ -1,13 +1,13 @@
 import axios, { AxiosRequestConfig } from 'axios';
-import { isPlatform, IonLabel, IonIcon } from '@ionic/react';
-import { refreshCircle } from 'ionicons/icons';
+import { isPlatform, IonLabel, IonIcon, IonButton } from '@ionic/react';
+import { alertCircle, refreshCircle } from 'ionicons/icons';
 import Store from './redux/store';
 import IndexedDbFuncs from './IndexedDbFuncs';
 import IndexedDbZipFuncs from './IndexedDbZipFuncs';
 
 const pwaUrl = process.env.PUBLIC_URL || '';
 const bugReportApiUrl = 'https://bug-report.mrmyh.eu.org/bugReportMailer';
-const cbetaApiUrl = `https://cbdata.dila.edu.tw/stable`;
+const cbetaApiUrl = `https://cbeta-api.mrmyh.eu.org`;
 const dilaDictApiUrl = `https://glossaries.dila.edu.tw/search.json`;
 // Disable problematic fonts.
 //const twKaiFonts = ['Kai'];
@@ -43,6 +43,17 @@ setInterval(() => {
     request && request();
   }
 }, INTERVAL);
+
+// Use CBETA API key as bearer token, only for requests to the CBETA API.
+axiosInstance.interceptors.request.use(config => {
+  const url = config.url ?? '';
+  const isCbetaApiRequest = !/^([a-z][a-z\d+\-.]*:)?\/\//i.test(url) || url.startsWith(cbetaApiUrl);
+  const apiKey = store.getState().settings?.cbetaApiKey;
+  if (isCbetaApiRequest && apiKey) {
+    config.headers.set('Authorization', `Bearer ${apiKey}`);
+  }
+  return config;
+});
 
 axiosInstance.interceptors.request.use(config => {
   return new Promise(resolve => {
@@ -311,11 +322,17 @@ const Globals = {
     <div className='contentCenter'>
       <IonLabel>
         <div>
-          <div>連線失敗!</div>
+          <div>連線失敗！</div>
           <div style={{ display: 'flex', alignItems: 'center', fontSize: 'var(--ui-font-size)', paddingTop: 24 }}>
-            請試上方重新整理按鈕<IonIcon icon={refreshCircle} slot='icon-only' />。
+                <div className='ion-padding uiFont' style={{ textAlign: 'center' }}>
+                   <p className='ion-padding uiFont'>由於 CBETA API server 新規定，請重新設定 CBETA API Key，以存取經典資料！</p>
+                  <p className='ion-padding uiFont'>請完成以下步驟：</p>
+                  <p className='ion-padding uiFont'>1. 請用您的 Google 或 GitHub 帳號取得 key 並記下:</p>
+                  <IonButton fill='outline' shape='round' className='uiFont' onClick={() => window.open('https://cbdata.dila.edu.tw/dev/login')}>取得 CBETA API Key</IonButton>
+                  <p className='ion-padding uiFont'>2. (請勿在公用電腦作此步驟，有 key 外洩可能！)至設定頁輸入 key 即可。</p>
+                  <IonButton fill='outline' shape='round' className='uiFont' onClick={() => window.location.href = "/settings"}>前往設定</IonButton>
+                </div>
           </div>
-          <div style={{ fontSize: 'var(--ui-font-size)', paddingTop: 24 }}>如果問題持續發生，請執行<a href="/settings" target="_self">設定頁</a>的 app 異常回報功能。</div>
         </div>
       </IonLabel>
     </div>

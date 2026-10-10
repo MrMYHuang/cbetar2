@@ -1,4 +1,7 @@
 # <a id='history'>版本歷史</a>
+* PWA 11.0.0:
+  * [更新] 因應 CBETA API server 存取將要求 API key，新增 key 設定。
+
 * PWA 10.12.0:
   * [更新] Ionic 到版本 8.
 
