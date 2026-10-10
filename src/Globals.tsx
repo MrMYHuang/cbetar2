@@ -49,7 +49,10 @@ axiosInstance.interceptors.request.use(config => {
   const url = config.url ?? '';
   const isCbetaApiRequest = !/^([a-z][a-z\d+\-.]*:)?\/\//i.test(url) || url.startsWith(cbetaApiUrl);
   const apiKey = store.getState().settings?.cbetaApiKey;
-  if (isCbetaApiRequest && apiKey) {
+  if (isCbetaApiRequest) {
+    if (!apiKey) {
+      throw new Error('CBETA API Key is empty.');
+    }
     config.headers.set('Authorization', `Bearer ${apiKey}`);
   }
   return config;
