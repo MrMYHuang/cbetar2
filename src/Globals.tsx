@@ -334,6 +334,7 @@ const Globals = {
                   <IonButton fill='outline' shape='round' className='uiFont' onClick={() => window.open('https://cbdata.dila.edu.tw/dev/login')}>取得 CBETA API Key</IonButton>
                   <p className='ion-padding uiFont'>2. (請勿在公用電腦作此步驟，有 key 外洩可能！)至設定頁輸入 key 即可。</p>
                   <IonButton fill='outline' shape='round' className='uiFont' onClick={() => window.location.href = "/settings"}>前往設定</IonButton>
+                  <p className='ion-padding uiFont'>3. 若上述設定無誤仍出現此連線錯誤，可能是被 CBETA API server 限流，請等待 30 秒後重試。若仍一直無法連線，建議至設定頁改用離線經文檔匯入。</p>
                 </div>
           </div>
         </div>
