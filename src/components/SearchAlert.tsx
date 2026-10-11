@@ -1,6 +1,6 @@
 import React from 'react';
 import { IonAlert } from '@ionic/react';
-import { RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps } from '../RouterCompat';
 
 interface Props {
   showSearchAlert: boolean;

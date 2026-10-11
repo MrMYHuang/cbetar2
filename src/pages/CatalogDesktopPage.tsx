@@ -1,6 +1,6 @@
 import React from 'react';
 import { IonMenu, IonLoading, IonButton, withIonLifeCycle, IonHeader, IonIcon, IonToolbar, IonTitle, IonToast, IonLabel, IonPage } from '@ionic/react';
-import { RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps } from '../RouterCompat';
 import { ChevronRight, ExpandMore } from '@mui/icons-material';
 import { TreeView, TreeItem } from '@mui/lab';
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Redirect, Route, RouteComponentProps, withRouter } from 'react-router-dom';
+import { Navigate, Route } from 'react-router-dom';
 import {
   setupIonicReact,
   IonApp,
@@ -40,6 +40,7 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
+import { RouteAdapter } from './RouterCompat';
 import SettingsPage from './pages/SettingsPage';
 import BookmarkPage from './pages/BookmarkPage';
 import SearchPage from './pages/SearchPage';
@@ -88,15 +89,7 @@ interface Props {
   settings: Settings;
 }
 
-interface PageProps extends RouteComponentProps<{
-  tab: string;
-  path: string;
-}> { }
-
-interface AppOrigProps extends Props, RouteComponentProps<{
-  tab: string;
-  path: string;
-}> { }
+interface AppOrigProps extends Props { }
 
 interface State {
   windowInnerHeight: number | null;
@@ -108,11 +101,17 @@ interface State {
 }
 
 const store = Globals.store;
-class _App extends React.Component<PageProps> {
+
+// Lazily evaluates a route element on render.
+function RouteByQueryString({ render }: { render: () => React.ReactNode }) {
+  return <>{render() ?? null}</>;
+}
+
+class _App extends React.Component {
   render() {
     return (
       <Provider store={store}>
-        <AppOrig {...this.props} />
+        <AppOrig />
       </Provider>
     );
   }
@@ -134,40 +133,42 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
       this.routes =
         <IonRouterOutlet id='ionRouterOutlet' animated={false}>
           {/* The following route is for backward compatibility. */}
-          <Route path={`/:tab(catalog)/webview/:path/:juan/:label`} render={(props: any) => <EPubViewPage {...props} />} exact={true} />
+          <Route path={`/catalog/webview/:path/:juan/:label`} element={<RouteAdapter component={EPubViewPage} />} />
           {/* The following route is for backward compatibility. */}
-          <Route path={`/:tab(catalog)/work/:path/:label`} render={(props: any) => <WorkPage {...props} />} exact={true} />
+          <Route path={`/catalog/work/:path/:label`} element={<RouteAdapter component={WorkPage} />} />
           {/* The following route is for backward compatibility. */}
-          <Route path={`/:tab(catalog)/catalog/:path/:label`} render={(props: any) => <CatalogPage {...props} />} exact={true} />
-          <Route path={`/:tab(catalog)`} render={(props: any) => <CatalogPage {...props} />} exact={true} />
-          <Route path={`/:tab(catalog)/:type(catalog|volumes|famous)/:path?`} render={(props: any) => <CatalogPage {...props} />} exact={true} />
-          <Route path={`/:tab(catalog)/:type(work)/:path`} render={(props: any) => <WorkPage {...props} />} exact={true} />
-          <Route path={`/:tab(catalog)/:type(juan)/:path/:juan`} render={(props: any) => <EPubViewPage {...props} />} exact={true} />
-          <Route path={`/:tab(bookmarks)`} render={(props: any) => <BookmarkPage {...props} />} exact={true} />
-          <Route path={`/:tab(dictionary)/search/:keyword?`} render={(props: any) => <DictionaryPage {...props} />} exact={true} />
-          <Route path={`/:tab(dictionary)/searchWord/:keyword?`} render={(props: any) => <WordDictionaryPage {...props} />} exact={true} />
-          <Route path={`/:tab(catalog)/search/:keyword?`} render={props => <SearchPage {...props} />} exact={true} />
-          <Route path={`/:tab(catalog)/fulltextsearch/:keyword?`} render={props => <FullTextSearchPage {...props} />} exact={true} />
-          <Route path={`/settings`} render={(props: any) => <SettingsPage {...props} />} />
-          <Route path={`/`} render={() => { return this.routeByQueryString(); }} exact={true} />
+          <Route path={`/catalog/catalog/:path/:label`} element={<RouteAdapter component={CatalogPage} />} />
+          <Route path={`/catalog`} element={<RouteAdapter component={CatalogPage} />} />
+          <Route path={`/catalog/catalog/:path?`} element={<RouteAdapter component={CatalogPage} params={{ type: 'catalog' }} />} />
+          <Route path={`/catalog/volumes/:path?`} element={<RouteAdapter component={CatalogPage} params={{ type: 'volumes' }} />} />
+          <Route path={`/catalog/famous/:path?`} element={<RouteAdapter component={CatalogPage} params={{ type: 'famous' }} />} />
+          <Route path={`/catalog/work/:path`} element={<RouteAdapter component={WorkPage} params={{ type: 'work' }} />} />
+          <Route path={`/catalog/juan/:path/:juan`} element={<RouteAdapter component={EPubViewPage} params={{ type: 'juan' }} />} />
+          <Route path={`/bookmarks`} element={<RouteAdapter component={BookmarkPage} />} />
+          <Route path={`/dictionary/search/:keyword?`} element={<RouteAdapter component={DictionaryPage} />} />
+          <Route path={`/dictionary/searchWord/:keyword?`} element={<RouteAdapter component={WordDictionaryPage} />} />
+          <Route path={`/catalog/search/:keyword?`} element={<RouteAdapter component={SearchPage} />} />
+          <Route path={`/catalog/fulltextsearch/:keyword?`} element={<RouteAdapter component={FullTextSearchPage} />} />
+          <Route path={`/settings`} element={<RouteAdapter component={SettingsPage} />} />
+          <Route path={`/`} element={<RouteByQueryString render={() => this.routeByQueryString()} />} />
         </IonRouterOutlet>;
     } else {
       this.routes =
         <IonRouterOutlet id='ionRouterOutlet' animated={false}>
           {/* The following route is for backward compatibility. */}
-          <Route path={`/:tab(catalog)/webview/:path/:juan/:label`} render={(props: any) => <EPubViewPage {...props} />} exact={true} />
+          <Route path={`/catalog/webview/:path/:juan/:label`} element={<RouteAdapter component={EPubViewPage} />} />
           {/* The following route is for backward compatibility. */}
-          <Route path={`/:tab(catalog)/work/:path/:label`} render={(props: any) => <WorkPage {...props} />} exact={true} />
+          <Route path={`/catalog/work/:path/:label`} element={<RouteAdapter component={WorkPage} />} />
           {/* The following route is for backward compatibility. */}
-          <Route path={`/:tab(catalog)/catalog/:path/:label`} render={(props: any) => <CatalogPage {...props} />} exact={true} />
-          <Route path={`/:tab(catalog)/:type(catalog|work|juan|volumes|famous)?/:path?/:juan?`} render={(props: any) => <CatalogDesktopPage {...props} />} exact={true} />
-          <Route path={`/:tab(bookmarks)`} render={(props: any) => <BookmarkPage {...props} />} exact={true} />
-          <Route path={`/:tab(dictionary)/search/:keyword?`} render={(props: any) => <DictionaryPage {...props} />} exact={true} />
-          <Route path={`/:tab(dictionary)/searchWord/:keyword?`} render={(props: any) => <WordDictionaryPage {...props} />} exact={true} />
-          <Route path={`/:tab(catalog)/search/:keyword?`} render={props => <SearchPage {...props} />} exact={true} />
-          <Route path={`/:tab(catalog)/fulltextsearch/:keyword?`} render={props => <FullTextSearchPage {...props} />} exact={true} />
-          <Route path={`/settings`} render={(props: any) => <SettingsPage {...props} />} />
-          <Route path={`/`} render={() => { return this.routeByQueryString(); }} exact={true} />
+          <Route path={`/catalog/catalog/:path/:label`} element={<RouteAdapter component={CatalogPage} />} />
+          <Route path={`/catalog/:type?/:path?/:juan?`} element={<RouteAdapter component={CatalogDesktopPage} />} />
+          <Route path={`/bookmarks`} element={<RouteAdapter component={BookmarkPage} />} />
+          <Route path={`/dictionary/search/:keyword?`} element={<RouteAdapter component={DictionaryPage} />} />
+          <Route path={`/dictionary/searchWord/:keyword?`} element={<RouteAdapter component={WordDictionaryPage} />} />
+          <Route path={`/catalog/search/:keyword?`} element={<RouteAdapter component={SearchPage} />} />
+          <Route path={`/catalog/fulltextsearch/:keyword?`} element={<RouteAdapter component={FullTextSearchPage} />} />
+          <Route path={`/settings`} element={<RouteAdapter component={SettingsPage} />} />
+          <Route path={`/`} element={<RouteByQueryString render={() => this.routeByQueryString()} />} />
         </IonRouterOutlet>;
     }
 
@@ -281,7 +282,7 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
     document.body.classList.toggle(`print${this.props.settings.printStyle}`, true);
 
     // Modify UI settings from query string.
-    const queryParams = queryString.parse(this.props.location.search) as any;
+    const queryParams = queryString.parse(window.location.search) as any;
     if (queryParams.settings) {
       this.originalAppSettingsStr = localStorage.getItem(Globals.storeFile);
       (queryParams.settings as string).split(',').forEach(setting => {
@@ -421,9 +422,9 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
       if (queryMatches !== null) {
         query = decodeURIComponent(queryMatches[1]);
       }
-      return <Redirect to={`${Globals.pwaUrl}` + routeMatches[1] + query} />;
+      return <Navigate to={`${Globals.pwaUrl}` + routeMatches[1] + query} replace />;
     } else if (window.location.pathname === `${Globals.pwaUrl}/` || window.location.pathname === `${Globals.pwaUrl}` || window.location.pathname === ``) {
-      return <Redirect to={`/bookmarks`} />;
+      return <Navigate to={`/bookmarks`} replace />;
     }
   }
 
@@ -548,6 +549,6 @@ const AppOrig = connect(
 )(_AppOrig);
 
 
-const App = withRouter(_App);
+const App = _App;
 
 export default App;

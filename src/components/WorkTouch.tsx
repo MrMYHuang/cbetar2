@@ -1,6 +1,6 @@
 import React from 'react';
 import { IonContent, IonHeader, IonToolbar, IonList, IonItem, IonLabel, withIonLifeCycle, IonButton, IonIcon, IonToast, IonLoading, IonPopover } from '@ionic/react';
-import { RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps } from '../RouterCompat';
 import { connect } from 'react-redux';
 import './WorkTouch.css';
 import { Work, WorkChapter, WorkListType } from '../models/Work';

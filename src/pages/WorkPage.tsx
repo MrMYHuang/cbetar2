@@ -1,6 +1,6 @@
 import React from 'react';
 import { IonPage, withIonLifeCycle } from '@ionic/react';
-import { RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps } from '../RouterCompat';
 import { connect } from 'react-redux';
 import { Bookmark } from '../models/Bookmark';
 import { TmpSettings } from '../models/TmpSettings';

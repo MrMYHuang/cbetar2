@@ -1,6 +1,5 @@
 import React from 'react';
 import { IonButton, IonContent, IonItem, IonLabel, IonList, IonModal, IonToggle } from '@ionic/react';
-import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Globals from '../Globals';
 import * as qrcode from 'qrcode';
@@ -12,10 +11,7 @@ interface Props {
   settings: any;
 }
 
-interface PageProps extends Props, RouteComponentProps<{
-  tab: string;
-  path: string;
-}> { }
+interface PageProps extends Props { }
 
 interface State {
   isAppSettingsExport: Array<boolean>;

@@ -1,5 +1,4 @@
 import { createRoot } from 'react-dom/client';
-import { BrowserRouter } from "react-router-dom";
 import App, { serviceWorkCallbacks } from './App';
 import Globals from './Globals';
 import * as serviceWorker from './serviceWorkerRegistration';
@@ -7,7 +6,7 @@ import * as serviceWorker from './serviceWorkerRegistration';
 // Enable at the very start for logging most messages.
 Globals.enableAppLog();
 
-createRoot(document.getElementById('root')!).render(<BrowserRouter><App /></BrowserRouter>);
+createRoot(document.getElementById('root')!).render(<App />);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

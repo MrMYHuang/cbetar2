@@ -1,7 +1,7 @@
 import React from 'react';
 import { IonContent, IonHeader, IonToolbar, IonList, IonItem, IonLabel, IonButton, IonIcon, withIonLifeCycle, IonLoading, IonSelectOption, IonSelect } from '@ionic/react';
 import { bookmark, arrowBack, home, search, shareSocial, refreshCircle } from 'ionicons/icons';
-import { RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps } from '../RouterCompat';
 import queryString from 'query-string';
 
 import { Catalog } from '../models/Catalog';

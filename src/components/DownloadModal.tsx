@@ -1,6 +1,5 @@
 import React from 'react';
 import { IonContent, IonLabel, IonModal, IonProgressBar } from '@ionic/react';
-import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Globals from '../Globals';
 
@@ -9,8 +8,7 @@ interface Props {
   progress: number;
 }
 
-interface PageProps extends Props, RouteComponentProps<{
-}> { }
+interface PageProps extends Props { }
 
 interface State {
   isAppSettingsExport: Array<boolean>;

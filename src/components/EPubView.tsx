@@ -1,5 +1,5 @@
 import React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps } from '../RouterCompat';
 import { connect } from 'react-redux';
 import { withIonLifeCycle, IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonIcon, IonAlert, IonPopover, IonList, IonItem, IonLabel, IonFab, IonFabButton, IonToast, IonLoading, isPlatform, IonProgressBar, IonFabList } from '@ionic/react';
 import { bookmark, arrowBack, home, search, ellipsisHorizontal, ellipsisVertical, arrowForward, musicalNotes, stopCircle, book, shareSocial, print, refreshCircle, copy, arrowUp, arrowDown, musicalNote, link, chevronUpOutline, playSkipForward, playSkipBack, expand, list } from 'ionicons/icons';
