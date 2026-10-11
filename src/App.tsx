@@ -258,8 +258,6 @@ class _AppOrig extends React.Component<AppOrigProps, State> {
     // Disable browser callout.
     if (isPlatform('android')) {
       window.oncontextmenu = Globals.disableAndroidChromeCallout;
-    } else if (isPlatform('ios')) {
-      document.ontouchend = Globals.disableIosSafariCallout.bind(window);
     }
     // Update IonApp height after screen rotation.
     if (Globals.isTouchDevice()) {

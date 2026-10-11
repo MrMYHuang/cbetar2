@@ -1,4 +1,8 @@
 # <a id='history'>版本歷史</a>
+* PWA 11.1.0:
+  * [修正] iOS 27 無法用觸控鍵盤輸入文字.
+  * [更新] 升級 Ionic v9.
+
 * PWA 11.0.0:
   * [更新] 因應 CBETA API server 存取將要求 API key，新增 key 設定。
 
